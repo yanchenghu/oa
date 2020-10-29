@@ -111,8 +111,7 @@ public class PerCustomerinfoController extends BaseController
      */
     @PutMapping("/analysisResume")
     public AjaxResult analysisResume(@RequestBody MultipartFile file,
-                                   Integer resumeDirection1,
-            HttpServletRequest request, HttpSession session) {
+                                   Integer resumeDirection1) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         AjaxResult dsa=  perCustomerinfoService.goAnalysisResume(file,resumeDirection1,loginUser);
 
