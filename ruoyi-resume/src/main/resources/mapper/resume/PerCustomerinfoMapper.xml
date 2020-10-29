@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resume.mapper.PerCustomerinfoMapper">
+
+    <resultMap type="PerCustomerinfo" id="PerCustomerinfoResult">
+        <result property="customerCode"    column="customer_code"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerSex"    column="customer_sex"    />
+        <result property="customerTel"    column="customer_tel"    />
+        <result property="customerBirth"    column="customer_birth"    />
+        <result property="customerUniversity"    column="customer_university"    />
+        <result property="customerSpecialities"    column="customer_specialities"    />
+        <result property="entryTime"    column="entry_time"    />
+        <result property="workYear"    column="work_year"    />
+        <result property="resumeSource"    column="resume_source"    />
+        <result property="resumeId"    column="resume_id"    />
+        <result property="resumePath"    column="resume_path"    />
+        <result property="relationshipZq"    column="relationship_zq"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="opertCode"    column="opert_code"    />
+        <result property="opertName"    column="opert_name"    />
+        <result property="expectationSalary"    column="expectation_salary"    />
+        <result property="professionId"    column="profession_id"    />
+        <result property="intentionArea"    column="intention_area"    />
+        <result property="education"    column="education"    />
+        <result property="entryTimes"    column="entry_times"    />
+        <result property="joinStatus"    column="join_status"    />
+        <result property="signPeople"    column="sign_people"    />
+        <result property="chsiFlag"    column="chsi_flag"    />
+        <result property="resumeDirection"    column="resume_direction"    />
+    </resultMap>
+
+    <sql id="selectPerCustomerinfoVo">
+        select customer_code, customer_name, customer_sex, customer_tel, customer_birth, customer_university, customer_specialities, entry_time, work_year, resume_source, resume_id, resume_path, relationship_zq, add_time, update_time, opert_code, opert_name, expectation_salary, profession_id, intention_area, education, entry_times, join_status, sign_people, chsi_flag, resume_direction from per_customerinfo
+    </sql>
+
+    <select id="selectPerCustomerinfoList" parameterType="PerCustomerinfo" resultMap="PerCustomerinfoResult">
+        <include refid="selectPerCustomerinfoVo"/>
+        <where>
+            <if test="customerSex != null "> and customer_sex = #{customerSex}</if>
+            <if test="customerTel != null  and customerTel != ''"> and customer_tel = #{customerTel}</if>
+            <if test="customerUniversity != null  and customerUniversity != ''"> and customer_university = #{customerUniversity}</if>
+            <if test="customerSpecialities != null  and customerSpecialities != ''"> and customer_specialities = #{customerSpecialities}</if>
+            <if test="workYear != null "> and work_year = #{workYear}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="expectationSalary != null  and expectationSalary != ''"> and expectation_salary = #{expectationSalary}</if>
+            <if test="professionId != null  and professionId != ''"> and profession_id = #{professionId}</if>
+            <if test="education != null "> and education = #{education}</if>
+        </where>
+    </select>
+
+    <select id="selectPerCustomerinfoById" parameterType="String" resultMap="PerCustomerinfoResult">
+        <include refid="selectPerCustomerinfoVo"/>
+        where customer_code = #{customerCode}
+    </select>
+
+    <insert id="insertPerCustomerinfo" parameterType="PerCustomerinfo">
+        insert into per_customerinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">customer_code,</if>
+            <if test="customerName != null and customerName != ''">customer_name,</if>
+            <if test="customerSex != null">customer_sex,</if>
+            <if test="customerTel != null and customerTel != ''">customer_tel,</if>
+            <if test="customerBirth != null">customer_birth,</if>
+            <if test="customerUniversity != null">customer_university,</if>
+            <if test="customerSpecialities != null">customer_specialities,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="workYear != null">work_year,</if>
+            <if test="resumeSource != null">resume_source,</if>
+            <if test="resumeId != null">resume_id,</if>
+            <if test="resumePath != null">resume_path,</if>
+            <if test="relationshipZq != null">relationship_zq,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="opertCode != null">opert_code,</if>
+            <if test="opertName != null">opert_name,</if>
+            <if test="expectationSalary != null">expectation_salary,</if>
+            <if test="professionId != null">profession_id,</if>
+            <if test="intentionArea != null">intention_area,</if>
+            <if test="education != null">education,</if>
+            <if test="entryTimes != null">entry_times,</if>
+            <if test="joinStatus != null">join_status,</if>
+            <if test="signPeople != null">sign_people,</if>
+            <if test="chsiFlag != null">chsi_flag,</if>
+            <if test="resumeDirection != null">resume_direction,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="customerName != null and customerName != ''">#{customerName},</if>
+            <if test="customerSex != null">#{customerSex},</if>
+            <if test="customerTel != null and customerTel != ''">#{customerTel},</if>
+            <if test="customerBirth != null">#{customerBirth},</if>
+            <if test="customerUniversity != null">#{customerUniversity},</if>
+            <if test="customerSpecialities != null">#{customerSpecialities},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="workYear != null">#{workYear},</if>
+            <if test="resumeSource != null">#{resumeSource},</if>
+            <if test="resumeId != null">#{resumeId},</if>
+            <if test="resumePath != null">#{resumePath},</if>
+            <if test="relationshipZq != null">#{relationshipZq},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="opertCode != null">#{opertCode},</if>
+            <if test="opertName != null">#{opertName},</if>
+            <if test="expectationSalary != null">#{expectationSalary},</if>
+            <if test="professionId != null">#{professionId},</if>
+            <if test="intentionArea != null">#{intentionArea},</if>
+            <if test="education != null">#{education},</if>
+            <if test="entryTimes != null">#{entryTimes},</if>
+            <if test="joinStatus != null">#{joinStatus},</if>
+            <if test="signPeople != null">#{signPeople},</if>
+            <if test="chsiFlag != null">#{chsiFlag},</if>
+            <if test="resumeDirection != null">#{resumeDirection},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePerCustomerinfo" parameterType="PerCustomerinfo">
+        update per_customerinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
+            <if test="customerSex != null">customer_sex = #{customerSex},</if>
+            <if test="customerTel != null and customerTel != ''">customer_tel = #{customerTel},</if>
+            <if test="customerBirth != null">customer_birth = #{customerBirth},</if>
+            <if test="customerUniversity != null">customer_university = #{customerUniversity},</if>
+            <if test="customerSpecialities != null">customer_specialities = #{customerSpecialities},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="workYear != null">work_year = #{workYear},</if>
+            <if test="resumeSource != null">resume_source = #{resumeSource},</if>
+            <if test="resumeId != null">resume_id = #{resumeId},</if>
+            <if test="resumePath != null">resume_path = #{resumePath},</if>
+            <if test="relationshipZq != null">relationship_zq = #{relationshipZq},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="opertCode != null">opert_code = #{opertCode},</if>
+            <if test="opertName != null">opert_name = #{opertName},</if>
+            <if test="expectationSalary != null">expectation_salary = #{expectationSalary},</if>
+            <if test="professionId != null">profession_id = #{professionId},</if>
+            <if test="intentionArea != null">intention_area = #{intentionArea},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="entryTimes != null">entry_times = #{entryTimes},</if>
+            <if test="joinStatus != null">join_status = #{joinStatus},</if>
+            <if test="signPeople != null">sign_people = #{signPeople},</if>
+            <if test="chsiFlag != null">chsi_flag = #{chsiFlag},</if>
+            <if test="resumeDirection != null">resume_direction = #{resumeDirection},</if>
+        </trim>
+        where customer_code = #{customerCode}
+    </update>
+
+    <delete id="deletePerCustomerinfoById" parameterType="String">
+        delete from per_customerinfo where customer_code = #{customerCode}
+    </delete>
+
+    <delete id="deletePerCustomerinfoByIds" parameterType="String">
+        delete from per_customerinfo where customer_code in
+        <foreach item="customerCode" collection="array" open="(" separator="," close=")">
+            #{customerCode}
+        </foreach>
+    </delete>
+
+</mapper>
