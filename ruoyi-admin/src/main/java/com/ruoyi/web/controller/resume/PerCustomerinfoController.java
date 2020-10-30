@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * 简历Controller
+ * 录入解析简历Controller
  *
  * @author yan
  * @date 2020-10-28
