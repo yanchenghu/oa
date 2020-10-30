@@ -155,6 +155,7 @@
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="钉钉userid" align="center" prop="dinguserid" :show-overflow-tooltip="true" />
           <el-table-column
             label="操作"
             align="center"
@@ -289,11 +290,17 @@
               </el-select>
             </el-form-item>
           </el-col>
+
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="钉钉userid" prop="dinguserid">
+              <el-input v-model="form.dinguserid" placeholder="请输入钉钉userid" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -442,6 +449,9 @@ export default {
             message: "请输入正确的手机号码",
             trigger: "blur"
           }
+        ],
+        dinguserid: [
+          { required: true, message: "钉钉userid不能为空", trigger: "blur" }
         ]
       }
     };
@@ -525,6 +535,7 @@ export default {
         sex: undefined,
         status: "0",
         remark: undefined,
+        dinguserid: undefined,
         postIds: [],
         roleIds: []
       };

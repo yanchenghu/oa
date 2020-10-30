@@ -91,6 +91,16 @@ public class SysUser extends BaseEntity
 
     /** 岗位组 */
     private Long[] postIds;
+    /** 钉钉userid */
+    private String dinguserid;
+
+    public String getDinguserid() {
+        return dinguserid;
+    }
+
+    public void setDinguserid(String dinguserid) {
+        this.dinguserid = dinguserid;
+    }
 
     public SysUser()
     {
