@@ -8,6 +8,15 @@ export function listRecord(query) {
     params: query
   })
 }
+//解析简历
+export function jiexi(file) {
+  console.log("123"+file)
+  return request({
+    url: 'resume/record/analysisResume',
+    method: 'post',
+    data:file
+  })
+}
 
 // 查询简历详细
 export function getRecord(customerCode) {

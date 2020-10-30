@@ -1,5 +1,158 @@
 <template>
   <div class="app-container">
+    <div style="margin-bottom: 30px;display: flex;justify-content: space-between;">
+      <div style="width: 25%;">
+        <p><b>录入解析简历</b></p>
+      </div>
+      <div style="display: flex;flex-wrap: wrap; width: 60%;justify-content: flex-end;">
+        <div>
+          <item>电话 </item>&nbsp;<input type="text" class="input" v-model="phone">
+        </div>
+        <div>
+          <item>姓名 </item>&nbsp;<input type="text" class="input" v-model="name">
+        </div>
+        <button class="but" @click="open = true">查询</button>
+      </div>
+    </div>
+    <div style="margin-bottom:40px;">
+         <input type="file" ref="files" >
+
+         <button class="but" @click="jiexii">解析</button>
+    </div>
+    <div>
+      <p><h4><b>姓名/电话</b></h4></p>
+      <div>
+
+          <el-form label-width="68px" :inline="true">
+              <el-form-item label="性别" prop="sex">
+                <el-input
+                  v-model="queryParams.sex"
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <el-form-item label="出生年月" prop="birthday">
+                <el-input
+                  v-model="queryParams.birthday"
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <el-form-item label="毕业学院" prop="school">
+                <el-input
+                  v-model="queryParams.school"
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <el-form-item label="学历" prop="education">
+                <el-input
+                  v-model="queryParams.education"
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <el-form-item label="期望薪资" prop="pay">
+                <el-input
+                  v-model="queryParams.pay"
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <el-form-item label="技术方向" prop="direction">
+                <el-input
+                  v-model="queryParams.direction"
+                  size="small"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <br/>
+              <el-form-item label="工作经验" prop="workjingyan">
+                <el-input
+                style="width: 300px;"
+                 type="textarea"
+                  v-model="queryParams.workjingyan"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <br>
+              <el-form-item label="工作经历" prop="workjingli">
+                <el-input
+                style="width: 300px;"
+                 type="textarea"
+                  v-model="queryParams.workjingli"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <br/>
+              <el-form-item label="项目经历" prop="xiangmu">
+                <el-input
+                style="width: 500px;"
+                 type="textarea"
+                  v-model="queryParams.xiangmu"
+                  @keyup.enter.native="handleQuery"
+                />
+              </el-form-item>
+              <br>
+              <el-form-item>
+                  <el-button  size="medium " @click="handleQuery" class="but">取消</el-button>
+                  <el-button size="medium " @click="resetQuery" class="but">保存</el-button>
+                </el-form-item>
+              </el-form>
+         </el-form>
+      </div>
+
+    </div>
+    <el-dialog :visible.sync="open" style="width: 90%;">
+        <div v-if="sous" style="height: 400px;">
+          <h3><p><b>简历查询-查询不到结果</b></p></h3>
+          <div style="margin-top:200px" align="center">未查询到人员信息</div>
+        </div>
+        <div v-else >
+          <h4><p><b>简历查询-可查询到结果</b></p></h4>
+          <el-table
+              :data="tableData"
+              border
+              style="width: 100%">
+              <el-table-column
+                prop="date"
+                label="姓名电话"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="出生日期"
+                width="140">
+              </el-table-column>
+              <el-table-column
+                prop="province"
+                label="技术方向"
+                width="160">
+              </el-table-column>
+              <el-table-column
+                prop="city"
+                label="录入/更新简历时间"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                prop="address"
+                label="占有人"
+                width="120">
+              </el-table-column>
+              <el-table-column
+
+                label="详情"
+                width="100">
+                <template slot-scope="scope">
+                 <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+        </div>
+    </el-dialog>
+
+
+
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="简历性别" prop="customerSex">
         <el-select v-model="queryParams.customerSex" placeholder="请选择简历性别" clearable size="small">
@@ -158,7 +311,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -168,7 +321,7 @@
     />
 
     <!-- 添加或修改简历对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
+    <el-dialog :title="title" :visible.sync="ope" width="1000px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="简历姓名" prop="customerName">
           <el-input v-model="form.customerName" placeholder="请输入简历姓名" />
@@ -274,12 +427,19 @@
 </template>
 
 <script>
-import { listRecord, getRecord, delRecord, addRecord, updateRecord, exportRecord } from "@/api/resume/record/customerinfo";
+import {jiexi, listRecord, getRecord, delRecord, addRecord, updateRecord, exportRecord } from "@/api/resume/record/customerinfo";
 
 export default {
   name: "Record",
   data() {
     return {
+      text:"",
+      // 查询电话
+      phone:null,
+      // 查询姓名
+      name:null,
+      // 是否查询到
+      sous:false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -304,15 +464,15 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        customerSex: null,
-        customerTel: null,
-        customerUniversity: null,
-        customerSpecialities: null,
-        workYear: null,
-        addTime: null,
-        expectationSalary: null,
-        professionId: null,
+        sex: null,
+        birthday: null,
+        school: null,
         education: null,
+        pay: null,
+        direction: null,
+        workjinli: null,
+        workjingyan: null,
+        xingmu: null,
       },
       // 表单参数
       form: {},
@@ -328,12 +488,20 @@ export default {
     };
   },
   created() {
+
     this.getList();
     this.getDicts("sys_user_sex").then(response => {
       this.customerSexOptions = response.data;
     });
   },
   methods: {
+
+    jiexii(){
+      this.text=this.$refs.files.value
+      let formData=new FormData();
+      formData.append('upfile',this.text);
+      jiexi(formData).then()
+    },
     /** 查询简历列表 */
     getList() {
       this.loading = true;
@@ -405,6 +573,7 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加简历";
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -466,3 +635,17 @@ export default {
   }
 };
 </script>
+
+<style>
+  .input{
+    width: 150px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  .but{
+    width: 90px;
+    height: 40px;
+    background: none;
+    border: 1px solid grey;
+  }
+</style>
