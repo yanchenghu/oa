@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * 录入解析简历Controller
+ * 简历Controller
  *
  * @author yan
  * @date 2020-10-28
@@ -42,7 +42,7 @@ public class PerCustomerinfoController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(PerCustomerinfo perCustomerinfo)
     {
-        startPage();
+        //startPage();
         List<PerCustomerinfo> list = perCustomerinfoService.selectPerCustomerinfoList(perCustomerinfo);
         return getDataTable(list);
     }
@@ -111,7 +111,9 @@ public class PerCustomerinfoController extends BaseController
      */
     @PutMapping("/analysisResume")
     public AjaxResult analysisResume(@RequestBody MultipartFile file,
-                                   Integer resumeDirection1) {
+                                   Integer resumeDirection1,
+            HttpServletRequest request, HttpSession session) {
+        AjaxResult ddsa=new AjaxResult();
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         AjaxResult dsa=  perCustomerinfoService.goAnalysisResume(file,resumeDirection1,loginUser);
 
