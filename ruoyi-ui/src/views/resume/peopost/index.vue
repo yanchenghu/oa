@@ -1,5 +1,26 @@
 <template>
   <div class="app-container">
+      <p><b>简历库</b></p>
+      <el-form ref="form" :model="form" label-width="80px" inline="true">
+        <el-form-item label="活动区域" >
+          <el-select v-model="form.region" placeholder="请选择活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="活动区域" >
+          <el-select v-model="form.region" placeholder="请选择活动区域">
+            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="区域二" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+
+
+
+
+<!-- // 模板 -->
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="简历性别" prop="customerSex">
         <el-select v-model="queryParams.customerSex" placeholder="请选择简历性别" clearable size="small">
@@ -158,7 +179,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
