@@ -1,12 +1,15 @@
 package com.ruoyi.resume.service.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.resume.ResumeParserUtil;
+import com.ruoyi.common.utils.resume.MultipartFileToFile;
+
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,13 +108,13 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
     @Override
     @Transactional
-    public AjaxResult goAnalysisResume(MultipartFile file, Integer resumeDirection1, LoginUser loginUser) {
+    public AjaxResult goAnalysisResume(MultipartFile  file, Integer resumeDirection1, LoginUser loginUser) throws Exception {
         if(file == null){
             return AjaxResult.error("上传失败，文件为空");
         }
-        CommonsMultipartFile cf= (CommonsMultipartFile)file;
-        DiskFileItem fi = (DiskFileItem)cf.getFileItem();
-        File f = fi.getStoreLocation();
+
+         File f =MultipartFileToFile.multipartFileToFile(file);
+
         JSONObject analyticalResults ,contact_info=new JSONObject();
         PerCustomerinfo perCustomerinfo=new PerCustomerinfo();
         try {
@@ -123,11 +126,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
              }
             perCustomerinfo.setCustomerTel(phone_number);
 
-
-
-
-
         } catch (Exception e) {
+
             e.printStackTrace();
             return AjaxResult.error("简历解析失败");
         }
@@ -136,4 +136,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
         return null;
     }
+
+
+
+
 }
