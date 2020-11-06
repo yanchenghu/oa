@@ -70,4 +70,12 @@ public interface IPerCustomerinfoService
      * @return 结果
      */
     AjaxResult goAnalysisResume(MultipartFile file, Integer resumeDirection1, LoginUser loginUser) throws Exception;
+
+    /**
+     * 查询当前人是否抢占
+     *
+     * @param
+     * @return 结果
+     */
+    List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo);
 }

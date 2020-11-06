@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resume.mapper.PerEducationMapper">
+    
+    <resultMap type="PerEducation" id="PerEducationResult">
+        <result property="id"    column="id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="schoolName"    column="school_name"    />
+        <result property="degree"    column="degree"    />
+        <result property="major"    column="major"    />
+        <result property="stillActive"    column="still_active"    />
+        <result property="schoolLevel"    column="school_level"    />
+        <result property="studyModel"    column="study_model"    />
+        <result property="location"    column="location"    />
+        <result property="gpa"    column="GPA"    />
+        <result property="ranking"    column="ranking"    />
+        <result property="courses"    column="courses"    />
+        <result property="department"    column="department"    />
+        <result property="schoolRank"    column="school_rank"    />
+        <result property="addpeople"    column="addpeople"    />
+        <result property="addtime"    column="addtime"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPerEducationVo">
+        select id, customer_code, start_time, end_time, school_name, degree, major, still_active, school_level, study_model, location, GPA, ranking, courses, department, school_rank, addpeople, addtime, remark from per_education
+    </sql>
+
+    <select id="selectPerEducationList" parameterType="PerEducation" resultMap="PerEducationResult">
+        <include refid="selectPerEducationVo"/>
+        <where>  
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="schoolName != null  and schoolName != ''"> and school_name like concat('%', #{schoolName}, '%')</if>
+            <if test="degree != null  and degree != ''"> and degree = #{degree}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="stillActive != null "> and still_active = #{stillActive}</if>
+            <if test="schoolLevel != null  and schoolLevel != ''"> and school_level = #{schoolLevel}</if>
+            <if test="studyModel != null  and studyModel != ''"> and study_model = #{studyModel}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="gpa != null  and gpa != ''"> and GPA = #{gpa}</if>
+            <if test="ranking != null  and ranking != ''"> and ranking = #{ranking}</if>
+            <if test="courses != null  and courses != ''"> and courses = #{courses}</if>
+            <if test="department != null  and department != ''"> and department = #{department}</if>
+            <if test="schoolRank != null  and schoolRank != ''"> and school_rank = #{schoolRank}</if>
+            <if test="addpeople != null  and addpeople != ''"> and addpeople = #{addpeople}</if>
+            <if test="addtime != null "> and addtime = #{addtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerEducationById" parameterType="Long" resultMap="PerEducationResult">
+        <include refid="selectPerEducationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPerEducation" parameterType="PerEducation" useGeneratedKeys="true" keyProperty="id">
+        insert into per_education
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">customer_code,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="schoolName != null">school_name,</if>
+            <if test="degree != null">degree,</if>
+            <if test="major != null">major,</if>
+            <if test="stillActive != null">still_active,</if>
+            <if test="schoolLevel != null">school_level,</if>
+            <if test="studyModel != null">study_model,</if>
+            <if test="location != null">location,</if>
+            <if test="gpa != null">GPA,</if>
+            <if test="ranking != null">ranking,</if>
+            <if test="courses != null">courses,</if>
+            <if test="department != null">department,</if>
+            <if test="schoolRank != null">school_rank,</if>
+            <if test="addpeople != null">addpeople,</if>
+            <if test="addtime != null">addtime,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="schoolName != null">#{schoolName},</if>
+            <if test="degree != null">#{degree},</if>
+            <if test="major != null">#{major},</if>
+            <if test="stillActive != null">#{stillActive},</if>
+            <if test="schoolLevel != null">#{schoolLevel},</if>
+            <if test="studyModel != null">#{studyModel},</if>
+            <if test="location != null">#{location},</if>
+            <if test="gpa != null">#{gpa},</if>
+            <if test="ranking != null">#{ranking},</if>
+            <if test="courses != null">#{courses},</if>
+            <if test="department != null">#{department},</if>
+            <if test="schoolRank != null">#{schoolRank},</if>
+            <if test="addpeople != null">#{addpeople},</if>
+            <if test="addtime != null">#{addtime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerEducation" parameterType="PerEducation">
+        update per_education
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="schoolName != null">school_name = #{schoolName},</if>
+            <if test="degree != null">degree = #{degree},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="stillActive != null">still_active = #{stillActive},</if>
+            <if test="schoolLevel != null">school_level = #{schoolLevel},</if>
+            <if test="studyModel != null">study_model = #{studyModel},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="gpa != null">GPA = #{gpa},</if>
+            <if test="ranking != null">ranking = #{ranking},</if>
+            <if test="courses != null">courses = #{courses},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="schoolRank != null">school_rank = #{schoolRank},</if>
+            <if test="addpeople != null">addpeople = #{addpeople},</if>
+            <if test="addtime != null">addtime = #{addtime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePerEducationById" parameterType="Long">
+        delete from per_education where id = #{id}
+    </delete>
+
+    <delete id="deletePerEducationByIds" parameterType="String">
+        delete from per_education where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

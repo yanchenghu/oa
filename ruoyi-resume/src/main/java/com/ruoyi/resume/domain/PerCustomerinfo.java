@@ -9,9 +9,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 简历对象 per_customerinfo
- *
+ * 
  * @author yan
- * @date 2020-10-28
+ * @date 2020-11-06
  */
 public class PerCustomerinfo extends BaseEntity
 {
@@ -68,6 +68,10 @@ public class PerCustomerinfo extends BaseEntity
     @Excel(name = "与梓钦关系", readConverterExp = "1=-已离职、2-在职、3-提交简历未通过、4-待入职、5-无关系,6=-入职")
     private Integer relationshipZq;
 
+    /** 邮箱 */
+    @Excel(name = "邮箱")
+    private String email;
+
     /** 添加时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -109,230 +113,239 @@ public class PerCustomerinfo extends BaseEntity
     private Integer chsiFlag;
 
     /** 简历方向 : 1:国内 2:对日 */
-    private Long resumeDirection;
+    private Integer resumeDirection;
 
-    public void setCustomerCode(String customerCode)
+    public void setCustomerCode(String customerCode) 
     {
         this.customerCode = customerCode;
     }
 
-    public String getCustomerCode()
+    public String getCustomerCode() 
     {
         return customerCode;
     }
-    public void setCustomerName(String customerName)
+    public void setCustomerName(String customerName) 
     {
         this.customerName = customerName;
     }
 
-    public String getCustomerName()
+    public String getCustomerName() 
     {
         return customerName;
     }
-    public void setCustomerSex(Integer customerSex)
+    public void setCustomerSex(Integer customerSex) 
     {
         this.customerSex = customerSex;
     }
 
-    public Integer getCustomerSex()
+    public Integer getCustomerSex() 
     {
         return customerSex;
     }
-    public void setCustomerTel(String customerTel)
+    public void setCustomerTel(String customerTel) 
     {
         this.customerTel = customerTel;
     }
 
-    public String getCustomerTel()
+    public String getCustomerTel() 
     {
         return customerTel;
     }
-    public void setCustomerBirth(Date customerBirth)
+    public void setCustomerBirth(Date customerBirth) 
     {
         this.customerBirth = customerBirth;
     }
 
-    public Date getCustomerBirth()
+    public Date getCustomerBirth() 
     {
         return customerBirth;
     }
-    public void setCustomerUniversity(String customerUniversity)
+    public void setCustomerUniversity(String customerUniversity) 
     {
         this.customerUniversity = customerUniversity;
     }
 
-    public String getCustomerUniversity()
+    public String getCustomerUniversity() 
     {
         return customerUniversity;
     }
-    public void setCustomerSpecialities(String customerSpecialities)
+    public void setCustomerSpecialities(String customerSpecialities) 
     {
         this.customerSpecialities = customerSpecialities;
     }
 
-    public String getCustomerSpecialities()
+    public String getCustomerSpecialities() 
     {
         return customerSpecialities;
     }
-    public void setEntryTime(Date entryTime)
+    public void setEntryTime(Date entryTime) 
     {
         this.entryTime = entryTime;
     }
 
-    public Date getEntryTime()
+    public Date getEntryTime() 
     {
         return entryTime;
     }
-    public void setWorkYear(Integer workYear)
+    public void setWorkYear(Integer workYear) 
     {
         this.workYear = workYear;
     }
 
-    public Integer getWorkYear()
+    public Integer getWorkYear() 
     {
         return workYear;
     }
-    public void setResumeSource(Integer resumeSource)
+    public void setResumeSource(Integer resumeSource) 
     {
         this.resumeSource = resumeSource;
     }
 
-    public Integer getResumeSource()
+    public Integer getResumeSource() 
     {
         return resumeSource;
     }
-    public void setResumeId(String resumeId)
+    public void setResumeId(String resumeId) 
     {
         this.resumeId = resumeId;
     }
 
-    public String getResumeId()
+    public String getResumeId() 
     {
         return resumeId;
     }
-    public void setResumePath(String resumePath)
+    public void setResumePath(String resumePath) 
     {
         this.resumePath = resumePath;
     }
 
-    public String getResumePath()
+    public String getResumePath() 
     {
         return resumePath;
     }
-    public void setRelationshipZq(Integer relationshipZq)
+    public void setRelationshipZq(Integer relationshipZq) 
     {
         this.relationshipZq = relationshipZq;
     }
 
-    public Integer getRelationshipZq()
+    public Integer getRelationshipZq() 
     {
         return relationshipZq;
     }
-    public void setAddTime(Date addTime)
+    public void setEmail(String email) 
+    {
+        this.email = email;
+    }
+
+    public String getEmail() 
+    {
+        return email;
+    }
+    public void setAddTime(Date addTime) 
     {
         this.addTime = addTime;
     }
 
-    public Date getAddTime()
+    public Date getAddTime() 
     {
         return addTime;
     }
-    public void setOpertCode(String opertCode)
+    public void setOpertCode(String opertCode) 
     {
         this.opertCode = opertCode;
     }
 
-    public String getOpertCode()
+    public String getOpertCode() 
     {
         return opertCode;
     }
-    public void setOpertName(String opertName)
+    public void setOpertName(String opertName) 
     {
         this.opertName = opertName;
     }
 
-    public String getOpertName()
+    public String getOpertName() 
     {
         return opertName;
     }
-    public void setExpectationSalary(String expectationSalary)
+    public void setExpectationSalary(String expectationSalary) 
     {
         this.expectationSalary = expectationSalary;
     }
 
-    public String getExpectationSalary()
+    public String getExpectationSalary() 
     {
         return expectationSalary;
     }
-    public void setProfessionId(String professionId)
+    public void setProfessionId(String professionId) 
     {
         this.professionId = professionId;
     }
 
-    public String getProfessionId()
+    public String getProfessionId() 
     {
         return professionId;
     }
-    public void setIntentionArea(String intentionArea)
+    public void setIntentionArea(String intentionArea) 
     {
         this.intentionArea = intentionArea;
     }
 
-    public String getIntentionArea()
+    public String getIntentionArea() 
     {
         return intentionArea;
     }
-    public void setEducation(Integer education)
+    public void setEducation(Integer education) 
     {
         this.education = education;
     }
 
-    public Integer getEducation()
+    public Integer getEducation() 
     {
         return education;
     }
-    public void setEntryTimes(Long entryTimes)
+    public void setEntryTimes(Long entryTimes) 
     {
         this.entryTimes = entryTimes;
     }
 
-    public Long getEntryTimes()
+    public Long getEntryTimes() 
     {
         return entryTimes;
     }
-    public void setJoinStatus(Integer joinStatus)
+    public void setJoinStatus(Integer joinStatus) 
     {
         this.joinStatus = joinStatus;
     }
 
-    public Integer getJoinStatus()
+    public Integer getJoinStatus() 
     {
         return joinStatus;
     }
-    public void setSignPeople(String signPeople)
+    public void setSignPeople(String signPeople) 
     {
         this.signPeople = signPeople;
     }
 
-    public String getSignPeople()
+    public String getSignPeople() 
     {
         return signPeople;
     }
-    public void setChsiFlag(Integer chsiFlag)
+    public void setChsiFlag(Integer chsiFlag) 
     {
         this.chsiFlag = chsiFlag;
     }
 
-    public Integer getChsiFlag()
+    public Integer getChsiFlag() 
     {
         return chsiFlag;
     }
-    public void setResumeDirection(Long resumeDirection)
+    public void setResumeDirection(Integer resumeDirection) 
     {
         this.resumeDirection = resumeDirection;
     }
 
-    public Long getResumeDirection()
+    public Integer getResumeDirection() 
     {
         return resumeDirection;
     }
@@ -340,32 +353,33 @@ public class PerCustomerinfo extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("customerCode", getCustomerCode())
-                .append("customerName", getCustomerName())
-                .append("customerSex", getCustomerSex())
-                .append("customerTel", getCustomerTel())
-                .append("customerBirth", getCustomerBirth())
-                .append("customerUniversity", getCustomerUniversity())
-                .append("customerSpecialities", getCustomerSpecialities())
-                .append("entryTime", getEntryTime())
-                .append("workYear", getWorkYear())
-                .append("resumeSource", getResumeSource())
-                .append("resumeId", getResumeId())
-                .append("resumePath", getResumePath())
-                .append("relationshipZq", getRelationshipZq())
-                .append("addTime", getAddTime())
-                .append("updateTime", getUpdateTime())
-                .append("opertCode", getOpertCode())
-                .append("opertName", getOpertName())
-                .append("expectationSalary", getExpectationSalary())
-                .append("professionId", getProfessionId())
-                .append("intentionArea", getIntentionArea())
-                .append("education", getEducation())
-                .append("entryTimes", getEntryTimes())
-                .append("joinStatus", getJoinStatus())
-                .append("signPeople", getSignPeople())
-                .append("chsiFlag", getChsiFlag())
-                .append("resumeDirection", getResumeDirection())
-                .toString();
+            .append("customerCode", getCustomerCode())
+            .append("customerName", getCustomerName())
+            .append("customerSex", getCustomerSex())
+            .append("customerTel", getCustomerTel())
+            .append("customerBirth", getCustomerBirth())
+            .append("customerUniversity", getCustomerUniversity())
+            .append("customerSpecialities", getCustomerSpecialities())
+            .append("entryTime", getEntryTime())
+            .append("workYear", getWorkYear())
+            .append("resumeSource", getResumeSource())
+            .append("resumeId", getResumeId())
+            .append("resumePath", getResumePath())
+            .append("relationshipZq", getRelationshipZq())
+            .append("email", getEmail())
+            .append("addTime", getAddTime())
+            .append("updateTime", getUpdateTime())
+            .append("opertCode", getOpertCode())
+            .append("opertName", getOpertName())
+            .append("expectationSalary", getExpectationSalary())
+            .append("professionId", getProfessionId())
+            .append("intentionArea", getIntentionArea())
+            .append("education", getEducation())
+            .append("entryTimes", getEntryTimes())
+            .append("joinStatus", getJoinStatus())
+            .append("signPeople", getSignPeople())
+            .append("chsiFlag", getChsiFlag())
+            .append("resumeDirection", getResumeDirection())
+            .toString();
     }
 }

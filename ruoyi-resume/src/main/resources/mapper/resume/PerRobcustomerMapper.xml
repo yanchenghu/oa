@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resume.mapper.PerRobcustomerMapper">
+    
+    <resultMap type="PerRobcustomer" id="PerRobcustomerResult">
+        <result property="seizeId"    column="seize_id"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerTel"    column="customer_tel"    />
+        <result property="resumeId"    column="resume_id"    />
+        <result property="editTime"    column="edit_time"    />
+        <result property="wechat"    column="wechat"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="status"    column="Status"    />
+        <result property="remark"    column="remark"    />
+        <result property="addPeople"    column="add_people"    />
+    </resultMap>
+
+    <sql id="selectPerRobcustomerVo">
+        select seize_id, customer_name, customer_tel, resume_id, edit_time, wechat, add_time, Status, remark, add_people from per_robcustomer
+    </sql>
+
+    <select id="selectPerRobcustomerList" parameterType="PerRobcustomer" resultMap="PerRobcustomerResult">
+        <include refid="selectPerRobcustomerVo"/>
+        <where>  
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="customerTel != null  and customerTel != ''"> and customer_tel = #{customerTel}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="status != null "> and Status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerRobcustomerById" parameterType="String" resultMap="PerRobcustomerResult">
+        <include refid="selectPerRobcustomerVo"/>
+        where seize_id = #{seizeId}
+    </select>
+        
+    <insert id="insertPerRobcustomer" parameterType="PerRobcustomer">
+        insert into per_robcustomer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seizeId != null">seize_id,</if>
+            <if test="customerName != null">customer_name,</if>
+            <if test="customerTel != null">customer_tel,</if>
+            <if test="resumeId != null">resume_id,</if>
+            <if test="editTime != null">edit_time,</if>
+            <if test="wechat != null">wechat,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="status != null">Status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="addPeople != null">add_people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seizeId != null">#{seizeId},</if>
+            <if test="customerName != null">#{customerName},</if>
+            <if test="customerTel != null">#{customerTel},</if>
+            <if test="resumeId != null">#{resumeId},</if>
+            <if test="editTime != null">#{editTime},</if>
+            <if test="wechat != null">#{wechat},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="addPeople != null">#{addPeople},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerRobcustomer" parameterType="PerRobcustomer">
+        update per_robcustomer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerName != null">customer_name = #{customerName},</if>
+            <if test="customerTel != null">customer_tel = #{customerTel},</if>
+            <if test="resumeId != null">resume_id = #{resumeId},</if>
+            <if test="editTime != null">edit_time = #{editTime},</if>
+            <if test="wechat != null">wechat = #{wechat},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="status != null">Status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="addPeople != null">add_people = #{addPeople},</if>
+        </trim>
+        where seize_id = #{seizeId}
+    </update>
+
+    <delete id="deletePerRobcustomerById" parameterType="String">
+        delete from per_robcustomer where seize_id = #{seizeId}
+    </delete>
+
+    <delete id="deletePerRobcustomerByIds" parameterType="String">
+        delete from per_robcustomer where seize_id in 
+        <foreach item="seizeId" collection="array" open="(" separator="," close=")">
+            #{seizeId}
+        </foreach>
+    </delete>
+    <select id="selectByphone" parameterType="String" resultMap="PerRobcustomerResult">
+        <include refid="selectPerRobcustomerVo"/>
+        where customer_tel = #{phone_number}
+        and Status=0
+    </select>
+</mapper>
