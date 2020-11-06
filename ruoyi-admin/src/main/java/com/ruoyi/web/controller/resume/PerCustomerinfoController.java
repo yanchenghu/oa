@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpSession;
  * @author yan
  * @date 2020-10-28
  */
+@Api("简历管理")
 @RestController
 @RequestMapping("/resume/record")
 public class PerCustomerinfoController extends BaseController
@@ -47,18 +49,7 @@ public class PerCustomerinfoController extends BaseController
         return getDataTable(list);
     }
 
-    /**
-     * 导出简历列表
-     */
-    @PreAuthorize("@ss.hasPermi('resume:record:export')")
-    @Log(title = "简历", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public AjaxResult export(PerCustomerinfo perCustomerinfo)
-    {
-        List<PerCustomerinfo> list = perCustomerinfoService.selectPerCustomerinfoList(perCustomerinfo);
-        ExcelUtil<PerCustomerinfo> util = new ExcelUtil<PerCustomerinfo>(PerCustomerinfo.class);
-        return util.exportExcel(list, "record");
-    }
+
 
     /**
      * 获取简历详细信息
@@ -92,34 +83,37 @@ public class PerCustomerinfoController extends BaseController
         return toAjax(perCustomerinfoService.updatePerCustomerinfo(perCustomerinfo));
     }
 
-    /**
-     * 删除简历
-     */
-    @PreAuthorize("@ss.hasPermi('resume:record:remove')")
-    @Log(title = "简历", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{customerCodes}")
-    public AjaxResult remove(@PathVariable String[] customerCodes)
-    {
-        return toAjax(perCustomerinfoService.deletePerCustomerinfoByIds(customerCodes));
-    }
-
-
 
 
     /**
-     * 获取简历详细信息
+     * 简历解析详细信息
      */
-    @PutMapping("/analysisResume")
-    public AjaxResult analysisResume(@RequestBody MultipartFile file,
-                                   Integer resumeDirection1,
-            HttpServletRequest request, HttpSession session) {
+    @PostMapping(value = "/analysisResume")
+    public AjaxResult analysisResume( @RequestParam("upfile") MultipartFile file, Integer resume_direction)  {
+
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        AjaxResult dsa=  perCustomerinfoService.goAnalysisResume(file,resumeDirection1,loginUser);
+        try {
+            return perCustomerinfoService.goAnalysisResume(file,resume_direction,loginUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error("简历解析失败");
+        }
 
-        return dsa;
     }
 
 
+
+
+    /**
+     * 根据姓名电话查询简历列表
+     */
+    @GetMapping("/lists")
+    public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
+    {
+        startPage();
+        List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
+        return getDataTable(list);
+    }
 
 
 }

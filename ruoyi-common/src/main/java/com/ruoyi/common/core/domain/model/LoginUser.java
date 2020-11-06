@@ -94,6 +94,8 @@ public class LoginUser implements UserDetails
         return user.getUserName();
     }
 
+
+
     /**
      * 账户是否未过期,过期无法验证
      */

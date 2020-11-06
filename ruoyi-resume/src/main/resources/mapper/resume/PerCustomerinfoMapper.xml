@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.resume.mapper.PerCustomerinfoMapper">
-
     <resultMap type="PerCustomerinfo" id="PerCustomerinfoResult">
         <result property="customerCode"    column="customer_code"    />
         <result property="customerName"    column="customer_name"    />
@@ -18,6 +17,7 @@
         <result property="resumeId"    column="resume_id"    />
         <result property="resumePath"    column="resume_path"    />
         <result property="relationshipZq"    column="relationship_zq"    />
+        <result property="email"    column="email"    />
         <result property="addTime"    column="add_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="opertCode"    column="opert_code"    />
@@ -34,7 +34,7 @@
     </resultMap>
 
     <sql id="selectPerCustomerinfoVo">
-        select customer_code, customer_name, customer_sex, customer_tel, customer_birth, customer_university, customer_specialities, entry_time, work_year, resume_source, resume_id, resume_path, relationship_zq, add_time, update_time, opert_code, opert_name, expectation_salary, profession_id, intention_area, education, entry_times, join_status, sign_people, chsi_flag, resume_direction from per_customerinfo
+        select customer_code, customer_name, customer_sex, customer_tel, customer_birth, customer_university, customer_specialities, entry_time, work_year, resume_source, resume_id, resume_path, relationship_zq, email, add_time, update_time, opert_code, opert_name, expectation_salary, profession_id, intention_area, education, entry_times, join_status, sign_people, chsi_flag, resume_direction from per_customerinfo
     </sql>
 
     <select id="selectPerCustomerinfoList" parameterType="PerCustomerinfo" resultMap="PerCustomerinfoResult">
@@ -45,12 +45,14 @@
             <if test="customerUniversity != null  and customerUniversity != ''"> and customer_university = #{customerUniversity}</if>
             <if test="customerSpecialities != null  and customerSpecialities != ''"> and customer_specialities = #{customerSpecialities}</if>
             <if test="workYear != null "> and work_year = #{workYear}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
             <if test="addTime != null "> and add_time = #{addTime}</if>
             <if test="expectationSalary != null  and expectationSalary != ''"> and expectation_salary = #{expectationSalary}</if>
             <if test="professionId != null  and professionId != ''"> and profession_id = #{professionId}</if>
             <if test="education != null "> and education = #{education}</if>
         </where>
     </select>
+
 
     <select id="selectPerCustomerinfoById" parameterType="String" resultMap="PerCustomerinfoResult">
         <include refid="selectPerCustomerinfoVo"/>
@@ -73,6 +75,7 @@
             <if test="resumeId != null">resume_id,</if>
             <if test="resumePath != null">resume_path,</if>
             <if test="relationshipZq != null">relationship_zq,</if>
+            <if test="email != null">email,</if>
             <if test="addTime != null">add_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="opertCode != null">opert_code,</if>
@@ -101,6 +104,7 @@
             <if test="resumeId != null">#{resumeId},</if>
             <if test="resumePath != null">#{resumePath},</if>
             <if test="relationshipZq != null">#{relationshipZq},</if>
+            <if test="email != null">#{email},</if>
             <if test="addTime != null">#{addTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="opertCode != null">#{opertCode},</if>
@@ -132,6 +136,7 @@
             <if test="resumeId != null">resume_id = #{resumeId},</if>
             <if test="resumePath != null">resume_path = #{resumePath},</if>
             <if test="relationshipZq != null">relationship_zq = #{relationshipZq},</if>
+            <if test="email != null">email = #{email},</if>
             <if test="addTime != null">add_time = #{addTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="opertCode != null">opert_code = #{opertCode},</if>
@@ -159,5 +164,35 @@
             #{customerCode}
         </foreach>
     </delete>
+
+
+
+
+
+
+
+
+    <select id="getSameCustomerCount"  parameterType="PerCustomerinfo" resultType="int">
+       select count(1) from per_customerinfo
+        where customer_tel = #{customerTel}
+    </select>
+
+
+
+    <select id="selectlistbyNametel"  parameterType="PerCustomerinfo" resultType="map">
+
+        SELECT
+        a.customer_name,a.customer_tel,a.customer_birth,a.profession_id,a.add_time,a.update_time,b.add_name
+        FROM
+        per_customerinfo a
+        LEFT JOIN (SELECT customer_tel,add_name from per_robcustomer where Status=0 ) b ON a.customer_tel = b.customer_tel
+        <where>
+            <if test="customerName != null "> and a.customer_name = #{customerName}</if>
+            <if test="customerTel != null  and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
+        </where>
+
+    </select>
+
+
 
 </mapper>

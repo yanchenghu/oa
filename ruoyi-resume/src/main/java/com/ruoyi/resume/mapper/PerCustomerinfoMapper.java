@@ -58,4 +58,20 @@ public interface PerCustomerinfoMapper
      * @return 结果
      */
     public int deletePerCustomerinfoByIds(String[] customerCodes);
+
+    /**
+     * 根据电话号码查询当前人是否存在
+     *
+     * @param perCustomerinfo
+     * @return 结果
+     */
+    int getSameCustomerCount(PerCustomerinfo perCustomerinfo);
+
+    /**
+     * 根据电话号码查询姓名查询简历信息
+     *
+     * @param perCustomerinfo
+     * @return 结果
+     */
+    List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo);
 }

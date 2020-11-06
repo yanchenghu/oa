@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resume.mapper.PerProjectMapper">
+    
+    <resultMap type="PerProject" id="PerProjectResult">
+        <result property="custproId"    column="custpro_id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="industry"    column="industry"    />
+        <result property="role"    column="role"    />
+        <result property="joinprojectTime"    column="joinproject_time"    />
+        <result property="quitprojectTime"    column="quitproject_time"    />
+        <result property="softwareEnvironment"    column="software_environment"    />
+        <result property="projectIntroduction"    column="project_introduction"    />
+        <result property="technologyType"    column="technology_type"    />
+        <result property="duty"    column="duty"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="remark1"    column="remark1"    />
+        <result property="teamSize"    column="team_size"    />
+    </resultMap>
+
+    <sql id="selectPerProjectVo">
+        select custpro_id, customer_code, industry, role, joinproject_time, quitproject_time, software_environment, project_introduction, technology_type, duty, project_name, remark, remark1, team_size from per_project
+    </sql>
+
+    <select id="selectPerProjectList" parameterType="PerProject" resultMap="PerProjectResult">
+        <include refid="selectPerProjectVo"/>
+        <where>  
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="industry != null "> and industry = #{industry}</if>
+            <if test="role != null "> and role = #{role}</if>
+            <if test="joinprojectTime != null "> and joinproject_time = #{joinprojectTime}</if>
+            <if test="quitprojectTime != null "> and quitproject_time = #{quitprojectTime}</if>
+            <if test="softwareEnvironment != null  and softwareEnvironment != ''"> and software_environment = #{softwareEnvironment}</if>
+            <if test="projectIntroduction != null  and projectIntroduction != ''"> and project_introduction = #{projectIntroduction}</if>
+            <if test="technologyType != null  and technologyType != ''"> and technology_type = #{technologyType}</if>
+            <if test="duty != null  and duty != ''"> and duty = #{duty}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="remark1 != null  and remark1 != ''"> and remark1 = #{remark1}</if>
+            <if test="teamSize != null  and teamSize != ''"> and team_size = #{teamSize}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerProjectById" parameterType="String" resultMap="PerProjectResult">
+        <include refid="selectPerProjectVo"/>
+        where custpro_id = #{custproId}
+    </select>
+        
+    <insert id="insertPerProject" parameterType="PerProject">
+        insert into per_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="custproId != null">custpro_id,</if>
+            <if test="customerCode != null">customer_code,</if>
+            <if test="industry != null">industry,</if>
+            <if test="role != null">role,</if>
+            <if test="joinprojectTime != null">joinproject_time,</if>
+            <if test="quitprojectTime != null">quitproject_time,</if>
+            <if test="softwareEnvironment != null">software_environment,</if>
+            <if test="projectIntroduction != null">project_introduction,</if>
+            <if test="technologyType != null">technology_type,</if>
+            <if test="duty != null">duty,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="remark1 != null">remark1,</if>
+            <if test="teamSize != null">team_size,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="custproId != null">#{custproId},</if>
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="industry != null">#{industry},</if>
+            <if test="role != null">#{role},</if>
+            <if test="joinprojectTime != null">#{joinprojectTime},</if>
+            <if test="quitprojectTime != null">#{quitprojectTime},</if>
+            <if test="softwareEnvironment != null">#{softwareEnvironment},</if>
+            <if test="projectIntroduction != null">#{projectIntroduction},</if>
+            <if test="technologyType != null">#{technologyType},</if>
+            <if test="duty != null">#{duty},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="remark1 != null">#{remark1},</if>
+            <if test="teamSize != null">#{teamSize},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerProject" parameterType="PerProject">
+        update per_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="industry != null">industry = #{industry},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="joinprojectTime != null">joinproject_time = #{joinprojectTime},</if>
+            <if test="quitprojectTime != null">quitproject_time = #{quitprojectTime},</if>
+            <if test="softwareEnvironment != null">software_environment = #{softwareEnvironment},</if>
+            <if test="projectIntroduction != null">project_introduction = #{projectIntroduction},</if>
+            <if test="technologyType != null">technology_type = #{technologyType},</if>
+            <if test="duty != null">duty = #{duty},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="remark1 != null">remark1 = #{remark1},</if>
+            <if test="teamSize != null">team_size = #{teamSize},</if>
+        </trim>
+        where custpro_id = #{custproId}
+    </update>
+
+    <delete id="deletePerProjectById" parameterType="String">
+        delete from per_project where custpro_id = #{custproId}
+    </delete>
+
+    <delete id="deletePerProjectByIds" parameterType="String">
+        delete from per_project where custpro_id in 
+        <foreach item="custproId" collection="array" open="(" separator="," close=")">
+            #{custproId}
+        </foreach>
+    </delete>
+    
+</mapper>

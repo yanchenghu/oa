@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  * 简历Service接口
@@ -68,5 +69,13 @@ public interface IPerCustomerinfoService
      * @param
      * @return 结果
      */
-    AjaxResult goAnalysisResume(MultipartFile file, Integer resumeDirection1, LoginUser loginUser);
+    AjaxResult goAnalysisResume(MultipartFile file, Integer resumeDirection1, LoginUser loginUser) throws Exception;
+
+    /**
+     * 查询当前人是否抢占
+     *
+     * @param
+     * @return 结果
+     */
+    List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo);
 }
