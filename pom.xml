@@ -205,7 +205,6 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-        <module>ruoyi-customer</module>
     </modules>
     <packaging>pom</packaging>
 
