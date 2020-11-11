@@ -19,49 +19,19 @@ export function getTemplate(templateId) {
   })
 }
 
-// 新增简历模板
-export function addTemplate(data) {
+
+
+
+// 预览
+export function preview(templateId) {
   return request({
-    url: '/resume/template',
-    method: 'post',
-    data: data
+    url: '/resume/template/preview/' + templateId,
+    method: 'get'
   })
 }
 
-export function changeTemplateStatus(templateId, templateStatus) {
-  const data = {
-    templateId,
-    templateStatus
-  }
-  return request({
-    url: '/resume/template/changeStatus',
-    method: 'put',
-    data: data
-  })
-}
 
-// 修改简历模板
-export function updateTemplate(data) {
-  return request({
-    url: '/resume/template',
-    method: 'put',
-    data: data
-  })
-}
 
-// 删除简历模板
-export function delTemplate(templateId) {
-  return request({
-    url: '/resume/template/' + templateId,
-    method: 'delete'
-  })
-}
 
-// 导出简历模板
-export function exportTemplate(query) {
-  return request({
-    url: '/resume/template/export',
-    method: 'get',
-    params: query
-  })
-}
+
+

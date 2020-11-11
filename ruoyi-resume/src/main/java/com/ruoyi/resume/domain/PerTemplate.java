@@ -59,7 +59,18 @@ public class PerTemplate extends BaseEntity
     @Excel(name = "作废人")
     private String invalidpeople;
 
-    public void setTemplateId(String templateId) 
+    /** 命名格式  */
+    private String  namingFormat;
+
+    public String getNamingFormat() {
+        return namingFormat;
+    }
+
+    public void setNamingFormat(String namingFormat) {
+        this.namingFormat = namingFormat;
+    }
+
+    public void setTemplateId(String templateId)
     {
         this.templateId = templateId;
     }

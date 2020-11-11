@@ -15,10 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addpeople"    column="AddPeople"    />
         <result property="invalidtime"    column="InvalidTime"    />
         <result property="invalidpeople"    column="InvalidPeople"    />
+        <result property="namingFormat"    column="naming_format"    />
     </resultMap>
 
     <sql id="selectPerTemplateVo">
-        select template_id, template_name, template_file, template_prc, template_order, template_status, addTime, AddPeople, InvalidTime, InvalidPeople from per_template
+        select template_id, template_name, template_file, template_prc, template_order, template_status, addTime, AddPeople, InvalidTime, InvalidPeople, naming_format from per_template
     </sql>
 
     <select id="selectPerTemplateList" parameterType="PerTemplate" resultMap="PerTemplateResult">
@@ -34,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addpeople != null  and addpeople != ''"> and AddPeople = #{addpeople}</if>
             <if test="invalidtime != null "> and InvalidTime = #{invalidtime}</if>
             <if test="invalidpeople != null  and invalidpeople != ''"> and InvalidPeople = #{invalidpeople}</if>
+            <if test="namingFormat != null  and namingFormat != ''"> and naming_format = #{namingFormat}</if>
         </where>
     </select>
     
@@ -55,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addpeople != null and addpeople != ''">AddPeople,</if>
             <if test="invalidtime != null">InvalidTime,</if>
             <if test="invalidpeople != null">InvalidPeople,</if>
+            <if test="namingFormat != null">naming_format,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="templateId != null and templateId != ''">#{templateId},</if>
@@ -67,6 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addpeople != null and addpeople != ''">#{addpeople},</if>
             <if test="invalidtime != null">#{invalidtime},</if>
             <if test="invalidpeople != null">#{invalidpeople},</if>
+            <if test="namingFormat != null">#{namingFormat},</if>
          </trim>
     </insert>
 
@@ -82,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addpeople != null and addpeople != ''">AddPeople = #{addpeople},</if>
             <if test="invalidtime != null">InvalidTime = #{invalidtime},</if>
             <if test="invalidpeople != null">InvalidPeople = #{invalidpeople},</if>
+            <if test="namingFormat != null">naming_format = #{namingFormat},</if>
         </trim>
         where template_id = #{templateId}
     </update>

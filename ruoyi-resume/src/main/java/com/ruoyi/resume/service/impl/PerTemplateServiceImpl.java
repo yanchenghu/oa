@@ -1,6 +1,7 @@
 package com.ruoyi.resume.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.resume.domain.PerTemplate;
@@ -93,6 +94,11 @@ public class PerTemplateServiceImpl implements IPerTemplateService
     public int deletePerTemplateById(String templateId)
     {
         return perTemplateMapper.deletePerTemplateById(templateId);
+    }
+
+    @Override
+    public Map<String, String> previewCode(String templateId) {
+        return (Map<String, String>) perTemplateMapper.selectPerTemplateById(templateId);
     }
 
 

@@ -3,6 +3,7 @@ package com.ruoyi.resume.mapper;
 import com.ruoyi.resume.domain.PerTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PerTemplateMapper {
     /**

@@ -3,6 +3,7 @@ package com.ruoyi.resume.service;
 import com.ruoyi.resume.domain.PerTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IPerTemplateService {
     /**
@@ -53,4 +54,5 @@ public interface IPerTemplateService {
      */
     public int deletePerTemplateById(String templateId);
 
+    Map<String, String> previewCode(String templateId);
 }
