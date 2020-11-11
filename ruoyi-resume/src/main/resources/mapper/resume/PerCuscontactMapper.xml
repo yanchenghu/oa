@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resume.mapper.PerCuscontactMapper">
+    
+    <resultMap type="PerCuscontact" id="PerCuscontactResult">
+        <result property="contacDatecode"    column="contac_datecode"    />
+        <result property="contactTime"    column="contact_time"    />
+        <result property="contactUsercode"    column="contact_usercode"    />
+        <result property="contactCustomercode"    column="contact_customercode"    />
+        <result property="memo"    column="memo"    />
+        <result property="entryProbability"    column="entry_probability"    />
+        <result property="updateStatic"    column="update_static"    />
+        <result property="considerChangeJob"    column="consider_change_job"    />
+        <result property="intentionArea"    column="intention_area"    />
+        <result property="binding"    column="binding"    />
+        <result property="nointerviewing"    column="nointerviewing"    />
+        <result property="bindId"    column="bind_id"    />
+        <result property="followStatus"    column="follow_status"    />
+        <result property="demandId"    column="demand_id"    />
+    </resultMap>
+
+    <sql id="selectPerCuscontactVo">
+        select contac_datecode, contact_time, contact_usercode, contact_customercode, memo, entry_probability, update_static, consider_change_job, intention_area, binding, nointerviewing, bind_id, follow_status, demand_id from per_cuscontact
+    </sql>
+
+    <select id="selectPerCuscontactList" parameterType="PerCuscontact" resultMap="PerCuscontactResult">
+        <include refid="selectPerCuscontactVo"/>
+        <where>  
+            <if test="contactTime != null "> and contact_time = #{contactTime}</if>
+            <if test="contactUsercode != null  and contactUsercode != ''"> and contact_usercode = #{contactUsercode}</if>
+            <if test="contactCustomercode != null  and contactCustomercode != ''"> and contact_customercode = #{contactCustomercode}</if>
+            <if test="memo != null  and memo != ''"> and memo = #{memo}</if>
+            <if test="entryProbability != null "> and entry_probability = #{entryProbability}</if>
+            <if test="updateStatic != null "> and update_static = #{updateStatic}</if>
+            <if test="considerChangeJob != null "> and consider_change_job = #{considerChangeJob}</if>
+            <if test="intentionArea != null  and intentionArea != ''"> and intention_area = #{intentionArea}</if>
+            <if test="binding != null  and binding != ''"> and binding = #{binding}</if>
+            <if test="nointerviewing != null  and nointerviewing != ''"> and nointerviewing = #{nointerviewing}</if>
+            <if test="bindId != null  and bindId != ''"> and bind_id = #{bindId}</if>
+            <if test="followStatus != null "> and follow_status = #{followStatus}</if>
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerCuscontactById" parameterType="String" resultMap="PerCuscontactResult">
+        <include refid="selectPerCuscontactVo"/>
+        where contac_datecode = #{contacDatecode}
+    </select>
+        
+    <insert id="insertPerCuscontact" parameterType="PerCuscontact">
+        insert into per_cuscontact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contacDatecode != null">contac_datecode,</if>
+            <if test="contactTime != null">contact_time,</if>
+            <if test="contactUsercode != null">contact_usercode,</if>
+            <if test="contactCustomercode != null">contact_customercode,</if>
+            <if test="memo != null">memo,</if>
+            <if test="entryProbability != null">entry_probability,</if>
+            <if test="updateStatic != null">update_static,</if>
+            <if test="considerChangeJob != null">consider_change_job,</if>
+            <if test="intentionArea != null">intention_area,</if>
+            <if test="binding != null">binding,</if>
+            <if test="nointerviewing != null">nointerviewing,</if>
+            <if test="bindId != null">bind_id,</if>
+            <if test="followStatus != null">follow_status,</if>
+            <if test="demandId != null">demand_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contacDatecode != null">#{contacDatecode},</if>
+            <if test="contactTime != null">#{contactTime},</if>
+            <if test="contactUsercode != null">#{contactUsercode},</if>
+            <if test="contactCustomercode != null">#{contactCustomercode},</if>
+            <if test="memo != null">#{memo},</if>
+            <if test="entryProbability != null">#{entryProbability},</if>
+            <if test="updateStatic != null">#{updateStatic},</if>
+            <if test="considerChangeJob != null">#{considerChangeJob},</if>
+            <if test="intentionArea != null">#{intentionArea},</if>
+            <if test="binding != null">#{binding},</if>
+            <if test="nointerviewing != null">#{nointerviewing},</if>
+            <if test="bindId != null">#{bindId},</if>
+            <if test="followStatus != null">#{followStatus},</if>
+            <if test="demandId != null">#{demandId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerCuscontact" parameterType="PerCuscontact">
+        update per_cuscontact
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contactTime != null">contact_time = #{contactTime},</if>
+            <if test="contactUsercode != null">contact_usercode = #{contactUsercode},</if>
+            <if test="contactCustomercode != null">contact_customercode = #{contactCustomercode},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="entryProbability != null">entry_probability = #{entryProbability},</if>
+            <if test="updateStatic != null">update_static = #{updateStatic},</if>
+            <if test="considerChangeJob != null">consider_change_job = #{considerChangeJob},</if>
+            <if test="intentionArea != null">intention_area = #{intentionArea},</if>
+            <if test="binding != null">binding = #{binding},</if>
+            <if test="nointerviewing != null">nointerviewing = #{nointerviewing},</if>
+            <if test="bindId != null">bind_id = #{bindId},</if>
+            <if test="followStatus != null">follow_status = #{followStatus},</if>
+            <if test="demandId != null">demand_id = #{demandId},</if>
+        </trim>
+        where contac_datecode = #{contacDatecode}
+    </update>
+
+    <delete id="deletePerCuscontactById" parameterType="String">
+        delete from per_cuscontact where contac_datecode = #{contacDatecode}
+    </delete>
+
+    <delete id="deletePerCuscontactByIds" parameterType="String">
+        delete from per_cuscontact where contac_datecode in 
+        <foreach item="contacDatecode" collection="array" open="(" separator="," close=")">
+            #{contacDatecode}
+        </foreach>
+    </delete>
+    
+</mapper>

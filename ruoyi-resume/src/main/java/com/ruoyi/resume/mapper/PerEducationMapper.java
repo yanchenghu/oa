@@ -58,4 +58,6 @@ public interface PerEducationMapper
      * @return 结果
      */
     public int deletePerEducationByIds(Long[] ids);
+
+    int insertList(List<PerEducation> edulistArr);
 }

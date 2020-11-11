@@ -15,12 +15,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.service.IPerCustomerinfoService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * 简历Controller
@@ -49,7 +45,16 @@ public class PerCustomerinfoController extends BaseController
         return getDataTable(list);
     }
 
-
+        /**
+         * 根据姓名电话查询简历列表
+         */
+        @GetMapping("/listbynatel")
+        public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
+        {
+            startPage();
+            List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
+            return getDataTable(list);
+        }
 
     /**
      * 获取简历详细信息
@@ -58,7 +63,7 @@ public class PerCustomerinfoController extends BaseController
     @GetMapping(value = "/{customerCode}")
     public AjaxResult getInfo(@PathVariable("customerCode") String customerCode)
     {
-        return AjaxResult.success(perCustomerinfoService.selectPerCustomerinfoById(customerCode));
+        return  perCustomerinfoService.selectPerCustomerinfoById(customerCode);
     }
 
     /**
@@ -98,22 +103,21 @@ public class PerCustomerinfoController extends BaseController
             e.printStackTrace();
             return AjaxResult.error("简历解析失败");
         }
-
     }
-
-
 
 
     /**
-     * 根据姓名电话查询简历列表
+     * 文件上传的接口
      */
-    @GetMapping("/lists")
-    public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
-    {
-        startPage();
-        List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
-        return getDataTable(list);
+    @PostMapping(value = "/fileUpload")
+    public AjaxResult fileUpload( @RequestParam("upfile") MultipartFile file)  {
+     return perCustomerinfoService.fileUpload(file);
     }
+
+
+
+
+
 
 
 }

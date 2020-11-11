@@ -1,6 +1,8 @@
 package com.ruoyi.resume.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.resume.domain.PerCustomerinfo;
 
 /**
@@ -74,4 +76,12 @@ public interface PerCustomerinfoMapper
      * @return 结果
      */
     List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo);
+
+    /**
+     * 根据个人信息查询入项信息
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    List<Map> selectIntoItem(String customerCode);
 }

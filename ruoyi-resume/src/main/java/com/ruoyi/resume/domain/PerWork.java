@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 简历录入工作经历对象 per_work
  * 
  * @author ych
- * @date 2020-11-06
+ * @date 2020-11-09
  */
 public class PerWork
 {
@@ -86,7 +86,6 @@ public class PerWork
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date addtime;
-
     /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -246,7 +245,6 @@ public class PerWork
         return addtime;
     }
 
-
     public Date getStarttime() {
         return starttime;
     }
@@ -254,7 +252,6 @@ public class PerWork
     public void setStarttime(Date starttime) {
         this.starttime = starttime;
     }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

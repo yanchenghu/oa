@@ -114,5 +114,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{custproId}
         </foreach>
     </delete>
+
+
+
+    <insert id="insertList" parameterType="java.util.List" >
+     insert into per_project
+            ( customer_code,
+            industry,
+            role,
+            joinproject_time,
+            quitproject_time,
+            software_environment,
+            project_introduction,
+            technology_type,
+            duty,
+            project_name,
+            remark,
+            remark1,
+            team_size)
+            values
+      <foreach collection="list" item="proinfo"  index="index" separator=",">
+            (
+            #{proinfo.customerCode},
+            #{proinfo.industry},
+            #{proinfo.role},
+            #{proinfo.joinprojectTime},
+            #{proinfo.quitprojectTime},
+            #{proinfo.softwareEnvironment},
+            #{proinfo.projectIntroduction},
+            #{proinfo.technologyType},
+            #{proinfo.duty},
+            #{proinfo.projectName},
+            #{proinfo.remark},
+            #{proinfo.remark1},
+            #{proinfo.teamSize})
+       </foreach>
+    </insert>
+
+
     
 </mapper>

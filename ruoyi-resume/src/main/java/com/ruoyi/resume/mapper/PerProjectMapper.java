@@ -58,4 +58,6 @@ public interface PerProjectMapper
      * @return 结果
      */
     public int deletePerProjectByIds(String[] custproIds);
+
+    int insertList(List<PerProject> proListArr);
 }

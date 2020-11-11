@@ -1,12 +1,12 @@
 package com.ruoyi.resume.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  * 简历Service接口
@@ -22,7 +22,7 @@ public interface IPerCustomerinfoService
      * @param customerCode 简历ID
      * @return 简历
      */
-    public PerCustomerinfo selectPerCustomerinfoById(String customerCode);
+    public AjaxResult selectPerCustomerinfoById(String customerCode);
 
     /**
      * 查询简历列表
@@ -78,4 +78,12 @@ public interface IPerCustomerinfoService
      * @return 结果
      */
     List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo);
+
+    /**
+     * 文件上传
+     *
+     * @param file
+     * @return 结果
+     */
+    AjaxResult fileUpload(MultipartFile file) ;
 }

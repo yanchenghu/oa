@@ -58,4 +58,6 @@ public interface PerWorkMapper
      * @return 结果
      */
     public int deletePerWorkByIds(Long[] ids);
+
+    int insertList(List<PerWork> worklistArr);
 }

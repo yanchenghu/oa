@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 抢占简历信息对象 per_robcustomer
  * 
  * @author yan
- * @date 2020-10-30
+ * @date 2020-11-09
  */
 public class PerRobcustomer extends BaseEntity
 {
@@ -53,6 +53,10 @@ public class PerRobcustomer extends BaseEntity
     /** 抢战人 */
     @Excel(name = "抢战人")
     private String addPeople;
+
+    /** 抢战人姓名 */
+    @Excel(name = "抢战人姓名")
+    private String addName;
 
     public void setSeizeId(String seizeId) 
     {
@@ -135,6 +139,15 @@ public class PerRobcustomer extends BaseEntity
     {
         return addPeople;
     }
+    public void setAddName(String addName) 
+    {
+        this.addName = addName;
+    }
+
+    public String getAddName() 
+    {
+        return addName;
+    }
 
     @Override
     public String toString() {
@@ -149,6 +162,7 @@ public class PerRobcustomer extends BaseEntity
             .append("status", getStatus())
             .append("remark", getRemark())
             .append("addPeople", getAddPeople())
+            .append("addName", getAddName())
             .toString();
     }
 }
