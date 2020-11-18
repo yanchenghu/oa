@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.MarCompanyMapper">
+    
+    <resultMap type="MarCompany" id="MarCompanyResult">
+        <result property="corpCode"    column="corp_code"    />
+        <result property="corpName"    column="corp_name"    />
+        <result property="customerLevel"    column="Customer_level"    />
+        <result property="paybackPeriod"    column="payback_period"    />
+        <result property="cooperationTime"    column="cooperation_time"    />
+        <result property="enteredBy"    column="entered_by"    />
+        <result property="transformingPeople"    column="transforming_people"    />
+    </resultMap>
+
+    <sql id="selectMarCompanyVo">
+        select corp_code, corp_name, Customer_level, payback_period, cooperation_time, entered_by, transforming_people from mar_company
+    </sql>
+
+    <select id="selectMarCompanyList" parameterType="MarCompany" resultMap="MarCompanyResult">
+        <include refid="selectMarCompanyVo"/>
+        <where>  
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="customerLevel != null "> and Customer_level = #{customerLevel}</if>
+            <if test="paybackPeriod != null  and paybackPeriod != ''"> and payback_period = #{paybackPeriod}</if>
+            <if test="cooperationTime != null "> and cooperation_time = #{cooperationTime}</if>
+            <if test="enteredBy != null  and enteredBy != ''"> and entered_by = #{enteredBy}</if>
+            <if test="transformingPeople != null  and transformingPeople != ''"> and transforming_people = #{transformingPeople}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarCompanyById" parameterType="String" resultMap="MarCompanyResult">
+        <include refid="selectMarCompanyVo"/>
+        where corp_code = #{corpCode}
+    </select>
+        
+    <insert id="insertMarCompany" parameterType="MarCompany">
+        insert into mar_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">corp_code,</if>
+            <if test="corpName != null">corp_name,</if>
+            <if test="customerLevel != null">Customer_level,</if>
+            <if test="paybackPeriod != null">payback_period,</if>
+            <if test="cooperationTime != null">cooperation_time,</if>
+            <if test="enteredBy != null">entered_by,</if>
+            <if test="transformingPeople != null">transforming_people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="corpName != null">#{corpName},</if>
+            <if test="customerLevel != null">#{customerLevel},</if>
+            <if test="paybackPeriod != null">#{paybackPeriod},</if>
+            <if test="cooperationTime != null">#{cooperationTime},</if>
+            <if test="enteredBy != null">#{enteredBy},</if>
+            <if test="transformingPeople != null">#{transformingPeople},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarCompany" parameterType="MarCompany">
+        update mar_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="customerLevel != null">Customer_level = #{customerLevel},</if>
+            <if test="paybackPeriod != null">payback_period = #{paybackPeriod},</if>
+            <if test="cooperationTime != null">cooperation_time = #{cooperationTime},</if>
+            <if test="enteredBy != null">entered_by = #{enteredBy},</if>
+            <if test="transformingPeople != null">transforming_people = #{transformingPeople},</if>
+        </trim>
+        where corp_code = #{corpCode}
+    </update>
+
+    <delete id="deleteMarCompanyById" parameterType="String">
+        delete from mar_company where corp_code = #{corpCode}
+    </delete>
+
+    <delete id="deleteMarCompanyByIds" parameterType="String">
+        delete from mar_company where corp_code in 
+        <foreach item="corpCode" collection="array" open="(" separator="," close=")">
+            #{corpCode}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -4,16 +4,18 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.customer.domain.Yxcontact;
 import com.ruoyi.customer.domain.Yxdemand;
+import com.ruoyi.customer.mapper.IntentionMapper;
 import com.ruoyi.customer.mapper.YxcontactMapper;
 import com.ruoyi.customer.mapper.YxdemandMapper;
 import com.ruoyi.customer.service.IYxdemandService;
+import com.ruoyi.customer.service.IntentionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 营销录入公司Service业务层处理
@@ -22,10 +24,10 @@ import java.util.*;
  * @date 2020-11-05
  */
 @Service
-public class YxdemandServiceImpl implements IYxdemandService
+public class IntentionServiceImpl implements IntentionService
 {
     @Autowired
-    private YxdemandMapper yxdemandMapper;
+    private IntentionMapper intentionMapper;
 
     @Autowired
     private YxcontactMapper yxcontactMapper;
@@ -40,7 +42,7 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Override
     public AjaxResult selectYxdemandById(Integer entryId)
     {
-        Yxdemand yxdemand= yxdemandMapper.selectYxdemandById(entryId);
+        Yxdemand yxdemand= intentionMapper.selectYxdemandById(entryId);
         Yxcontact yxcontact=new Yxcontact();
         yxcontact.setEntryId(entryId);
         List<Yxcontact> listYxcon=yxcontactMapper.selectYxcontactList(yxcontact);
@@ -93,7 +95,7 @@ public class YxdemandServiceImpl implements IYxdemandService
 //            date=date2;
 //        }
         yxdemand.setRobPeopleId(loginUser.getUsername());
-        return yxdemandMapper.selectYxdemandList(yxdemand);
+        return intentionMapper.selectYxdemandList(yxdemand);
     }
 
 
@@ -129,7 +131,7 @@ public class YxdemandServiceImpl implements IYxdemandService
 
 
         yxdemand.setUpdateDate(new Date());
-        return yxdemandMapper.insertYxdemand(yxdemand);
+        return intentionMapper.insertYxdemand(yxdemand);
     }
 
     /**
@@ -141,7 +143,7 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Override
     public int updateYxdemand(Yxdemand yxdemand)
     {
-        return yxdemandMapper.updateYxdemand(yxdemand);
+        return intentionMapper.updateYxdemand(yxdemand);
     }
 
     /**
@@ -153,7 +155,7 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Override
     public int deleteYxdemandByIds(Integer[] entryIds)
     {
-        return yxdemandMapper.deleteYxdemandByIds(entryIds);
+        return intentionMapper.deleteYxdemandByIds(entryIds);
     }
 
     /**
@@ -165,6 +167,6 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Override
     public int deleteYxdemandById(Integer entryId)
     {
-        return yxdemandMapper.deleteYxdemandById(entryId);
+        return intentionMapper.deleteYxdemandById(entryId);
     }
 }

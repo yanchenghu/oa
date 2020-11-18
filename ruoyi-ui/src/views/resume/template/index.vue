@@ -18,6 +18,24 @@
 
 
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['resume:template:add']"
+        >新增</el-button>
+      </el-col>
+
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+
+
+
+
     <el-row>
       <el-col  :span="7" v-for="temp in templateList" style="margin-right: 10px;margin-bottom: 10px">
         <el-card shadow="hover" >
@@ -56,11 +74,34 @@
     </el-row>
 
 
-    <el-dialog title="预览" :visible.sync="open" width="70%"  :before-close='closeDialog'>
+    <el-dialog title="预览" :visible.sync="open" width="70%"  >
       <iframe
         src='https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=https://oa.zhuyanhr.com/shzqoa/custTemp/demand20072003485269172/%E7%8E%8B%E8%82%96%E4%B8%9C.doc'
         style="overflow: auto; position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height:1000%"
       ></iframe>
+    </el-dialog>
+
+    <!-- 添加或修改简历模板对话框 -->
+    <el-dialog :title="title" :visible.sync="openn" width="500px" append-to-body>
+      <el-form ref="form" :model="form"  label-width="80px">
+        <el-form-item label="模板名称" prop="templateName">
+          <el-input v-model="form.templateName" placeholder="请输入模板名称" />
+        </el-form-item>
+        <el-form-item label="模板文件">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :on-change="handleRemove"
+            :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
     </el-dialog>
 
 
@@ -71,7 +112,7 @@
 </template>
 
 <script>
-import { listTemplate, changeTemplateStatus,  } from "@/api/resume/template/template";
+import { listTemplate, changeTemplateStatus,addTemplate  } from "@/api/resume/template/template";
 
 export default {
   name: "Template",
@@ -79,6 +120,7 @@ export default {
     return {
       // 是否显示弹出层
       open: false,
+      openn: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -133,7 +175,9 @@ export default {
       this.open=true;
       this.title=value.templateFile
     },
-
+    handleRemove(value){
+      this.form.templateFile=value.raw;
+    },
     // 下载简历
     download(){
       this.open=true;
@@ -170,6 +214,12 @@ export default {
       };
       this.resetForm("form");
     },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.openn = true;
+      this.title = "添加简历";
+    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -179,6 +229,34 @@ export default {
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
+    },
+
+    /** 提交按钮 */
+    submitForm() {
+      let formdata = new FormData()
+      formdata.append("templateFile",form.templateFile)
+      formdata.append("templateName",form.templateName)
+      addTemplate(formdata).then(response => {
+        this.msgSuccess("新增成功");
+        this.open = false;
+        this.getList();
+      });
+
+      console.log(this.form)
+      // this.$refs["form"].validate(valid => {
+      //   if (valid) {
+      //     if (this.form.templateId != null) {
+      //       this.msgSuccess("新增失败");
+      //       this.open = false;
+      //       this.getList();
+      //     } else {
+      //       let formdata = new FormData()
+      //       formdata.append("templateFile",form.templateFile)
+      //
+      //
+      //     }
+      //   }
+      // });
     },
 
     // 模板状态修改

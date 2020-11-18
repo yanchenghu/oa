@@ -11,63 +11,59 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 跟进联系内容对象 yxcontact
  * 
  * @author ruoyi
- * @date 2020-11-09
+ * @date 2020-11-11
  */
 public class Yxcontact extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long contactId;
+    private Integer contactId;
 
-    /** 公司Id */
-    @Excel(name = "公司Id")
-    private Long entryId;
+    /** $column.columnComment */
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    private Integer entryId;
 
-    /** 跟进详情 */
-    @Excel(name = "跟进详情")
+    /** 联系记录 */
+    @Excel(name = "联系记录")
     private String contactDetail;
 
     /** 跟进人姓名 */
     @Excel(name = "跟进人姓名")
-    private String contactName;
+    private String nickName;
+
+    /** 跟进人姓名 */
+    @Excel(name = "状态")
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     /** 添加时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date contactTime;
 
-    /** 邮箱 */
-    @Excel(name = "邮箱")
-    private String mailbox;
-
-    /** 微信 */
-    @Excel(name = "微信")
-    private String wechat;
-
-    /** QQ */
-    @Excel(name = "QQ")
-    private String qq;
-
-    /** 添加人 */
-    @Excel(name = "添加人")
-    private String usercode;
-
-    public void setContactId(Long contactId) 
+    public void setContactId(Integer contactId) 
     {
         this.contactId = contactId;
     }
 
-    public Long getContactId() 
+    public Integer getContactId() 
     {
         return contactId;
     }
-    public void setEntryId(Long entryId) 
+    public void setEntryId(Integer entryId) 
     {
         this.entryId = entryId;
     }
 
-    public Long getEntryId() 
+    public Integer getEntryId() 
     {
         return entryId;
     }
@@ -80,14 +76,14 @@ public class Yxcontact extends BaseEntity
     {
         return contactDetail;
     }
-    public void setContactName(String contactName) 
+    public void setNickName(String nickName) 
     {
-        this.contactName = contactName;
+        this.nickName = nickName;
     }
 
-    public String getContactName() 
+    public String getNickName() 
     {
-        return contactName;
+        return nickName;
     }
     public void setContactTime(Date contactTime) 
     {
@@ -98,42 +94,6 @@ public class Yxcontact extends BaseEntity
     {
         return contactTime;
     }
-    public void setMailbox(String mailbox) 
-    {
-        this.mailbox = mailbox;
-    }
-
-    public String getMailbox() 
-    {
-        return mailbox;
-    }
-    public void setWechat(String wechat) 
-    {
-        this.wechat = wechat;
-    }
-
-    public String getWechat() 
-    {
-        return wechat;
-    }
-    public void setQq(String qq) 
-    {
-        this.qq = qq;
-    }
-
-    public String getQq() 
-    {
-        return qq;
-    }
-    public void setUsercode(String usercode) 
-    {
-        this.usercode = usercode;
-    }
-
-    public String getUsercode() 
-    {
-        return usercode;
-    }
 
     @Override
     public String toString() {
@@ -141,12 +101,8 @@ public class Yxcontact extends BaseEntity
             .append("contactId", getContactId())
             .append("entryId", getEntryId())
             .append("contactDetail", getContactDetail())
-            .append("contactName", getContactName())
+            .append("nickName", getNickName())
             .append("contactTime", getContactTime())
-            .append("mailbox", getMailbox())
-            .append("wechat", getWechat())
-            .append("qq", getQq())
-            .append("usercode", getUsercode())
             .toString();
     }
 }

@@ -1,7 +1,11 @@
 package com.ruoyi.resume.service;
 
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.resume.domain.PerTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +32,8 @@ public interface IPerTemplateService {
      * @param perTemplate 简历模板
      * @return 结果
      */
-    public int insertPerTemplate(PerTemplate perTemplate);
+    public AjaxResult insertPerTemplate(MultipartFile file, String templateName,
+                                 String company,String technicalDirection,Integer workingYears,String name) throws IOException;
 
     /**
      * 修改简历模板
@@ -55,4 +60,6 @@ public interface IPerTemplateService {
     public int deletePerTemplateById(String templateId);
 
     Map<String, String> previewCode(String templateId);
+
+
 }

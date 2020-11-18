@@ -56,8 +56,8 @@
           size="mini"
           @click="handleAdd"
           style="position: absolute;right: 0;margin-right: 50px"
-          v-hasPermi="['resume:yxbemand:add']"
-        >新建客户线索</el-button>
+          v-hasPermi="['resume:intention:add']"
+        >新建意向客户</el-button>
     </el-form>
    <!-- <el-row :gutter="10" class="mb8">
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -104,7 +104,7 @@
             type="text"
             icon="el-icon-edit"
             @click="followUp(scope.row.entryId)"
-            v-hasPermi="['customer:yxdemand:follow']"
+            v-hasPermi="['customer:intention:follow']"
           >跟进</el-button>
         </template>
       </el-table-column>

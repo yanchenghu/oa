@@ -11,14 +11,13 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 简历模板对象 per_template
  * 
  * @author ruoyi
- * @date 2020-11-04
+ * @date 2020-11-13
  */
 public class PerTemplate extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 模板id */
-    @Excel(name = "模板id")
     private String templateId;
 
     /** 模板名称 */
@@ -35,7 +34,7 @@ public class PerTemplate extends BaseEntity
 
     /** 模板顺序 */
     @Excel(name = "模板顺序")
-    private Long templateOrder;
+    private Integer templateOrder;
 
     /** 模板状态（1.启用 2.作废） */
     @Excel(name = "模板状态", readConverterExp = "1=.启用,2=.作废")
@@ -59,18 +58,23 @@ public class PerTemplate extends BaseEntity
     @Excel(name = "作废人")
     private String invalidpeople;
 
-    /** 命名格式  */
-    private String  namingFormat;
+    /** 公司 */
+    @Excel(name = "公司")
+    private String company;
 
-    public String getNamingFormat() {
-        return namingFormat;
-    }
+    /** 技术方向 */
+    @Excel(name = "技术方向")
+    private String technicalDirection;
 
-    public void setNamingFormat(String namingFormat) {
-        this.namingFormat = namingFormat;
-    }
+    /** 工作年限 */
+    @Excel(name = "工作年限")
+    private Integer workingYears;
 
-    public void setTemplateId(String templateId)
+    /** 姓名 */
+    @Excel(name = "姓名")
+    private String name;
+
+    public void setTemplateId(String templateId) 
     {
         this.templateId = templateId;
     }
@@ -106,25 +110,25 @@ public class PerTemplate extends BaseEntity
     {
         return templatePrc;
     }
-    public void setTemplateOrder(Long templateOrder) 
+    public void setTemplateOrder(Integer templateOrder) 
     {
         this.templateOrder = templateOrder;
     }
 
-    public Long getTemplateOrder() 
+    public Integer getTemplateOrder() 
     {
         return templateOrder;
     }
-
-    public String getTemplateStatus() {
-        return templateStatus;
-    }
-
-    public void setTemplateStatus(String templateStatus) {
+    public void setTemplateStatus(String templateStatus) 
+    {
         this.templateStatus = templateStatus;
     }
 
-    public void setAddtime(Date addtime)
+    public String getTemplateStatus() 
+    {
+        return templateStatus;
+    }
+    public void setAddtime(Date addtime) 
     {
         this.addtime = addtime;
     }
@@ -160,6 +164,42 @@ public class PerTemplate extends BaseEntity
     {
         return invalidpeople;
     }
+    public void setCompany(String company) 
+    {
+        this.company = company;
+    }
+
+    public String getCompany() 
+    {
+        return company;
+    }
+    public void setTechnicalDirection(String technicalDirection) 
+    {
+        this.technicalDirection = technicalDirection;
+    }
+
+    public String getTechnicalDirection() 
+    {
+        return technicalDirection;
+    }
+    public void setWorkingYears(Integer workingYears) 
+    {
+        this.workingYears = workingYears;
+    }
+
+    public Integer getWorkingYears() 
+    {
+        return workingYears;
+    }
+    public void setName(String name) 
+    {
+        this.name = name;
+    }
+
+    public String getName() 
+    {
+        return name;
+    }
 
     @Override
     public String toString() {
@@ -174,6 +214,10 @@ public class PerTemplate extends BaseEntity
             .append("addpeople", getAddpeople())
             .append("invalidtime", getInvalidtime())
             .append("invalidpeople", getInvalidpeople())
+            .append("company", getCompany())
+            .append("technicalDirection", getTechnicalDirection())
+            .append("workingYears", getWorkingYears())
+            .append("name", getName())
             .toString();
     }
 }

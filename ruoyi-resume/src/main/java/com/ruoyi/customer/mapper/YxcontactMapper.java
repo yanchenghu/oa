@@ -59,4 +59,6 @@ public interface YxcontactMapper
      * @return 结果
      */
     public int deleteYxcontactByIds(Long[] contactIds);
+
+
 }

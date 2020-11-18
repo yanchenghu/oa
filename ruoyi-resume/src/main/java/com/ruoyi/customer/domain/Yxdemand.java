@@ -1,18 +1,17 @@
 package com.ruoyi.customer.domain;
 
+import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Date;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 营销录入公司对象 yxdemand
  * 
  * @author ruoyi
- * @date 2020-11-05
+ * @date 2020-11-12
  */
 public class Yxdemand extends BaseEntity
 {
@@ -26,9 +25,11 @@ public class Yxdemand extends BaseEntity
     private String companyName;
 
     /** 招聘岗位 */
+    @Excel(name = "招聘岗位")
     private String recruitmentJob;
 
     /** 联系人 */
+    @Excel(name = "联系人")
     private String contactPeople;
 
     /** 联系人/职位 */
@@ -36,25 +37,31 @@ public class Yxdemand extends BaseEntity
     private String contactPosition;
 
     /** 联系人电话 */
+    @Excel(name = "联系人电话")
     private String contactPhone;
 
     /** 信息来源 */
+    @Excel(name = "信息来源")
     private String infoSourse;
 
-    /** 公司性质（0、外包公司，1、甲方公司，2、不确定） */
-    @Excel(name = "公司性质", readConverterExp = "0=、外包公司，1、甲方公司，2、不确定")
+    /** 公司情况（0、外包公司，1、甲方公司，2、不确定） */
+    @Excel(name = "公司情况", readConverterExp = "0=、外包公司，1、甲方公司，2、不确定")
     private Integer companySituation;
 
     /** 是否投递简历（0、是，1、否） */
+    @Excel(name = "是否投递简历", readConverterExp = "0=、是，1、否")
     private Integer isSendResume;
 
     /** 面试名义公司姓名 */
+    @Excel(name = "面试名义公司姓名")
     private String interviewCompany;
 
     /** 面试官 */
+    @Excel(name = "面试官")
     private String interviewer;
 
     /** 面试官职位 */
+    @Excel(name = "面试官职位")
     private String interviewerPosition;
 
     /** 联系方式 */
@@ -62,9 +69,11 @@ public class Yxdemand extends BaseEntity
     private String interviewContact;
 
     /** 面试地点 */
+    @Excel(name = "面试地点")
     private String interviewAddress;
 
     /** 最终甲方 */
+    @Excel(name = "最终甲方")
     private String finalParty;
 
     /** 录入人 */
@@ -72,108 +81,104 @@ public class Yxdemand extends BaseEntity
     private String entryPeople;
 
     /** 录入人ID */
+    @Excel(name = "录入人ID")
     private String entryPeopleId;
 
     /** 添加时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date insertTime;
 
-    /** 线索状态（0、暂未回复，1、无意向，2、需跟进，3、无效联系，4、意向客户） */
-    @Excel(name = "线索状态", readConverterExp = "0=、暂未回复，1、无意向，2、需跟进，3、无效联系，4、意向客户")
+    /** 营销转化情况（0、暂未回复，1、无意向，2、需跟进，3、无效联系，4、意向客户） */
+    @Excel(name = "营销转化情况", readConverterExp = "0=、暂未回复，1、无意向，2、需跟进，3、无效联系，4、意向客户")
     private Integer isFollowSubmit;
 
     /** 抢占人ID */
+    @Excel(name = "抢占人ID")
     private String robPeopleId;
 
     /** 抢占人姓名 */
+    @Excel(name = "抢占人姓名")
     private String robPeople;
 
     /** 抢占时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "抢占时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date robTime;
 
     /** 是否提交给商务（0、是1、否） */
+    @Excel(name = "是否提交给商务", readConverterExp = "0=、是1、否")
     private Integer isAccept;
 
     /** 跟进人ID */
+    @Excel(name = "跟进人ID")
     private String businessId;
 
     /** 跟进人姓名 */
+    @Excel(name = "跟进人姓名")
     private String businessPeople;
 
     /** 提交给商务时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "提交给商务时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date submitTime;
 
     /** 商务转化（0、无意向1、需跟进2、成为客户3、无效联系） */
+    @Excel(name = "商务转化", readConverterExp = "0=、无意向1、需跟进2、成为客户3、无效联系")
     private String isBusiness;
 
     /** 合作项目（0、代理招聘1、外派2、猎头） */
+    @Excel(name = "合作项目", readConverterExp = "0=、代理招聘1、外派2、猎头")
     private Integer cooperationProjects;
 
     /** 是否签合同（0、是1、否） */
+    @Excel(name = "是否签合同", readConverterExp = "0=、是1、否")
     private Integer isSigning;
 
     /** 签署时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "签署时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date singTime;
 
     /** 人员是否入项（0、是1否） */
+    @Excel(name = "人员是否入项", readConverterExp = "0=、是1否")
     private Integer personnelInto;
 
     /** 是否回款（0、是1、否） */
-    private Long isReturnMoney;
+    @Excel(name = "是否回款", readConverterExp = "0=、是1、否")
+    private Integer isReturnMoney;
 
     /** 更新时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateDate;
 
-    /** 距进入公海天数(1.1，2.2，3.3） */
-    @Excel(name = "距进入公海天数(1.1，2.2，3.3）")
-    private Integer entryDays;
-
-    /** 最近一次跟进情况 */
+    /** 最近一次联系情况 */
+    @Excel(name = "最近一次联系情况")
     private String contactInformation;
 
     /** 微信 */
+    @Excel(name = "微信")
     private String wechat;
 
     /** 邮箱 */
+    @Excel(name = "邮箱")
     private String mailbox;
 
     /** QQ */
+    @Excel(name = "QQ")
     private String qq;
 
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
-    }
-
-    public String getMailbox() {
-        return mailbox;
-    }
-
-    public void setMailbox(String mailbox) {
-        this.mailbox = mailbox;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
-    public Integer getEntryId() {
-        return entryId;
-    }
-
-    public void setEntryId(Integer entryId) {
+    public void setEntryId(Integer entryId) 
+    {
         this.entryId = entryId;
     }
 
-    public void setCompanyName(String companyName)
+    public Integer getEntryId() 
+    {
+        return entryId;
+    }
+    public void setCompanyName(String companyName) 
     {
         this.companyName = companyName;
     }
@@ -443,12 +448,12 @@ public class Yxdemand extends BaseEntity
     {
         return personnelInto;
     }
-    public void setIsReturnMoney(Long isReturnMoney) 
+    public void setIsReturnMoney(Integer isReturnMoney) 
     {
         this.isReturnMoney = isReturnMoney;
     }
 
-    public Long getIsReturnMoney() 
+    public Integer getIsReturnMoney() 
     {
         return isReturnMoney;
     }
@@ -461,22 +466,41 @@ public class Yxdemand extends BaseEntity
     {
         return updateDate;
     }
-    public void setEntryDays(Integer entryDays) 
+    public void setContactInformation(String contactInformation) 
     {
-        this.entryDays = entryDays;
+        this.contactInformation = contactInformation;
     }
 
-    public Integer getEntryDays() 
+    public String getContactInformation() 
     {
-        return entryDays;
-    }
-
-    public String getContactInformation() {
         return contactInformation;
     }
+    public void setWechat(String wechat) 
+    {
+        this.wechat = wechat;
+    }
 
-    public void setContactInformation(String contactInformation) {
-        this.contactInformation = contactInformation;
+    public String getWechat() 
+    {
+        return wechat;
+    }
+    public void setMailbox(String mailbox) 
+    {
+        this.mailbox = mailbox;
+    }
+
+    public String getMailbox() 
+    {
+        return mailbox;
+    }
+    public void setQq(String qq) 
+    {
+        this.qq = qq;
+    }
+
+    public String getQq() 
+    {
+        return qq;
     }
 
     @Override
@@ -515,7 +539,6 @@ public class Yxdemand extends BaseEntity
             .append("personnelInto", getPersonnelInto())
             .append("isReturnMoney", getIsReturnMoney())
             .append("updateDate", getUpdateDate())
-            .append("entryDays", getEntryDays())
             .append("contactInformation", getContactInformation())
             .append("wechat", getWechat())
             .append("mailbox", getMailbox())

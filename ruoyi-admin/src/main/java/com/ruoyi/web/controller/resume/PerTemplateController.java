@@ -3,30 +3,30 @@ package com.ruoyi.web.controller.resume;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.resume.domain.PerTemplate;
 import com.ruoyi.resume.service.IPerTemplateService;
-import org.apache.commons.io.IOUtils;
-import org.apache.velocity.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/resume/template")
 public class PerTemplateController extends BaseController {
     @Autowired
     private IPerTemplateService perTemplateService;
+
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询简历模板列表
@@ -50,6 +50,25 @@ public class PerTemplateController extends BaseController {
         return toAjax(perTemplateService.updatePerTemplate(perTemplate));
     }
 
+
+    /**
+     * 新增简历模板
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('resume:template:add')")
+    @Log(title = "简历模板", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestParam("templateFile") MultipartFile file, String templateName,
+                   String company,String technicalDirection,Integer workingYears,String name)  {
+        try {
+            return perTemplateService.insertPerTemplate(file,templateName,company,technicalDirection,workingYears,name);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return AjaxResult.error("上传错误");
+        }
+    }
+
+
     /**
      * 下载简历模板
      */
@@ -62,6 +81,20 @@ public class PerTemplateController extends BaseController {
         ExcelUtil<PerTemplate> util = new ExcelUtil<PerTemplate>(PerTemplate.class);
         return util.exportExcel(list, "template");
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

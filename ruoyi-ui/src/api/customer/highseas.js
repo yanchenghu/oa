@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询营销录入公司列表
 export function listYxdemand(query) {
   return request({
-    url: '/customer/yxdemand/list',
+    url: '/customer/highseas/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listYxdemand(query) {
 // 查询营销录入公司详细
 export function getYxdemand(entryId) {
   return request({
-    url: '/customer/yxdemand/' + entryId,
+    url: '/customer/highseas/' + entryId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getYxdemand(entryId) {
 // 新增营销录入公司
 export function addYxdemand(data) {
   return request({
-    url: '/customer/yxdemand',
+    url: '/customer/highseas',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addYxdemand(data) {
 // 修改营销录入公司
 export function see(data) {
   return request({
-    url: '/customer/yxdemand',
+    url: '/customer/highseas',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function see(data) {
 // 删除营销录入公司
 export function delYxdemand(entryId) {
   return request({
-    url: '/customer/yxdemand/' + entryId,
+    url: '/customer/highseas/' + entryId,
     method: 'delete'
   })
 }
@@ -46,7 +46,7 @@ export function delYxdemand(entryId) {
 // 导出营销录入公司
 export function exportYxdemand(query) {
   return request({
-    url: '/customer/yxdemand/export',
+    url: '/customer/highseas/export',
     method: 'get',
     params: query
   })
@@ -55,7 +55,7 @@ export function exportYxdemand(query) {
 // 新增营销录入公司
 export function release(data) {
   return request({
-    url: '/customer/yxdemand',
+    url: '/customer/highseas',
     method: 'post',
     data: data
   })

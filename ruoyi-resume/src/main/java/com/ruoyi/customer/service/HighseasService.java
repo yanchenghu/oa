@@ -12,11 +12,11 @@ import java.util.List;
  * @author ruoyi
  * @date 2020-11-05
  */
-public interface IYxdemandService 
+public interface HighseasService
 {
     /**
      * 查询营销录入公司
-     * 
+     *
      * @param entryId 营销录入公司ID
      * @return 营销录入公司
      */
@@ -24,19 +24,19 @@ public interface IYxdemandService
 
     /**
      * 查询营销录入公司列表
-     * 
+     *
      * @param yxdemand 营销录入公司
      * @return 营销录入公司集合
      */
-    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand,LoginUser loginUser) throws Exception;
+    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand, LoginUser loginUser) throws Exception;
 
     /**
      * 新增营销录入公司
-     * 
+     *
      * @param yxdemand 营销录入公司
      * @return 结果
      */
-    public int insertYxdemand(Yxdemand yxdemand,LoginUser loginUser);
+    public int insertYxdemand(Yxdemand yxdemand, LoginUser loginUser);
 
     /**
      * 修改营销录入公司
