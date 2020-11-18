@@ -1,10 +1,17 @@
 package com.ruoyi.web.controller.resume;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.resume.domain.PerEducation;
+import com.ruoyi.resume.domain.PerProject;
+import com.ruoyi.resume.domain.PerWork;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +40,8 @@ public class PerCustomerinfoController extends BaseController
     private IPerCustomerinfoService perCustomerinfoService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private RedisCache redisCache;
     /**
      * 查询简历列表
      */
@@ -45,40 +54,8 @@ public class PerCustomerinfoController extends BaseController
         return getDataTable(list);
     }
 
-        /**
-         * 根据姓名电话查询简历列表
-         */
-        @GetMapping("/listbynatel")
-        public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
-        {
-            startPage();
-            List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
-            return getDataTable(list);
-        }
-
     /**
-     * 获取简历详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('resume:record:query')")
-    @GetMapping(value = "/{customerCode}")
-    public AjaxResult getInfo(@PathVariable("customerCode") String customerCode)
-    {
-        return  perCustomerinfoService.selectPerCustomerinfoById(customerCode);
-    }
-
-    /**
-     * 新增简历
-     */
-    @PreAuthorize("@ss.hasPermi('resume:record:add')")
-    @Log(title = "简历", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody PerCustomerinfo perCustomerinfo)
-    {
-        return toAjax(perCustomerinfoService.insertPerCustomerinfo(perCustomerinfo));
-    }
-
-    /**
-     * 修改简历
+     * 修改简历基本信息
      */
     @PreAuthorize("@ss.hasPermi('resume:record:edit')")
     @Log(title = "简历", businessType = BusinessType.UPDATE)
@@ -87,15 +64,11 @@ public class PerCustomerinfoController extends BaseController
     {
         return toAjax(perCustomerinfoService.updatePerCustomerinfo(perCustomerinfo));
     }
-
-
-
     /**
      * 简历解析详细信息
      */
     @PostMapping(value = "/analysisResume")
     public AjaxResult analysisResume( @RequestParam("upfile") MultipartFile file, Integer resume_direction)  {
-
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         try {
             return perCustomerinfoService.goAnalysisResume(file,resume_direction,loginUser);
@@ -104,8 +77,6 @@ public class PerCustomerinfoController extends BaseController
             return AjaxResult.error("简历解析失败");
         }
     }
-
-
     /**
      * 文件上传的接口
      */
@@ -113,11 +84,77 @@ public class PerCustomerinfoController extends BaseController
     public AjaxResult fileUpload( @RequestParam("upfile") MultipartFile file)  {
      return perCustomerinfoService.fileUpload(file);
     }
+    /**
+     * 根据姓名电话查询简历列表
+     */
+    @GetMapping("/listbynatel")
+    public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
+    {
+        startPage();
+        List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
+        return getDataTable(list);
+    }
+    /**
+     * 获取简历详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('resume:record:query')")
+    @PostMapping(value = "/query")
+    public AjaxResult getInfo(String customerCode)
+    {
+        return  perCustomerinfoService.selectPerCustomerinfoById(customerCode);
+    }
+    /**
+     * 抢占简历
+     */
+    @PostMapping(value = "/rob")
+    public AjaxResult robCustomeInfo(@RequestParam("customerCode")String customerCode)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String captcha = redisCache.getCacheObject(customerCode);
+        if(null == captcha) {
+            redisCache.setCacheObject(customerCode, customerCode, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        }else{
+            return AjaxResult.error("当前人正在被抢占");
+        }
+        return  perCustomerinfoService.robCustomeInfo(customerCode,loginUser);
+    }
+    /**
+     * 简历跟进
+     */
+    @PostMapping(value = "/follow")
+    public AjaxResult followCustomeInfo(@RequestParam("customerCode")String customerCode)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.followCustomeInfo(customerCode,loginUser);
+    }
 
+    /**
+     * 简历释放
+     */
+    @PostMapping(value = "/release")
+    public AjaxResult releaseCustomeInfo(@RequestParam("customerCode")String customerCode)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.releaseCustomeInfo(customerCode,loginUser);
+    }
+    /**
+     * 简历更新（工作经验、工作信息、学历信息）
+     */
+    @PostMapping(value = "/resumeUpdate")
+    public AjaxResult resumeUpdate(String zm)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.resumeUpdate(zm,loginUser);
+    }
 
-
-
-
-
+    /**
+     * 简历添加（工作经验、工作信息、学历信息）
+     */
+    @PostMapping(value = "/resumeInsert")
+    public AjaxResult resumeInsert(String zm)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.resumeInsert(zm,loginUser);
+    }
 
 }

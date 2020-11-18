@@ -6,6 +6,9 @@ import java.util.List;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.resume.domain.PerCustomerinfo;
+import com.ruoyi.resume.domain.PerEducation;
+import com.ruoyi.resume.domain.PerProject;
+import com.ruoyi.resume.domain.PerWork;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -86,4 +89,43 @@ public interface IPerCustomerinfoService
      * @return 结果
      */
     AjaxResult fileUpload(MultipartFile file) ;
+
+    /**
+     *  抢占简历
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    AjaxResult robCustomeInfo(String customerCode,LoginUser loginUser);
+
+    /**
+     *  简历跟踪
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    AjaxResult followCustomeInfo(String customerCode, LoginUser loginUser);
+
+    /**
+     *  简历释放
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    AjaxResult releaseCustomeInfo(String customerCode, LoginUser loginUser);
+    /**
+     *  手动简历更新
+     *
+     * @param zm loginUser
+     * @return 结果 AjaxResult
+     */
+    AjaxResult resumeUpdate(String zm, LoginUser loginUser);
+
+    /**
+     *  手动简历添加
+     *
+     * @param zm loginUser
+     * @return 结果 AjaxResult
+     */
+    AjaxResult resumeInsert(String zm, LoginUser loginUser);
 }

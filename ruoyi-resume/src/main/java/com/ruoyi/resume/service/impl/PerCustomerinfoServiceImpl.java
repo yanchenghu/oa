@@ -5,18 +5,24 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.RuoYiConfig;
+
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.resume.ResumeParserUtil;
 
 import com.ruoyi.common.utils.resume.SerialNumber;
+import com.ruoyi.conn.domain.ConOperationrecords;
+import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
 import com.ruoyi.resume.domain.*;
 import com.ruoyi.resume.mapper.*;
+import com.ruoyi.tool.WorkDay;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +30,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.resume.service.IPerCustomerinfoService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -52,6 +60,10 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
     private ConOperationrecordsMapper conOperationrecordsMapper;
     @Autowired
     private PerCuscontactMapper perCuscontactMapper;
+    @Autowired
+    private WorkDay workDay;
+    @Autowired
+    private RedisCache redisCache;
 
 
 
@@ -77,11 +89,10 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         List<PerProject>  PerProjList= perProjectMapper.selectPerProjectList(perproject);
         //入项信息
         List<Map> mapList=perCustomerinfoMapper.selectIntoItem(customerCode);
-
         //简历跟踪状态
-        PerCuscontact percuscontact=new PerCuscontact();
-        percuscontact.setContactCustomercode(customerCode);
-        List<PerCuscontact>  perCuscontactList=  perCuscontactMapper.selectPerCuscontactList(percuscontact);
+        List<Map>  perCuscontactList=  perCuscontactMapper.selectBycustomerCode(customerCode);
+        //抢占信息
+        PerRobcustomer perrobcustomer=perRobcustomerMapper.selectByCustomerCode(customerCode);
 
         HashMap hashmap=new HashMap();
         hashmap.put("perCustomerinfo",perCustomerinfo);
@@ -90,6 +101,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         hashmap.put("PerProjList",PerProjList);
         hashmap.put("mapList",mapList);
         hashmap.put("perCuscontactList",perCuscontactList);
+        hashmap.put("perrobcustomer",perrobcustomer);
         return AjaxResult.success("hashmap",hashmap);
     }
 
@@ -268,7 +280,9 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             perrobcustomer.setSeizeId(UUID.randomUUID().toString());
             perrobcustomer.setCustomerTel(phone_number);
             perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
+            perrobcustomer.setResumeId(perCustomerinfo.getCustomerCode());
             perrobcustomer.setAddTime(new Date());
+            perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
             perrobcustomer.setAddPeople(loginUser.getUsername());
             perrobcustomer.setAddName(loginUser.getUser().getNickName());
             perrobcustomer.setStatus(0);
@@ -369,7 +383,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             for(GenWorkExperience arr:work_experienceListArr){
                 cw = new PerWork();
                 if(!arr.getStart_time_year().equals("") && !arr.getStart_time_month().equals("")){
-                    cw.setStarttime(sdf.parse(arr.getStart_time_year()+'-'+arr.getStart_time_month()+"-01 00:00:00"));
+                    cw.setStartTime(sdf.parse(arr.getStart_time_year()+'-'+arr.getStart_time_month()+"-01 00:00:00"));
                 }
                 if(!arr.getEnd_time_year().equals("") && !arr.getEnd_time_month().equals("")){
                     cw.setEndTime(sdf.parse(arr.getEnd_time_year()+'-'+arr.getEnd_time_month()+"-01 00:00:00"));
@@ -411,7 +425,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
             //添加操作记录
             ConOperationrecords record = new ConOperationrecords();
-            record.setType("1");
+            record.setType(1);
             record.setDatetime(new Date());
             record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
             record.setUserName(loginUser.getUser().getUserName());
@@ -422,9 +436,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             percuscontact.setContactTime(new Date());
             percuscontact.setContactUsercode(loginUser.getUser().getUserName());
             percuscontact.setContactCustomercode(perCustomerinfo.getCustomerCode());
-            percuscontact.setEntryProbability(0);
-            percuscontact.setUpdateStatic(5);
-            percuscontact.setMemo("录入人员信息");
+            percuscontact.setUpdateStatic(1);
+            percuscontact.setMemoDetail("录入人员信息");
             perCuscontactMapper.insertPerCuscontact(percuscontact);
         HashMap dsa=new HashMap();
         dsa.put("perCustomerinfo",perCustomerinfo);
@@ -449,6 +462,213 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             e.printStackTrace();
             return AjaxResult.error("文件上传失败");
         }
+
+    }
+
+    @Override
+    @Transactional
+    public AjaxResult robCustomeInfo(String customerCode,LoginUser loginUser) {
+        PerRobcustomer perrob = perRobcustomerMapper.selectByCustomerCode(customerCode);
+        if(perrob!=null){
+            return AjaxResult.error("当前人已被抢占");
+        }
+        //添加抢占信息表
+        PerCustomerinfo perCustomerinfo=perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
+        if(perCustomerinfo!=null){
+            return AjaxResult.error("当前人不存在");
+        }
+        Date now=new Date();
+        PerRobcustomer perrobcus =new  PerRobcustomer();
+        perrobcus.setSeizeId(UUID.randomUUID().toString());
+        perrobcus.setCustomerName(perCustomerinfo.getCustomerName());
+        perrobcus.setCustomerTel(perCustomerinfo.getCustomerTel());
+        perrobcus.setResumeId(customerCode);
+        perrobcus.setEditTime(workDay.getAfterWorkDay(now,3));
+        perrobcus.setAddTime(now);
+        perrobcus.setStatus(0);
+        perrobcus.setAddPeople(loginUser.getUsername());
+        perrobcus.setAddName(loginUser.getUser().getNickName());
+        //添加抢占记录
+//        PerCuscontact
+        ConOperationrecords conOperationrecords =new ConOperationrecords();
+        conOperationrecords.setType(3);
+        conOperationrecords.setDatetime(now);
+        conOperationrecords.setUserName(loginUser.getUsername());
+        conOperationrecords.setRemark("抢占简历-"+perCustomerinfo.getCustomerName());
+        int i = perRobcustomerMapper.insertPerRobcustomer(perrobcus);
+        if (i==1){
+            redisCache.deleteObject(customerCode);
+        }
+        conOperationrecordsMapper.insertConOperationrecords(conOperationrecords);
+        return AjaxResult.success("抢占简历成功");
+
+    }
+    /**
+     *  简历跟踪
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    @Override
+    public AjaxResult followCustomeInfo(String customerCode, LoginUser loginUser) {
+
+
+
+        return null;
+    }
+    /**
+     *  简历释放
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    @Override
+    public AjaxResult releaseCustomeInfo(String customerCode, LoginUser loginUser) {
+        PerRobcustomer perRobcustomer = perRobcustomerMapper.selectByCustomerCode(customerCode);
+        if (perRobcustomer==null){
+            return AjaxResult.error("当前人已被释放");
+        }else{
+            if(!loginUser.getUser().getUserName().equals( perRobcustomer.getAddPeople())){
+                return AjaxResult.error("你不是该简历的抢占人，不可释放");
+            }else{
+                List<String> list=new ArrayList<>();
+                list.add(perRobcustomer.getSeizeId());
+                perRobcustomerMapper.updatePerRobbylist(list);
+                return AjaxResult.success("释放成功");
+            }
+
+        }
+
+
+    }
+    /**
+     *  手动简历更新
+     *
+     * @param zm loginUser
+     * @return 结果 AjaxResult
+     */
+    @Override
+    @Transactional
+    public AjaxResult resumeUpdate(String zm, LoginUser loginUser) {
+        PerCustomerinfo perCustomerinfo = JSON.parseObject(JSON.parseObject(zm).getString("perCustomerinfo"), PerCustomerinfo.class);
+        List<PerWork> workList = JSON.parseArray(JSON.parseObject(zm).getString("PerWorList"), PerWork.class);
+        List<PerProject> projList = JSON.parseArray(JSON.parseObject(zm).getString("PerProjList"), PerProject.class);
+        List<PerEducation>  educaList = JSON.parseArray(JSON.parseObject(zm).getString("perEducList"), PerEducation.class);
+        perCustomerinfoMapper.updatePerCustomerinfo(perCustomerinfo);
+        for (PerWork perWork:workList){
+            if (perWork.getId()!=null){
+                perWorkMapper.updatePerWork(perWork);
+            }else{
+                perWork.setCustomerCode(perCustomerinfo.getCustomerCode());
+                perWork.setAddpeople(loginUser.getUser().getUserName());
+                perWork.setAddtime(new Date());
+                perWorkMapper.insertPerWork(perWork);
+            }
+        }
+        for (PerProject perProject:projList){
+            if (perProject.getCustproId()!=null){
+                perProjectMapper.updatePerProject(perProject);
+            }else{
+                perProject.setCustomerCode(perCustomerinfo.getCustomerCode());
+                perProjectMapper.insertPerProject(perProject);
+            }
+        }
+        for (PerEducation perEducation:educaList){
+            if (perEducation.getId()!=null){
+                perEducationMapper.updatePerEducation(perEducation);
+            }else{
+                perEducation.setCustomerCode(perCustomerinfo.getCustomerCode());
+                perEducation.setAddpeople(loginUser.getUser().getUserName());
+                perEducation.setAddtime(new Date());
+                perEducationMapper.insertPerEducation(perEducation);
+            }
+        }
+
+        return AjaxResult.success("简历修改成功");
+    }
+    /**
+     *  手动简历添加
+     *
+     * @param zm loginUser
+     * @return 结果 AjaxResult
+     */
+    @Override
+    public AjaxResult resumeInsert(String zm, LoginUser loginUser) {
+        PerCustomerinfo perCustomerinfo = JSON.parseObject(JSON.parseObject(zm).getString("perCustomerinfo"), PerCustomerinfo.class);
+        List<PerWork> workList = JSON.parseArray(JSON.parseObject(zm).getString("PerWorList"), PerWork.class);
+        List<PerProject> projList = JSON.parseArray(JSON.parseObject(zm).getString("PerProjList"), PerProject.class);
+        List<PerEducation>  educaList = JSON.parseArray(JSON.parseObject(zm).getString("perEducList"), PerEducation.class);
+        perCustomerinfo.setCustomerCode(SerialNumber.createSerial("cstm", 5));//个人编号生成
+        //添加简历基本
+         String phone_number=perCustomerinfo.getCustomerTel();
+        if(phone_number.equals("")){
+            return AjaxResult.error("该简历无联系方式，请查证");
+        }
+        perCustomerinfo.setCustomerTel(phone_number);
+        PerRobcustomer perrobcus = perRobcustomerMapper.selectByphone(phone_number);
+        if(perrobcus!=null){
+            return AjaxResult.error("客户信息已被"+perrobcus.getAddName()+"抢占");
+        }
+        int count = perCustomerinfoMapper.getSameCustomerCount(perCustomerinfo);
+        if(count>0){
+            return AjaxResult.error("客户已存在，请查证");
+        }
+        perCustomerinfo.setAddTime(new Date());
+        perCustomerinfo.setOpertCode(loginUser.getUser().getUserName());
+        perCustomerinfo.setOpertName(loginUser.getUser().getNickName());
+        perCustomerinfo.setResumePath("");
+        perCustomerinfoMapper.insertPerCustomerinfo(perCustomerinfo);
+        //添加简历基本项目
+        PerRobcustomer perrobcustomer=new PerRobcustomer();
+        perrobcustomer.setSeizeId(UUID.randomUUID().toString());
+        perrobcustomer.setCustomerTel(phone_number);
+        perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
+        perrobcustomer.setResumeId(perCustomerinfo.getCustomerCode());
+        perrobcustomer.setAddTime(new Date());
+        perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
+        perrobcustomer.setAddPeople(loginUser.getUsername());
+        perrobcustomer.setAddName(loginUser.getUser().getNickName());
+        perrobcustomer.setStatus(0);
+        //添加简历工作经验
+        for (PerWork perWork:workList){
+            perWork.setCustomerCode(perCustomerinfo.getCustomerCode());
+            perWork.setAddpeople(loginUser.getUser().getUserName());
+            perWork.setAddtime(new Date());
+        }
+        perWorkMapper.insertList(workList);
+        //添加简历项目经验
+        for (PerProject perProject:projList){
+            perProject.setCustomerCode(perCustomerinfo.getCustomerCode());
+        }
+        perProjectMapper.insertList(projList);
+        //添加简历学历经验
+        for (PerEducation perEducation:educaList){
+            perEducation.setCustomerCode(perCustomerinfo.getCustomerCode());
+            perEducation.setAddpeople(loginUser.getUser().getUserName());
+            perEducation.setAddtime(new Date());
+        }
+        perEducationMapper.insertList(educaList);
+
+
+        //添加操作记录
+        ConOperationrecords record = new ConOperationrecords();
+        record.setType(1);
+        record.setDatetime(new Date());
+        record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
+        record.setUserName(loginUser.getUser().getUserName());
+        conOperationrecordsMapper.insertConOperationrecords(record);
+        PerCuscontact   percuscontact=new   PerCuscontact();
+        String serrialno = SerialNumber.createSerial("shzq", 6);
+        percuscontact.setContacDatecode(serrialno);
+        percuscontact.setContactTime(new Date());
+        percuscontact.setContactUsercode(loginUser.getUser().getUserName());
+        percuscontact.setContactCustomercode(perCustomerinfo.getCustomerCode());
+        percuscontact.setUpdateStatic(1);
+        percuscontact.setMemoDetail("录入人员信息");
+        perCuscontactMapper.insertPerCuscontact(percuscontact);
+
+
+        return AjaxResult.success("简历修改成功");
 
     }
 

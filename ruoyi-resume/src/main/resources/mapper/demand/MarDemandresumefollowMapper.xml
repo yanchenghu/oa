@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarDemandresumefollowMapper">
+    
+    <resultMap type="MarDemandresumefollow" id="MarDemandresumefollowResult">
+        <result property="id"    column="Id"    />
+        <result property="demandresumeId"    column="demandresume_id"    />
+        <result property="trackingPeople"    column="tracking_people"    />
+        <result property="trackingtime"    column="trackingtime"    />
+        <result property="followStatus"    column="follow_status"    />
+        <result property="followDetail"    column="follow_detail"    />
+        <result property="remark1"    column="remark1"    />
+    </resultMap>
+
+    <sql id="selectMarDemandresumefollowVo">
+        select Id, demandresume_id, tracking_people, trackingtime, follow_status, follow_detail, remark1 from mar_demandresumefollow
+    </sql>
+
+    <select id="selectMarDemandresumefollowList" parameterType="MarDemandresumefollow" resultMap="MarDemandresumefollowResult">
+        <include refid="selectMarDemandresumefollowVo"/>
+        <where>  
+            <if test="demandresumeId != null  and demandresumeId != ''"> and demandresume_id = #{demandresumeId}</if>
+            <if test="trackingPeople != null  and trackingPeople != ''"> and tracking_people = #{trackingPeople}</if>
+            <if test="trackingtime != null "> and trackingtime = #{trackingtime}</if>
+            <if test="followStatus != null "> and follow_status = #{followStatus}</if>
+            <if test="followDetail != null  and followDetail != ''"> and follow_detail = #{followDetail}</if>
+            <if test="remark1 != null  and remark1 != ''"> and remark1 = #{remark1}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarDemandresumefollowById" parameterType="String" resultMap="MarDemandresumefollowResult">
+        <include refid="selectMarDemandresumefollowVo"/>
+        where Id = #{id}
+    </select>
+        
+    <insert id="insertMarDemandresumefollow" parameterType="MarDemandresumefollow">
+        insert into mar_demandresumefollow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">Id,</if>
+            <if test="demandresumeId != null">demandresume_id,</if>
+            <if test="trackingPeople != null">tracking_people,</if>
+            <if test="trackingtime != null">trackingtime,</if>
+            <if test="followStatus != null">follow_status,</if>
+            <if test="followDetail != null">follow_detail,</if>
+            <if test="remark1 != null">remark1,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="demandresumeId != null">#{demandresumeId},</if>
+            <if test="trackingPeople != null">#{trackingPeople},</if>
+            <if test="trackingtime != null">#{trackingtime},</if>
+            <if test="followStatus != null">#{followStatus},</if>
+            <if test="followDetail != null">#{followDetail},</if>
+            <if test="remark1 != null">#{remark1},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarDemandresumefollow" parameterType="MarDemandresumefollow">
+        update mar_demandresumefollow
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="demandresumeId != null">demandresume_id = #{demandresumeId},</if>
+            <if test="trackingPeople != null">tracking_people = #{trackingPeople},</if>
+            <if test="trackingtime != null">trackingtime = #{trackingtime},</if>
+            <if test="followStatus != null">follow_status = #{followStatus},</if>
+            <if test="followDetail != null">follow_detail = #{followDetail},</if>
+            <if test="remark1 != null">remark1 = #{remark1},</if>
+        </trim>
+        where Id = #{id}
+    </update>
+
+    <delete id="deleteMarDemandresumefollowById" parameterType="String">
+        delete from mar_demandresumefollow where Id = #{id}
+    </delete>
+
+    <delete id="deleteMarDemandresumefollowByIds" parameterType="String">
+        delete from mar_demandresumefollow where Id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 简历跟踪对象 per_cuscontact
  * 
  * @author ych
- * @date 2020-11-10
+ * @date 2020-11-13
  */
 public class PerCuscontact extends BaseEntity
 {
@@ -33,41 +33,17 @@ public class PerCuscontact extends BaseEntity
     @Excel(name = "联系客户编号")
     private String contactCustomercode;
 
-    /** 备注 */
-    @Excel(name = "备注")
-    private String memo;
-
-    /** 入职概率 */
-    @Excel(name = "入职概率")
-    private Integer entryProbability;
-
-    /** 最后更新状态（1:电话错误   2:不接电话   3:直接挂断电话   4:不接受外包   5:其他   6:不参加面试   7:薪资不合适   8:距离远） */
-    @Excel(name = "最后更新状态", readConverterExp = "1=:电话错误,2=:不接电话,3=:直接挂断电话,4=:不接受外包,5=:其他,6=:不参加面试,7=:薪资不合适,8=:距离远")
+    /** (1、录入 2、跟进) */
+    @Excel(name = "(1、录入 2、跟进 3、绑定)")
     private Integer updateStatic;
 
-    /** 是否考虑换工作（1-考虑   2-不考虑 ） */
-    @Excel(name = "是否考虑换工作", readConverterExp = "1=-考虑,2=-不考虑")
-    private Integer considerChangeJob;
-
-    /** 意向地区 */
-    @Excel(name = "意向地区")
-    private String intentionArea;
-
-    /** $column.columnComment */
-    @Excel(name = "意向地区")
-    private String binding;
-
-    /** 不参加面试原因 */
-    @Excel(name = "不参加面试原因")
-    private String nointerviewing;
+    /** 跟进详情 */
+    @Excel(name = "跟进详情")
+    private String memoDetail;
 
     /** 需求简历Id */
     @Excel(name = "需求简历Id")
     private String bindId;
-
-    /** 跟踪状态(0-未入项  1-确认面试时间   2-入项) */
-    @Excel(name = "跟踪状态(0-未入项  1-确认面试时间   2-入项)")
-    private Integer followStatus;
 
     /** 需求Id */
     @Excel(name = "需求Id")
@@ -109,24 +85,6 @@ public class PerCuscontact extends BaseEntity
     {
         return contactCustomercode;
     }
-    public void setMemo(String memo) 
-    {
-        this.memo = memo;
-    }
-
-    public String getMemo() 
-    {
-        return memo;
-    }
-    public void setEntryProbability(Integer entryProbability) 
-    {
-        this.entryProbability = entryProbability;
-    }
-
-    public Integer getEntryProbability() 
-    {
-        return entryProbability;
-    }
     public void setUpdateStatic(Integer updateStatic) 
     {
         this.updateStatic = updateStatic;
@@ -136,41 +94,14 @@ public class PerCuscontact extends BaseEntity
     {
         return updateStatic;
     }
-    public void setConsiderChangeJob(Integer considerChangeJob) 
+    public void setMemoDetail(String memoDetail) 
     {
-        this.considerChangeJob = considerChangeJob;
+        this.memoDetail = memoDetail;
     }
 
-    public Integer getConsiderChangeJob() 
+    public String getMemoDetail() 
     {
-        return considerChangeJob;
-    }
-    public void setIntentionArea(String intentionArea) 
-    {
-        this.intentionArea = intentionArea;
-    }
-
-    public String getIntentionArea() 
-    {
-        return intentionArea;
-    }
-    public void setBinding(String binding) 
-    {
-        this.binding = binding;
-    }
-
-    public String getBinding() 
-    {
-        return binding;
-    }
-    public void setNointerviewing(String nointerviewing) 
-    {
-        this.nointerviewing = nointerviewing;
-    }
-
-    public String getNointerviewing() 
-    {
-        return nointerviewing;
+        return memoDetail;
     }
     public void setBindId(String bindId) 
     {
@@ -180,15 +111,6 @@ public class PerCuscontact extends BaseEntity
     public String getBindId() 
     {
         return bindId;
-    }
-    public void setFollowStatus(Integer followStatus) 
-    {
-        this.followStatus = followStatus;
-    }
-
-    public Integer getFollowStatus() 
-    {
-        return followStatus;
     }
     public void setDemandId(String demandId) 
     {
@@ -207,15 +129,9 @@ public class PerCuscontact extends BaseEntity
             .append("contactTime", getContactTime())
             .append("contactUsercode", getContactUsercode())
             .append("contactCustomercode", getContactCustomercode())
-            .append("memo", getMemo())
-            .append("entryProbability", getEntryProbability())
             .append("updateStatic", getUpdateStatic())
-            .append("considerChangeJob", getConsiderChangeJob())
-            .append("intentionArea", getIntentionArea())
-            .append("binding", getBinding())
-            .append("nointerviewing", getNointerviewing())
+            .append("memoDetail", getMemoDetail())
             .append("bindId", getBindId())
-            .append("followStatus", getFollowStatus())
             .append("demandId", getDemandId())
             .toString();
     }

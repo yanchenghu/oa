@@ -5,10 +5,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.resume.mapper.PerWorkMapper">
 
 
+
     <resultMap type="PerWork" id="PerWorkResult">
         <result property="id"    column="id"    />
         <result property="customerCode"    column="customer_code"    />
-        <result property="startTime_month"    column="start_time"    />
+        <result property="startTime"    column="start_time"    />
         <result property="endTime"    column="end_time"    />
         <result property="stillActive"    column="still_active"    />
         <result property="companyName"    column="company_name"    />
@@ -33,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectPerWorkVo"/>
         <where>
             <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
-            <if test="startTime_month != null "> and start_time = #{startTime_month}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
             <if test="stillActive != null "> and still_active = #{stillActive}</if>
             <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
@@ -51,56 +52,56 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectPerWorkById" parameterType="Long" resultMap="PerWorkResult">
+    <select id="selectPerWorkById" parameterType="Integer" resultMap="PerWorkResult">
         <include refid="selectPerWorkVo"/>
         where id = #{id}
     </select>
 
     <insert id="insertPerWork" parameterType="PerWork" useGeneratedKeys="true" keyProperty="id">
-            insert into per_work
-            <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="customerCode != null">customer_code,</if>
-                <if test="startTime_month != null">start_time,</if>
-                <if test="endTime != null">end_time,</if>
-                <if test="stillActive != null">still_active,</if>
-                <if test="companyName != null">company_name,</if>
-                <if test="department != null">department,</if>
-                <if test="location != null">location,</if>
-                <if test="jobTitle != null">job_title,</if>
-                <if test="description != null">description,</if>
-                <if test="industry != null">industry,</if>
-                <if test="jobFunction != null">job_function,</if>
-                <if test="companySize != null">company_size,</if>
-                <if test="companyType != null">company_type,</if>
-                <if test="salary != null">salary,</if>
-                <if test="addpeople != null">addpeople,</if>
-                <if test="addtime != null">addtime,</if>
-            </trim>
-            <trim prefix="values (" suffix=")" suffixOverrides=",">
-                <if test="customerCode != null">#{customerCode},</if>
-                <if test="startTime_month != null">#{startTime_month},</if>
-                <if test="endTime != null">#{endTime},</if>
-                <if test="stillActive != null">#{stillActive},</if>
-                <if test="companyName != null">#{companyName},</if>
-                <if test="department != null">#{department},</if>
-                <if test="location != null">#{location},</if>
-                <if test="jobTitle != null">#{jobTitle},</if>
-                <if test="description != null">#{description},</if>
-                <if test="industry != null">#{industry},</if>
-                <if test="jobFunction != null">#{jobFunction},</if>
-                <if test="companySize != null">#{companySize},</if>
-                <if test="companyType != null">#{companyType},</if>
-                <if test="salary != null">#{salary},</if>
-                <if test="addpeople != null">#{addpeople},</if>
-                <if test="addtime != null">#{addtime},</if>
-            </trim>
+        insert into per_work
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">customer_code,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="stillActive != null">still_active,</if>
+            <if test="companyName != null">company_name,</if>
+            <if test="department != null">department,</if>
+            <if test="location != null">location,</if>
+            <if test="jobTitle != null">job_title,</if>
+            <if test="description != null">description,</if>
+            <if test="industry != null">industry,</if>
+            <if test="jobFunction != null">job_function,</if>
+            <if test="companySize != null">company_size,</if>
+            <if test="companyType != null">company_type,</if>
+            <if test="salary != null">salary,</if>
+            <if test="addpeople != null">addpeople,</if>
+            <if test="addtime != null">addtime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="stillActive != null">#{stillActive},</if>
+            <if test="companyName != null">#{companyName},</if>
+            <if test="department != null">#{department},</if>
+            <if test="location != null">#{location},</if>
+            <if test="jobTitle != null">#{jobTitle},</if>
+            <if test="description != null">#{description},</if>
+            <if test="industry != null">#{industry},</if>
+            <if test="jobFunction != null">#{jobFunction},</if>
+            <if test="companySize != null">#{companySize},</if>
+            <if test="companyType != null">#{companyType},</if>
+            <if test="salary != null">#{salary},</if>
+            <if test="addpeople != null">#{addpeople},</if>
+            <if test="addtime != null">#{addtime},</if>
+        </trim>
     </insert>
 
     <update id="updatePerWork" parameterType="PerWork">
         update per_work
         <trim prefix="SET" suffixOverrides=",">
             <if test="customerCode != null">customer_code = #{customerCode},</if>
-            <if test="startTime_month != null">start_time = #{startTime_month},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="stillActive != null">still_active = #{stillActive},</if>
             <if test="companyName != null">company_name = #{companyName},</if>
@@ -119,7 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePerWorkById" parameterType="Long">
+    <delete id="deletePerWorkById" parameterType="Integer">
         delete from per_work where id = #{id}
     </delete>
 
@@ -153,7 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         values
         <foreach collection="list" item="proinfo" separator=",">
                 ( #{proinfo.customerCode},
-                #{proinfo.startTime_month},
+                #{proinfo.startTime},
                 #{proinfo.endTime},
                 #{proinfo.stillActive},
                 #{proinfo.companyName},

@@ -1,6 +1,8 @@
 package com.ruoyi.resume.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.resume.domain.PerCuscontact;
 
 /**
@@ -58,4 +60,12 @@ public interface PerCuscontactMapper
      * @return 结果
      */
     public int deletePerCuscontactByIds(String[] contacDatecodes);
+
+    /**
+     * 根据简历编号查询跟总信息
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    List<Map> selectBycustomerCode(String customerCode);
 }

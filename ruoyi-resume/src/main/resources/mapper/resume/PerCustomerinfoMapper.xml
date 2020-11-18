@@ -182,7 +182,7 @@
     <select id="selectlistbyNametel"  parameterType="PerCustomerinfo" resultType="map">
 
         SELECT
-        a.customer_name,a.customer_code,a.profession_id,a.customer_tel,a.customer_birth,a.profession_id,a.add_time,a.update_time,b.add_name
+        a.customer_name,a.customer_code,a.profession_id,a.customer_tel,a.customer_birth,a.profession_id,DATE_FORMAT(a.add_time,'%Y-%m-%d %H:%i:%s') as add_time, DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') as update_time,b.add_name
         FROM
         per_customerinfo a
         LEFT JOIN (SELECT customer_tel,add_name from per_robcustomer where Status=0 ) b ON a.customer_tel = b.customer_tel
@@ -199,7 +199,7 @@
         SELECT
         d.corp_name,
         c.projecttype,
-        b.trackingtime
+        DATE_FORMAT( b.trackingtime,'%Y-%m-%d %H:%i:%s') as trackingtime
         FROM
         mar_company d
         LEFT JOIN mar_demand c ON d.corp_code = c.corp_code

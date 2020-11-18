@@ -73,8 +73,8 @@ public class PerCustomerinfo extends BaseEntity
     private String email;
 
     /** 添加时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone ="GMT+8")
+    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
 
     /** 操作员编号 */

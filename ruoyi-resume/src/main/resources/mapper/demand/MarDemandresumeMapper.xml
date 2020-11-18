@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarDemandresumeMapper">
+    
+    <resultMap type="MarDemandresume" id="MarDemandresumeResult">
+        <result property="id"    column="id"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="bindTime"    column="bind_time"    />
+        <result property="bindPeople"    column="bind_people"    />
+        <result property="downloadStatus"    column="download_status"    />
+        <result property="newfollowtime"    column="newfollowtime"    />
+        <result property="trackzPeoname"    column="trackz_peoname"    />
+    </resultMap>
+
+    <sql id="selectMarDemandresumeVo">
+        select id, demand_id, customer_code, bind_time, bind_people, download_status, newfollowtime, trackz_peoname from mar_demandresume
+    </sql>
+
+    <select id="selectMarDemandresumeList" parameterType="MarDemandresume" resultMap="MarDemandresumeResult">
+        <include refid="selectMarDemandresumeVo"/>
+        <where>  
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="bindTime != null "> and bind_time = #{bindTime}</if>
+            <if test="bindPeople != null  and bindPeople != ''"> and bind_people = #{bindPeople}</if>
+            <if test="downloadStatus != null  and downloadStatus != ''"> and download_status = #{downloadStatus}</if>
+            <if test="newfollowtime != null "> and newfollowtime = #{newfollowtime}</if>
+            <if test="trackzPeoname != null  and trackzPeoname != ''"> and trackz_peoname like concat('%', #{trackzPeoname}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectMarDemandresumeById" parameterType="String" resultMap="MarDemandresumeResult">
+        <include refid="selectMarDemandresumeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarDemandresume" parameterType="MarDemandresume">
+        insert into mar_demandresume
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="demandId != null">demand_id,</if>
+            <if test="customerCode != null">customer_code,</if>
+            <if test="bindTime != null">bind_time,</if>
+            <if test="bindPeople != null">bind_people,</if>
+            <if test="downloadStatus != null">download_status,</if>
+            <if test="newfollowtime != null">newfollowtime,</if>
+            <if test="trackzPeoname != null">trackz_peoname,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="demandId != null">#{demandId},</if>
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="bindTime != null">#{bindTime},</if>
+            <if test="bindPeople != null">#{bindPeople},</if>
+            <if test="downloadStatus != null">#{downloadStatus},</if>
+            <if test="newfollowtime != null">#{newfollowtime},</if>
+            <if test="trackzPeoname != null">#{trackzPeoname},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarDemandresume" parameterType="MarDemandresume">
+        update mar_demandresume
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="demandId != null">demand_id = #{demandId},</if>
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="bindTime != null">bind_time = #{bindTime},</if>
+            <if test="bindPeople != null">bind_people = #{bindPeople},</if>
+            <if test="downloadStatus != null">download_status = #{downloadStatus},</if>
+            <if test="newfollowtime != null">newfollowtime = #{newfollowtime},</if>
+            <if test="trackzPeoname != null">trackz_peoname = #{trackzPeoname},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarDemandresumeById" parameterType="String">
+        delete from mar_demandresume where id = #{id}
+    </delete>
+
+    <delete id="deleteMarDemandresumeByIds" parameterType="String">
+        delete from mar_demandresume where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

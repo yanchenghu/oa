@@ -1,17 +1,17 @@
-package com.ruoyi.resume.service.impl;
+package com.ruoyi.conn.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.resume.mapper.ConOperationrecordsMapper;
-import com.ruoyi.resume.domain.ConOperationrecords;
-import com.ruoyi.resume.service.IConOperationrecordsService;
+import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
+import com.ruoyi.conn.domain.ConOperationrecords;
+import com.ruoyi.conn.service.IConOperationrecordsService;
 
 /**
  * 操作记录Service业务层处理
  * 
  * @author ych
- * @date 2020-11-09
+ * @date 2020-11-16
  */
 @Service
 public class ConOperationrecordsServiceImpl implements IConOperationrecordsService 

@@ -90,4 +90,23 @@ public class PerRobcustomerServiceImpl implements IPerRobcustomerService
     {
         return perRobcustomerMapper.deletePerRobcustomerById(seizeId);
     }
+    /**
+     * 查询全部抢占记录，监测是否过期，过期则释放
+     *
+     * @param
+     * @return
+     */
+
+    @Override
+    public void initRobStatus() {
+    //查询所有的过期抢占信息
+    List<String>  list= perRobcustomerMapper.selectAllOverrob();
+    if(list!=null && list.size()>0){
+        perRobcustomerMapper.updatePerRobbylist(list);
+
+    }
+
+    }
+
+
 }
