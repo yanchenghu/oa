@@ -124,7 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from per_work where id = #{id}
     </delete>
 
-    <delete id="deletePerWorkByIds" parameterType="String">
+    <delete id="deletePerWorkByIds" parameterType="Integer">
         delete from per_work where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}

@@ -57,5 +57,5 @@ public interface IPerProjectService
      * @param custproId 简历工作经验ID
      * @return 结果
      */
-    public int deletePerProjectById(String custproId);
+    public int deletePerProjectById(Integer custproId);
 }

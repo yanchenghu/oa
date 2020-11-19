@@ -119,7 +119,7 @@ public interface IPerCustomerinfoService
      * @param zm loginUser
      * @return 结果 AjaxResult
      */
-    AjaxResult resumeUpdate(String zm, LoginUser loginUser);
+    AjaxResult resumeUpdate(String zm,MultipartFile file, LoginUser loginUser);
 
     /**
      *  手动简历添加
@@ -127,5 +127,5 @@ public interface IPerCustomerinfoService
      * @param zm loginUser
      * @return 结果 AjaxResult
      */
-    AjaxResult resumeInsert(String zm, LoginUser loginUser);
+    AjaxResult resumeInsert(String zm,MultipartFile file, LoginUser loginUser);
 }

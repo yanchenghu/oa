@@ -6,9 +6,7 @@ import com.ruoyi.customer.domain.Yxcontact;
 import com.ruoyi.customer.domain.Yxdemand;
 import com.ruoyi.customer.mapper.HighseasMapper;
 import com.ruoyi.customer.mapper.YxcontactMapper;
-import com.ruoyi.customer.mapper.YxdemandMapper;
-import com.ruoyi.customer.service.HighseasService;
-import com.ruoyi.customer.service.IYxdemandService;
+import com.ruoyi.customer.service.IHighseasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,7 @@ import java.util.List;
  * @date 2020-11-05
  */
 @Service
-public class HighseasServicelmpl implements HighseasService
+public class HighseasServiceImpl implements IHighseasService
 {
     @Autowired
     private HighseasMapper highseasMapper;

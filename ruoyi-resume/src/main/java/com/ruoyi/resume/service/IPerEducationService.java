@@ -57,5 +57,5 @@ public interface IPerEducationService
      * @param id 简历教育经验ID
      * @return 结果
      */
-    public int deletePerEducationById(Long id);
+    public int deletePerEducationById(Integer id);
 }

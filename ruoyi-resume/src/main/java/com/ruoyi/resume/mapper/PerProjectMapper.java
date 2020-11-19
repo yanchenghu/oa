@@ -49,7 +49,7 @@ public interface PerProjectMapper
      * @param custproId 简历工作经验ID
      * @return 结果
      */
-    public int deletePerProjectById(String custproId);
+    public int deletePerProjectById(Integer custproId);
 
     /**
      * 批量删除简历工作经验

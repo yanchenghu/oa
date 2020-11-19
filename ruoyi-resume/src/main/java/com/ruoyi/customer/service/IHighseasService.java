@@ -12,7 +12,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2020-11-05
  */
-public interface HighseasService
+public interface IHighseasService
 {
     /**
      * 查询营销录入公司

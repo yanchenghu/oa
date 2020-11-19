@@ -12,6 +12,9 @@ import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.resume.domain.PerEducation;
 import com.ruoyi.resume.domain.PerProject;
 import com.ruoyi.resume.domain.PerWork;
+import com.ruoyi.resume.service.IPerEducationService;
+import com.ruoyi.resume.service.IPerProjectService;
+import com.ruoyi.resume.service.IPerWorkService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +45,12 @@ public class PerCustomerinfoController extends BaseController
     private TokenService tokenService;
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private IPerEducationService perEducationService;
+    @Autowired
+    private IPerProjectService perProjectService;
+    @Autowired
+    private IPerWorkService perWorkService;
     /**
      * 查询简历列表
      */
@@ -141,20 +150,50 @@ public class PerCustomerinfoController extends BaseController
      * 简历更新（工作经验、工作信息、学历信息）
      */
     @PostMapping(value = "/resumeUpdate")
-    public AjaxResult resumeUpdate(String zm)
+    public AjaxResult resumeUpdate(String zm,MultipartFile file)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return  perCustomerinfoService.resumeUpdate(zm,loginUser);
+        return  perCustomerinfoService.resumeUpdate(zm,file,loginUser);
     }
 
     /**
      * 简历添加（工作经验、工作信息、学历信息）
      */
     @PostMapping(value = "/resumeInsert")
-    public AjaxResult resumeInsert(String zm)
+    public AjaxResult resumeInsert(String zm,MultipartFile file)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return  perCustomerinfoService.resumeInsert(zm,loginUser);
+        return  perCustomerinfoService.resumeInsert(zm,file,loginUser);
     }
+
+
+    /**
+     * 工作经验删除
+     */
+    @GetMapping(value = "/workDel")
+    public AjaxResult workDel(@RequestParam("id")Integer id)
+    {
+        return toAjax(perWorkService.deletePerWorkById(id));
+    }
+    /**
+     * 工作信息删除
+     */
+    @GetMapping(value = "/projdeDel")
+    public AjaxResult projdeDel(@RequestParam("id")Integer id)
+    {
+        return toAjax(perProjectService.deletePerProjectById(id));
+    }
+    /**
+     * 学历信息
+     */
+    @GetMapping(value = "/educaDel")
+    public AjaxResult educaDel(@RequestParam("custpro_id")Integer custpro_id)
+    {
+        return toAjax(perEducationService.deletePerEducationById(custpro_id));
+
+    }
+
+
+
 
 }

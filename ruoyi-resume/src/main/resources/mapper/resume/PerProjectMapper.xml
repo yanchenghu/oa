@@ -104,11 +104,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where custpro_id = #{custproId}
     </update>
 
-    <delete id="deletePerProjectById" parameterType="String">
+    <delete id="deletePerProjectById" parameterType="Integer">
         delete from per_project where custpro_id = #{custproId}
     </delete>
 
-    <delete id="deletePerProjectByIds" parameterType="String">
+    <delete id="deletePerProjectByIds" parameterType="Integer">
         delete from per_project where custpro_id in 
         <foreach item="custproId" collection="array" open="(" separator="," close=")">
             #{custproId}

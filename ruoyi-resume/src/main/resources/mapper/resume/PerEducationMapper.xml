@@ -127,11 +127,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePerEducationById" parameterType="Long">
+    <delete id="deletePerEducationById" parameterType="Integer">
         delete from per_education where id = #{id}
     </delete>
 
-    <delete id="deletePerEducationByIds" parameterType="String">
+    <delete id="deletePerEducationByIds" parameterType="Integer">
         delete from per_education where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
