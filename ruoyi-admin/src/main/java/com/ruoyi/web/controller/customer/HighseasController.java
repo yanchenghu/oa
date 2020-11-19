@@ -8,9 +8,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.customer.domain.Yxdemand;
-import com.ruoyi.customer.service.HighseasService;
+import com.ruoyi.customer.service.IHighseasService;
 import com.ruoyi.customer.service.IYxcontactService;
-import com.ruoyi.customer.service.IYxdemandService;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +28,7 @@ import java.util.List;
 public class HighseasController extends BaseController
 {
     @Autowired
-    private HighseasService highseasService;
+    private IHighseasService highseasService;
 
     @Autowired
     private IYxcontactService yxcontactService;

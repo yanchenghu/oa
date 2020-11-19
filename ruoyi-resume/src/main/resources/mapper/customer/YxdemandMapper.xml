@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.customer.mapper.YxdemandMapper">
-    
+
     <resultMap type="Yxdemand" id="YxdemandResult">
         <result property="entryId"    column="entry_id"    />
         <result property="companyName"    column="company_name"    />
@@ -44,14 +44,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="mailbox"    column="mailbox"    />
         <result property="qq"    column="qq"    />
     </resultMap>
-
     <sql id="selectYxdemandVo">
         select entry_id, company_name, recruitment_job, contact_people, contact_position, contact_phone, info_sourse, company_situation, is_send_resume, interview_company, interviewer, interviewer_position, interview_contact, interview_address, final_party, entry_people, entry_people_id, insert_time, is_follow_submit, rob_people_id, rob_people, rob_time, is_accept, business_id, business_people, submit_time, is_business, cooperation_projects, is_signing, sing_time, personnel_into, is_return_money, update_date, entry_days, contact_information,wechat,mailbox,qq from yxdemand
     </sql>
 
     <select id="selectYxdemandList" parameterType="Yxdemand" resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
-        <where>  
+        <where>
             <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
             <if test="contactPosition != null  and contactPosition != ''"> and contact_position = #{contactPosition}</if>
             <if test="companySituation != null "> and company_situation = #{companySituation}</if>
@@ -63,12 +62,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="entryDays != null "> and entry_days = #{entryDays}</if>
         </where>
     </select>
-    
+
     <select id="selectYxdemandById" parameterType="Integer" resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
         where entry_id = #{entryId}
     </select>
-        
+
     <insert id="insertYxdemand" parameterType="Yxdemand">
         insert into yxdemand
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -107,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateDate != null">update_date,</if>
             <if test="entryDays != null">entry_days,</if>
             <if test="contactInformation != null">contact_information,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="entryId != null">#{entryId},</if>
             <if test="companyName != null">#{companyName},</if>
@@ -144,7 +143,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateDate != null">#{updateDate},</if>
             <if test="entryDays != null">#{entryDays},</if>
             <if test="contactInformation != null">#{contactInformation},</if>
-         </trim>
+        </trim>
     </insert>
 
 
@@ -152,5 +151,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
-    
+
 </mapper>

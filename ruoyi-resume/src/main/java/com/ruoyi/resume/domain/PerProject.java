@@ -18,7 +18,7 @@ public class PerProject
     private static final long serialVersionUID = 1L;
 
     /** 项目经验ID */
-    private String custproId;
+    private Integer custproId;
 
     /** 简历编号 */
     @Excel(name = "简历编号")
@@ -73,16 +73,15 @@ public class PerProject
     @Excel(name = "备注")
     private String remark;
 
-    public void setCustproId(String custproId) 
-    {
+    public Integer getCustproId() {
+        return custproId;
+    }
+
+    public void setCustproId(Integer custproId) {
         this.custproId = custproId;
     }
 
-    public String getCustproId() 
-    {
-        return custproId;
-    }
-    public void setCustomerCode(String customerCode) 
+    public void setCustomerCode(String customerCode)
     {
         this.customerCode = customerCode;
     }
@@ -199,23 +198,24 @@ public class PerProject
         this.remark = remark;
     }
 
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("custproId", getCustproId())
-            .append("customerCode", getCustomerCode())
-            .append("industry", getIndustry())
-            .append("role", getRole())
-            .append("joinprojectTime", getJoinprojectTime())
-            .append("quitprojectTime", getQuitprojectTime())
-            .append("softwareEnvironment", getSoftwareEnvironment())
-            .append("projectIntroduction", getProjectIntroduction())
-            .append("technologyType", getTechnologyType())
-            .append("duty", getDuty())
-            .append("projectName", getProjectName())
-            .append("remark", getRemark())
-            .append("remark1", getRemark1())
-            .append("teamSize", getTeamSize())
-            .toString();
+        return "PerProject{" +
+                "custproId=" + custproId +
+                ", customerCode='" + customerCode + '\'' +
+                ", industry=" + industry +
+                ", role=" + role +
+                ", joinprojectTime=" + joinprojectTime +
+                ", quitprojectTime=" + quitprojectTime +
+                ", softwareEnvironment='" + softwareEnvironment + '\'' +
+                ", projectIntroduction='" + projectIntroduction + '\'' +
+                ", technologyType='" + technologyType + '\'' +
+                ", duty='" + duty + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", remark1='" + remark1 + '\'' +
+                ", teamSize='" + teamSize + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

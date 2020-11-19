@@ -549,11 +549,23 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
      */
     @Override
     @Transactional
-    public AjaxResult resumeUpdate(String zm, LoginUser loginUser) {
+    public AjaxResult resumeUpdate(String zm,MultipartFile file, LoginUser loginUser) {
         PerCustomerinfo perCustomerinfo = JSON.parseObject(JSON.parseObject(zm).getString("perCustomerinfo"), PerCustomerinfo.class);
         List<PerWork> workList = JSON.parseArray(JSON.parseObject(zm).getString("PerWorList"), PerWork.class);
         List<PerProject> projList = JSON.parseArray(JSON.parseObject(zm).getString("PerProjList"), PerProject.class);
         List<PerEducation>  educaList = JSON.parseArray(JSON.parseObject(zm).getString("perEducList"), PerEducation.class);
+        String fsafsa="";
+        if(file != null){
+            String avatar = null;
+            try {
+                avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+                fsafsa=avatar.replace("/profile","");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        perCustomerinfo.setUpdateTime(new Date());
+        perCustomerinfo.setResumePath(fsafsa);
         perCustomerinfoMapper.updatePerCustomerinfo(perCustomerinfo);
         for (PerWork perWork:workList){
             if (perWork.getId()!=null){
@@ -593,7 +605,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
      * @return 结果 AjaxResult
      */
     @Override
-    public AjaxResult resumeInsert(String zm, LoginUser loginUser) {
+    public AjaxResult resumeInsert(String zm, MultipartFile file,LoginUser loginUser) {
         PerCustomerinfo perCustomerinfo = JSON.parseObject(JSON.parseObject(zm).getString("perCustomerinfo"), PerCustomerinfo.class);
         List<PerWork> workList = JSON.parseArray(JSON.parseObject(zm).getString("PerWorList"), PerWork.class);
         List<PerProject> projList = JSON.parseArray(JSON.parseObject(zm).getString("PerProjList"), PerProject.class);
@@ -613,12 +625,25 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         if(count>0){
             return AjaxResult.error("客户已存在，请查证");
         }
+        String fsafsa="";
+        if(file != null){
+            String avatar = null;
+            try {
+                avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+                fsafsa=avatar.replace("/profile","");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //添加简历基本项目
         perCustomerinfo.setAddTime(new Date());
         perCustomerinfo.setOpertCode(loginUser.getUser().getUserName());
         perCustomerinfo.setOpertName(loginUser.getUser().getNickName());
-        perCustomerinfo.setResumePath("");
+        perCustomerinfo.setResumePath(fsafsa);
         perCustomerinfoMapper.insertPerCustomerinfo(perCustomerinfo);
-        //添加简历基本项目
+
+
+        //插入简历抢占信息
         PerRobcustomer perrobcustomer=new PerRobcustomer();
         perrobcustomer.setSeizeId(UUID.randomUUID().toString());
         perrobcustomer.setCustomerTel(phone_number);
@@ -629,27 +654,32 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         perrobcustomer.setAddPeople(loginUser.getUsername());
         perrobcustomer.setAddName(loginUser.getUser().getNickName());
         perrobcustomer.setStatus(0);
+        perRobcustomerMapper.insertPerRobcustomer(perrobcustomer);
         //添加简历工作经验
         for (PerWork perWork:workList){
             perWork.setCustomerCode(perCustomerinfo.getCustomerCode());
             perWork.setAddpeople(loginUser.getUser().getUserName());
             perWork.setAddtime(new Date());
         }
-        perWorkMapper.insertList(workList);
+        if(workList.size()>0){
+            perWorkMapper.insertList(workList);
+        }
         //添加简历项目经验
         for (PerProject perProject:projList){
             perProject.setCustomerCode(perCustomerinfo.getCustomerCode());
         }
+        if(projList.size()>0){
         perProjectMapper.insertList(projList);
+        }
         //添加简历学历经验
         for (PerEducation perEducation:educaList){
             perEducation.setCustomerCode(perCustomerinfo.getCustomerCode());
             perEducation.setAddpeople(loginUser.getUser().getUserName());
             perEducation.setAddtime(new Date());
         }
-        perEducationMapper.insertList(educaList);
-
-
+        if(educaList.size()>0) {
+            perEducationMapper.insertList(educaList);
+        }
         //添加操作记录
         ConOperationrecords record = new ConOperationrecords();
         record.setType(1);
@@ -666,9 +696,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         percuscontact.setUpdateStatic(1);
         percuscontact.setMemoDetail("录入人员信息");
         perCuscontactMapper.insertPerCuscontact(percuscontact);
-
-
-        return AjaxResult.success("简历修改成功");
+        return AjaxResult.success("简历添加成功");
 
     }
 

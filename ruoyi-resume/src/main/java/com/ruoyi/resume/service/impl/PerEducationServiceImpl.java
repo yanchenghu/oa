@@ -86,7 +86,7 @@ public class PerEducationServiceImpl implements IPerEducationService
      * @return 结果
      */
     @Override
-    public int deletePerEducationById(Long id)
+    public int deletePerEducationById(Integer id)
     {
         return perEducationMapper.deletePerEducationById(id);
     }
