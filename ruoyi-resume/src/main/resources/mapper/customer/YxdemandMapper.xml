@@ -38,7 +38,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="personnelInto"    column="personnel_into"    />
         <result property="isReturnMoney"    column="is_return_money"    />
         <result property="updateDate"    column="update_date"    />
-        <result property="entryDays"    column="entry_days"    />
         <result property="contactInformation"    column="contact_information"    />
         <result property="wechat"    column="wechat"    />
         <result property="mailbox"    column="mailbox"    />
@@ -46,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectYxdemandVo">
-        select entry_id, company_name, recruitment_job, contact_people, contact_position, contact_phone, info_sourse, company_situation, is_send_resume, interview_company, interviewer, interviewer_position, interview_contact, interview_address, final_party, entry_people, entry_people_id, insert_time, is_follow_submit, rob_people_id, rob_people, rob_time, is_accept, business_id, business_people, submit_time, is_business, cooperation_projects, is_signing, sing_time, personnel_into, is_return_money, update_date, entry_days, contact_information,wechat,mailbox,qq from yxdemand
+        select entry_id, company_name, recruitment_job, contact_people, contact_position, contact_phone, info_sourse, company_situation, is_send_resume, interview_company, interviewer, interviewer_position, interview_contact, interview_address, final_party, entry_people, entry_people_id, insert_time, is_follow_submit, rob_people_id, rob_people, rob_time, is_accept, business_id, business_people, submit_time, is_business, cooperation_projects, is_signing, sing_time, personnel_into, is_return_money, update_date,  contact_information,wechat,mailbox,qq from yxdemand
     </sql>
 
     <select id="selectYxdemandList" parameterType="Yxdemand" resultMap="YxdemandResult">
@@ -60,7 +59,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isFollowSubmit != null "> and is_follow_submit = #{isFollowSubmit}</if>
             <if test="contactInformation != null "> and contact_information = #{contactInformation}</if>
             <if test="updateDate != null "> and update_date = #{updateDate}</if>
-            <if test="entryDays != null "> and entry_days = #{entryDays}</if>
         </where>
     </select>
     
@@ -105,7 +103,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="personnelInto != null">personnel_into,</if>
             <if test="isReturnMoney != null">is_return_money,</if>
             <if test="updateDate != null">update_date,</if>
-            <if test="entryDays != null">entry_days,</if>
             <if test="contactInformation != null">contact_information,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -142,7 +139,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="personnelInto != null">#{personnelInto},</if>
             <if test="isReturnMoney != null">#{isReturnMoney},</if>
             <if test="updateDate != null">#{updateDate},</if>
-            <if test="entryDays != null">#{entryDays},</if>
             <if test="contactInformation != null">#{contactInformation},</if>
          </trim>
     </insert>
