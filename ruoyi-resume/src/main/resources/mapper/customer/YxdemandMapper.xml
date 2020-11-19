@@ -59,6 +59,9 @@
             <if test="contactInformation != null "> and contact_information = #{contactInformation}</if>
             <if test="updateDate != null "> and update_date = #{updateDate}</if>
         </where>
+
+
+
     </select>
 
     <select id="selectYxdemandById" parameterType="Integer" resultMap="YxdemandResult">
