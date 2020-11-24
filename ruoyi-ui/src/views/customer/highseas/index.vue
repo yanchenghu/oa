@@ -283,7 +283,7 @@
 </template>
 
 <script>
-import { getYxdemand,listYxdemand,addYxdemand,see} from "@/api/customer/yxdemand";
+import { getYxdemand,listYxdemand,addYxdemand,see} from "@/api/customer/highseas";
 
 export default {
   name: "Yxdemand",

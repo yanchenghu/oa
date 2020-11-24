@@ -220,6 +220,25 @@ public class YxdemandServiceImpl implements IYxdemandService
         yxdemand.setSubmitTime(new Date());
         return yxdemandMapper.updateYxdemand(yxdemand);
     }
+    /**
+     * 商务意向客户列表
+     */
+    @Override
+    public List<Yxdemand> selectBusinessList(Yxdemand yxdemand, LoginUser loginUser) {
+        yxdemand.setBusinessId(loginUser.getUsername());
+        List<Yxdemand> list=yxdemandMapper.selectYxdemandList(yxdemand);
+
+        return null;
+    }
+
+
+
+
+
+
+
+
+
 
     /**
      * 定时任务

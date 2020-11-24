@@ -76,6 +76,24 @@ public interface IYxdemandService
 
     int Customertransfer(Yxdemand yxdemand, LoginUser loginUser);
 
+
+    /**
+     * 商务意向客户列表
+     */
+    List<Yxdemand> selectBusinessList(Yxdemand yxdemand, LoginUser loginUser);
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * 定时任务
      * 查询全部录入公司记录，监测是否过期，过期则释放

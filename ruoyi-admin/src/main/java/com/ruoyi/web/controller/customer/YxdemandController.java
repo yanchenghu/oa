@@ -108,7 +108,7 @@ public class YxdemandController extends BaseController
         return toAjax(yxdemandService.Customertransfer(yxdemand,loginUser));
     }
     /**
-     * 抢占功能
+     * 抢占功能营销
      */
     @PostMapping(value = "/rebClientByEnId")
     public AjaxResult  rebClientByEnId(@RequestParam(value = "entryId", defaultValue = "") Integer entryId)
@@ -119,7 +119,18 @@ public class YxdemandController extends BaseController
         return null;
     }
 
-
+    /**
+     * 查询商务公司列表
+     */
+    @PreAuthorize("@ss.hasPermi('customer:yxdemand:buslist')")
+    @GetMapping("/buslist")
+    public TableDataInfo buslist(Yxdemand yxdemand)throws Exception
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        startPage();
+        List<Yxdemand> list = yxdemandService.selectYxdemandList(yxdemand,loginUser);
+        return getDataTable(list);
+    }
 
 
 
