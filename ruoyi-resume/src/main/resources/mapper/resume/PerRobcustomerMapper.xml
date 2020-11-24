@@ -129,9 +129,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          update per_robcustomer
          set Status=1
          where seize_id in
-            <foreach item="list" collection="array" open="(" separator="," close=")">
-                #{list}
-            </foreach>
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
 
     </update>
 

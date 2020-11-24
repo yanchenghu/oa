@@ -10,8 +10,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 跟进联系内容对象 yxcontact
  * 
- * @author ruoyi
- * @date 2020-11-11
+ * @author ych
+ * @date 2020-11-23
  */
 public class Yxcontact extends BaseEntity
 {
@@ -32,22 +32,14 @@ public class Yxcontact extends BaseEntity
     @Excel(name = "跟进人姓名")
     private String nickName;
 
-    /** 跟进人姓名 */
-    @Excel(name = "状态")
-    private Integer status;
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     /** 添加时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date contactTime;
+
+    /** 1录入2、改变状态 3、跟进 */
+    @Excel(name = "1录入2、改变状态 3、跟进")
+    private Integer status;
 
     public void setContactId(Integer contactId) 
     {
@@ -94,6 +86,15 @@ public class Yxcontact extends BaseEntity
     {
         return contactTime;
     }
+    public void setStatus(Integer status) 
+    {
+        this.status = status;
+    }
+
+    public Integer getStatus() 
+    {
+        return status;
+    }
 
     @Override
     public String toString() {
@@ -103,6 +104,7 @@ public class Yxcontact extends BaseEntity
             .append("contactDetail", getContactDetail())
             .append("nickName", getNickName())
             .append("contactTime", getContactTime())
+            .append("status", getStatus())
             .toString();
     }
 }

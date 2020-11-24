@@ -59,6 +59,9 @@ public interface IPerRobcustomerService
      */
     public int deletePerRobcustomerById(String seizeId);
 
-
+    /**
+     * 定时任务
+     * 查询全部抢占记录，监测是否过期，过期则释放
+     */
     void initRobStatus();
 }

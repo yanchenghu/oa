@@ -4,50 +4,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.customer.mapper.YxcontactMapper">
 
-    
+
     <resultMap type="Yxcontact" id="YxcontactResult">
         <result property="contactId"    column="contact_id"    />
         <result property="entryId"    column="entry_id"    />
         <result property="contactDetail"    column="contact_detail"    />
         <result property="nickName"    column="nick_name"    />
         <result property="contactTime"    column="contact_time"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectYxcontactVo">
-        select contact_id, entry_id, contact_detail, nick_name, contact_time from yxcontact
+        select contact_id, entry_id, contact_detail, nick_name, contact_time, status from yxcontact
     </sql>
 
     <select id="selectYxcontactList" parameterType="Yxcontact" resultMap="YxcontactResult">
         <include refid="selectYxcontactVo"/>
-        <where>  
+        <where>
             <if test="entryId != null "> and entry_id = #{entryId}</if>
             <if test="contactDetail != null  and contactDetail != ''"> and contact_detail = #{contactDetail}</if>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="contactTime != null "> and contact_time = #{contactTime}</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
+        order by contact_time desc
     </select>
-    
+
     <select id="selectYxcontactById" parameterType="Integer" resultMap="YxcontactResult">
         <include refid="selectYxcontactVo"/>
         where contact_id = #{contactId}
     </select>
-        
-    <insert id="insertYxcontact" parameterType="Yxcontact">
+
+    <insert id="insertYxcontact" parameterType="Yxcontact" useGeneratedKeys="true" keyProperty="contactId">
         insert into yxcontact
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="contactId != null">contact_id,</if>
             <if test="entryId != null">entry_id,</if>
             <if test="contactDetail != null">contact_detail,</if>
             <if test="nickName != null">nick_name,</if>
             <if test="contactTime != null">contact_time,</if>
-         </trim>
+            <if test="status != null">status,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="contactId != null">#{contactId},</if>
             <if test="entryId != null">#{entryId},</if>
             <if test="contactDetail != null">#{contactDetail},</if>
             <if test="nickName != null">#{nickName},</if>
             <if test="contactTime != null">#{contactTime},</if>
-         </trim>
+            <if test="status != null">#{status},</if>
+        </trim>
     </insert>
 
     <update id="updateYxcontact" parameterType="Yxcontact">
@@ -57,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contactDetail != null">contact_detail = #{contactDetail},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="contactTime != null">contact_time = #{contactTime},</if>
+            <if test="status != null">status = #{status},</if>
         </trim>
         where contact_id = #{contactId}
     </update>
@@ -66,10 +70,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteYxcontactByIds" parameterType="String">
-        delete from yxcontact where contact_id in 
+        delete from yxcontact where contact_id in
         <foreach item="contactId" collection="array" open="(" separator="," close=")">
             #{contactId}
         </foreach>
     </delete>
+    <select id="selNewdetailByentryId" parameterType="Integer" resultMap="YxcontactResult">
+        <include refid="selectYxcontactVo"/>
+        where entry_id = #{entryId}
+        order by contact_time desc
+        limit 1
+    </select>
     
 </mapper>

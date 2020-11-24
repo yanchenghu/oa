@@ -85,8 +85,8 @@ public class Yxdemand extends BaseEntity
     private String entryPeopleId;
 
     /** 添加时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date insertTime;
 
     /** 营销转化情况（0、暂未回复，1、无意向，2、需跟进，3、无效联系，4、意向客户） */
@@ -102,8 +102,8 @@ public class Yxdemand extends BaseEntity
     private String robPeople;
 
     /** 抢占时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "抢占时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "抢占时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date robTime;
 
     /** 是否提交给商务（0、是1、否） */
@@ -119,8 +119,8 @@ public class Yxdemand extends BaseEntity
     private String businessPeople;
 
     /** 提交给商务时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "提交给商务时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "提交给商务时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date submitTime;
 
     /** 商务转化（0、无意向1、需跟进2、成为客户3、无效联系） */
@@ -136,8 +136,8 @@ public class Yxdemand extends BaseEntity
     private Integer isSigning;
 
     /** 签署时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "签署时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "签署时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date singTime;
 
     /** 人员是否入项（0、是1否） */
@@ -149,8 +149,8 @@ public class Yxdemand extends BaseEntity
     private Integer isReturnMoney;
 
     /** 更新时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date updateDate;
 
     /** 最近一次联系情况 */

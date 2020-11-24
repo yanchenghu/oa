@@ -613,7 +613,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         perCustomerinfo.setCustomerCode(SerialNumber.createSerial("cstm", 5));//个人编号生成
         //添加简历基本
          String phone_number=perCustomerinfo.getCustomerTel();
-        if(phone_number.equals("")){
+        if(StringUtils.isBlank(phone_number)){
             return AjaxResult.error("该简历无联系方式，请查证");
         }
         perCustomerinfo.setCustomerTel(phone_number);

@@ -179,17 +179,17 @@ public class PerCustomerinfoController extends BaseController
      * 工作信息删除
      */
     @GetMapping(value = "/projdeDel")
-    public AjaxResult projdeDel(@RequestParam("id")Integer id)
+    public AjaxResult projdeDel(@RequestParam("custproId")Integer custproId)
     {
-        return toAjax(perProjectService.deletePerProjectById(id));
+        return toAjax(perProjectService.deletePerProjectById(custproId));
     }
     /**
      * 学历信息
      */
     @GetMapping(value = "/educaDel")
-    public AjaxResult educaDel(@RequestParam("custpro_id")Integer custpro_id)
+    public AjaxResult educaDel(@RequestParam("id")Integer id)
     {
-        return toAjax(perEducationService.deletePerEducationById(custpro_id));
+        return toAjax(perEducationService.deletePerEducationById(id));
 
     }
 

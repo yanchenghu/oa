@@ -132,6 +132,18 @@
         </dependency>
 
 
+
+        <!--钉钉工具包,如缺失请到钉钉服务器开发文档下载-->
+        <dependency>
+            <groupId>com.taobao.top</groupId>
+            <artifactId>top-api-sdk-dev</artifactId>
+            <version>ding-open-mc-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/lib/taobao-sdk-java-auto_1479188381469-20190527.jar</systemPath>
+        </dependency>
+
+
+
     </dependencies>
 
 </project>

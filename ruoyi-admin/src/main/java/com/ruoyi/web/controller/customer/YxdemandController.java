@@ -10,6 +10,7 @@ import com.ruoyi.customer.domain.Yxdemand;
 import com.ruoyi.customer.service.IYxcontactService;
 import com.ruoyi.customer.service.IYxdemandService;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,11 +33,11 @@ public class YxdemandController extends BaseController
     @Autowired
     private IYxdemandService yxdemandService;
 
-    @Autowired
-    private IYxcontactService yxcontactService;
 
     @Autowired
     private TokenService tokenService;
+
+
 
     /**
      * 查询营销录入公司列表
@@ -45,7 +46,6 @@ public class YxdemandController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Yxdemand yxdemand)throws Exception
     {
-
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         startPage();
         List<Yxdemand> list = yxdemandService.selectYxdemandList(yxdemand,loginUser);
@@ -72,7 +72,7 @@ public class YxdemandController extends BaseController
     public AjaxResult add(@RequestBody Yxdemand yxdemand)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return toAjax(yxdemandService.insertYxdemand(yxdemand,loginUser));
+        return yxdemandService.insertYxdemand(yxdemand,loginUser);
     }
 
     /**
@@ -83,26 +83,41 @@ public class YxdemandController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Yxdemand yxdemand)
     {
-        return toAjax(yxdemandService.updateYxdemand(yxdemand));
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+
+        return yxdemandService.updateYxdemand(yxdemand,loginUser);
     }
 
 
-//    /**
-//     * 发布信息
-//     */
-//    @PreAuthorize("@ss.hasPermi('customer:yxdemand:release')")
-//    @Log(title = "营销录入公司", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult release(@RequestBody Yxcontact yxcontact)
-//    {
-//        return toAjax(yxcontactService.insertYxcontact(yxcontact));
-//    }
-
-
-
     /**
-     * 移交
+     * 发布信息
      */
+    @PostMapping(value = "/release")
+    public AjaxResult release(Yxcontact yxcontact)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return yxdemandService.insertYxcontact(yxcontact,loginUser);
+    }
+    /**
+     * 客户移交
+     */
+    @PostMapping(value = "/transfer")
+    public AjaxResult  Customertransfer(Yxdemand yxdemand)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return toAjax(yxdemandService.Customertransfer(yxdemand,loginUser));
+    }
+    /**
+     * 抢占功能
+     */
+    @PostMapping(value = "/rebClientByEnId")
+    public AjaxResult  rebClientByEnId(@RequestParam(value = "entryId", defaultValue = "") Integer entryId)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+
+//        return toAjax(yxdemandService.rebClientByEnId(entryId,loginUser));
+        return null;
+    }
 
 
 

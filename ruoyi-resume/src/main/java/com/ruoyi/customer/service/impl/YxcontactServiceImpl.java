@@ -54,6 +54,7 @@ public class YxcontactServiceImpl implements IYxcontactService
     @Override
     public int insertYxcontact(Yxcontact yxcontact)
     {
+
         return yxcontactMapper.insertYxcontact(yxcontact);
     }
 

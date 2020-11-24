@@ -3,6 +3,7 @@ package com.ruoyi.customer.mapper;
 import com.ruoyi.customer.domain.Yxdemand;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 营销录入公司Mapper接口
@@ -59,4 +60,12 @@ public interface YxdemandMapper
      * @return 结果
      */
     public int deleteYxdemandByIds(Integer[] entryIds);
+
+
+    /**
+     * 定时任务
+     * 查询全部录入公司记录，监测是否过期，过期则释放
+     */
+    List<Yxdemand> selrobYxdelist();
+
 }

@@ -61,4 +61,5 @@ public interface YxcontactMapper
     public int deleteYxcontactByIds(Long[] contactIds);
 
 
+    Yxcontact selNewdetailByentryId(Integer entryId);
 }
