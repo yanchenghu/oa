@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectYxdemandById" parameterType="Integer" resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
         where entry_id = #{entryId}
-    </select>w
+    </select>
         
     <insert id="insertYxdemand" parameterType="Yxdemand">
         insert into yxdemand
