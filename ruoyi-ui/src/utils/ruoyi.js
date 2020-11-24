@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 通用js方法封装处理
  * Copyright (c) 2019 ruoyi
  */
@@ -52,6 +52,11 @@ export function resetForm(refName) {
 		this.$refs[refName].resetFields();
 	}
 }
+
+export function worktime(startyear,startmonth,endyear,endmonth){
+        return `${startyear}.${startmonth} — ${endyear}.${endmonth}`
+}
+
 
 // 添加日期范围
 export function addDateRange(params, dateRange) {

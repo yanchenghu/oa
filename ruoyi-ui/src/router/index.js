@@ -92,6 +92,27 @@ export const constantRoutes = [
       }
     ]
   },
+
+  {
+    path: '/record',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'particulars',
+        component: (resolve) => require(['@/views/resume/record/part.vue'], resolve),
+        name: 'Part',
+        meta: { title: '简历详情', icon: '' }
+      },
+      {
+        path: 'manually',
+        component: (resolve) => require(['@/views/resume/record/manually.vue'], resolve),
+        name: 'manually',
+        meta: { title: '手动上传更新简历', icon: '' }
+      }
+    ]
+  },
+
   {
     path: '/job',
     component: Layout,

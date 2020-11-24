@@ -4,17 +4,25 @@
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
+
+      <el-carousel indicator-position="none" height="50px" >
+         <el-carousel-item v-for="item in 4" :key="item">
+           <h3>{{ item }}</h3>
+         </el-carousel-item>
+       </el-carousel>
+
+
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
-        </el-tooltip>
 
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
+        <!-- <el-tooltip content="源码地址" effect="dark" placement="bottom">
+          <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
+        </el-tooltip> -->
+
+        <!-- <el-tooltip content="文档地址" effect="dark" placement="bottom">
           <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        </el-tooltip> -->
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -109,6 +117,29 @@ export default {
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
+
+
+    .el-carousel{
+      width: 170px;
+      float: left;
+      margin-left: 50%;
+      position:absolute;
+      // left:-100px;
+      .el-carousel__item{
+        background-color: red;
+        text-align: center;
+      }
+    }
+
+    .el-carousel__item h3 {
+        color: #475669;
+        font-size: 18px;
+        opacity: 0.75;
+        line-height: 50px;
+        margin: 0;
+      }
+
+
 
   .hamburger-container {
     line-height: 46px;

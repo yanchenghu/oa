@@ -33,6 +33,7 @@ function position() {
  */
 export function scrollTo(to, duration, callback) {
   const start = position()
+  console.log(start)
   const change = to - start
   const increment = 20
   let currentTime = 0

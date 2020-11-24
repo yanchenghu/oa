@@ -16,8 +16,6 @@
       </el-form-item>
     </el-form>
 
-
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -34,8 +32,6 @@
 
 
 
-
-
     <el-row>
       <el-col  :span="7" v-for="temp in templateList" style="margin-right: 10px;margin-bottom: 10px">
         <el-card shadow="hover" >
@@ -47,7 +43,7 @@
                 {{temp.templateName}}
               </div>
               <div>
-                {{temp.namingFormat}}
+                {{temp.company}}-{{temp.technicalDirection}}-{{temp.workingYears}}年-{{temp.name}}
               </div>
             </div >
             <div style="position: absolute;right: -15px;line-height: 50px;">
@@ -61,14 +57,12 @@
               <el-button
                 size="mini"
                 type="success"
-                @click="download"
+                @click="download(temp)"
                 v-hasPermi="['resume:template:download']"
               >下载</el-button>
             </div>
 
           </div>
-
-
         </el-card>
       </el-col>
     </el-row>
@@ -76,8 +70,8 @@
 
     <el-dialog title="预览" :visible.sync="open" width="70%"  >
       <iframe
-        src='https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=https://oa.zhuyanhr.com/shzqoa/custTemp/demand20072003485269172/%E7%8E%8B%E8%82%96%E4%B8%9C.doc'
-        style="overflow: auto; position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height:1000%"
+        :src="'https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost/dev-api/'+drees"
+        style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
 
@@ -97,6 +91,20 @@
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
         </el-form-item>
+
+        <el-form-item label="公司" prop="company">
+          <el-input v-model="form.company" placeholder="请输入公司" />
+        </el-form-item>
+        <el-form-item label="技术方向" prop="technicalDirection">
+          <el-input v-model="form.technicalDirection" placeholder="请输入技术方向" />
+        </el-form-item>
+        <el-form-item label="工作年限" prop="workingYears">
+          <el-input v-model="form.workingYears" placeholder="请输入工作年限" />
+        </el-form-item>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名" />
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确定</el-button>
@@ -104,20 +112,18 @@
       </div>
     </el-dialog>
 
-
-
-
-
   </div>
 </template>
 
 <script>
-import { listTemplate, changeTemplateStatus,addTemplate  } from "@/api/resume/template/template";
+import { listTemplate, changeTemplateStatus,addTemplate} from "@/api/resume/template/template";
 
 export default {
   name: "Template",
   data() {
     return {
+      // 简历地址
+      drees:"",
       // 是否显示弹出层
       open: false,
       openn: false,
@@ -173,14 +179,17 @@ export default {
     // 预览简历
     preview(value){
       this.open=true;
-      this.title=value.templateFile
+      this.drees = value.templateFile
+      this.title="简历预览"
     },
+
     handleRemove(value){
       this.form.templateFile=value.raw;
     },
     // 下载简历
-    download(){
-      this.open=true;
+    download(val){
+      window.open(
+      `http://localhost/dev-api/${val.templateFile}`)
     },
 
     /** 查询简历模板列表 */
@@ -233,16 +242,21 @@ export default {
 
     /** 提交按钮 */
     submitForm() {
+      let form = this.form
       let formdata = new FormData()
       formdata.append("templateFile",form.templateFile)
       formdata.append("templateName",form.templateName)
+      formdata.append("company",form.company)
+      formdata.append("technicalDirection",form.technicalDirection)
+      formdata.append("workingYears",form.workingYears)
+      formdata.append("name",form.name)
       addTemplate(formdata).then(response => {
         this.msgSuccess("新增成功");
         this.open = false;
         this.getList();
       });
 
-      console.log(this.form)
+
       // this.$refs["form"].validate(valid => {
       //   if (valid) {
       //     if (this.form.templateId != null) {
@@ -276,15 +290,9 @@ export default {
       });
     },
 
-
-
-
-
-
-
-
-
-
   }
 };
 </script>
+<style>
+
+</style>

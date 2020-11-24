@@ -21,6 +21,7 @@ export function formatDate(cellValue) {
  * @returns {string}
  */
 export function formatTime(time, option) {
+  console.log("123")
   if (('' + time).length === 10) {
     time = parseInt(time) * 1000
   } else {

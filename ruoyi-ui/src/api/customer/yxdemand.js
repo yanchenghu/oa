@@ -8,7 +8,22 @@ export function listYxdemand(query) {
     params: query
   })
 }
-
+// 移交
+export function turnover(data) {
+  return request({
+    url: '/customer/yxdemand/transfer',
+    method: 'post',
+    data: data
+  })
+}
+// 发布跟踪记录
+export function release(data) {
+  return request({
+    url: '/customer/yxdemand/release',
+    method: 'post',
+    data: data
+  })
+}
 // 查询营销录入公司详细
 export function getYxdemand(entryId) {
   return request({

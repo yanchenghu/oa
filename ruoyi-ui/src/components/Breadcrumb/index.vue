@@ -1,4 +1,7 @@
 <template>
+  
+
+
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
@@ -7,6 +10,7 @@
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
+
 </template>
 
 <script>
@@ -67,6 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
   font-size: 14px;
