@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resume.mapper.PerCuscontactMapper">
+
+    <resultMap type="PerCuscontact" id="PerCuscontactResult">
+        <result property="contacDatecode"    column="contac_datecode"    />
+        <result property="contactTime"    column="contact_time"    />
+        <result property="contactUsercode"    column="contact_usercode"    />
+        <result property="contactCustomercode"    column="contact_customercode"    />
+        <result property="updateStatic"    column="update_static"    />
+        <result property="memoDetail"    column="memo_detail"    />
+        <result property="bindId"    column="bind_id"    />
+        <result property="demandId"    column="demand_id"    />
+    </resultMap>
+
+    <sql id="selectPerCuscontactVo">
+        select contac_datecode, contact_time, contact_usercode, contact_customercode, update_static, memo_detail, bind_id, demand_id from per_cuscontact
+    </sql>
+
+    <select id="selectPerCuscontactList" parameterType="PerCuscontact" resultMap="PerCuscontactResult">
+        <include refid="selectPerCuscontactVo"/>
+        <where>
+            <if test="contactTime != null "> and contact_time = #{contactTime}</if>
+            <if test="contactUsercode != null  and contactUsercode != ''"> and contact_usercode = #{contactUsercode}</if>
+            <if test="contactCustomercode != null  and contactCustomercode != ''"> and contact_customercode = #{contactCustomercode}</if>
+            <if test="updateStatic != null "> and update_static = #{updateStatic}</if>
+            <if test="memoDetail != null  and memoDetail != ''"> and memo_detail = #{memoDetail}</if>
+            <if test="bindId != null  and bindId != ''"> and bind_id = #{bindId}</if>
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+        </where>
+    </select>
+
+    <select id="selectPerCuscontactById" parameterType="String" resultMap="PerCuscontactResult">
+        <include refid="selectPerCuscontactVo"/>
+        where contac_datecode = #{contacDatecode}
+    </select>
+
+    <insert id="insertPerCuscontact" parameterType="PerCuscontact">
+        insert into per_cuscontact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contacDatecode != null">contac_datecode,</if>
+            <if test="contactTime != null">contact_time,</if>
+            <if test="contactUsercode != null">contact_usercode,</if>
+            <if test="contactCustomercode != null">contact_customercode,</if>
+            <if test="updateStatic != null">update_static,</if>
+            <if test="memoDetail != null">memo_detail,</if>
+            <if test="bindId != null">bind_id,</if>
+            <if test="demandId != null">demand_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contacDatecode != null">#{contacDatecode},</if>
+            <if test="contactTime != null">#{contactTime},</if>
+            <if test="contactUsercode != null">#{contactUsercode},</if>
+            <if test="contactCustomercode != null">#{contactCustomercode},</if>
+            <if test="updateStatic != null">#{updateStatic},</if>
+            <if test="memoDetail != null">#{memoDetail},</if>
+            <if test="bindId != null">#{bindId},</if>
+            <if test="demandId != null">#{demandId},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePerCuscontact" parameterType="PerCuscontact">
+        update per_cuscontact
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contactTime != null">contact_time = #{contactTime},</if>
+            <if test="contactUsercode != null">contact_usercode = #{contactUsercode},</if>
+            <if test="contactCustomercode != null">contact_customercode = #{contactCustomercode},</if>
+            <if test="updateStatic != null">update_static = #{updateStatic},</if>
+            <if test="memoDetail != null">memo_detail = #{memoDetail},</if>
+            <if test="bindId != null">bind_id = #{bindId},</if>
+            <if test="demandId != null">demand_id = #{demandId},</if>
+        </trim>
+        where contac_datecode = #{contacDatecode}
+    </update>
+
+    <delete id="deletePerCuscontactById" parameterType="String">
+        delete from per_cuscontact where contac_datecode = #{contacDatecode}
+    </delete>
+
+    <delete id="deletePerCuscontactByIds" parameterType="String">
+        delete from per_cuscontact where contac_datecode in
+        <foreach item="contacDatecode" collection="array" open="(" separator="," close=")">
+            #{contacDatecode}
+        </foreach>
+    </delete>
+
+    <select id="selectBycustomerCode"  parameterType="String" resultType="map">
+
+        SELECT
+            a.contac_datecode,DATE_FORMAT(a.contact_time,'%Y-%m-%d %H:%i:%s') as contact_time ,a.update_static,a.memo_detail
+            , d.nick_name,c.follow_status,f.projecttype,a.demand_id
+        FROM
+            per_cuscontact a
+            LEFT JOIN mar_demandresume b ON a.bind_id = b.id
+            LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id and b.newfollowtime=c.trackingtime
+            LEFT JOIN sys_user d on a.contact_usercode=d.user_name
+            LEFT JOIN mar_demand f on b.demand_id=f.id
+        where a.contact_customercode=#{customerCode}
+
+    </select>
+    
+</mapper>

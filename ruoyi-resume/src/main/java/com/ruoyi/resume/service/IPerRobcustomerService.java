@@ -58,4 +58,7 @@ public interface IPerRobcustomerService
      * @return 结果
      */
     public int deletePerRobcustomerById(String seizeId);
+
+
+    void initRobStatus();
 }

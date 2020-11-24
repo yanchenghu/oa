@@ -1,14 +1,22 @@
 package com.ruoyi.resume.service.impl;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.resume.domain.PerTemplate;
 import com.ruoyi.resume.mapper.PerTemplateMapper;
 import com.ruoyi.resume.service.IPerTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -23,6 +31,8 @@ public class PerTemplateServiceImpl implements IPerTemplateService
     @Autowired
     private PerTemplateMapper perTemplateMapper;
 
+    @Value("${ruoyi.profile}")
+    private String profile;// (路径)
     /**
      * 查询简历模板
      * 
@@ -44,6 +54,8 @@ public class PerTemplateServiceImpl implements IPerTemplateService
     @Override
     public List<PerTemplate> selectPerTemplateList(PerTemplate perTemplate)
     {
+
+
         return perTemplateMapper.selectPerTemplateList(perTemplate);
     }
 
@@ -54,10 +66,21 @@ public class PerTemplateServiceImpl implements IPerTemplateService
      * @return 结果
      */
     @Override
-    public int insertPerTemplate(PerTemplate perTemplate)
-    {
+    @Transactional
+    public AjaxResult insertPerTemplate(MultipartFile file, String templateName,
+                                 String company,String technicalDirection,Integer workingYears,String name) throws IOException {
+
+        String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+        PerTemplate perTemplate = new PerTemplate();
         perTemplate.setTemplateId(String.valueOf(UUID.randomUUID()));
-        return perTemplateMapper.insertPerTemplate(perTemplate);
+        perTemplate.setTemplateName(templateName);
+        perTemplate.setCompany(company);
+        perTemplate.setTechnicalDirection(technicalDirection);
+        perTemplate.setWorkingYears(workingYears);
+        perTemplate.setName(name);
+        perTemplate.setTemplateFile(avatar);
+         perTemplateMapper.insertPerTemplate(perTemplate);
+        return AjaxResult.success();
     }
 
     /**
@@ -100,6 +123,7 @@ public class PerTemplateServiceImpl implements IPerTemplateService
     public Map<String, String> previewCode(String templateId) {
         return (Map<String, String>) perTemplateMapper.selectPerTemplateById(templateId);
     }
+
 
 
 }

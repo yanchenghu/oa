@@ -49,7 +49,7 @@ public interface PerEducationMapper
      * @param id 简历教育经验ID
      * @return 结果
      */
-    public int deletePerEducationById(Long id);
+    public int deletePerEducationById(Integer id);
 
     /**
      * 批量删除简历教育经验
@@ -58,4 +58,6 @@ public interface PerEducationMapper
      * @return 结果
      */
     public int deletePerEducationByIds(Long[] ids);
+
+    int insertList(List<PerEducation> edulistArr);
 }

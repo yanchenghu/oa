@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.HighseasMapper">
+
+    <resultMap type="Yxdemand" id="YxdemandResult">
+        <result property="entryId"    column="entry_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="recruitmentJob"    column="recruitment_job"    />
+        <result property="contactPeople"    column="contact_people"    />
+        <result property="contactPosition"    column="contact_position"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="infoSourse"    column="info_sourse"    />
+        <result property="companySituation"    column="company_situation"    />
+        <result property="isSendResume"    column="is_send_resume"    />
+        <result property="interviewCompany"    column="interview_company"    />
+        <result property="interviewer"    column="interviewer"    />
+        <result property="interviewerPosition"    column="interviewer_position"    />
+        <result property="interviewContact"    column="interview_contact"    />
+        <result property="interviewAddress"    column="interview_address"    />
+        <result property="finalParty"    column="final_party"    />
+        <result property="entryPeople"    column="entry_people"    />
+        <result property="entryPeopleId"    column="entry_people_id"    />
+        <result property="insertTime"    column="insert_time"    />
+        <result property="isFollowSubmit"    column="is_follow_submit"    />
+        <result property="robPeopleId"    column="rob_people_id"    />
+        <result property="robPeople"    column="rob_people"    />
+        <result property="robTime"    column="rob_time"    />
+        <result property="isAccept"    column="is_accept"    />
+        <result property="businessId"    column="business_id"    />
+        <result property="businessPeople"    column="business_people"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="isBusiness"    column="is_business"    />
+        <result property="cooperationProjects"    column="cooperation_projects"    />
+        <result property="isSigning"    column="is_signing"    />
+        <result property="singTime"    column="sing_time"    />
+        <result property="personnelInto"    column="personnel_into"    />
+        <result property="isReturnMoney"    column="is_return_money"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="contactInformation"    column="contact_information"    />
+        <result property="wechat"    column="wechat"    />
+        <result property="mailbox"    column="mailbox"    />
+        <result property="qq"    column="qq"    />
+    </resultMap>
+
+    <sql id="selectYxdemandVo">
+        select entry_id, company_name, recruitment_job, contact_people, contact_position, contact_phone, info_sourse, company_situation, is_send_resume, interview_company, interviewer, interviewer_position, interview_contact, interview_address, final_party, entry_people, entry_people_id, insert_time, is_follow_submit, rob_people_id, rob_people, rob_time, is_accept, business_id, business_people, submit_time, is_business, cooperation_projects, is_signing, sing_time, personnel_into, is_return_money, update_date, contact_information, wechat, mailbox, qq from yxdemand
+    </sql>
+
+    <select id="selectYxdemandList" parameterType="Yxdemand" resultMap="YxdemandResult">
+        <include refid="selectYxdemandVo"/>
+        <where>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="recruitmentJob != null  and recruitmentJob != ''"> and recruitment_job = #{recruitmentJob}</if>
+            <if test="contactPeople != null  and contactPeople != ''"> and contact_people = #{contactPeople}</if>
+            <if test="contactPosition != null  and contactPosition != ''"> and contact_position = #{contactPosition}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="infoSourse != null  and infoSourse != ''"> and info_sourse = #{infoSourse}</if>
+            <if test="companySituation != null "> and company_situation = #{companySituation}</if>
+            <if test="isSendResume != null "> and is_send_resume = #{isSendResume}</if>
+            <if test="interviewCompany != null  and interviewCompany != ''"> and interview_company = #{interviewCompany}</if>
+            <if test="interviewer != null  and interviewer != ''"> and interviewer = #{interviewer}</if>
+            <if test="interviewerPosition != null  and interviewerPosition != ''"> and interviewer_position = #{interviewerPosition}</if>
+            <if test="interviewContact != null  and interviewContact != ''"> and interview_contact = #{interviewContact}</if>
+            <if test="interviewAddress != null  and interviewAddress != ''"> and interview_address = #{interviewAddress}</if>
+            <if test="finalParty != null  and finalParty != ''"> and final_party = #{finalParty}</if>
+            <if test="entryPeople != null  and entryPeople != ''"> and entry_people = #{entryPeople}</if>
+            <if test="entryPeopleId != null  and entryPeopleId != ''"> and entry_people_id = #{entryPeopleId}</if>
+            <if test="insertTime != null "> and insert_time = #{insertTime}</if>
+            <if test="isFollowSubmit != null "> and is_follow_submit = #{isFollowSubmit}</if>
+            <if test="robPeopleId != null  and robPeopleId != ''"> and rob_people_id = #{robPeopleId}</if>
+            <if test="robPeople != null  and robPeople != ''"> and rob_people = #{robPeople}</if>
+            <if test="robTime != null "> and rob_time = #{robTime}</if>
+            <if test="isAccept != null "> and is_accept = #{isAccept}</if>
+            <if test="businessId != null  and businessId != ''"> and business_id = #{businessId}</if>
+            <if test="businessPeople != null  and businessPeople != ''"> and business_people = #{businessPeople}</if>
+            <if test="submitTime != null "> and submit_time = #{submitTime}</if>
+            <if test="isBusiness != null  and isBusiness != ''"> and is_business = #{isBusiness}</if>
+            <if test="cooperationProjects != null "> and cooperation_projects = #{cooperationProjects}</if>
+            <if test="isSigning != null "> and is_signing = #{isSigning}</if>
+            <if test="singTime != null "> and sing_time = #{singTime}</if>
+            <if test="personnelInto != null "> and personnel_into = #{personnelInto}</if>
+            <if test="isReturnMoney != null "> and is_return_money = #{isReturnMoney}</if>
+            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+            <if test="contactInformation != null  and contactInformation != ''"> and contact_information = #{contactInformation}</if>
+            <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
+            <if test="mailbox != null  and mailbox != ''"> and mailbox = #{mailbox}</if>
+            <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
+        </where>
+    </select>
+
+    <select id="selectYxdemandById" parameterType="Integer" resultMap="YxdemandResult">
+        <include refid="selectYxdemandVo"/>
+        where entry_id = #{entryId}
+    </select>
+
+    <insert id="insertYxdemand" parameterType="Yxdemand" useGeneratedKeys="true" keyProperty="entryId">
+        insert into yxdemand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyName != null">company_name,</if>
+            <if test="recruitmentJob != null">recruitment_job,</if>
+            <if test="contactPeople != null">contact_people,</if>
+            <if test="contactPosition != null">contact_position,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="infoSourse != null">info_sourse,</if>
+            <if test="companySituation != null">company_situation,</if>
+            <if test="isSendResume != null">is_send_resume,</if>
+            <if test="interviewCompany != null">interview_company,</if>
+            <if test="interviewer != null">interviewer,</if>
+            <if test="interviewerPosition != null">interviewer_position,</if>
+            <if test="interviewContact != null">interview_contact,</if>
+            <if test="interviewAddress != null">interview_address,</if>
+            <if test="finalParty != null">final_party,</if>
+            <if test="entryPeople != null">entry_people,</if>
+            <if test="entryPeopleId != null">entry_people_id,</if>
+            <if test="insertTime != null">insert_time,</if>
+            <if test="isFollowSubmit != null">is_follow_submit,</if>
+            <if test="robPeopleId != null">rob_people_id,</if>
+            <if test="robPeople != null">rob_people,</if>
+            <if test="robTime != null">rob_time,</if>
+            <if test="isAccept != null">is_accept,</if>
+            <if test="businessId != null">business_id,</if>
+            <if test="businessPeople != null">business_people,</if>
+            <if test="submitTime != null">submit_time,</if>
+            <if test="isBusiness != null">is_business,</if>
+            <if test="cooperationProjects != null">cooperation_projects,</if>
+            <if test="isSigning != null">is_signing,</if>
+            <if test="singTime != null">sing_time,</if>
+            <if test="personnelInto != null">personnel_into,</if>
+            <if test="isReturnMoney != null">is_return_money,</if>
+            <if test="updateDate != null">update_date,</if>
+            <if test="contactInformation != null">contact_information,</if>
+            <if test="wechat != null">wechat,</if>
+            <if test="mailbox != null">mailbox,</if>
+            <if test="qq != null">qq,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyName != null">#{companyName},</if>
+            <if test="recruitmentJob != null">#{recruitmentJob},</if>
+            <if test="contactPeople != null">#{contactPeople},</if>
+            <if test="contactPosition != null">#{contactPosition},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="infoSourse != null">#{infoSourse},</if>
+            <if test="companySituation != null">#{companySituation},</if>
+            <if test="isSendResume != null">#{isSendResume},</if>
+            <if test="interviewCompany != null">#{interviewCompany},</if>
+            <if test="interviewer != null">#{interviewer},</if>
+            <if test="interviewerPosition != null">#{interviewerPosition},</if>
+            <if test="interviewContact != null">#{interviewContact},</if>
+            <if test="interviewAddress != null">#{interviewAddress},</if>
+            <if test="finalParty != null">#{finalParty},</if>
+            <if test="entryPeople != null">#{entryPeople},</if>
+            <if test="entryPeopleId != null">#{entryPeopleId},</if>
+            <if test="insertTime != null">#{insertTime},</if>
+            <if test="isFollowSubmit != null">#{isFollowSubmit},</if>
+            <if test="robPeopleId != null">#{robPeopleId},</if>
+            <if test="robPeople != null">#{robPeople},</if>
+            <if test="robTime != null">#{robTime},</if>
+            <if test="isAccept != null">#{isAccept},</if>
+            <if test="businessId != null">#{businessId},</if>
+            <if test="businessPeople != null">#{businessPeople},</if>
+            <if test="submitTime != null">#{submitTime},</if>
+            <if test="isBusiness != null">#{isBusiness},</if>
+            <if test="cooperationProjects != null">#{cooperationProjects},</if>
+            <if test="isSigning != null">#{isSigning},</if>
+            <if test="singTime != null">#{singTime},</if>
+            <if test="personnelInto != null">#{personnelInto},</if>
+            <if test="isReturnMoney != null">#{isReturnMoney},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+            <if test="contactInformation != null">#{contactInformation},</if>
+            <if test="wechat != null">#{wechat},</if>
+            <if test="mailbox != null">#{mailbox},</if>
+            <if test="qq != null">#{qq},</if>
+        </trim>
+    </insert>
+
+    <update id="updateYxdemand" parameterType="Yxdemand">
+        update yxdemand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null">company_name = #{companyName},</if>
+            <if test="recruitmentJob != null">recruitment_job = #{recruitmentJob},</if>
+            <if test="contactPeople != null">contact_people = #{contactPeople},</if>
+            <if test="contactPosition != null">contact_position = #{contactPosition},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="infoSourse != null">info_sourse = #{infoSourse},</if>
+            <if test="companySituation != null">company_situation = #{companySituation},</if>
+            <if test="isSendResume != null">is_send_resume = #{isSendResume},</if>
+            <if test="interviewCompany != null">interview_company = #{interviewCompany},</if>
+            <if test="interviewer != null">interviewer = #{interviewer},</if>
+            <if test="interviewerPosition != null">interviewer_position = #{interviewerPosition},</if>
+            <if test="interviewContact != null">interview_contact = #{interviewContact},</if>
+            <if test="interviewAddress != null">interview_address = #{interviewAddress},</if>
+            <if test="finalParty != null">final_party = #{finalParty},</if>
+            <if test="entryPeople != null">entry_people = #{entryPeople},</if>
+            <if test="entryPeopleId != null">entry_people_id = #{entryPeopleId},</if>
+            <if test="insertTime != null">insert_time = #{insertTime},</if>
+            <if test="isFollowSubmit != null">is_follow_submit = #{isFollowSubmit},</if>
+            <if test="robPeopleId != null">rob_people_id = #{robPeopleId},</if>
+            <if test="robPeople != null">rob_people = #{robPeople},</if>
+            <if test="robTime != null">rob_time = #{robTime},</if>
+            <if test="isAccept != null">is_accept = #{isAccept},</if>
+            <if test="businessId != null">business_id = #{businessId},</if>
+            <if test="businessPeople != null">business_people = #{businessPeople},</if>
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
+            <if test="isBusiness != null">is_business = #{isBusiness},</if>
+            <if test="cooperationProjects != null">cooperation_projects = #{cooperationProjects},</if>
+            <if test="isSigning != null">is_signing = #{isSigning},</if>
+            <if test="singTime != null">sing_time = #{singTime},</if>
+            <if test="personnelInto != null">personnel_into = #{personnelInto},</if>
+            <if test="isReturnMoney != null">is_return_money = #{isReturnMoney},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+            <if test="contactInformation != null">contact_information = #{contactInformation},</if>
+            <if test="wechat != null">wechat = #{wechat},</if>
+            <if test="mailbox != null">mailbox = #{mailbox},</if>
+            <if test="qq != null">qq = #{qq},</if>
+        </trim>
+        where entry_id = #{entryId}
+    </update>
+
+    <delete id="deleteYxdemandById" parameterType="Integer">
+        delete from yxdemand where entry_id = #{entryId}
+    </delete>
+
+    <delete id="deleteYxdemandByIds" parameterType="String">
+        delete from yxdemand where entry_id in
+        <foreach item="entryId" collection="array" open="(" separator="," close=")">
+            #{entryId}
+        </foreach>
+    </delete>
+
+
+
+
+
+
+
+</mapper>

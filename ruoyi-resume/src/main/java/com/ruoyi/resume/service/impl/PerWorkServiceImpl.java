@@ -74,7 +74,7 @@ public class PerWorkServiceImpl implements IPerWorkService
      * @return 结果
      */
     @Override
-    public int deletePerWorkByIds(Long[] ids)
+    public int deletePerWorkByIds(Integer[] ids)
     {
         return perWorkMapper.deletePerWorkByIds(ids);
     }
@@ -86,7 +86,7 @@ public class PerWorkServiceImpl implements IPerWorkService
      * @return 结果
      */
     @Override
-    public int deletePerWorkById(Long id)
+    public int deletePerWorkById(Integer id)
     {
         return perWorkMapper.deletePerWorkById(id);
     }

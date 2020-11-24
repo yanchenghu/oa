@@ -8,17 +8,17 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 简历录入工作经历对象 per_work
+ * 简历工作经验对象 per_work
  * 
  * @author ych
- * @date 2020-11-06
+ * @date 2020-11-13
  */
 public class PerWork
 {
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private Integer id;
 
     /** 求职者code */
     @Excel(name = "求职者code")
@@ -27,7 +27,7 @@ public class PerWork
     /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date startTime_month;
+    private Date startTime;
 
     /** 结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -87,17 +87,12 @@ public class PerWork
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date addtime;
 
-    /** 开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date starttime;
-
-    public void setId(Long id) 
+    public void setId(Integer id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId() 
     {
         return id;
     }
@@ -110,14 +105,14 @@ public class PerWork
     {
         return customerCode;
     }
-    public void setStartTime_month(Date startTime_month) 
+    public void setStartTime(Date startTime) 
     {
-        this.startTime_month = startTime_month;
+        this.startTime = startTime;
     }
 
-    public Date getStartTime_month() 
+    public Date getStartTime() 
     {
-        return startTime_month;
+        return startTime;
     }
     public void setEndTime(Date endTime) 
     {
@@ -246,21 +241,12 @@ public class PerWork
         return addtime;
     }
 
-
-    public Date getStarttime() {
-        return starttime;
-    }
-
-    public void setStarttime(Date starttime) {
-        this.starttime = starttime;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("customerCode", getCustomerCode())
-            .append("startTime_month", getStartTime_month())
+            .append("startTime", getStartTime())
             .append("endTime", getEndTime())
             .append("stillActive", getStillActive())
             .append("companyName", getCompanyName())

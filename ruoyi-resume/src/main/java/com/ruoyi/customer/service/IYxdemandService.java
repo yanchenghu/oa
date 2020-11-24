@@ -1,5 +1,7 @@
 package com.ruoyi.customer.service;
 
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.customer.domain.Yxdemand;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public interface IYxdemandService
      * @param entryId 营销录入公司ID
      * @return 营销录入公司
      */
-    public Yxdemand selectYxdemandById(Integer entryId);
+    public AjaxResult selectYxdemandById(Integer entryId);
 
     /**
      * 查询营销录入公司列表
@@ -26,7 +28,7 @@ public interface IYxdemandService
      * @param yxdemand 营销录入公司
      * @return 营销录入公司集合
      */
-    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand);
+    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand,LoginUser loginUser) throws Exception;
 
     /**
      * 新增营销录入公司
@@ -34,7 +36,7 @@ public interface IYxdemandService
      * @param yxdemand 营销录入公司
      * @return 结果
      */
-    public int insertYxdemand(Yxdemand yxdemand);
+    public int insertYxdemand(Yxdemand yxdemand,LoginUser loginUser);
 
     /**
      * 修改营销录入公司

@@ -120,6 +120,7 @@
         </dependency>
 
 
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -129,6 +130,7 @@
             <artifactId>android-json</artifactId>
             <version>0.0.20131108.vaadin1</version>
         </dependency>
+
 
     </dependencies>
 

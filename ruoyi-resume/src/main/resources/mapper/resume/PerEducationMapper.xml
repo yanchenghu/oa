@@ -127,15 +127,63 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deletePerEducationById" parameterType="Long">
+    <delete id="deletePerEducationById" parameterType="Integer">
         delete from per_education where id = #{id}
     </delete>
 
-    <delete id="deletePerEducationByIds" parameterType="String">
+    <delete id="deletePerEducationByIds" parameterType="Integer">
         delete from per_education where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+
+
+    <insert id="insertList" parameterType="java.util.List">
+
+      insert into per_education
+               ( customer_code,
+                start_time,
+                end_time,
+                school_name,
+                degree,
+                major,
+                still_active,
+                school_level,
+                study_model,
+                location,
+                GPA,
+                ranking,
+                courses,
+                department,
+                school_rank,
+                addpeople,
+                addtime,
+                remark)
+      values
+      <foreach collection="list" item="proinfo" separator=",">
+               ( #{proinfo.customerCode},
+                #{proinfo.startTime},
+                #{proinfo.endTime},
+                #{proinfo.schoolName},
+                #{proinfo.degree},
+                #{proinfo.major},
+                #{proinfo.stillActive},
+                #{proinfo.schoolLevel},
+                #{proinfo.studyModel},
+                #{proinfo.location},
+                #{proinfo.gpa},
+                #{proinfo.ranking},
+                #{proinfo.courses},
+                #{proinfo.department},
+                #{proinfo.schoolRank},
+                #{proinfo.addpeople},
+                #{proinfo.addtime},
+                #{proinfo.remark})
+        </foreach>
+    </insert>
+
+
     
 </mapper>

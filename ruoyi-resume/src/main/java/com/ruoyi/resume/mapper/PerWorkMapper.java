@@ -49,7 +49,7 @@ public interface PerWorkMapper
      * @param id 简历录入工作经历ID
      * @return 结果
      */
-    public int deletePerWorkById(Long id);
+    public int deletePerWorkById(Integer id);
 
     /**
      * 批量删除简历录入工作经历
@@ -57,5 +57,7 @@ public interface PerWorkMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deletePerWorkByIds(Long[] ids);
+    public int deletePerWorkByIds(Integer[] ids);
+
+    int insertList(List<PerWork> worklistArr);
 }

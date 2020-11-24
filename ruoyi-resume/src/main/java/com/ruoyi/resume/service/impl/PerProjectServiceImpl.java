@@ -86,7 +86,7 @@ public class PerProjectServiceImpl implements IPerProjectService
      * @return 结果
      */
     @Override
-    public int deletePerProjectById(String custproId)
+    public int deletePerProjectById(Integer custproId)
     {
         return perProjectMapper.deletePerProjectById(custproId);
     }

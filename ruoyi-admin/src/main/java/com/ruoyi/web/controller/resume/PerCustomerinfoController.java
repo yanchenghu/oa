@@ -1,10 +1,20 @@
 package com.ruoyi.web.controller.resume;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.resume.domain.PerEducation;
+import com.ruoyi.resume.domain.PerProject;
+import com.ruoyi.resume.domain.PerWork;
+import com.ruoyi.resume.service.IPerEducationService;
+import com.ruoyi.resume.service.IPerProjectService;
+import com.ruoyi.resume.service.IPerWorkService;
 import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +25,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.service.IPerCustomerinfoService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * 简历Controller
@@ -37,6 +43,14 @@ public class PerCustomerinfoController extends BaseController
     private IPerCustomerinfoService perCustomerinfoService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private RedisCache redisCache;
+    @Autowired
+    private IPerEducationService perEducationService;
+    @Autowired
+    private IPerProjectService perProjectService;
+    @Autowired
+    private IPerWorkService perWorkService;
     /**
      * 查询简历列表
      */
@@ -49,31 +63,8 @@ public class PerCustomerinfoController extends BaseController
         return getDataTable(list);
     }
 
-
-
     /**
-     * 获取简历详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('resume:record:query')")
-    @GetMapping(value = "/{customerCode}")
-    public AjaxResult getInfo(@PathVariable("customerCode") String customerCode)
-    {
-        return AjaxResult.success(perCustomerinfoService.selectPerCustomerinfoById(customerCode));
-    }
-
-    /**
-     * 新增简历
-     */
-    @PreAuthorize("@ss.hasPermi('resume:record:add')")
-    @Log(title = "简历", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody PerCustomerinfo perCustomerinfo)
-    {
-        return toAjax(perCustomerinfoService.insertPerCustomerinfo(perCustomerinfo));
-    }
-
-    /**
-     * 修改简历
+     * 修改简历基本信息
      */
     @PreAuthorize("@ss.hasPermi('resume:record:edit')")
     @Log(title = "简历", businessType = BusinessType.UPDATE)
@@ -82,15 +73,11 @@ public class PerCustomerinfoController extends BaseController
     {
         return toAjax(perCustomerinfoService.updatePerCustomerinfo(perCustomerinfo));
     }
-
-
-
     /**
      * 简历解析详细信息
      */
     @PostMapping(value = "/analysisResume")
     public AjaxResult analysisResume( @RequestParam("upfile") MultipartFile file, Integer resume_direction)  {
-
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         try {
             return perCustomerinfoService.goAnalysisResume(file,resume_direction,loginUser);
@@ -98,22 +85,115 @@ public class PerCustomerinfoController extends BaseController
             e.printStackTrace();
             return AjaxResult.error("简历解析失败");
         }
-
     }
-
-
-
-
+    /**
+     * 文件上传的接口
+     */
+    @PostMapping(value = "/fileUpload")
+    public AjaxResult fileUpload( @RequestParam("upfile") MultipartFile file)  {
+     return perCustomerinfoService.fileUpload(file);
+    }
     /**
      * 根据姓名电话查询简历列表
      */
-    @GetMapping("/lists")
+    @GetMapping("/listbynatel")
     public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
     {
         startPage();
         List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
         return getDataTable(list);
     }
+    /**
+     * 获取简历详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('resume:record:query')")
+    @PostMapping(value = "/query")
+    public AjaxResult getInfo(String customerCode)
+    {
+        return  perCustomerinfoService.selectPerCustomerinfoById(customerCode);
+    }
+    /**
+     * 抢占简历
+     */
+    @PostMapping(value = "/rob")
+    public AjaxResult robCustomeInfo(@RequestParam("customerCode")String customerCode)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String captcha = redisCache.getCacheObject(customerCode);
+        if(null == captcha) {
+            redisCache.setCacheObject(customerCode, customerCode, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        }else{
+            return AjaxResult.error("当前人正在被抢占");
+        }
+        return  perCustomerinfoService.robCustomeInfo(customerCode,loginUser);
+    }
+    /**
+     * 简历跟进
+     */
+    @PostMapping(value = "/follow")
+    public AjaxResult followCustomeInfo(@RequestParam("customerCode")String customerCode)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.followCustomeInfo(customerCode,loginUser);
+    }
+
+    /**
+     * 简历释放
+     */
+    @PostMapping(value = "/release")
+    public AjaxResult releaseCustomeInfo(@RequestParam("customerCode")String customerCode)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.releaseCustomeInfo(customerCode,loginUser);
+    }
+    /**
+     * 简历更新（工作经验、工作信息、学历信息）
+     */
+    @PostMapping(value = "/resumeUpdate")
+    public AjaxResult resumeUpdate(String zm,MultipartFile file)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.resumeUpdate(zm,file,loginUser);
+    }
+
+    /**
+     * 简历添加（工作经验、工作信息、学历信息）
+     */
+    @PostMapping(value = "/resumeInsert")
+    public AjaxResult resumeInsert(String zm,MultipartFile file)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return  perCustomerinfoService.resumeInsert(zm,file,loginUser);
+    }
+
+
+    /**
+     * 工作经验删除
+     */
+    @GetMapping(value = "/workDel")
+    public AjaxResult workDel(@RequestParam("id")Integer id)
+    {
+        return toAjax(perWorkService.deletePerWorkById(id));
+    }
+    /**
+     * 工作信息删除
+     */
+    @GetMapping(value = "/projdeDel")
+    public AjaxResult projdeDel(@RequestParam("id")Integer id)
+    {
+        return toAjax(perProjectService.deletePerProjectById(id));
+    }
+    /**
+     * 学历信息
+     */
+    @GetMapping(value = "/educaDel")
+    public AjaxResult educaDel(@RequestParam("custpro_id")Integer custpro_id)
+    {
+        return toAjax(perEducationService.deletePerEducationById(custpro_id));
+
+    }
+
+
 
 
 }

@@ -15,27 +15,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addpeople"    column="AddPeople"    />
         <result property="invalidtime"    column="InvalidTime"    />
         <result property="invalidpeople"    column="InvalidPeople"    />
-        <result property="namingFormat"    column="naming_format"    />
+        <result property="company"    column="company"    />
+        <result property="technicalDirection"    column="technical_direction"    />
+        <result property="workingYears"    column="working_years"    />
+        <result property="name"    column="name"    />
     </resultMap>
 
     <sql id="selectPerTemplateVo">
-        select template_id, template_name, template_file, template_prc, template_order, template_status, addTime, AddPeople, InvalidTime, InvalidPeople, naming_format from per_template
+        select template_id, template_name, template_file, template_prc, template_order, template_status, addTime, AddPeople, InvalidTime, InvalidPeople, company, technical_direction, working_years, name from per_template
     </sql>
 
     <select id="selectPerTemplateList" parameterType="PerTemplate" resultMap="PerTemplateResult">
         <include refid="selectPerTemplateVo"/>
         <where>  
-            <if test="templateId != null  and templateId != ''"> and template_id = #{templateId}</if>
             <if test="templateName != null  and templateName != ''"> and template_name like concat('%', #{templateName}, '%')</if>
             <if test="templateFile != null  and templateFile != ''"> and template_file = #{templateFile}</if>
             <if test="templatePrc != null  and templatePrc != ''"> and template_prc = #{templatePrc}</if>
             <if test="templateOrder != null "> and template_order = #{templateOrder}</if>
-            <if test="templateStatus != null "> and template_status = #{templateStatus}</if>
+            <if test="templateStatus != null  and templateStatus != ''"> and template_status = #{templateStatus}</if>
             <if test="addtime != null "> and addTime = #{addtime}</if>
             <if test="addpeople != null  and addpeople != ''"> and AddPeople = #{addpeople}</if>
             <if test="invalidtime != null "> and InvalidTime = #{invalidtime}</if>
             <if test="invalidpeople != null  and invalidpeople != ''"> and InvalidPeople = #{invalidpeople}</if>
-            <if test="namingFormat != null  and namingFormat != ''"> and naming_format = #{namingFormat}</if>
+            <if test="company != null  and company != ''"> and company = #{company}</if>
+            <if test="technicalDirection != null  and technicalDirection != ''"> and technical_direction = #{technicalDirection}</if>
+            <if test="workingYears != null "> and working_years = #{workingYears}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
         </where>
     </select>
     
@@ -47,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertPerTemplate" parameterType="PerTemplate">
         insert into per_template
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="templateId != null and templateId != ''">template_id,</if>
+            <if test="templateId != null">template_id,</if>
             <if test="templateName != null">template_name,</if>
             <if test="templateFile != null">template_file,</if>
             <if test="templatePrc != null">template_prc,</if>
@@ -57,10 +62,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addpeople != null and addpeople != ''">AddPeople,</if>
             <if test="invalidtime != null">InvalidTime,</if>
             <if test="invalidpeople != null">InvalidPeople,</if>
-            <if test="namingFormat != null">naming_format,</if>
+            <if test="company != null">company,</if>
+            <if test="technicalDirection != null">technical_direction,</if>
+            <if test="workingYears != null">working_years,</if>
+            <if test="name != null">name,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="templateId != null and templateId != ''">#{templateId},</if>
+            <if test="templateId != null">#{templateId},</if>
             <if test="templateName != null">#{templateName},</if>
             <if test="templateFile != null">#{templateFile},</if>
             <if test="templatePrc != null">#{templatePrc},</if>
@@ -70,7 +78,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addpeople != null and addpeople != ''">#{addpeople},</if>
             <if test="invalidtime != null">#{invalidtime},</if>
             <if test="invalidpeople != null">#{invalidpeople},</if>
-            <if test="namingFormat != null">#{namingFormat},</if>
+            <if test="company != null">#{company},</if>
+            <if test="technicalDirection != null">#{technicalDirection},</if>
+            <if test="workingYears != null">#{workingYears},</if>
+            <if test="name != null">#{name},</if>
          </trim>
     </insert>
 
@@ -86,7 +97,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addpeople != null and addpeople != ''">AddPeople = #{addpeople},</if>
             <if test="invalidtime != null">InvalidTime = #{invalidtime},</if>
             <if test="invalidpeople != null">InvalidPeople = #{invalidpeople},</if>
-            <if test="namingFormat != null">naming_format = #{namingFormat},</if>
+            <if test="company != null">company = #{company},</if>
+            <if test="technicalDirection != null">technical_direction = #{technicalDirection},</if>
+            <if test="workingYears != null">working_years = #{workingYears},</if>
+            <if test="name != null">name = #{name},</if>
         </trim>
         where template_id = #{templateId}
     </update>

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.resume.mapper.PerRobcustomerMapper">
-    
+
     <resultMap type="PerRobcustomer" id="PerRobcustomerResult">
         <result property="seizeId"    column="seize_id"    />
         <result property="customerName"    column="customer_name"    />
@@ -15,27 +15,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="Status"    />
         <result property="remark"    column="remark"    />
         <result property="addPeople"    column="add_people"    />
+        <result property="addName"    column="add_name"    />
     </resultMap>
 
     <sql id="selectPerRobcustomerVo">
-        select seize_id, customer_name, customer_tel, resume_id, edit_time, wechat, add_time, Status, remark, add_people from per_robcustomer
+        select seize_id, customer_name, customer_tel, resume_id, edit_time, wechat, add_time, Status, remark, add_people, add_name from per_robcustomer
     </sql>
 
     <select id="selectPerRobcustomerList" parameterType="PerRobcustomer" resultMap="PerRobcustomerResult">
         <include refid="selectPerRobcustomerVo"/>
-        <where>  
+        <where>
             <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
             <if test="customerTel != null  and customerTel != ''"> and customer_tel = #{customerTel}</if>
             <if test="addTime != null "> and add_time = #{addTime}</if>
             <if test="status != null "> and Status = #{status}</if>
+            <if test="addName != null  and addName != ''"> and add_name like concat('%', #{addName}, '%')</if>
         </where>
     </select>
-    
+
     <select id="selectPerRobcustomerById" parameterType="String" resultMap="PerRobcustomerResult">
         <include refid="selectPerRobcustomerVo"/>
         where seize_id = #{seizeId}
     </select>
-        
+
     <insert id="insertPerRobcustomer" parameterType="PerRobcustomer">
         insert into per_robcustomer
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -49,7 +51,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">Status,</if>
             <if test="remark != null">remark,</if>
             <if test="addPeople != null">add_people,</if>
-         </trim>
+            <if test="addName != null">add_name,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="seizeId != null">#{seizeId},</if>
             <if test="customerName != null">#{customerName},</if>
@@ -61,7 +64,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">#{status},</if>
             <if test="remark != null">#{remark},</if>
             <if test="addPeople != null">#{addPeople},</if>
-         </trim>
+            <if test="addName != null">#{addName},</if>
+        </trim>
     </insert>
 
     <update id="updatePerRobcustomer" parameterType="PerRobcustomer">
@@ -76,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">Status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="addPeople != null">add_people = #{addPeople},</if>
+            <if test="addName != null">add_name = #{addName},</if>
         </trim>
         where seize_id = #{seizeId}
     </update>
@@ -85,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePerRobcustomerByIds" parameterType="String">
-        delete from per_robcustomer where seize_id in 
+        delete from per_robcustomer where seize_id in
         <foreach item="seizeId" collection="array" open="(" separator="," close=")">
             #{seizeId}
         </foreach>
@@ -95,4 +100,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where customer_tel = #{phone_number}
         and Status=0
     </select>
+    <select id="selectByCustomerCode" parameterType="String" resultMap="PerRobcustomerResult">
+          SELECT
+            a.seize_id,
+            a.customer_name,
+            a.customer_tel,
+            a.resume_id,
+            a.edit_time,
+            a.wechat,
+            a.add_time,
+            a.STATUS,
+            a.remark,
+            a.add_people,
+            a.add_name
+        FROM
+            per_robcustomer a
+        LEFT JOIN per_customerinfo b ON a.customer_tel=b.customer_tel
+        where a.Status=0 and b.customer_code=#{customerCode}
+
+    </select>
+
+    <select id="selectAllOverrob" resultType="String">
+     SELECT seize_id from per_robcustomer  a where  a.edit_time <![CDATA[<  ]]>now() and a.`Status`=0
+    </select>
+
+
+    <update id="updatePerRobbylist" parameterType="List">
+         update per_robcustomer
+         set Status=1
+         where seize_id in
+            <foreach item="list" collection="array" open="(" separator="," close=")">
+                #{list}
+            </foreach>
+
+    </update>
+
+
+
 </mapper>

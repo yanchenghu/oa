@@ -1,12 +1,15 @@
 package com.ruoyi.resume.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.resume.domain.PerCustomerinfo;
+import com.ruoyi.resume.domain.PerEducation;
+import com.ruoyi.resume.domain.PerProject;
+import com.ruoyi.resume.domain.PerWork;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
  * 简历Service接口
@@ -22,7 +25,7 @@ public interface IPerCustomerinfoService
      * @param customerCode 简历ID
      * @return 简历
      */
-    public PerCustomerinfo selectPerCustomerinfoById(String customerCode);
+    public AjaxResult selectPerCustomerinfoById(String customerCode);
 
     /**
      * 查询简历列表
@@ -78,4 +81,51 @@ public interface IPerCustomerinfoService
      * @return 结果
      */
     List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo);
+
+    /**
+     * 文件上传
+     *
+     * @param file
+     * @return 结果
+     */
+    AjaxResult fileUpload(MultipartFile file) ;
+
+    /**
+     *  抢占简历
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    AjaxResult robCustomeInfo(String customerCode,LoginUser loginUser);
+
+    /**
+     *  简历跟踪
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    AjaxResult followCustomeInfo(String customerCode, LoginUser loginUser);
+
+    /**
+     *  简历释放
+     *
+     * @param customerCode
+     * @return 结果
+     */
+    AjaxResult releaseCustomeInfo(String customerCode, LoginUser loginUser);
+    /**
+     *  手动简历更新
+     *
+     * @param zm loginUser
+     * @return 结果 AjaxResult
+     */
+    AjaxResult resumeUpdate(String zm,MultipartFile file, LoginUser loginUser);
+
+    /**
+     *  手动简历添加
+     *
+     * @param zm loginUser
+     * @return 结果 AjaxResult
+     */
+    AjaxResult resumeInsert(String zm,MultipartFile file, LoginUser loginUser);
 }

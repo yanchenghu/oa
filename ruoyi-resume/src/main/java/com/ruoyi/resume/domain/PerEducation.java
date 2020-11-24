@@ -18,7 +18,7 @@ public class PerEducation
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private Integer id;
 
     /** 人员code */
     @Excel(name = "人员code")
@@ -94,16 +94,15 @@ public class PerEducation
     @Excel(name = "备注")
     private String remark;
 
-    public void setId(Long id) 
-    {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setCustomerCode(String customerCode) 
+    public void setCustomerCode(String customerCode)
     {
         this.customerCode = customerCode;
     }
@@ -265,28 +264,29 @@ public class PerEducation
         this.remark = remark;
     }
 
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("customerCode", getCustomerCode())
-            .append("startTime", getStartTime())
-            .append("endTime", getEndTime())
-            .append("schoolName", getSchoolName())
-            .append("degree", getDegree())
-            .append("major", getMajor())
-            .append("stillActive", getStillActive())
-            .append("schoolLevel", getSchoolLevel())
-            .append("studyModel", getStudyModel())
-            .append("location", getLocation())
-            .append("gpa", getGpa())
-            .append("ranking", getRanking())
-            .append("courses", getCourses())
-            .append("department", getDepartment())
-            .append("schoolRank", getSchoolRank())
-            .append("addpeople", getAddpeople())
-            .append("addtime", getAddtime())
-            .append("remark", getRemark())
-            .toString();
+        return "PerEducation{" +
+                "id=" + id +
+                ", customerCode='" + customerCode + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", schoolName='" + schoolName + '\'' +
+                ", degree='" + degree + '\'' +
+                ", major='" + major + '\'' +
+                ", stillActive=" + stillActive +
+                ", schoolLevel='" + schoolLevel + '\'' +
+                ", studyModel='" + studyModel + '\'' +
+                ", location='" + location + '\'' +
+                ", gpa='" + gpa + '\'' +
+                ", ranking='" + ranking + '\'' +
+                ", courses='" + courses + '\'' +
+                ", department='" + department + '\'' +
+                ", schoolRank='" + schoolRank + '\'' +
+                ", addpeople='" + addpeople + '\'' +
+                ", addtime=" + addtime +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

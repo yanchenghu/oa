@@ -182,17 +182,31 @@
     <select id="selectlistbyNametel"  parameterType="PerCustomerinfo" resultType="map">
 
         SELECT
-        a.customer_name,a.customer_tel,a.customer_birth,a.profession_id,a.add_time,a.update_time,b.add_name
+        a.customer_name,a.customer_code,a.profession_id,a.customer_tel,a.customer_birth,a.profession_id,DATE_FORMAT(a.add_time,'%Y-%m-%d %H:%i:%s') as add_time, DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%s') as update_time,b.add_name
         FROM
         per_customerinfo a
         LEFT JOIN (SELECT customer_tel,add_name from per_robcustomer where Status=0 ) b ON a.customer_tel = b.customer_tel
         <where>
-            <if test="customerName != null "> and a.customer_name = #{customerName}</if>
-            <if test="customerTel != null  and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
+            <if test="customerName != null and customerName != ''"> and a.customer_name = #{customerName}</if>
+            <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
         </where>
 
     </select>
 
 
+    <select id="selectIntoItem"  parameterType="String" resultType="map">
+
+        SELECT
+        d.corp_name,
+        c.projecttype,
+        DATE_FORMAT( b.trackingtime,'%Y-%m-%d %H:%i:%s') as trackingtime
+        FROM
+        mar_company d
+        LEFT JOIN mar_demand c ON d.corp_code = c.corp_code
+        LEFT JOIN mar_demandresume a on a.demand_id = c.id
+        LEFT JOIN ( SELECT demandresume_id ,trackingtime FROM mar_demandresumefollow WHERE follow_status = 7 ) b ON a.id = b.demandresume_id
+        where a.customer_code=#{customerCode}
+
+    </select>
 
 </mapper>

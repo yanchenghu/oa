@@ -52,6 +52,15 @@ export function exportYxdemand(query) {
   })
 }
 
+// 新增营销录入公司
+export function release(data) {
+  return request({
+    url: '/customer/yxdemand',
+    method: 'post',
+    data: data
+  })
+}
+
 
 // // 查看跟进营销录入公司列表
 // export function see(query) {

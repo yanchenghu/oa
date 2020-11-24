@@ -65,4 +65,16 @@ public interface PerRobcustomerMapper
      * @return 结果PerRobcustomer
      */
     PerRobcustomer selectByphone(String phone_number);
+
+    /**
+     * 根据个人编号查询当前人是否被抢占
+     *
+     * @param customerCode
+     * @return 结果PerRobcustomer
+     */
+    PerRobcustomer selectByCustomerCode(String customerCode);
+
+    List<String> selectAllOverrob();
+
+    void updatePerRobbylist(List<String> list);
 }

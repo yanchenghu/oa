@@ -30,6 +30,17 @@ export function preview(templateId) {
   })
 }
 
+// 新增简历模板
+export function addTemplate(data) {
+  return request({
+    url: '/resume/template',
+    method: 'post',
+    data: data
+  })
+}
+
+
+
 
 
 

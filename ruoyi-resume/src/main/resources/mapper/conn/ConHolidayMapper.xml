@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.conn.mapper.ConHolidayMapper">
+
+    <resultMap type="ConHoliday" id="ConHolidayResult">
+        <result property="id"    column="id"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="holType"    column="hol_type"    />
+    </resultMap>
+
+    <sql id="selectConHolidayVo">
+        select id, start_date, hol_type from con_holiday
+    </sql>
+
+    <select id="selectConHolidayList" parameterType="ConHoliday" resultMap="ConHolidayResult">
+        <include refid="selectConHolidayVo"/>
+        <where>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="holType != null "> and hol_type = #{holType}</if>
+        </where>
+    </select>
+
+    <select id="selectConHolidayById" parameterType="Long" resultMap="ConHolidayResult">
+        <include refid="selectConHolidayVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertConHoliday" parameterType="ConHoliday" useGeneratedKeys="true" keyProperty="id">
+        insert into con_holiday
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="startDate != null">start_date,</if>
+            <if test="holType != null">hol_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="startDate != null">#{startDate},</if>
+            <if test="holType != null">#{holType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateConHoliday" parameterType="ConHoliday">
+        update con_holiday
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="holType != null">hol_type = #{holType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConHolidayById" parameterType="Long">
+        delete from con_holiday where id = #{id}
+    </delete>
+
+    <delete id="deleteConHolidayByIds" parameterType="String">
+        delete from con_holiday where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="queryHolidayList" resultType="Date" parameterType="Map" >
+        select start_date
+        from con_holiday
+        where  1 = 1
+        <if test="startdate !=null">and date(start_date)    <![CDATA[ >=    ]]>  date(#{startdate}) </if>
+        <if test="enddate !=null">and date(start_date) <![CDATA[   <=   ]]>  date(#{enddate})</if>
+        <if test="holtype !=null">and hol_type = #{holtype} </if>
+    </select>
+
+
+    
+</mapper>
