@@ -60,12 +60,17 @@ public interface YxdemandMapper
      * @return 结果
      */
     public int deleteYxdemandByIds(Integer[] entryIds);
-
+    /**
+     * 根据名字查询Yxdemand
+     *
+     */
+    Yxdemand selectYxdemandByName(String companyName);
 
     /**
      * 定时任务
      * 查询全部录入公司记录，监测是否过期，过期则释放
      */
     List<Yxdemand> selrobYxdelist();
+
 
 }

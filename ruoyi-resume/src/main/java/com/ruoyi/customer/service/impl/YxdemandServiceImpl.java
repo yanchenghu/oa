@@ -3,8 +3,11 @@ package com.ruoyi.customer.service.impl;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.resume.DateUtils;
+import com.ruoyi.common.utils.resume.SerialNumber;
+import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.domain.Yxcontact;
 import com.ruoyi.customer.domain.Yxdemand;
+import com.ruoyi.customer.mapper.MarCompanyMapper;
 import com.ruoyi.customer.mapper.YxcontactMapper;
 import com.ruoyi.customer.mapper.YxdemandMapper;
 import com.ruoyi.customer.service.IYxdemandService;
@@ -35,6 +38,9 @@ public class YxdemandServiceImpl implements IYxdemandService
 
     @Autowired
     private WorkDay workDay;
+
+    @Autowired
+    private MarCompanyMapper marCompanyMapper;
 
 
 
@@ -67,7 +73,7 @@ public class YxdemandServiceImpl implements IYxdemandService
      * @return 营销录入公司
      */
     @Override
-    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand,LoginUser loginUser)throws Exception
+    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand,LoginUser loginUser)
     {
         //当前时间
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -103,6 +109,10 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Transactional
     public AjaxResult insertYxdemand(Yxdemand yxdemand,LoginUser loginUser)
     {
+        Yxdemand yxde=yxdemandMapper.selectYxdemandByName(yxdemand.getCompanyName());
+        if(yxde!=null){
+            return AjaxResult.error("当前公司已经存在");
+        }
         yxdemand.setEntryPeopleId(loginUser.getUsername());
         yxdemand.setEntryPeople(loginUser.getUser().getNickName());
         yxdemand.setInsertTime(new Date());
@@ -134,6 +144,8 @@ public class YxdemandServiceImpl implements IYxdemandService
     {
         Yxdemand yxde=yxdemandMapper.selectYxdemandById(yxdemand.getEntryId());
         Integer a=yxde.getIsFollowSubmit();
+        Integer c=yxde.getIsBusiness();
+
         if(a!=yxdemand.getIsFollowSubmit()){
             Integer b=yxdemand.getIsFollowSubmit();
             String abc="";
@@ -155,7 +167,28 @@ public class YxdemandServiceImpl implements IYxdemandService
             yxcontact.setContactDetail("将线索状态改为"+abc);
             yxcontact.setStatus(2);
             yxcontactMapper.insertYxcontact(yxcontact);
-
+        }
+        Integer f=yxdemand.getIsBusiness();
+        if(c!=null&&f!=null){
+           if(c!=f){
+               String abc="";
+               if(f==0){
+                   abc="无意向";
+               }else if (f==1){
+                   abc="需跟进";
+               }else if(f==2){
+                   abc="成为客户";
+               }else if(f==3){
+                   abc="无效联系";
+               }
+               Yxcontact yxcontact=new Yxcontact();
+               yxcontact.setNickName(loginUser.getUser().getNickName());
+               yxcontact.setContactTime(new Date());
+               yxcontact.setEntryId(yxdemand.getEntryId());
+               yxcontact.setContactDetail("将线索状态改为"+abc);
+               yxcontact.setStatus(2);
+               yxcontactMapper.insertYxcontact(yxcontact);
+           }
         }
         yxdemandMapper.updateYxdemand(yxdemand);
         return AjaxResult.success("修改成功");
@@ -216,8 +249,9 @@ public class YxdemandServiceImpl implements IYxdemandService
      */
     @Override
     public int Customertransfer(Yxdemand yxdemand, LoginUser loginUser) {
-        yxdemand.setIsAccept(0);
+        yxdemand.setIsAccept(1);
         yxdemand.setSubmitTime(new Date());
+        yxdemand.setIsBusiness(1);
         return yxdemandMapper.updateYxdemand(yxdemand);
     }
     /**
@@ -227,17 +261,37 @@ public class YxdemandServiceImpl implements IYxdemandService
     public List<Yxdemand> selectBusinessList(Yxdemand yxdemand, LoginUser loginUser) {
         yxdemand.setBusinessId(loginUser.getUsername());
         List<Yxdemand> list=yxdemandMapper.selectYxdemandList(yxdemand);
-
-        return null;
+        return list;
     }
+    /**
+     * 转化为合作客户
+     */
+    @Override
+    @Transactional
+    public AjaxResult turnCustomers(MarCompany marCom, LoginUser loginUser) {
+        Yxdemand yxdemand=yxdemandMapper.selectYxdemandByName(marCom.getCorpName());
+        if(yxdemand==null){
+            return AjaxResult.error("需求不存在");
+        }else{//5
+           Integer a= yxdemand.getIsBusiness();
+           if(a==5){
+               return AjaxResult.error("当前需求已经转化为合作客户");
+           } else{
+               yxdemand.setIsBusiness(5);
+               yxdemandMapper.updateYxdemand(yxdemand);
+           }
+        }
 
-
-
-
-
-
-
-
+        MarCompany mar=marCompanyMapper.selectMarCompanyByName(marCom.getCorpName());
+        if(mar!=null){
+            return AjaxResult.error("当前项目已经转化为合作公司");
+        }
+        marCom.setCorpCode(SerialNumber.createSerial("hzgs", 6));
+        marCom.setTransformingPeople(loginUser.getUsername());
+        marCom.setAddTime(new Date());
+        marCompanyMapper.insertMarCompany(marCom);
+        return AjaxResult.success("转化成功");
+    }
 
 
     /**
@@ -246,10 +300,8 @@ public class YxdemandServiceImpl implements IYxdemandService
      */
     @Override
     public void markeRelease() {
-
         List<Yxdemand> lis =yxdemandMapper.selrobYxdelist();
         Date date= workDay.getBeforeWorkDay(new Date(),2);
-
         for (Yxdemand yxdem:lis){
            Integer isAaccept=yxdem.getIsAccept();
            if(isAaccept==0){//营销的
@@ -267,15 +319,14 @@ public class YxdemandServiceImpl implements IYxdemandService
                }
            }else{//商务的
                Date libdate=yxdem.getUpdateDate();
-               if(libdate.before(date)){
+               Integer sa=yxdem.getIsBusiness();
+               if(libdate.before(date)&&(sa!=5||sa!=4)){
                    Yxdemand yxd=new Yxdemand();
                    yxd.setEntryId(yxdem.getEntryId());
                    yxd.setBusinessId("");
                    yxd.setBusinessPeople("");
                    yxdemandMapper.updateYxdemand(yxd);
                }
-
-
            }
         }
     }

@@ -10,8 +10,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 合作公司对象 mar_company
  * 
- * @author ruoyi
- * @date 2020-11-16
+ * @author ych
+ * @date 2020-11-25
  */
 public class MarCompany extends BaseEntity
 {
@@ -24,13 +24,65 @@ public class MarCompany extends BaseEntity
     @Excel(name = "公司名称")
     private String corpName;
 
-    /** 客户级别 */
-    @Excel(name = "客户级别")
+    /** 联系人 */
+    @Excel(name = "联系人")
+    private String contactPeople;
+
+    /** 联系人/职位 */
+    @Excel(name = "联系人/职位")
+    private String contactPosition;
+
+    /** 联系人电话 */
+    @Excel(name = "联系人电话")
+    private String contactPhone;
+
+    /** 公司情况（0、外包公司，1、甲方公司，2、不确定） */
+    @Excel(name = "公司情况", readConverterExp = "0=、外包公司，1、甲方公司，2、不确定")
+    private Integer companySituation;
+
+    /** 微信 */
+    @Excel(name = "微信")
+    private String wechat;
+
+    /** 邮箱 */
+    @Excel(name = "邮箱")
+    private String mailbox;
+
+    /** QQ */
+    @Excel(name = "QQ")
+    private String qq;
+
+    /** 面试名义公司姓名 */
+    @Excel(name = "面试名义公司姓名")
+    private String interviewCompany;
+
+    /** 面试官 */
+    @Excel(name = "面试官")
+    private String interviewer;
+
+    /** 面试官职位 */
+    @Excel(name = "面试官职位")
+    private String interviewerPosition;
+
+    /** 联系方式 */
+    @Excel(name = "联系方式")
+    private String interviewContact;
+
+    /** 面试地点 */
+    @Excel(name = "面试地点")
+    private String interviewAddress;
+
+    /** 最终甲方 */
+    @Excel(name = "最终甲方")
+    private String finalParty;
+
+    /** 客户级别  */
+    @Excel(name = "客户级别 ")
     private Integer customerLevel;
 
     /** 回款周期 */
     @Excel(name = "回款周期")
-    private String paybackPeriod;
+    private Integer paybackPeriod;
 
     /** 合作时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -39,11 +91,16 @@ public class MarCompany extends BaseEntity
 
     /** 录入人 */
     @Excel(name = "录入人")
-    private String enteredBy;
+    private String entryPeople;
 
     /** 转化人 */
     @Excel(name = "转化人")
     private String transformingPeople;
+
+    /** 添加时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date addTime;
 
     public void setCorpCode(String corpCode) 
     {
@@ -63,6 +120,123 @@ public class MarCompany extends BaseEntity
     {
         return corpName;
     }
+    public void setContactPeople(String contactPeople) 
+    {
+        this.contactPeople = contactPeople;
+    }
+
+    public String getContactPeople() 
+    {
+        return contactPeople;
+    }
+    public void setContactPosition(String contactPosition) 
+    {
+        this.contactPosition = contactPosition;
+    }
+
+    public String getContactPosition() 
+    {
+        return contactPosition;
+    }
+    public void setContactPhone(String contactPhone) 
+    {
+        this.contactPhone = contactPhone;
+    }
+
+    public String getContactPhone() 
+    {
+        return contactPhone;
+    }
+    public void setCompanySituation(Integer companySituation) 
+    {
+        this.companySituation = companySituation;
+    }
+
+    public Integer getCompanySituation() 
+    {
+        return companySituation;
+    }
+    public void setWechat(String wechat) 
+    {
+        this.wechat = wechat;
+    }
+
+    public String getWechat() 
+    {
+        return wechat;
+    }
+    public void setMailbox(String mailbox) 
+    {
+        this.mailbox = mailbox;
+    }
+
+    public String getMailbox() 
+    {
+        return mailbox;
+    }
+    public void setQq(String qq) 
+    {
+        this.qq = qq;
+    }
+
+    public String getQq() 
+    {
+        return qq;
+    }
+    public void setInterviewCompany(String interviewCompany) 
+    {
+        this.interviewCompany = interviewCompany;
+    }
+
+    public String getInterviewCompany() 
+    {
+        return interviewCompany;
+    }
+    public void setInterviewer(String interviewer) 
+    {
+        this.interviewer = interviewer;
+    }
+
+    public String getInterviewer() 
+    {
+        return interviewer;
+    }
+    public void setInterviewerPosition(String interviewerPosition) 
+    {
+        this.interviewerPosition = interviewerPosition;
+    }
+
+    public String getInterviewerPosition() 
+    {
+        return interviewerPosition;
+    }
+    public void setInterviewContact(String interviewContact) 
+    {
+        this.interviewContact = interviewContact;
+    }
+
+    public String getInterviewContact() 
+    {
+        return interviewContact;
+    }
+    public void setInterviewAddress(String interviewAddress) 
+    {
+        this.interviewAddress = interviewAddress;
+    }
+
+    public String getInterviewAddress() 
+    {
+        return interviewAddress;
+    }
+    public void setFinalParty(String finalParty) 
+    {
+        this.finalParty = finalParty;
+    }
+
+    public String getFinalParty() 
+    {
+        return finalParty;
+    }
     public void setCustomerLevel(Integer customerLevel) 
     {
         this.customerLevel = customerLevel;
@@ -72,12 +246,12 @@ public class MarCompany extends BaseEntity
     {
         return customerLevel;
     }
-    public void setPaybackPeriod(String paybackPeriod) 
+    public void setPaybackPeriod(Integer paybackPeriod) 
     {
         this.paybackPeriod = paybackPeriod;
     }
 
-    public String getPaybackPeriod() 
+    public Integer getPaybackPeriod() 
     {
         return paybackPeriod;
     }
@@ -90,14 +264,14 @@ public class MarCompany extends BaseEntity
     {
         return cooperationTime;
     }
-    public void setEnteredBy(String enteredBy) 
+    public void setEntryPeople(String entryPeople) 
     {
-        this.enteredBy = enteredBy;
+        this.entryPeople = entryPeople;
     }
 
-    public String getEnteredBy() 
+    public String getEntryPeople() 
     {
-        return enteredBy;
+        return entryPeople;
     }
     public void setTransformingPeople(String transformingPeople) 
     {
@@ -108,17 +282,41 @@ public class MarCompany extends BaseEntity
     {
         return transformingPeople;
     }
+    public void setAddTime(Date addTime) 
+    {
+        this.addTime = addTime;
+    }
+
+    public Date getAddTime() 
+    {
+        return addTime;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("corpCode", getCorpCode())
             .append("corpName", getCorpName())
+            .append("contactPeople", getContactPeople())
+            .append("contactPosition", getContactPosition())
+            .append("contactPhone", getContactPhone())
+            .append("companySituation", getCompanySituation())
+            .append("wechat", getWechat())
+            .append("mailbox", getMailbox())
+            .append("qq", getQq())
+            .append("interviewCompany", getInterviewCompany())
+            .append("interviewer", getInterviewer())
+            .append("interviewerPosition", getInterviewerPosition())
+            .append("interviewContact", getInterviewContact())
+            .append("interviewAddress", getInterviewAddress())
+            .append("finalParty", getFinalParty())
             .append("customerLevel", getCustomerLevel())
             .append("paybackPeriod", getPaybackPeriod())
             .append("cooperationTime", getCooperationTime())
-            .append("enteredBy", getEnteredBy())
+            .append("entryPeople", getEntryPeople())
             .append("transformingPeople", getTransformingPeople())
+            .append("addTime", getAddTime())
+            .append("remark", getRemark())
             .toString();
     }
 }

@@ -58,4 +58,9 @@ public interface MarCompanyMapper
      * @return 结果
      */
     public int deleteMarCompanyByIds(String[] corpCodes);
+
+    /**
+     * 转化为合作客户
+     */
+    MarCompany selectMarCompanyByName(String companyName);
 }

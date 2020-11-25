@@ -125,7 +125,7 @@ public class Yxdemand extends BaseEntity
 
     /** 商务转化（0、无意向1、需跟进2、成为客户3、无效联系） */
     @Excel(name = "商务转化", readConverterExp = "0=、无意向1、需跟进2、成为客户3、无效联系")
-    private String isBusiness;
+    private Integer isBusiness;
 
     /** 合作项目（0、代理招聘1、外派2、猎头） */
     @Excel(name = "合作项目", readConverterExp = "0=、代理招聘1、外派2、猎头")
@@ -403,16 +403,16 @@ public class Yxdemand extends BaseEntity
     {
         return submitTime;
     }
-    public void setIsBusiness(String isBusiness) 
-    {
+
+    public Integer getIsBusiness() {
+        return isBusiness;
+    }
+
+    public void setIsBusiness(Integer isBusiness) {
         this.isBusiness = isBusiness;
     }
 
-    public String getIsBusiness() 
-    {
-        return isBusiness;
-    }
-    public void setCooperationProjects(Integer cooperationProjects) 
+    public void setCooperationProjects(Integer cooperationProjects)
     {
         this.cooperationProjects = cooperationProjects;
     }
@@ -505,44 +505,44 @@ public class Yxdemand extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("entryId", getEntryId())
-            .append("companyName", getCompanyName())
-            .append("recruitmentJob", getRecruitmentJob())
-            .append("contactPeople", getContactPeople())
-            .append("contactPosition", getContactPosition())
-            .append("contactPhone", getContactPhone())
-            .append("infoSourse", getInfoSourse())
-            .append("companySituation", getCompanySituation())
-            .append("isSendResume", getIsSendResume())
-            .append("interviewCompany", getInterviewCompany())
-            .append("interviewer", getInterviewer())
-            .append("interviewerPosition", getInterviewerPosition())
-            .append("interviewContact", getInterviewContact())
-            .append("interviewAddress", getInterviewAddress())
-            .append("finalParty", getFinalParty())
-            .append("entryPeople", getEntryPeople())
-            .append("entryPeopleId", getEntryPeopleId())
-            .append("insertTime", getInsertTime())
-            .append("isFollowSubmit", getIsFollowSubmit())
-            .append("robPeopleId", getRobPeopleId())
-            .append("robPeople", getRobPeople())
-            .append("robTime", getRobTime())
-            .append("isAccept", getIsAccept())
-            .append("businessId", getBusinessId())
-            .append("businessPeople", getBusinessPeople())
-            .append("submitTime", getSubmitTime())
-            .append("isBusiness", getIsBusiness())
-            .append("cooperationProjects", getCooperationProjects())
-            .append("isSigning", getIsSigning())
-            .append("singTime", getSingTime())
-            .append("personnelInto", getPersonnelInto())
-            .append("isReturnMoney", getIsReturnMoney())
-            .append("updateDate", getUpdateDate())
-            .append("contactInformation", getContactInformation())
-            .append("wechat", getWechat())
-            .append("mailbox", getMailbox())
-            .append("qq", getQq())
-            .toString();
+        return "Yxdemand{" +
+                "entryId=" + entryId +
+                ", companyName='" + companyName + '\'' +
+                ", recruitmentJob='" + recruitmentJob + '\'' +
+                ", contactPeople='" + contactPeople + '\'' +
+                ", contactPosition='" + contactPosition + '\'' +
+                ", contactPhone='" + contactPhone + '\'' +
+                ", infoSourse='" + infoSourse + '\'' +
+                ", companySituation=" + companySituation +
+                ", isSendResume=" + isSendResume +
+                ", interviewCompany='" + interviewCompany + '\'' +
+                ", interviewer='" + interviewer + '\'' +
+                ", interviewerPosition='" + interviewerPosition + '\'' +
+                ", interviewContact='" + interviewContact + '\'' +
+                ", interviewAddress='" + interviewAddress + '\'' +
+                ", finalParty='" + finalParty + '\'' +
+                ", entryPeople='" + entryPeople + '\'' +
+                ", entryPeopleId='" + entryPeopleId + '\'' +
+                ", insertTime=" + insertTime +
+                ", isFollowSubmit=" + isFollowSubmit +
+                ", robPeopleId='" + robPeopleId + '\'' +
+                ", robPeople='" + robPeople + '\'' +
+                ", robTime=" + robTime +
+                ", isAccept=" + isAccept +
+                ", businessId='" + businessId + '\'' +
+                ", businessPeople='" + businessPeople + '\'' +
+                ", submitTime=" + submitTime +
+                ", isBusiness=" + isBusiness +
+                ", cooperationProjects=" + cooperationProjects +
+                ", isSigning=" + isSigning +
+                ", singTime=" + singTime +
+                ", personnelInto=" + personnelInto +
+                ", isReturnMoney=" + isReturnMoney +
+                ", updateDate=" + updateDate +
+                ", contactInformation='" + contactInformation + '\'' +
+                ", wechat='" + wechat + '\'' +
+                ", mailbox='" + mailbox + '\'' +
+                ", qq='" + qq + '\'' +
+                '}';
     }
 }

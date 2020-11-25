@@ -55,6 +55,8 @@
             <if test="companySituation != null "> and company_situation = #{companySituation}</if>
             <if test="interviewContact != null  and interviewContact != ''"> and interview_contact = #{interviewContact}</if>
             <if test="entryPeople != null  and entryPeople != ''"> and entry_people = #{entryPeople}</if>
+            <if test="businessId != null  and businessId != ''"> and business_id = #{businessId}</if>
+            <if test="robPeopleId != null  and robPeopleId != ''"> and rob_people_id = #{robPeopleId}</if>
             <if test="isFollowSubmit != null "> and is_follow_submit = #{isFollowSubmit}</if>
             <if test="isAccept != null "> and is_accept = #{isAccept}</if>
             <if test="contactInformation != null "> and contact_information = #{contactInformation}</if>
@@ -189,6 +191,12 @@
         </trim>
         where entry_id = #{entryId}
     </update>
+
+    <select id="selectYxdemandByName" parameterType="String" resultMap="YxdemandResult">
+        <include refid="selectYxdemandVo"/>
+        where company_name = #{companyName}
+    </select>
+
 
     <!--   定时器自动执行 -->
     <select id="selrobYxdelist" resultMap="YxdemandResult" >

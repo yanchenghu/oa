@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.domain.Yxdemand;
 import com.ruoyi.customer.service.IHighseasService;
 import com.ruoyi.customer.service.IYxcontactService;
@@ -31,18 +32,15 @@ public class BusinessController extends BaseController
     @Autowired
     private IYxdemandService yxdemandService;
 
-    @Autowired
-    private IYxcontactService yxcontactService;
 
     @Autowired
     private TokenService tokenService;
-
     /**
      * 商务意向客户列表
      */
     @PreAuthorize("@ss.hasPermi('customer:business:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Yxdemand yxdemand)throws Exception
+    public TableDataInfo list(Yxdemand yxdemand)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         startPage();
@@ -50,49 +48,15 @@ public class BusinessController extends BaseController
         return getDataTable(list);
     }
 
-
-//    /**
-//        * 获取营销录入公司详细信息
-//     */
-//    @PreAuthorize("@ss.hasPermi('customer:highseas:query')")
-//    @GetMapping(value = "/{entryId}")
-//    public AjaxResult getInfo(@PathVariable("entryId") Integer entryId)
-//    {
-//        return AjaxResult.success(highseasService.selectYxdemandById(entryId));
-//    }
-//
-//    /**
-//     * 新增营销录入公司
-//     */
-//    @PreAuthorize("@ss.hasPermi('customer:highseas:add')")
-//    @Log(title = "营销录入公司", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult add(@RequestBody Yxdemand yxdemand)
-//    {
-//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-//        return toAjax(highseasService.insertYxdemand(yxdemand,loginUser));
-//    }
-//
-//    /**
-//     * 跟进营销录入公司
-//     */
-//    @PreAuthorize("@ss.hasPermi('customer:highseas:edit')")
-//    @Log(title = "营销录入公司", businessType = BusinessType.UPDATE)
-//    @PutMapping
-//    public AjaxResult edit(@RequestBody Yxdemand yxdemand)
-//    {
-//        return toAjax(highseasService.updateYxdemand(yxdemand));
-//    }
-//
-
-
-
-
-
     /**
-     * 移交
+     * 转化为合作客户
      */
-
+    @PostMapping(value = "/turnCustomers")
+    public AjaxResult turnCustomers(@RequestBody MarCompany marCompany)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return yxdemandService.turnCustomers(marCompany,loginUser);
+    }
 
 
 

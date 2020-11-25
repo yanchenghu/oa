@@ -44,7 +44,7 @@ public class YxdemandController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('customer:yxdemand:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Yxdemand yxdemand)throws Exception
+    public TableDataInfo list(Yxdemand yxdemand)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         startPage();
@@ -56,7 +56,6 @@ public class YxdemandController extends BaseController
     /**
         * 获取营销录入公司详细信息
      */
-    @PreAuthorize("@ss.hasPermi('customer:yxdemand:query')")
     @GetMapping(value = "/{entryId}")
     public AjaxResult getInfo(@PathVariable("entryId") Integer entryId)
     {
@@ -78,13 +77,11 @@ public class YxdemandController extends BaseController
     /**
      * 跟进营销录入公司
      */
-    @PreAuthorize("@ss.hasPermi('customer:yxdemand:edit')")
-    @Log(title = "营销录入公司", businessType = BusinessType.UPDATE)
+    @Log(title = "营销跟进公司", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Yxdemand yxdemand)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-
         return yxdemandService.updateYxdemand(yxdemand,loginUser);
     }
 
