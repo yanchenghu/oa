@@ -33,6 +33,14 @@ public interface IYxdemandService
     public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand,LoginUser loginUser) ;
 
     /**
+     * 营销抢占
+     *
+     * @param  entryId loginUser
+     * @return AjaxResult
+     */
+    AjaxResult rebMarByEnId(Integer entryId, LoginUser loginUser);
+
+    /**
      * 新增营销录入公司
      * 
      * @param yxdemand 营销录入公司
@@ -96,12 +104,6 @@ public interface IYxdemandService
     void markeRelease();
 
 
-
-
-
-
-    AjaxResult rob(Integer entryId, LoginUser loginUser);
-
     /**
      * 商务公海
      */
@@ -110,4 +112,13 @@ public interface IYxdemandService
      * 营销公海
      */
     List<Yxdemand> selectByDepartMark(Yxdemand yxdemand, LoginUser loginUser);
+
+    /**
+     * 商务抢占功能营销
+     */
+    AjaxResult rebBusByEnId(Integer entryId, LoginUser loginUser);
+    /**
+     * 根据公司名字获取营销录入公司
+     */
+    int yxdemByName(String companyName);
 }

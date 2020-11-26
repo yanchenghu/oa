@@ -58,6 +58,17 @@ public class BusinessController extends BaseController
         return yxdemandService.turnCustomers(marCompany,loginUser);
     }
 
+    /**
+     * 商务抢占功能营销
+     */
+    @PostMapping(value = "/rebBusByEnId")
+    public AjaxResult  rebClientByEnId(@RequestParam(value = "entryId", defaultValue = "") Integer entryId)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+
+        return yxdemandService.rebBusByEnId(entryId,loginUser);
+    }
+
 
 
 

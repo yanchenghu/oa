@@ -198,17 +198,17 @@
     </select>
     <select id="selectByDepartBus"  resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
-        where business_id is null and is_accept=1
+        where   ISNULL(business_id)=0 and LENGTH(trim(business_id))=0 and is_accept=1
     </select>
 
     <select id="selectByDepartMark"  resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
-        where rob_people_id is null and is_accept=0
+        where   ISNULL(rob_people_id)=0 and LENGTH(trim(rob_people_id))=0 and is_accept=0
     </select>
 
     <!--   定时器自动执行 -->
     <select id="selrobYxdelist" resultMap="YxdemandResult" >
-     select company_name,rob_people_id,is_accept,business_id,update_date from yxdemand
+     select entry_id,company_name,rob_people_id,is_accept,business_id,is_business,update_date from yxdemand
       where
      ISNULL(rob_people_id)=0 and LENGTH(trim(rob_people_id))&gt;0
   </select>

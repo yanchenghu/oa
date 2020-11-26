@@ -57,19 +57,4 @@ public class HighseasController extends BaseController {
 
     }
 
-
-    /**
-     * 抢占
-     */
-    @PostMapping(value = "/rob")
-    public AjaxResult rob(@RequestParam("entryId")Integer entryId)
-    {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return yxdemandService.rob(entryId,loginUser);
-    }
-
-
-
-
-
 }

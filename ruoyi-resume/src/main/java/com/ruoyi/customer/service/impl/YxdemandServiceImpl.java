@@ -3,6 +3,7 @@ package com.ruoyi.customer.service.impl;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.common.utils.resume.SerialNumber;
 import com.ruoyi.conn.domain.ConOperationrecords;
@@ -108,7 +109,35 @@ public class YxdemandServiceImpl implements IYxdemandService
         }
         return  list;
     }
-
+    /**
+     * 营销抢占
+     *
+     * @param  entryId loginUser
+     * @return AjaxResult
+     */
+    @Override
+    @Transactional
+    public AjaxResult rebMarByEnId(Integer entryId, LoginUser loginUser) {
+        Yxdemand yxdemand=yxdemandMapper.selectYxdemandById(entryId);
+        String robPeopleId=yxdemand.getRobPeopleId();
+        if(StringUtils.isNotEmpty(robPeopleId)){
+            return AjaxResult.error("当前人已被"+yxdemand.getRobPeople()+"抢占");
+        }
+        Yxdemand yxdema=new Yxdemand();
+        yxdema.setEntryId(entryId);
+        yxdema.setRobPeopleId(loginUser.getUsername());
+        yxdema.setRobPeople(loginUser.getUser().getNickName());
+        yxdema.setRobTime(new Date());
+        yxdema.setUpdateDate(new Date());
+        yxdemandMapper.updateYxdemand(yxdema);
+        Yxrob yxrob=new Yxrob();
+        yxrob.setEntryId(entryId);
+        yxrob.setRobUsercode(loginUser.getUsername());
+        yxrob.setRobName(loginUser.getUser().getNickName());
+        yxrob.setRobTime(new Date());
+        yxrobMapper.insertPerRobPeople(yxrob);
+        return AjaxResult.success("抢占成功");
+    }
 
 
     /**
@@ -332,7 +361,7 @@ public class YxdemandServiceImpl implements IYxdemandService
            }else{//商务的
                Date libdate=yxdem.getUpdateDate();
                Integer sa=yxdem.getIsBusiness();
-               if(libdate.before(date)&&(sa!=5||sa!=4)){
+               if(libdate.before(date)&&(sa!=2||sa!=4)){
                    Yxdemand yxd=new Yxdemand();
                    yxd.setEntryId(yxdem.getEntryId());
                    yxd.setBusinessId("");
@@ -343,38 +372,6 @@ public class YxdemandServiceImpl implements IYxdemandService
         }
     }
 
-
-
-    @Override
-    public AjaxResult rob(Integer entryId, LoginUser loginUser) {
-
-
-
-
-        Yxdemand yxdemand= yxdemandMapper.selectYxdemandById(entryId);
-
-        if(yxdemand.getBusinessPeople().equals(loginUser.getUsername())){
-            AjaxResult.success("抢占");
-        }else{
-            return AjaxResult.error("不可以抢占");
-        }
-
-        if(yxdemand.getRobPeopleId()==null){
-            return AjaxResult.error("当前人已被抢占");
-        }
-
-        Yxrob yx = new Yxrob();
-
-        yx.setEntryId(yxdemand.getEntryId());
-        yx.setRobUsercode(yxdemand.getRobPeopleId());
-        yx.setRobName(yxdemand.getRobPeople());
-        yx.setRobTime(yx.getRobTime());
-        yxrobMapper.insertPerRobPeople(yx);
-
-        return AjaxResult.success("抢占成功");
-
-
-    }
     /**
      * 商务公海
      */
@@ -386,6 +383,43 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Override
     public List<Yxdemand> selectByDepartMark(Yxdemand yxdemand, LoginUser loginUser) {
         return yxdemandMapper.selectByDepartMark();
+    }
+    /**
+     * 商务抢占功能营销
+     */
+    @Override
+    @Transactional
+    public AjaxResult rebBusByEnId(Integer entryId, LoginUser loginUser) {
+        Yxdemand yxdemand=yxdemandMapper.selectYxdemandById(entryId);
+        String businessId=yxdemand.getBusinessId();
+        if(StringUtils.isNotEmpty(businessId)){
+            return AjaxResult.error("当前人已被"+yxdemand.getBusinessPeople()+"抢占");
+        }
+        Yxdemand yxdema=new Yxdemand();
+        yxdema.setEntryId(entryId);
+        yxdema.setBusinessId(loginUser.getUsername());
+        yxdema.setBusinessPeople(loginUser.getUser().getNickName());
+        yxdema.setSubmitTime(new Date());
+        yxdema.setUpdateDate(new Date());
+        yxdemandMapper.updateYxdemand(yxdema);
+        Yxrob yxrob=new Yxrob();
+        yxrob.setEntryId(entryId);
+        yxrob.setRobUsercode(loginUser.getUsername());
+        yxrob.setRobName(loginUser.getUser().getNickName());
+        yxrob.setRobTime(new Date());
+        yxrobMapper.insertPerRobPeople(yxrob);
+        return AjaxResult.success("抢占成功");
+    }
+
+    @Override
+    public int yxdemByName(String companyName) {
+        Yxdemand yxdemand=yxdemandMapper.selectYxdemandByName(companyName);
+        int a=1;
+        if(yxdemand!=null){
+            a=2;
+        }
+        return a;
+
     }
 
 
