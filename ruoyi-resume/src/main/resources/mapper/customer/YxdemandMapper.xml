@@ -196,7 +196,15 @@
         <include refid="selectYxdemandVo"/>
         where company_name = #{companyName}
     </select>
+    <select id="selectByDepartBus"  resultMap="YxdemandResult">
+        <include refid="selectYxdemandVo"/>
+        where business_id is null and is_accept=1
+    </select>
 
+    <select id="selectByDepartMark"  resultMap="YxdemandResult">
+        <include refid="selectYxdemandVo"/>
+        where rob_people_id is null and is_accept=0
+    </select>
 
     <!--   定时器自动执行 -->
     <select id="selrobYxdelist" resultMap="YxdemandResult" >

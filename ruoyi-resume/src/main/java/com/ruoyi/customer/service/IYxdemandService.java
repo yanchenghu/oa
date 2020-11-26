@@ -95,4 +95,19 @@ public interface IYxdemandService
      */
     void markeRelease();
 
+
+
+
+
+
+    AjaxResult rob(Integer entryId, LoginUser loginUser);
+
+    /**
+     * 商务公海
+     */
+    List<Yxdemand> selectByDepartBus(Yxdemand yxdemand, LoginUser loginUser);
+    /**
+     * 营销公海
+     */
+    List<Yxdemand> selectByDepartMark(Yxdemand yxdemand, LoginUser loginUser);
 }

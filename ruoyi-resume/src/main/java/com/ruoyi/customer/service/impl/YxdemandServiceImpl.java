@@ -2,15 +2,21 @@ package com.ruoyi.customer.service.impl;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.common.utils.resume.SerialNumber;
+import com.ruoyi.conn.domain.ConOperationrecords;
 import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.domain.Yxcontact;
 import com.ruoyi.customer.domain.Yxdemand;
+import com.ruoyi.customer.domain.Yxrob;
 import com.ruoyi.customer.mapper.MarCompanyMapper;
 import com.ruoyi.customer.mapper.YxcontactMapper;
 import com.ruoyi.customer.mapper.YxdemandMapper;
+import com.ruoyi.customer.mapper.YxrobMapper;
 import com.ruoyi.customer.service.IYxdemandService;
+import com.ruoyi.resume.domain.PerCustomerinfo;
+import com.ruoyi.resume.domain.PerRobcustomer;
 import com.ruoyi.tool.WorkDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +47,12 @@ public class YxdemandServiceImpl implements IYxdemandService
 
     @Autowired
     private MarCompanyMapper marCompanyMapper;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private YxrobMapper yxrobMapper;
 
 
 
@@ -277,7 +289,7 @@ public class YxdemandServiceImpl implements IYxdemandService
            if(a==5){
                return AjaxResult.error("当前需求已经转化为合作客户");
            } else{
-               yxdemand.setIsBusiness(5);
+               yxdemand.setIsBusiness(4);
                yxdemandMapper.updateYxdemand(yxdemand);
            }
         }
@@ -330,4 +342,51 @@ public class YxdemandServiceImpl implements IYxdemandService
            }
         }
     }
+
+
+
+    @Override
+    public AjaxResult rob(Integer entryId, LoginUser loginUser) {
+
+
+
+
+        Yxdemand yxdemand= yxdemandMapper.selectYxdemandById(entryId);
+
+        if(yxdemand.getBusinessPeople().equals(loginUser.getUsername())){
+            AjaxResult.success("抢占");
+        }else{
+            return AjaxResult.error("不可以抢占");
+        }
+
+        if(yxdemand.getRobPeopleId()==null){
+            return AjaxResult.error("当前人已被抢占");
+        }
+
+        Yxrob yx = new Yxrob();
+
+        yx.setEntryId(yxdemand.getEntryId());
+        yx.setRobUsercode(yxdemand.getRobPeopleId());
+        yx.setRobName(yxdemand.getRobPeople());
+        yx.setRobTime(yx.getRobTime());
+        yxrobMapper.insertPerRobPeople(yx);
+
+        return AjaxResult.success("抢占成功");
+
+
+    }
+    /**
+     * 商务公海
+     */
+    @Override
+    public List<Yxdemand> selectByDepartBus(Yxdemand yxdemand, LoginUser loginUser) {
+        return yxdemandMapper.selectByDepartBus();
+    }
+
+    @Override
+    public List<Yxdemand> selectByDepartMark(Yxdemand yxdemand, LoginUser loginUser) {
+        return yxdemandMapper.selectByDepartMark();
+    }
+
+
 }

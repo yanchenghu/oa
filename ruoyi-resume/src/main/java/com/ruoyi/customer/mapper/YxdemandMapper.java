@@ -13,6 +13,9 @@ import java.util.Map;
  */
 public interface YxdemandMapper 
 {
+
+
+
     /**
      * 查询营销录入公司
      * 
@@ -72,5 +75,12 @@ public interface YxdemandMapper
      */
     List<Yxdemand> selrobYxdelist();
 
-
+    /**
+     * 商务公海
+     */
+    List<Yxdemand> selectByDepartBus();
+    /**
+     * 营销公海
+     */
+    List<Yxdemand> selectByDepartMark();
 }
