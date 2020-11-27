@@ -474,7 +474,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         }
         //添加抢占信息表
         PerCustomerinfo perCustomerinfo=perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
-        if(perCustomerinfo!=null){
+            if(perCustomerinfo!=null){
             return AjaxResult.error("当前人不存在");
         }
         Date now=new Date();

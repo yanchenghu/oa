@@ -32,6 +32,7 @@ public class SerialNumber {
 
     public static void main(String[] args) {
         System.out.println(createSerial("zhzqoa", 6));;
+        System.out.println(createSerial("hzgs", 1));;
     }
 
 }

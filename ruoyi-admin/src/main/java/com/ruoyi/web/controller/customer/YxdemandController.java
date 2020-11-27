@@ -44,7 +44,7 @@ public class YxdemandController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('customer:yxdemand:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Yxdemand yxdemand)throws Exception
+    public TableDataInfo list(Yxdemand yxdemand)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         startPage();
@@ -56,7 +56,6 @@ public class YxdemandController extends BaseController
     /**
         * 获取营销录入公司详细信息
      */
-    @PreAuthorize("@ss.hasPermi('customer:yxdemand:query')")
     @GetMapping(value = "/{entryId}")
     public AjaxResult getInfo(@PathVariable("entryId") Integer entryId)
     {
@@ -66,7 +65,6 @@ public class YxdemandController extends BaseController
     /**
      * 新增营销录入公司
      */
-    @PreAuthorize("@ss.hasPermi('customer:yxdemand:add')")
     @Log(title = "营销录入公司", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Yxdemand yxdemand)
@@ -78,17 +76,13 @@ public class YxdemandController extends BaseController
     /**
      * 跟进营销录入公司
      */
-    @PreAuthorize("@ss.hasPermi('customer:yxdemand:edit')")
-    @Log(title = "营销录入公司", businessType = BusinessType.UPDATE)
+    @Log(title = "营销跟进公司", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Yxdemand yxdemand)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-
         return yxdemandService.updateYxdemand(yxdemand,loginUser);
     }
-
-
     /**
      * 发布信息
      */
@@ -108,37 +102,21 @@ public class YxdemandController extends BaseController
         return toAjax(yxdemandService.Customertransfer(yxdemand,loginUser));
     }
     /**
-     * 抢占功能营销
+     * 营销抢占功能营销
      */
-    @PostMapping(value = "/rebClientByEnId")
+    @PostMapping(value = "/rebMarByEnId")
     public AjaxResult  rebClientByEnId(@RequestParam(value = "entryId", defaultValue = "") Integer entryId)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-
-//        return toAjax(yxdemandService.rebClientByEnId(entryId,loginUser));
-        return null;
+        return yxdemandService.rebMarByEnId(entryId,loginUser);
     }
-
     /**
-     * 查询商务公司列表
+     * 根据公司名字获取营销录入公司
      */
-    @PreAuthorize("@ss.hasPermi('customer:yxdemand:buslist')")
-    @GetMapping("/buslist")
-    public TableDataInfo buslist(Yxdemand yxdemand)throws Exception
+    @PostMapping(value = "/yxdemByName")
+    public int getInfo(@RequestParam(value = "companyName", defaultValue = "") String companyName)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        startPage();
-        List<Yxdemand> list = yxdemandService.selectYxdemandList(yxdemand,loginUser);
-        return getDataTable(list);
+        return yxdemandService.yxdemByName(companyName);
     }
-
-
-
-
-
-
-
-
-
 
 }

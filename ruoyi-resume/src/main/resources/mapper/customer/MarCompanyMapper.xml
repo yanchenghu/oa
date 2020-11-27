@@ -3,69 +3,143 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.customer.mapper.MarCompanyMapper">
-    
+
     <resultMap type="MarCompany" id="MarCompanyResult">
         <result property="corpCode"    column="corp_code"    />
         <result property="corpName"    column="corp_name"    />
-        <result property="customerLevel"    column="Customer_level"    />
+        <result property="contactPeople"    column="contact_people"    />
+        <result property="contactPosition"    column="contact_position"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="companySituation"    column="company_situation"    />
+        <result property="wechat"    column="wechat"    />
+        <result property="mailbox"    column="mailbox"    />
+        <result property="qq"    column="qq"    />
+        <result property="interviewCompany"    column="interview_company"    />
+        <result property="interviewer"    column="interviewer"    />
+        <result property="interviewerPosition"    column="interviewer_position"    />
+        <result property="interviewContact"    column="interview_contact"    />
+        <result property="interviewAddress"    column="interview_address"    />
+        <result property="finalParty"    column="final_party"    />
+        <result property="customerLevel"    column="customer_level"    />
         <result property="paybackPeriod"    column="payback_period"    />
         <result property="cooperationTime"    column="cooperation_time"    />
-        <result property="enteredBy"    column="entered_by"    />
+        <result property="entryPeople"    column="entry_people"    />
         <result property="transformingPeople"    column="transforming_people"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectMarCompanyVo">
-        select corp_code, corp_name, Customer_level, payback_period, cooperation_time, entered_by, transforming_people from mar_company
+        select corp_code, corp_name, contact_people, contact_position, contact_phone, company_situation, wechat, mailbox, qq, interview_company, interviewer, interviewer_position, interview_contact, interview_address, final_party, customer_level, payback_period, cooperation_time, entry_people, transforming_people, add_time, remark from mar_company
     </sql>
 
     <select id="selectMarCompanyList" parameterType="MarCompany" resultMap="MarCompanyResult">
         <include refid="selectMarCompanyVo"/>
-        <where>  
+        <where>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
-            <if test="customerLevel != null "> and Customer_level = #{customerLevel}</if>
-            <if test="paybackPeriod != null  and paybackPeriod != ''"> and payback_period = #{paybackPeriod}</if>
+            <if test="contactPeople != null  and contactPeople != ''"> and contact_people = #{contactPeople}</if>
+            <if test="contactPosition != null  and contactPosition != ''"> and contact_position = #{contactPosition}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="companySituation != null "> and company_situation = #{companySituation}</if>
+            <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
+            <if test="mailbox != null  and mailbox != ''"> and mailbox = #{mailbox}</if>
+            <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
+            <if test="interviewCompany != null  and interviewCompany != ''"> and interview_company = #{interviewCompany}</if>
+            <if test="interviewer != null  and interviewer != ''"> and interviewer = #{interviewer}</if>
+            <if test="interviewerPosition != null  and interviewerPosition != ''"> and interviewer_position = #{interviewerPosition}</if>
+            <if test="interviewContact != null  and interviewContact != ''"> and interview_contact = #{interviewContact}</if>
+            <if test="interviewAddress != null  and interviewAddress != ''"> and interview_address = #{interviewAddress}</if>
+            <if test="finalParty != null  and finalParty != ''"> and final_party = #{finalParty}</if>
+            <if test="customerLevel != null "> and customer_level = #{customerLevel}</if>
+            <if test="paybackPeriod != null "> and payback_period = #{paybackPeriod}</if>
             <if test="cooperationTime != null "> and cooperation_time = #{cooperationTime}</if>
-            <if test="enteredBy != null  and enteredBy != ''"> and entered_by = #{enteredBy}</if>
+            <if test="entryPeople != null  and entryPeople != ''"> and entry_people = #{entryPeople}</if>
             <if test="transformingPeople != null  and transformingPeople != ''"> and transforming_people = #{transformingPeople}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
         </where>
     </select>
-    
+
     <select id="selectMarCompanyById" parameterType="String" resultMap="MarCompanyResult">
         <include refid="selectMarCompanyVo"/>
         where corp_code = #{corpCode}
     </select>
-        
+
     <insert id="insertMarCompany" parameterType="MarCompany">
         insert into mar_company
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="corpCode != null">corp_code,</if>
             <if test="corpName != null">corp_name,</if>
-            <if test="customerLevel != null">Customer_level,</if>
+            <if test="contactPeople != null">contact_people,</if>
+            <if test="contactPosition != null">contact_position,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="companySituation != null">company_situation,</if>
+            <if test="wechat != null">wechat,</if>
+            <if test="mailbox != null">mailbox,</if>
+            <if test="qq != null">qq,</if>
+            <if test="interviewCompany != null">interview_company,</if>
+            <if test="interviewer != null">interviewer,</if>
+            <if test="interviewerPosition != null">interviewer_position,</if>
+            <if test="interviewContact != null">interview_contact,</if>
+            <if test="interviewAddress != null">interview_address,</if>
+            <if test="finalParty != null">final_party,</if>
+            <if test="customerLevel != null">customer_level,</if>
             <if test="paybackPeriod != null">payback_period,</if>
             <if test="cooperationTime != null">cooperation_time,</if>
-            <if test="enteredBy != null">entered_by,</if>
+            <if test="entryPeople != null">entry_people,</if>
             <if test="transformingPeople != null">transforming_people,</if>
-         </trim>
+            <if test="addTime != null">add_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="corpCode != null">#{corpCode},</if>
             <if test="corpName != null">#{corpName},</if>
+            <if test="contactPeople != null">#{contactPeople},</if>
+            <if test="contactPosition != null">#{contactPosition},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="companySituation != null">#{companySituation},</if>
+            <if test="wechat != null">#{wechat},</if>
+            <if test="mailbox != null">#{mailbox},</if>
+            <if test="qq != null">#{qq},</if>
+            <if test="interviewCompany != null">#{interviewCompany},</if>
+            <if test="interviewer != null">#{interviewer},</if>
+            <if test="interviewerPosition != null">#{interviewerPosition},</if>
+            <if test="interviewContact != null">#{interviewContact},</if>
+            <if test="interviewAddress != null">#{interviewAddress},</if>
+            <if test="finalParty != null">#{finalParty},</if>
             <if test="customerLevel != null">#{customerLevel},</if>
             <if test="paybackPeriod != null">#{paybackPeriod},</if>
             <if test="cooperationTime != null">#{cooperationTime},</if>
-            <if test="enteredBy != null">#{enteredBy},</if>
+            <if test="entryPeople != null">#{entryPeople},</if>
             <if test="transformingPeople != null">#{transformingPeople},</if>
-         </trim>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
     </insert>
 
     <update id="updateMarCompany" parameterType="MarCompany">
         update mar_company
         <trim prefix="SET" suffixOverrides=",">
             <if test="corpName != null">corp_name = #{corpName},</if>
-            <if test="customerLevel != null">Customer_level = #{customerLevel},</if>
+            <if test="contactPeople != null">contact_people = #{contactPeople},</if>
+            <if test="contactPosition != null">contact_position = #{contactPosition},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="companySituation != null">company_situation = #{companySituation},</if>
+            <if test="wechat != null">wechat = #{wechat},</if>
+            <if test="mailbox != null">mailbox = #{mailbox},</if>
+            <if test="qq != null">qq = #{qq},</if>
+            <if test="interviewCompany != null">interview_company = #{interviewCompany},</if>
+            <if test="interviewer != null">interviewer = #{interviewer},</if>
+            <if test="interviewerPosition != null">interviewer_position = #{interviewerPosition},</if>
+            <if test="interviewContact != null">interview_contact = #{interviewContact},</if>
+            <if test="interviewAddress != null">interview_address = #{interviewAddress},</if>
+            <if test="finalParty != null">final_party = #{finalParty},</if>
+            <if test="customerLevel != null">customer_level = #{customerLevel},</if>
             <if test="paybackPeriod != null">payback_period = #{paybackPeriod},</if>
             <if test="cooperationTime != null">cooperation_time = #{cooperationTime},</if>
-            <if test="enteredBy != null">entered_by = #{enteredBy},</if>
+            <if test="entryPeople != null">entry_people = #{entryPeople},</if>
             <if test="transformingPeople != null">transforming_people = #{transformingPeople},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
         </trim>
         where corp_code = #{corpCode}
     </update>
@@ -75,10 +149,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteMarCompanyByIds" parameterType="String">
-        delete from mar_company where corp_code in 
+        delete from mar_company where corp_code in
         <foreach item="corpCode" collection="array" open="(" separator="," close=")">
             #{corpCode}
         </foreach>
     </delete>
+
+    <select id="selectMarCompanyByName" parameterType="String" resultMap="MarCompanyResult">
+        <include refid="selectMarCompanyVo"/>
+        where corp_name = #{corpName}
+    </select>
     
 </mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.YxrobMapper">
+    
+    <resultMap type="Yxrob" id="YxrobResult">
+        <result property="robId"    column="rob_id"    />
+        <result property="entryId"    column="entry_id"    />
+        <result property="robUsercode"    column="rob_usercode"    />
+        <result property="robName"    column="rob_name"    />
+        <result property="robTime"    column="rob_time"    />
+        <result property="bz"    column="bz"    />
+    </resultMap>
+
+    <sql id="selectYxrobVo">
+        select rob_id, entry_id, rob_usercode, rob_name, rob_time, bz from yxrob
+    </sql>
+
+    <select id="selectYxrobList" parameterType="Yxrob" resultMap="YxrobResult">
+        <include refid="selectYxrobVo"/>
+        <where>  
+            <if test="entryId != null "> and entry_id = #{entryId}</if>
+            <if test="robUsercode != null  and robUsercode != ''"> and rob_usercode = #{robUsercode}</if>
+            <if test="robName != null  and robName != ''"> and rob_name like concat('%', #{robName}, '%')</if>
+            <if test="robTime != null "> and rob_time = #{robTime}</if>
+            <if test="bz != null  and bz != ''"> and bz = #{bz}</if>
+        </where>
+    </select>
+    
+    <select id="selectYxrobById" parameterType="Integer" resultMap="YxrobResult">
+        <include refid="selectYxrobVo"/>
+        where rob_id = #{robId}
+    </select>
+        
+    <insert id="insertPerRobPeople" parameterType="Yxrob">
+        insert into yxrob
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="robId != null">rob_id,</if>
+            <if test="entryId != null">entry_id,</if>
+            <if test="robUsercode != null">rob_usercode,</if>
+            <if test="robName != null">rob_name,</if>
+            <if test="robTime != null">rob_time,</if>
+            <if test="bz != null">bz,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="robId != null">#{robId},</if>
+            <if test="entryId != null">#{entryId},</if>
+            <if test="robUsercode != null">#{robUsercode},</if>
+            <if test="robName != null">#{robName},</if>
+            <if test="robTime != null">#{robTime},</if>
+            <if test="bz != null">#{bz},</if>
+         </trim>
+    </insert>
+
+    <update id="updateYxrob" parameterType="Yxrob">
+        update yxrob
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entryId != null">entry_id = #{entryId},</if>
+            <if test="robUsercode != null">rob_usercode = #{robUsercode},</if>
+            <if test="robName != null">rob_name = #{robName},</if>
+            <if test="robTime != null">rob_time = #{robTime},</if>
+            <if test="bz != null">bz = #{bz},</if>
+        </trim>
+        where rob_id = #{robId}
+    </update>
+
+    <delete id="deleteYxrobById" parameterType="Integer">
+        delete from yxrob where rob_id = #{robId}
+    </delete>
+
+    <delete id="deleteYxrobByIds" parameterType="String">
+        delete from yxrob where rob_id in 
+        <foreach item="robId" collection="array" open="(" separator="," close=")">
+            #{robId}
+        </foreach>
+    </delete>
+
+
+
+    <select id="selectById" parameterType="Integer" resultMap="YxrobResult">
+          SELECT
+            a.rob_id,
+            a.entry_id,
+            a.rob_usercode,
+            a.rob_name,
+            a.rob_time,
+            a.bz
+        FROM
+            yxrob a
+        LEFT JOIN yxdemand b ON a.entry_id=b.entry_id
+
+
+    </select>
+
+    
+</mapper>

@@ -2,6 +2,7 @@ package com.ruoyi.customer.service;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.domain.Yxcontact;
 import com.ruoyi.customer.domain.Yxdemand;
 
@@ -29,7 +30,15 @@ public interface IYxdemandService
      * @param yxdemand 营销录入公司
      * @return 营销录入公司集合
      */
-    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand,LoginUser loginUser) throws Exception;
+    public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand,LoginUser loginUser) ;
+
+    /**
+     * 营销抢占
+     *
+     * @param  entryId loginUser
+     * @return AjaxResult
+     */
+    AjaxResult rebMarByEnId(Integer entryId, LoginUser loginUser);
 
     /**
      * 新增营销录入公司
@@ -82,16 +91,10 @@ public interface IYxdemandService
      */
     List<Yxdemand> selectBusinessList(Yxdemand yxdemand, LoginUser loginUser);
 
-
-
-
-
-
-
-
-
-
-
+    /**
+     * 转化为合作客户
+     */
+    AjaxResult turnCustomers(MarCompany marCompany, LoginUser loginUser);
 
 
     /**
@@ -99,4 +102,23 @@ public interface IYxdemandService
      * 查询全部录入公司记录，监测是否过期，过期则释放
      */
     void markeRelease();
+
+
+    /**
+     * 商务公海
+     */
+    List<Yxdemand> selectByDepartBus(Yxdemand yxdemand, LoginUser loginUser);
+    /**
+     * 营销公海
+     */
+    List<Yxdemand> selectByDepartMark(Yxdemand yxdemand, LoginUser loginUser);
+
+    /**
+     * 商务抢占功能营销
+     */
+    AjaxResult rebBusByEnId(Integer entryId, LoginUser loginUser);
+    /**
+     * 根据公司名字获取营销录入公司
+     */
+    int yxdemByName(String companyName);
 }
