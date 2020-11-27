@@ -52,11 +52,20 @@ export function resetForm(refName) {
 		this.$refs[refName].resetFields();
 	}
 }
-
+export function debounce(func) {
+    var timer=null;
+    return function() {
+      if (timer){
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        func();
+      }, 1000);
+    }
+}
 export function worktime(startyear,startmonth,endyear,endmonth){
         return `${startyear}.${startmonth} — ${endyear}.${endmonth}`
 }
-
 
 // 添加日期范围
 export function addDateRange(params, dateRange) {

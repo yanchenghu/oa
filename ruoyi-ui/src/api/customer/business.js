@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 // 查询营销录入公司列表
-export function listYxdemand(query) {
+export function listbusiness(query) {
   return request({
-    url: '/customer/yxdemand/list',
+    url: '/customer/business/list',
     method: 'get',
     params: query
   })
@@ -44,11 +44,11 @@ export function delYxdemand(entryId) {
 }
 
 // 导出营销录入公司
-export function exportYxdemand(query) {
+export function exportYxdemand(data) {
   return request({
-    url: '/customer/yxdemand/export',
-    method: 'get',
-    params: query
+    url: '/customer/business/turnCustomers',
+    method: 'post',
+    data: data
   })
 }
 

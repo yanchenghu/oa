@@ -1,64 +1,92 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-
-      <el-form-item label="客户级别" prop="customerLevel">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" style="width:80% ;">
+       <el-form-item label="" prop="companyName">
+         <el-input
+           v-model="queryParams.companyName"
+           placeholder="请输入客户名称"
+           clearable
+           size="small"
+           @keyup.enter.native="handleQuery"
+         />
+       </el-form-item>
+       <el-form-item>
+         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+       </el-form-item>
+       <el-form-item  prop="companySituation">
+         <el-select v-model="queryParams.companySituation"   placeholder="请选择公司性质" clearable size="small" @change="change">
+           <el-option
+             v-for="dict in companySituationOptions"
+             :key="dict.dictValue"
+             :label="dict.dictLabel"
+             :value="dict.dictValue"
+           />
+         </el-select>
+       </el-form-item>
+      <el-form-item prop="customerLevel">
         <el-select v-model="queryParams.customerLevel" placeholder="请选择客户级别" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+              v-for="dict in customerleve"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-select>
       </el-form-item>
-      <el-form-item label="回款周期" prop="paybackPeriod">
+      <el-form-item  prop="paybackPeriod">
         <el-select v-model="queryParams.paybackPeriod" placeholder="请选择回款周期" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option
+              v-for="dict in companyperiod"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
         </el-select>
       </el-form-item>
-
-      <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
+      <el-button
+          type="cyan"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['customer:company:add']"
-        >新增</el-button>
-      </el-col>
+          style="position: absolute;right: 0;margin-right: 50px"
+        >新建合作用户</el-button>
+    </el-form>
+    <el-row :gutter="10" class="mb8">
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="companyList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序列" align="center" prop="corpCode" />
-      <el-table-column label="公司名称" align="center" prop="corpName" />
-      <el-table-column label="客户级别" align="center" prop="customerLevel" />
-      <el-table-column label="回款周期" align="center" prop="paybackPeriod" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <!-- <el-table-column label="序列" align="center" prop="corpCode" /> -->
+      <el-table-column label="公司名称" align="left" prop="corpName" width="160"/>
+      <el-table-column label="公司性质" align="center" prop="companySituation" :formatter="companySituationFormat"/>
+      <el-table-column label="联系人/职位" align="left" width="130">
+        <template slot-scope="scope">
+          <span>{{scope.row.contactPeople}} / {{scope.row.contactPosition}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="联系方式" align="left" prop="contactPhone" width="110"/>
+      <el-table-column label="客户级别" align="center" prop="customerLevel" :formatter="customerleveFormat" width="100"/>
+      <el-table-column label="回款周期" align="center" prop="paybackPeriod" :formatter="companyperiodFormat"/>
       <el-table-column label="合作时间" align="center" prop="cooperationTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.cooperationTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="录入人" align="center" prop="enteredBy" />
-      <el-table-column label="转化人" align="center" prop="transformingPeople" />
-      <el-table-column label="更多" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="录入人" align="center" prop="entryPeople" />
+      <el-table-column label="转化人" align="center" prop="transformingPeople" :formatter="usernameFormat"/>
+      <el-table-column label="更多" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-
           <el-button
             size="mini"
             type="text"
             icon="el-icon-more"
             @click="more(scope.row)"
-            v-hasPermi="['customer:company:more']"
-          ></el-button>
+          >更多</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
     <pagination
       v-show="total>0"
       :total="total"
@@ -146,13 +174,48 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+      },
+      companySituationOptions:[],
+      customerleve:[],
+
+      companyperiod:[],
+      username:[],
     };
   },
   created() {
     this.getList();
+    this.getDicts("yxdemand_company_situation").then(response => {
+      this.companySituationOptions = response.data;
+    });
+    this.getDicts("bus_customer_leve").then(response => {
+      this.customerleve = response.data;
+    });
+    this.getDicts("mar_company_period").then(response => {
+      this.companyperiod = response.data;
+    });
+    this.getDicts("sys_user_name").then(response => {
+      this.username = response.data;
+    });
   },
   methods: {
+    // 公司性质
+    companySituationFormat(row, column) {
+      return this.selectDictLabel(this.companySituationOptions, row.companySituation);
+    },
+    // 客户级别
+    customerleveFormat(row, column) {
+      return this.selectDictLabel(this.customerleve, row.customerLevel);
+    },
+    // 回款周期
+    companyperiodFormat(row, column) {
+      return this.selectDictLabel(this.companyperiod, row.paybackPeriod);
+    },
+    // 转化人
+    usernameFormat(row, column) {
+      return this.selectDictLabel(this.username, row.transformingPeople);
+    },
+
+
     /** 查询合作公司列表 */
     getList() {
       this.loading = true;
@@ -185,10 +248,9 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+    // 更多
+    more(value){
+      getCompany(value.corpCode)
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -202,16 +264,7 @@ export default {
       this.open = true;
       this.title = "添加合作公司";
     },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const corpCode = row.corpCode || this.ids
-      getCompany(corpCode).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改合作公司";
-      });
-    },
+
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -232,33 +285,7 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const corpCodes = row.corpCode || this.ids;
-      this.$confirm('是否确认删除合作公司编号为"' + corpCodes + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delCompany(corpCodes);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有合作公司数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportCompany(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        })
-    }
+
   }
 };
 </script>

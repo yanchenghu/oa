@@ -12,7 +12,7 @@ export function listYxdemand(query) {
 // 查询营销录入公司详细
 export function getYxdemand(entryId) {
   return request({
-    url: '/customer/highseas/' + entryId,
+    url: '/customer/yxdemand/' + entryId,
     method: 'get'
   })
 }
@@ -52,21 +52,19 @@ export function exportYxdemand(query) {
   })
 }
 
-// 新增营销录入公司
-export function release(data) {
+// 营销抢占
+export function yxhandrob(data) {
   return request({
-    url: '/customer/highseas',
+    url: '/customer/yxdemand/rebMarByEnId',
     method: 'post',
     data: data
   })
 }
-
-
-// // 查看跟进营销录入公司列表
-// export function see(query) {
-//   return request({
-//     url: '/customer/yxdemand/follow',
-//     method: 'get',
-//     params: query
-//   })
-// }
+// 商务抢占
+export function swhandrob(data) {
+  return request({
+    url: '/customer/business/rebBusByEnId ',
+    method: 'post',
+    data: data
+  })
+}
