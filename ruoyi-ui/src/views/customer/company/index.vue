@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { listCompany, getCompany, delCompany, addCompany, updateCompany, exportCompany } from "@/api/customer/company";
+import { listCompany, getCompany, delCompany, addCompany, updateCompany, exportCompany,contractCompany } from "@/api/customer/company";
 
 export default {
   name: "Company",
@@ -251,6 +251,7 @@ export default {
     // 更多
     more(value){
       getCompany(value.corpCode)
+      // contractCompany()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {

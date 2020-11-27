@@ -35,11 +35,11 @@ export function updateCompany(data) {
   })
 }
 
-// 删除合作公司
-export function delCompany(corpCode) {
+// 合同查询
+export function contractCompany(query) {
   return request({
-    url: '/customer/company/' + corpCode,
-    method: 'delete'
+    url: '/customer/company/contract',
+    method: 'get',
   })
 }
 

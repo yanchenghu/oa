@@ -465,7 +465,6 @@ export default {
         this.getList()
     },
     changes(value){
-      this.$set(this.yxdemandone,value)
       this.sees()
       this.followUp(this.yxdemandone.entryId)
       this.$forceUpdate()
