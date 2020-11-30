@@ -110,6 +110,11 @@ public class MarCompanyServiceImpl implements IMarCompanyService
     @Transactional
     public AjaxResult updateMarCompany(MarCompany marCompany,LoginUser loginUser)
     {
+        MarCompany maw = marCompanyMapper.selectMarCompanyByName(marCompany.getCorpName());
+        if(maw!=null){
+            return AjaxResult.error("当前公司已存在");
+        }
+
         MarCompany mar = marCompanyMapper.selectMarCompanyById(marCompany.getCorpCode());
         Integer a = mar.getCompanySituation();
         Integer b = mar.getCustomerLevel();

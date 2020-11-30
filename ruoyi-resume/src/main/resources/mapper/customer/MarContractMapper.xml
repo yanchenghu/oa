@@ -3,9 +3,10 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.customer.mapper.MarContractMapper">
-    
+
     <resultMap type="MarContract" id="MarContractResult">
         <result property="id"    column="id"    />
+        <result property="corpCode"    column="corp_code"    />
         <result property="firstParty"    column="first_party"    />
         <result property="party"    column="party"    />
         <result property="startTime"    column="start_time"    />
@@ -18,12 +19,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMarContractVo">
-        select id, first_party, party, start_time, end_time, client_signer, company_signer, contract_preview,contract_name,contract_time from mar_contract
+        select id, corp_code, first_party, party, start_time, end_time, client_signer, company_signer, contract_preview, contract_name, contract_time from mar_contract
     </sql>
 
     <select id="selectMarContractList" parameterType="MarContract" resultMap="MarContractResult">
         <include refid="selectMarContractVo"/>
-        <where>  
+        <where>
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
             <if test="firstParty != null  and firstParty != ''"> and first_party = #{firstParty}</if>
             <if test="party != null  and party != ''"> and party = #{party}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
@@ -31,19 +33,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="clientSigner != null  and clientSigner != ''"> and client_signer = #{clientSigner}</if>
             <if test="companySigner != null  and companySigner != ''"> and company_signer = #{companySigner}</if>
             <if test="contractPreview != null  and contractPreview != ''"> and contract_preview = #{contractPreview}</if>
-            <if test="contractName != null  and contractName != ''"> and contract_name = #{contractName}</if>
-            <if test="contractTime != null  and contractTime != ''"> and contract_time = #{contractTime}</if>
+            <if test="contractName != null  and contractName != ''"> and contract_name like concat('%', #{contractName}, '%')</if>
+            <if test="contractTime != null "> and contract_time = #{contractTime}</if>
         </where>
     </select>
-    
-    <select id="selectMarContractById" parameterType="Integer" resultMap="MarContractResult">
+
+    <select id="selectMarContractById" parameterType="Long" resultMap="MarContractResult">
         <include refid="selectMarContractVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertMarContract" parameterType="MarContract" useGeneratedKeys="true" keyProperty="id">
         insert into mar_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">corp_code,</if>
             <if test="firstParty != null">first_party,</if>
             <if test="party != null">party,</if>
             <if test="startTime != null">start_time,</if>
@@ -53,8 +56,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractPreview != null">contract_preview,</if>
             <if test="contractName != null">contract_name,</if>
             <if test="contractTime != null">contract_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">#{corpCode},</if>
             <if test="firstParty != null">#{firstParty},</if>
             <if test="party != null">#{party},</if>
             <if test="startTime != null">#{startTime},</if>
@@ -64,12 +68,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractPreview != null">#{contractPreview},</if>
             <if test="contractName != null">#{contractName},</if>
             <if test="contractTime != null">#{contractTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateMarContract" parameterType="MarContract">
         update mar_contract
         <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
             <if test="firstParty != null">first_party = #{firstParty},</if>
             <if test="party != null">party = #{party},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
@@ -83,15 +88,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteMarContractById" parameterType="Integer">
+    <delete id="deleteMarContractById" parameterType="Long">
         delete from mar_contract where id = #{id}
     </delete>
 
     <delete id="deleteMarContractByIds" parameterType="String">
-        delete from mar_contract where id in 
+        delete from mar_contract where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
 </mapper>
