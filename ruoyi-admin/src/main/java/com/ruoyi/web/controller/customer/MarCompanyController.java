@@ -1,26 +1,27 @@
 package com.ruoyi.web.controller.customer;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.customer.domain.MarContract;
+import com.ruoyi.customer.service.IMarContractService;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.service.IMarCompanyService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 合作公司Controller
@@ -35,6 +36,12 @@ public class MarCompanyController extends BaseController
     @Autowired
     private IMarCompanyService marCompanyService;
 
+    @Autowired
+    private IMarContractService marContractService;
+
+    @Autowired
+    private TokenService tokenService;
+
     /**
      * 查询合作公司列表
      */
@@ -42,65 +49,80 @@ public class MarCompanyController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(MarCompany marCompany)
     {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         startPage();
-        List<MarCompany> list = marCompanyService.selectMarCompanyList(marCompany);
+        List<MarCompany> list = marCompanyService.selectMarCompanyList(marCompany,loginUser);
         return getDataTable(list);
-    }
-
-    /**
-     * 导出合作公司列表
-     */
-    @PreAuthorize("@ss.hasPermi('customer:company:export')")
-    @Log(title = "合作公司", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public AjaxResult export(MarCompany marCompany)
-    {
-        List<MarCompany> list = marCompanyService.selectMarCompanyList(marCompany);
-        ExcelUtil<MarCompany> util = new ExcelUtil<MarCompany>(MarCompany.class);
-        return util.exportExcel(list, "company");
-    }
-
-    /**
-     * 获取合作公司详细信息
-     */
-    @PreAuthorize("@ss.hasPermi('customer:company:query')")
-    @GetMapping(value = "/{corpCode}")
-    public AjaxResult getInfo(@PathVariable("corpCode") String corpCode)
-    {
-        return AjaxResult.success(marCompanyService.selectMarCompanyById(corpCode));
     }
 
     /**
      * 新增合作公司
      */
-    @PreAuthorize("@ss.hasPermi('customer:company:add')")
+
     @Log(title = "合作公司", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MarCompany marCompany)
     {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         marCompany.setCorpCode(String.valueOf(UUID.randomUUID()));
-        return toAjax(marCompanyService.insertMarCompany(marCompany));
+        return marCompanyService.insertMarCompany(marCompany,loginUser);
     }
 
+
     /**
-     * 修改合作公司
+     * 获取合作公司详细信息
      */
-    @PreAuthorize("@ss.hasPermi('customer:company:edit')")
+    @GetMapping(value = "/{corpCode}")
+    public AjaxResult getInfo(@PathVariable("corpCode") String corpCode)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return AjaxResult.success(marCompanyService.selectMarCompanyById(corpCode,loginUser));
+    }
+
+
+    /**
+     * 修改合作公司详细信息
+     */
     @Log(title = "合作公司", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MarCompany marCompany)
     {
-        return toAjax(marCompanyService.updateMarCompany(marCompany));
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return marCompanyService.updateMarCompany(marCompany,loginUser);
+    }
+
+
+    /**
+     * 查询合同信息
+     */
+    @GetMapping("/contract")
+    public TableDataInfo contract(MarContract marContract)
+    {
+        startPage();
+        List<MarContract> list = marContractService.selectMarContractList(marContract);
+        return getDataTable(list);
     }
 
     /**
-     * 删除合作公司
+     * 添加合同信息
      */
-    @PreAuthorize("@ss.hasPermi('customer:company:remove')")
-    @Log(title = "合作公司", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{corpCodes}")
-    public AjaxResult remove(@PathVariable String[] corpCodes)
+    @PostMapping(value = "/save")
+    public AjaxResult save(@RequestParam("contractPreview") MultipartFile file, String firstParty,
+    String party, String startTime, String endTime,String clientSigner, String companySigner)
     {
-        return toAjax(marCompanyService.deleteMarCompanyByIds(corpCodes));
+        try {
+            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+            Date startTime1 = DateUtils.parseDate(startTime);
+            Date endTime1 = DateUtils.parseDate(endTime);
+            return marContractService.insertMarContract(file,firstParty,party, startTime1,endTime1,clientSigner,companySigner,loginUser);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return AjaxResult.error("上传错误");
+        }
     }
+
+
+
+
+
 }

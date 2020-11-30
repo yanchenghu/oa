@@ -1,7 +1,11 @@
 package com.ruoyi.customer.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.customer.domain.MarCompany;
+import com.ruoyi.customer.domain.MarContract;
 
 /**
  * 合作公司Service接口
@@ -17,7 +21,7 @@ public interface IMarCompanyService
      * @param corpCode 合作公司ID
      * @return 合作公司
      */
-    public MarCompany selectMarCompanyById(String corpCode);
+    public AjaxResult selectMarCompanyById(String corpCode, LoginUser loginUser);
 
     /**
      * 查询合作公司列表
@@ -25,7 +29,7 @@ public interface IMarCompanyService
      * @param marCompany 合作公司
      * @return 合作公司集合
      */
-    public List<MarCompany> selectMarCompanyList(MarCompany marCompany);
+    public List<MarCompany> selectMarCompanyList(MarCompany marCompany, LoginUser loginUser);
 
     /**
      * 新增合作公司
@@ -33,7 +37,7 @@ public interface IMarCompanyService
      * @param marCompany 合作公司
      * @return 结果
      */
-    public int insertMarCompany(MarCompany marCompany);
+    public AjaxResult insertMarCompany(MarCompany marCompany, LoginUser loginUser);
 
     /**
      * 修改合作公司
@@ -41,7 +45,7 @@ public interface IMarCompanyService
      * @param marCompany 合作公司
      * @return 结果
      */
-    public int updateMarCompany(MarCompany marCompany);
+    public AjaxResult updateMarCompany(MarCompany marCompany, LoginUser loginUser);
 
     /**
      * 批量删除合作公司
@@ -58,4 +62,15 @@ public interface IMarCompanyService
      * @return 结果
      */
     public int deleteMarCompanyById(String corpCode);
+
+     /**
+     * 查询联系人信息
+     */
+    List<MarCompany> selectMarCompanyContact(MarCompany marCompany);
+
+
+    /**
+     * 查询合同信息
+     */
+    List<MarCompany> selectMarContractList(MarContract marContract);
 }

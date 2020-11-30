@@ -1,7 +1,10 @@
 package com.ruoyi.customer.mapper;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.customer.domain.MarCompany;
+import com.ruoyi.customer.domain.MarContract;
 
 /**
  * 合作公司Mapper接口
@@ -63,4 +66,11 @@ public interface MarCompanyMapper
      * 转化为合作客户
      */
     MarCompany selectMarCompanyByName(String companyName);
+
+    /**
+     * 查询联系人信息
+     */
+    List<MarCompany> selectMarCompanyContact(MarCompany marCompany);
+
+    List<MarCompany> selectMarContractList(MarContract marContract);
 }

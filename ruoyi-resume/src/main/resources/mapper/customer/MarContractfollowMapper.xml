@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.MarContractfollowMapper">
+    
+    <resultMap type="MarContractfollow" id="MarContractfollowResult">
+        <result property="contractId"    column="contract_id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="contactDetail"    column="contact_detail"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="contactTime"    column="contact_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectMarContractfollowVo">
+        select contract_id, corp_code, contact_detail, nick_name, contact_time, status from mar_contractfollow
+    </sql>
+
+    <select id="selectMarContractfollowList" parameterType="MarContractfollow" resultMap="MarContractfollowResult">
+        <include refid="selectMarContractfollowVo"/>
+        <where>  
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="contactDetail != null  and contactDetail != ''"> and contact_detail = #{contactDetail}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="contactTime != null "> and contact_time = #{contactTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarContractfollowById" parameterType="Integer" resultMap="MarContractfollowResult">
+        <include refid="selectMarContractfollowVo"/>
+        where contract_id = #{contractId}
+    </select>
+        
+    <insert id="insertMarContractfollow" parameterType="MarContractfollow">
+        insert into mar_contractfollow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractId != null">contract_id,</if>
+            <if test="corpCode != null">corp_code,</if>
+            <if test="contactDetail != null">contact_detail,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="contactTime != null">contact_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractId != null">#{contractId},</if>
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="contactDetail != null">#{contactDetail},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="contactTime != null">#{contactTime},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarContractfollow" parameterType="MarContractfollow">
+        update mar_contractfollow
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
+            <if test="contactDetail != null">contact_detail = #{contactDetail},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="contactTime != null">contact_time = #{contactTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where contract_id = #{contractId}
+    </update>
+
+    <delete id="deleteMarContractfollowById" parameterType="Integer">
+        delete from mar_contractfollow where contract_id = #{contractId}
+    </delete>
+
+    <delete id="deleteMarContractfollowByIds" parameterType="String">
+        delete from mar_contractfollow where contract_id in 
+        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+            #{contractId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -159,5 +159,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectMarCompanyVo"/>
         where corp_name = #{corpName}
     </select>
+
+
+
+
+    <select id="selectMarCompanyContact" parameterType="MarCompany" resultMap="MarCompanyResult">
+        <include refid="selectMarCompanyVo"/>
+        <where>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="contactPeople != null  and contactPeople != ''"> and contact_people = #{contactPeople}</if>
+            <if test="contactPosition != null  and contactPosition != ''"> and contact_position = #{contactPosition}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="companySituation != null "> and company_situation = #{companySituation}</if>
+            <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
+            <if test="mailbox != null  and mailbox != ''"> and mailbox = #{mailbox}</if>
+            <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
+            <if test="interviewCompany != null  and interviewCompany != ''"> and interview_company = #{interviewCompany}</if>
+            <if test="interviewer != null  and interviewer != ''"> and interviewer = #{interviewer}</if>
+            <if test="interviewerPosition != null  and interviewerPosition != ''"> and interviewer_position = #{interviewerPosition}</if>
+            <if test="interviewContact != null  and interviewContact != ''"> and interview_contact = #{interviewContact}</if>
+            <if test="interviewAddress != null  and interviewAddress != ''"> and interview_address = #{interviewAddress}</if>
+            <if test="finalParty != null  and finalParty != ''"> and final_party = #{finalParty}</if>
+            <if test="customerLevel != null "> and customer_level = #{customerLevel}</if>
+            <if test="paybackPeriod != null "> and payback_period = #{paybackPeriod}</if>
+            <if test="cooperationTime != null "> and cooperation_time = #{cooperationTime}</if>
+            <if test="entryPeople != null  and entryPeople != ''"> and entry_people = #{entryPeople}</if>
+            <if test="transformingPeople != null  and transformingPeople != ''"> and transforming_people = #{transformingPeople}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
     
 </mapper>
