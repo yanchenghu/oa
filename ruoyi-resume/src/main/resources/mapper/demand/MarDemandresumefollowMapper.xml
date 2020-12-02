@@ -13,6 +13,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="followDetail"    column="follow_detail"    />
         <result property="remark1"    column="remark1"    />
     </resultMap>
+    <resultMap type="MarDemandresume" id="MarDemandresumeResult">
+        <result property="id"    column="id"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="bindTime"    column="bind_time"    />
+        <result property="bindPeople"    column="bind_people"    />
+        <result property="downloadStatus"    column="download_status"    />
+        <result property="newfollowtime"    column="newfollowtime"    />
+        <result property="trackzPeoname"    column="trackz_peoname"    />
+    </resultMap>
 
     <sql id="selectMarDemandresumefollowVo">
         select Id, demandresume_id, tracking_people, trackingtime, follow_status, follow_detail, remark1 from mar_demandresumefollow
@@ -80,5 +90,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+
+    <select id="selectMarDemandList"  parameterType="MarDemandresume" resultMap="MarDemandresumefollowResult">
+         SELECT c.* from mar_demand a
+            LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id
+            LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id
+        where c.follow_status=#{downloadStatus} and a.demand_id=#{demandId}
+    </select>
     
 </mapper>

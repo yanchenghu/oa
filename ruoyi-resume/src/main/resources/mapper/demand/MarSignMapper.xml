@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarSignMapper">
+    
+    <resultMap type="MarSign" id="MarSignResult">
+        <result property="id"    column="id"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarSignVo">
+        select id, demand_id, dept_id, add_time from mar_sign
+    </sql>
+
+    <select id="selectMarSignList" parameterType="MarSign" resultMap="MarSignResult">
+        <include refid="selectMarSignVo"/>
+        <where>  
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarSignById" parameterType="Long" resultMap="MarSignResult">
+        <include refid="selectMarSignVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarSign" parameterType="MarSign" useGeneratedKeys="true" keyProperty="id">
+        insert into mar_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="demandId != null and demandId != ''">demand_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="demandId != null and demandId != ''">#{demandId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarSign" parameterType="MarSign">
+        update mar_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="demandId != null and demandId != ''">demand_id = #{demandId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarSignById" parameterType="Long">
+        delete from mar_sign where id = #{id}
+    </delete>
+
+    <delete id="deleteMarSignByIds" parameterType="String">
+        delete from mar_sign where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertMList" parameterType="java.util.List">
+        insert into mar_sign
+        ( demand_id,
+        dept_id,
+        add_time
+             )
+        values
+        <foreach collection="list" item="proinfo" separator=",">
+            ( #{proinfo.demandId},
+            #{proinfo.deptId},
+            #{proinfo.addTime}
+           )
+        </foreach>
+    </insert>
+
+    <delete id="deleteMarSignBy" parameterType="String">
+        delete from mar_sign where demand_id = #{demandId}
+    </delete>
+    
+</mapper>

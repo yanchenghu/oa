@@ -1,23 +1,25 @@
 package com.ruoyi.demand.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.demand.domain.MarDemand;
 
 /**
  * 需求Mapper接口
  * 
  * @author ych
- * @date 2020-11-27
+ * @date 2020-12-01
  */
 public interface MarDemandMapper 
 {
     /**
      * 查询需求
      * 
-     * @param id 需求ID
+     * @param demandId 需求ID
      * @return 需求
      */
-    public MarDemand selectMarDemandById(String id);
+    public MarDemand selectMarDemandById(String demandId);
 
     /**
      * 查询需求列表
@@ -46,16 +48,29 @@ public interface MarDemandMapper
     /**
      * 删除需求
      * 
-     * @param id 需求ID
+     * @param demandId 需求ID
      * @return 结果
      */
-    public int deleteMarDemandById(String id);
+    public int deleteMarDemandById(String demandId);
 
     /**
      * 批量删除需求
      * 
-     * @param ids 需要删除的数据ID
+     * @param demandIds 需要删除的数据ID
      * @return 结果
      */
-    public int deleteMarDemandByIds(String[] ids);
+    public int deleteMarDemandByIds(String[] demandIds);
+    /**
+     * 需求根据名字查重
+     */
+
+    MarDemand selectMarDemandByName(String projectName);
+    /*
+    需求下面是否存在未处理的
+     */
+    List<String> seluntreatedResume();
+    /**
+     * 需求绑定表的查询
+     */
+    List<MarDemand> selectMarDemandbindingList(Map map);
 }

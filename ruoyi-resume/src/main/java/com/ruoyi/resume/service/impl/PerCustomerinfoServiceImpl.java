@@ -556,10 +556,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         List<PerEducation>  educaList = JSON.parseArray(JSON.parseObject(zm).getString("perEducList"), PerEducation.class);
         String fsafsa="";
         if(file != null){
-            String avatar = null;
             try {
-                avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-                fsafsa=avatar.replace("/profile","");
+                fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -627,10 +625,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         }
         String fsafsa="";
         if(file != null){
-            String avatar = null;
             try {
-                avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-                fsafsa=avatar.replace("/profile","");
+                fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             } catch (IOException e) {
                 e.printStackTrace();
             }

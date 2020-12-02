@@ -12,14 +12,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 需求对象 mar_demand
  * 
  * @author ych
- * @date 2020-11-27
+ * @date 2020-12-02
  */
 public class MarDemand extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 需求ID */
-    private String id;
+    private String demandId;
 
     /** 客户公司编号 */
     @Excel(name = "客户公司编号")
@@ -37,17 +37,13 @@ public class MarDemand extends BaseEntity
     @Excel(name = "级别(1、中级2高级)")
     private String demandYears;
 
-    /** 需求级别 */
-    @Excel(name = "需求级别")
-    private Integer demandLevel;
-
     /** 学历要求 */
     @Excel(name = "学历要求")
     private String education;
 
     /** 需求人数 */
     @Excel(name = "需求人数")
-    private String demandNumber;
+    private Long demandNumber;
 
     /** 具体要求 */
     @Excel(name = "具体要求")
@@ -132,7 +128,7 @@ public class MarDemand extends BaseEntity
 
     /** 模板Id */
     @Excel(name = "模板Id")
-    private Long tempId;
+    private String tempId;
 
     /** 模板名称 */
     @Excel(name = "模板名称")
@@ -151,14 +147,14 @@ public class MarDemand extends BaseEntity
     @Excel(name = "录入人姓名")
     private String operUsername;
 
-    public void setId(String id) 
+    public void setDemandId(String demandId) 
     {
-        this.id = id;
+        this.demandId = demandId;
     }
 
-    public String getId() 
+    public String getDemandId() 
     {
-        return id;
+        return demandId;
     }
     public void setCorpCode(String corpCode) 
     {
@@ -196,15 +192,6 @@ public class MarDemand extends BaseEntity
     {
         return demandYears;
     }
-    public void setDemandLevel(Integer demandLevel) 
-    {
-        this.demandLevel = demandLevel;
-    }
-
-    public Integer getDemandLevel() 
-    {
-        return demandLevel;
-    }
     public void setEducation(String education) 
     {
         this.education = education;
@@ -214,12 +201,12 @@ public class MarDemand extends BaseEntity
     {
         return education;
     }
-    public void setDemandNumber(String demandNumber) 
+    public void setDemandNumber(Long demandNumber) 
     {
         this.demandNumber = demandNumber;
     }
 
-    public String getDemandNumber() 
+    public Long getDemandNumber() 
     {
         return demandNumber;
     }
@@ -403,12 +390,12 @@ public class MarDemand extends BaseEntity
     {
         return closeDate;
     }
-    public void setTempId(Long tempId) 
+    public void setTempId(String tempId) 
     {
         this.tempId = tempId;
     }
 
-    public Long getTempId() 
+    public String getTempId() 
     {
         return tempId;
     }
@@ -452,12 +439,11 @@ public class MarDemand extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
+            .append("demandId", getDemandId())
             .append("corpCode", getCorpCode())
             .append("projectName", getProjectName())
             .append("technologyDirection", getTechnologyDirection())
             .append("demandYears", getDemandYears())
-            .append("demandLevel", getDemandLevel())
             .append("education", getEducation())
             .append("demandNumber", getDemandNumber())
             .append("specificrequiRement", getSpecificrequiRement())

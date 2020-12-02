@@ -1,6 +1,8 @@
 package com.ruoyi.demand.mapper;
 
 import java.util.List;
+
+import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.demand.domain.MarDemandresumefollow;
 
 /**
@@ -58,4 +60,7 @@ public interface MarDemandresumefollowMapper
      * @return 结果
      */
     public int deleteMarDemandresumefollowByIds(String[] ids);
+
+
+    List<MarDemandresume> selectMarDemandList(MarDemandresume marDema);
 }
