@@ -16,16 +16,23 @@ export function getCompany(corpCode) {
     method: 'get'
   })
 }
+// 新增合同
+export function addCompany(data) {
+  return request({
+    url: '/customer/company/save',
+    method: 'post',
+    data: data
+  })
+}
 
 // 新增合作公司
-export function addCompany(data) {
+export function addcontract(data) {
   return request({
     url: '/customer/company',
     method: 'post',
     data: data
   })
 }
-
 // 修改合作公司
 export function updateCompany(data) {
   return request({
@@ -40,6 +47,7 @@ export function contractCompany(query) {
   return request({
     url: '/customer/company/contract',
     method: 'get',
+    params: query
   })
 }
 

@@ -243,7 +243,7 @@
                      v-for="dict,index in companyperiod"
                      :key="dict.dictValue"
                      :label="dict.dictLabel"
-                     :value="dict.dictValue"
+                     :value="parseInt(dict.dictValue)"
                    />
                  </el-select>
              </el-form-item>

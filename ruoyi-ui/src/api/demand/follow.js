@@ -1,5 +1,29 @@
 import request from '@/utils/request'
 
+
+
+// 查询简历模板
+export function template() {
+  return request({
+    url: '/resume/template/templaList',
+    method: 'get',
+  })
+}
+// 查询公司名称
+export function corpName() {
+  return request({
+    url: '/customer/company/listcom',
+    method: 'get',
+  })
+}
+// 查询部门下拉树结构
+export function treeselect() {
+  return request({
+    url: '/system/dept/treeselect',
+    method: 'get'
+  })
+}
+
 // 查询需求列表
 export function listFollow(query) {
   return request({
