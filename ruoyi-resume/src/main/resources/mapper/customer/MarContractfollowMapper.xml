@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="contactTime != null "> and contact_time = #{contactTime}</if>
             <if test="status != null "> and status = #{status}</if>
-        </where>
+        </where> order by contact_time desc
     </select>
     
     <select id="selectMarContractfollowById" parameterType="Integer" resultMap="MarContractfollowResult">
