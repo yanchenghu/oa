@@ -10,15 +10,19 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 合同对象 mar_contract
  * 
- * @author ruoyi
- * @date 2020-11-27
+ * @author ych
+ * @date 2020-11-30
  */
 public class MarContract
 {
     private static final long serialVersionUID = 1L;
 
     /** id */
-    private Integer id;
+    private Long id;
+
+    /** 合作公司Id */
+    @Excel(name = "合作公司Id")
+    private String corpCode;
 
     /** 甲方 */
     @Excel(name = "甲方")
@@ -59,30 +63,23 @@ public class MarContract
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date contractTime;
 
-    public String getContractName() {
-        return contractName;
-    }
-
-    public void setContractName(String contractName) {
-        this.contractName = contractName;
-    }
-
-    public Date getContractTime() {
-        return contractTime;
-    }
-
-    public void setContractTime(Date contractTime) {
-        this.contractTime = contractTime;
-    }
-
-    public void setId(Integer id)
+    public void setId(Long id) 
     {
         this.id = id;
     }
 
-    public Integer getId() 
+    public Long getId() 
     {
         return id;
+    }
+    public void setCorpCode(String corpCode) 
+    {
+        this.corpCode = corpCode;
+    }
+
+    public String getCorpCode() 
+    {
+        return corpCode;
     }
     public void setFirstParty(String firstParty) 
     {
@@ -116,7 +113,7 @@ public class MarContract
         this.endTime = endTime;
     }
 
-    public Date getEndTime()
+    public Date getEndTime() 
     {
         return endTime;
     }
@@ -147,11 +144,30 @@ public class MarContract
     {
         return contractPreview;
     }
+    public void setContractName(String contractName) 
+    {
+        this.contractName = contractName;
+    }
+
+    public String getContractName() 
+    {
+        return contractName;
+    }
+    public void setContractTime(Date contractTime) 
+    {
+        this.contractTime = contractTime;
+    }
+
+    public Date getContractTime() 
+    {
+        return contractTime;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
+            .append("corpCode", getCorpCode())
             .append("firstParty", getFirstParty())
             .append("party", getParty())
             .append("startTime", getStartTime())
@@ -159,6 +175,8 @@ public class MarContract
             .append("clientSigner", getClientSigner())
             .append("companySigner", getCompanySigner())
             .append("contractPreview", getContractPreview())
+            .append("contractName", getContractName())
+            .append("contractTime", getContractTime())
             .toString();
     }
 }

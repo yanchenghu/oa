@@ -9,6 +9,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.customer.domain.MarContract;
 import com.ruoyi.customer.domain.MarContractfollow;
 import com.ruoyi.customer.domain.Yxdemand;
+import com.ruoyi.customer.mapper.MarContractMapper;
 import com.ruoyi.customer.mapper.MarContractfollowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ public class MarCompanyServiceImpl implements IMarCompanyService
     @Autowired
     private MarContractfollowMapper marContractfollowMapper;
 
+    @Autowired
+    private MarContractMapper marContractMapper;
+
     /**
      * 查询合作公司
      * 
@@ -42,10 +46,14 @@ public class MarCompanyServiceImpl implements IMarCompanyService
     public AjaxResult selectMarCompanyById(String corpCode,LoginUser loginUser)
     {
         MarCompany marCompany = marCompanyMapper.selectMarCompanyById(corpCode);
+        MarContract marContract = new MarContract();
+        marContract.setCorpCode(corpCode);
+        List<MarContract> marContracts = marContractMapper.selectMarContractList(marContract);
         MarContractfollow marContractfollow = new MarContractfollow();
         marContractfollow.setCorpCode(marCompany.getCorpCode());
         List<MarContractfollow> mar = marContractfollowMapper.selectMarContractfollowList(marContractfollow);
         HashMap hashmap = new HashMap();
+        hashmap.put("marContracts",marContracts);
         hashmap.put("marCompany",marCompany);
         hashmap.put("mar",mar);
         return AjaxResult.success("hashmap",hashmap);
@@ -102,13 +110,18 @@ public class MarCompanyServiceImpl implements IMarCompanyService
     @Transactional
     public AjaxResult updateMarCompany(MarCompany marCompany,LoginUser loginUser)
     {
+        MarCompany maw = marCompanyMapper.selectMarCompanyByName(marCompany.getCorpName());
+        if(maw!=null){
+            return AjaxResult.error("当前公司已存在");
+        }
+
         MarCompany mar = marCompanyMapper.selectMarCompanyById(marCompany.getCorpCode());
         Integer a = mar.getCompanySituation();
         Integer b = mar.getCustomerLevel();
         Integer c = mar.getPaybackPeriod();
 
-        if(a!=mar.getCompanySituation()){
-            Integer a1 = mar.getCompanySituation();
+        if(a!=marCompany.getCompanySituation()){
+            Integer a1 = marCompany.getCompanySituation();
             String  aa= "";
             if(a1==0){
                 aa = "外包公司";
@@ -127,8 +140,8 @@ public class MarCompanyServiceImpl implements IMarCompanyService
             marContractfollowMapper.insertMarContractfollow(marContractfollow);
         }
 
-        if(b!=mar.getCustomerLevel()){
-            Integer b1 = mar.getCustomerLevel();
+        if(b!=marCompany.getCustomerLevel()){
+            Integer b1 = marCompany.getCustomerLevel();
             String  bb= "";
             if(b1==0){
                 bb = "A(核心客户)";
@@ -149,8 +162,8 @@ public class MarCompanyServiceImpl implements IMarCompanyService
             marContractfollowMapper.insertMarContractfollow(marContractfollow);
         }
 
-        if(c!=mar.getPaybackPeriod()){
-            Integer c1 = mar.getPaybackPeriod();
+        if(c!=marCompany.getPaybackPeriod()){
+            Integer c1 = marCompany.getPaybackPeriod();
             String  cc= "";
             if(c1==0){
                 cc = "N+3";

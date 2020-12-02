@@ -61,7 +61,7 @@ public class MarContractServiceImpl implements IMarContractService
     /**
      * 新增合同
      * 
-     * @param marContract 合同
+     * @param  file firstParty
      * @return 结果
      */
     @Override
