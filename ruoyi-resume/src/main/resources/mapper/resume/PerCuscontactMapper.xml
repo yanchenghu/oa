@@ -90,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         SELECT
             a.contac_datecode,DATE_FORMAT(a.contact_time,'%Y-%m-%d %H:%i:%s') as contact_time ,a.update_static,a.memo_detail
-            , d.nick_name,c.follow_status,f.projecttype,a.demand_id
+            , d.nick_name,c.follow_status,f.project_name,a.demand_id
         FROM
             per_cuscontact a
             LEFT JOIN mar_demandresume b ON a.bind_id = b.id
