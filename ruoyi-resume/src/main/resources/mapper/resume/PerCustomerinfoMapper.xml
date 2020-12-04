@@ -209,4 +209,15 @@
 
     </select>
 
+    <select id="myRobresume" parameterType="String"  resultType="map">
+        SELECT
+            b.customer_code,
+            a.customer_name,
+            a.customer_tel
+        FROM
+            per_robcustomer a
+        LEFT JOIN per_customerinfo b ON a.customer_tel=b.customer_tel
+        where a.Status=0 and a.add_people=#{username}
+    </select>
+
 </mapper>

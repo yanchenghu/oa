@@ -84,4 +84,9 @@ public interface PerCustomerinfoMapper
      * @return 结果
      */
     List<Map> selectIntoItem(String customerCode);
+
+    /**
+     * 获取我抢占的简历
+     */
+    List<Map> myRobresume(String username);
 }

@@ -68,7 +68,7 @@ public interface MarDemandMapper
     /*
     需求下面是否存在未处理的
      */
-    List<String> seluntreatedResume();
+    List<String> seluntreatedResume(String demandId);
     /**
      * 需求绑定表的查询
      */

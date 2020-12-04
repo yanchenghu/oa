@@ -6,6 +6,7 @@ import java.util.Map;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.domain.MarDemandresumefollow;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -75,7 +76,26 @@ public interface IMarDemandService
      */
     AjaxResult demandClosure(String demandId,LoginUser loginUser);
     /**
+     * 需求开启
+     */
+    AjaxResult demandOpen(String demandId, LoginUser loginUser);
+    /**
      * 需求绑定表的查询
      */
     List<MarDemand> selectMarDemandbindingList(MarDemand marDemand, LoginUser loginUser);
+
+    /**
+     * 简历绑定需求
+     */
+    AjaxResult resumeBingDemand(LoginUser loginUser,String zm);
+
+    /**
+     * 需求已绑定简历列表
+     */
+    List<Map> demandDetailsList(String demandId ,String customerName);
+
+    /**
+     *需求已绑定简历跟踪
+     */
+    AjaxResult demandResumeTrack(MarDemandresumefollow marDemandresumefollow, LoginUser loginUser);
 }

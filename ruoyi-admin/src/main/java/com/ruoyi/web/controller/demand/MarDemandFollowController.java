@@ -132,4 +132,13 @@ public class MarDemandFollowController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return marDemandService.demandClosure(demandId,loginUser);
     }
+    /**
+     * 需求开启
+     */
+    @PostMapping(value = "/demandOpen")
+    public AjaxResult demandOpen(String demandId)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return marDemandService.demandOpen(demandId,loginUser);
+    }
 }

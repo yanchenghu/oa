@@ -7,13 +7,19 @@ import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.resume.SerialNumber;
+import com.ruoyi.conn.domain.ConOperationrecords;
+import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
 import com.ruoyi.demand.domain.MarDemandresume;
+import com.ruoyi.demand.domain.MarDemandresumefollow;
 import com.ruoyi.demand.domain.MarSign;
 import com.ruoyi.demand.mapper.MarDemandresumeMapper;
 import com.ruoyi.demand.mapper.MarDemandresumefollowMapper;
 import com.ruoyi.demand.mapper.MarSignMapper;
+import com.ruoyi.resume.domain.PerCustomerinfo;
+import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarDemandMapper;
@@ -39,6 +45,12 @@ public class MarDemandServiceImpl implements IMarDemandService
     private MarDemandresumefollowMapper marDemandresumefollowMapper;
     @Autowired
     private MarSignMapper marSignMapper;
+    @Autowired
+    private ConOperationrecordsMapper conOperationrecordsMapper;
+    @Autowired
+    private PerCustomerinfoMapper perCustomerinfoMapper;
+
+
 
     /**
      * 查询需求
@@ -107,6 +119,11 @@ public class MarDemandServiceImpl implements IMarDemandService
 
         List<Integer> liStr = JSON.parseArray(JSON.parseObject(zm).getString("list"), Integer.class);
         MarDemand marDemand = JSON.parseObject(JSON.parseObject(zm).getString("marDemand"), MarDemand.class);
+
+        MarDemand sd=marDemandMapper.selectMarDemandByName(marDemand.getProjectName());
+        if(sd!=null){
+            return AjaxResult.error("當前需求已存在");
+        }
         String demandId=SerialNumber.createSerial("demd-", 5);
         marDemand.setDemandPic(fsafsa);
         marDemand.setDemandId(demandId);
@@ -144,6 +161,12 @@ public class MarDemandServiceImpl implements IMarDemandService
         MarDemand marDemand = JSON.parseObject(JSON.parseObject(zm).getString("marDemand"), MarDemand.class);
         String demandId=marDemand.getDemandId();
 
+        MarDemand sd=marDemandMapper.selectMarDemandByName(marDemand.getProjectName());
+        if(sd!=null){
+            if(!sd.getDemandId().equals(marDemand.getDemandId())){
+                return AjaxResult.error("當前需求已存在");
+            }
+        }
         //如果图片不为空的话，则重新上传图片
         if(demandPic != null){
             String fsafsa="";
@@ -174,7 +197,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         if (a==1){
             return AjaxResult.success("修改成功");
         }else{
-            return AjaxResult.error("修改成功");
+            return AjaxResult.error("修改失敗");
         }
 
 
@@ -224,13 +247,16 @@ public class MarDemandServiceImpl implements IMarDemandService
         MarDemand marDema= marDemandMapper.selectMarDemandById(demandId);
         if (marDema!=null){
             if(!marDema.getOperationuser().equals(loginUser.getUsername())){
-                return AjaxResult.error("你不是该需求的持有人，不可以关闭或者开启需求");
+                return AjaxResult.error("你不是该需求的持有人，不可以关闭需求");
             }
         }else{
             return AjaxResult.error("该需求不存在");
         }
+        if(marDema.getState()==1){
+            return AjaxResult.error("该需求已经在关闭状态了，不需要关闭");
+        }
         //需求下面是否存在未处理的
-        List<String> liStr=marDemandMapper.seluntreatedResume();
+        List<String> liStr=marDemandMapper.seluntreatedResume(demandId);
         if(null != liStr && !liStr.isEmpty()){
             return AjaxResult.error("当前需求下的"+liStr.toString()+"还未完成操作，不可关闭");
 
@@ -247,12 +273,41 @@ public class MarDemandServiceImpl implements IMarDemandService
         return AjaxResult.success("关闭成功");
     }
     /**
+     * 需求开启
+     */
+    @Override
+    public AjaxResult demandOpen(String demandId, LoginUser loginUser) {
+        MarDemand marDema= marDemandMapper.selectMarDemandById(demandId);
+        if (marDema!=null){
+            if(!marDema.getOperationuser().equals(loginUser.getUsername())){
+                return AjaxResult.error("你不是该需求的持有人，不可以关闭需求");
+            }
+        }else{
+            return AjaxResult.error("该需求不存在");
+        }
+        if(marDema.getState()==0){
+            return AjaxResult.error("该需求已经在开启状态了，不需要开启");
+        }
+
+
+        MarDemand marDe=new MarDemand();
+        marDe.setDemandId(demandId);
+        marDe.setState(0);
+        int as=marDemandMapper.updateMarDemand(marDe);
+        if(as!=1){
+            return AjaxResult.error("开启失败");
+
+        }
+        return AjaxResult.success("开启成功");
+
+    }
+    /**
      * 需求绑定表的查询
      */
     @Override
     public List<MarDemand> selectMarDemandbindingList(MarDemand marDemand, LoginUser loginUser) {
         Map map=new HashMap();
-        map.put("DeptId",loginUser.getUser().getDeptId());
+        map.put("deptId",loginUser.getUser().getDeptId());
         List<MarDemand> list= marDemandMapper.selectMarDemandbindingList(map);
         MarDemandresume marDema=new MarDemandresume();
         for (MarDemand marDe:list){
@@ -270,6 +325,105 @@ public class MarDemandServiceImpl implements IMarDemandService
             marDe.setCoopnature(lif.size());
         }
         return list;
+    }
+    /**
+     * 简历绑定需求
+     */
+    @Override
+    @Transactional
+    public AjaxResult resumeBingDemand(LoginUser loginUser,String zm) {
+        List<String> liStr = JSON.parseArray(JSON.parseObject(zm).getString("list"), String.class);
+        String demandId = JSON.parseObject(zm).getString("demandId");
+        Map map=new HashMap();
+        map.put("demandId",demandId);
+        if(liStr.size()>0){
+            for (String customerCode:liStr){
+                //查询是否有简历地址
+                PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
+                if(StringUtils.isEmpty(perCustomerinfo.getResumePath())){
+                    return AjaxResult.error( perCustomerinfo.getCustomerName()+"没有简历附件，绑定失败，请上传后在绑定");
+                }
+                //查重
+                map.put("customerCode",customerCode);
+                Map me=marDemandresumeMapper.selectMarDemandresumeByCodeID(map);
+                if(me!=null && me.get("customer_name")!=null){
+                    return AjaxResult.error( me.get("customer_name").toString()+"已经被绑定，绑定失败");
+                }
+                    Date date=new Date();
+                    String demandresumeId=UUID.randomUUID().toString();
+                    MarDemandresume marde=new MarDemandresume();
+                    marde.setId(demandresumeId);
+                    marde.setDemandId(demandId);
+                    marde.setCustomerCode(customerCode);
+                    marde.setBindTime(date);
+                    marde.setBindPeople(loginUser.getUsername());
+                    marde.setNewfollowtime(date);
+                    marde.setTrackzPeoname(loginUser.getUser().getNickName());
+                marDemandresumeMapper.insertMarDemandresume(marde);
+                //添加简历跟进记录
+                    MarDemandresumefollow marDemFoll=new MarDemandresumefollow();
+                    marDemFoll.setDemandresumeId(demandresumeId);
+                    marDemFoll.setTrackingPeople(loginUser.getUsername());
+                    marDemFoll.setTrackingtime(date);
+                    marDemFoll.setFollowStatus(1);
+                    marDemFoll.setFollowDetail("简历绑定");
+                 marDemandresumefollowMapper.insertMarDemandresumefollow(marDemFoll);
+                     //添加操作记录
+                    ConOperationrecords conOperationrec=new ConOperationrecords();
+                    conOperationrec.setType(4);
+                    conOperationrec.setDatetime(date);
+                    conOperationrec.setUserName(loginUser.getUsername());
+                    conOperationrec.setRemark("简历绑定");
+                conOperationrecordsMapper.insertConOperationrecords(conOperationrec);
+
+            }
+        }else{
+            return AjaxResult.error("绑定简历为空");
+        }
+        return AjaxResult.success("绑定成功");
+
+
+
+    }
+    /**
+     * 需求已绑定简历列表
+     */
+    @Override
+    public  List<Map>  demandDetailsList( String demandId ,String customerName) {
+        Map map=new HashMap();
+        map.put("demandId",demandId);
+        map.put("customerName",customerName);
+        List<Map>  list=marDemandresumefollowMapper.selectDemandDetailsList(map);
+        return list;
+    }
+    /**
+     *需求已绑定简历跟踪
+     */
+    @Override
+    public AjaxResult demandResumeTrack(MarDemandresumefollow marDemandresumefollow, LoginUser loginUser) {
+
+          if(StringUtils.isEmpty(marDemandresumefollow.getDemandresumeId())){
+              return AjaxResult.error("id为空,不可跟踪，请联系管理员");
+          }
+          Date date=new Date();
+          MarDemandresume marDemandres=new MarDemandresume();
+          marDemandres.setId(marDemandresumefollow.getDemandresumeId());
+          marDemandres.setNewfollowtime(date);
+
+          int a=marDemandresumeMapper.updateMarDemandresume(marDemandres);
+          if(a==1){
+              marDemandresumefollow.setTrackingtime(date);
+              marDemandresumefollow.setTrackingPeople(loginUser.getUsername());
+              marDemandresumefollowMapper.insertMarDemandresumefollow(marDemandresumefollow);
+              return AjaxResult.success("跟踪成功");
+          }else {
+              return AjaxResult.error("跟踪失败");
+          }
+
+
+
+
+
     }
 
 

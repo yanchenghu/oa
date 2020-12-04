@@ -206,7 +206,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{demandId}
         </foreach>
     </delete>
-    <select id="seluntreatedResume"   resultType="String">
+    <select id="seluntreatedResume"  parameterType="String"  resultType="String">
         SELECT
             d.customer_name
         FROM
@@ -216,18 +216,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             AND b.newfollowtime = c.trackingtime
             LEFT JOIN per_customerinfo d ON b.customer_code = d.customer_code
         WHERE
-            follow_status IN ( 1, 3, 5 )
+            a.demand_id=#{demandId}
+           and c.follow_status IN ( 1, 3, 5 )
     </select>
     <select id="selectMarDemandByName" parameterType="String" resultMap="MarDemandResult">
         <include refid="selectMarDemandVo"/>
         where project_name = #{projectName}
+        limit 1
     </select>
 
 
     <select id="selectMarDemandbindingList" parameterType="Map" resultMap="MarDemandResult">
         SELECT b.* from mar_sign a LEFT JOIN mar_demand b on a.demand_id=b.demand_id
-        where  1 = 1
-        <if test="holtype !=null">and a.dept_id = #{deptId} </if>
+        where  1 = 1 and b.state=0
+        <if test="deptId !=null">and a.dept_id = #{deptId} </if>
     </select>
 
 
