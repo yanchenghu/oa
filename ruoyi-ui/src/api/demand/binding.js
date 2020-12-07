@@ -27,7 +27,7 @@ export function treeselect() {
 // 查询需求列表
 export function listFollow(query) {
   return request({
-    url: '/demand/follow/list',
+    url: '/demand/binding/list',
     method: 'get',
     params: query
   })
@@ -40,15 +40,6 @@ export function changeUserStatus(query) {
     data: query
   })
 }
-// 需求开启
-export function changeopenStatus(query) {
-  return request({
-    url: '/demand/follow/demandOpen',
-    method: 'post',
-    data: query
-  })
-}
-
 // 查询需求详细
 export function getFollow(id) {
   return request({
@@ -58,11 +49,10 @@ export function getFollow(id) {
 }
 
 // 新增需求
-export function addFollow(data) {
+export function addFollow() {
   return request({
-    url: '/demand/follow',
-    method: 'post',
-    data: data
+    url: '/demand/binding/myRobresume',
+    method: 'get',
   })
 }
 
@@ -82,11 +72,12 @@ export function findnames(data) {
   })
 }
 
-// 删除需求
+// 绑定简历
 export function delFollow(id) {
   return request({
-    url: '/demand/follow/' + id,
-    method: 'delete'
+    url: '/demand/binding/resumeBingDemand',
+    method: 'post',
+    data:id
   })
 }
 

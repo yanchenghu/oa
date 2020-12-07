@@ -112,6 +112,34 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/follow',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'particulars',
+        component: (resolve) => require(['@/views/demand/particulars/index.vue'], resolve),
+        name: 'fparticulars',
+        meta: { title: '需求详情', icon: '' }
+      },
+    ]
+  },
+  {
+    path: '/binding',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'particulars',
+        component: (resolve) => require(['@/views/demand/particulars/binding.vue'], resolve),
+        name: 'bparticulars',
+        meta: { title: '需求详情', icon: '' }
+      },
+    ]
+  },
+
+
 
   {
     path: '/job',

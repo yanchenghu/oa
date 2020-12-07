@@ -119,10 +119,10 @@
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="125px" style="width: 600px;">
         <el-form-item label="公司名称" prop="companyName" >
-          <el-input  v-model="form.companyName"  placeholder="请输入公司名称"  @blur="findname(form.companyName)" style="width: 80%;"/>
-          <span v-if="msg==2" style="color: red;padding-left: 10px;">该公司已存在</span>
-          <span v-else-if="msg==1" style="color: green;padding-left: 10px;"><i class="el-icon-circle-check"></i></span>
+          <el-input  v-model="form.companyName"  placeholder="请输入公司名称"  @blur="findname(form.companyName)" />
+          <span v-if="msg==1" style="color: green;line-height: 40px;position: absolute;"><i class="el-icon-circle-check"></i></span>
         </el-form-item>
+
         <el-form-item label="联系人姓名" prop="contactPeople">
           <el-input v-model="form.contactPeople"  placeholder="请输入联系人" />
         </el-form-item>
@@ -298,6 +298,16 @@ import { getYxdemand,listYxdemand,addYxdemand, see ,release,turnover,findnames} 
 export default {
   name: "Yxdemand",
   data() {
+    var checkAge = (rule, value, callback) => {
+       if (!value) {
+         return callback(new Error('公司名称不能为空'));
+       }
+       setTimeout(() => {
+         if (this.msg==2) {
+           callback(new Error('该公司已存在'));
+         }
+       }, 1000);
+      };
     return {
       user:"rxg2016",
       opens:false,
@@ -349,9 +359,8 @@ export default {
       // 表单校验
       rules: {
         companyName: [{
-          required: true,
-          message: "公司名称不能为空",
-          trigger: ["blur", "change"]
+          validator: checkAge,
+          trigger: 'blur',
         }, ],
         contactPeople: [{
           required: true,
@@ -438,14 +447,15 @@ export default {
       // },500)
     },
     findname(name){
-      if(name==null){}else{
+      if(name==""||null){
+        this.msg=null
+      }else{
         let formData = new FormData()
         formData.append("companyName",name)
         findnames(formData).then(res=>{
           this.msg=res
         })
       }
-
     },
     // 下拉框选中加载
     change(){
@@ -570,6 +580,8 @@ export default {
               });
             }
           }
+        }else{
+          this.msg=null
         }
       });
     },

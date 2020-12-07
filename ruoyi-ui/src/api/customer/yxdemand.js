@@ -8,6 +8,13 @@ export function listYxdemand(query) {
     params: query
   })
 }
+export function findnames(data) {
+  return request({
+    url: '/customer/yxdemand/yxdemByName',
+    method: 'post',
+    data: data
+  })
+}
 // 移交
 export function turnover(data) {
   return request({

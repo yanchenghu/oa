@@ -315,7 +315,6 @@
           let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
 
           this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
-          console.log(srcs)
           this.open=true
 
         }else if(val==2){

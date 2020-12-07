@@ -5,56 +5,89 @@
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 190px;"/>
         </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
-          <el-input v-model="queryParams.technologyDirection" placeholder="请选择技术方向" clearable size="small"
-            @keyup.enter.native="handleQuery" />
+          <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" size="small" @change="handleQuery">
+            <el-option
+                v-for="dict in professionIdoptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+          </el-select>
         </el-form-item>
-        <el-form-item label="级别" prop="demandYears">
-          <el-input v-model="queryParams.demandYears" placeholder="请选择级别" clearable size="small" @keyup.enter.native="handleQuery" />
+        <el-form-item label="技术级别" prop="demandYears">
+          <el-select v-model="queryParams.demandYears" clearable placeholder="请选择" size="small" @change="handleQuery">
+            <el-option label="中级" value="1"/>
+            <el-option label="高级" value="2"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="项目地点" prop="projectLocation">
-          <el-input v-model="queryParams.projectLocation" placeholder="请输入项目地点" clearable size="small" />
+          <el-select v-model="queryParams.projectLocation" placeholder="请选择" clearable size="small" @change="handleQuery">
+            <el-option
+                v-for="dict in intentionareaOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+          </el-select>
         </el-form-item>
         <el-form-item label="客户级别" prop="importantLevel">
-          <el-input v-model="queryParams.importantLevel" placeholder="请选择重要级别" clearable size="small" />
+          <el-select  v-model="queryParams.importantLevel"  size="small" @change="handleQuery">
+            <el-option
+                v-for="dict,index in customerleve"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="parseInt(dict.dictValue)"
+              />
+            </el-select>
+        </el-form-item>
+        <el-form-item label="需求状态" prop="state">
+          <el-select  v-model="queryParams.state"  size="small" @change="handleQuery">
+            <el-option label="启用中" :value="0" />
+            <el-option label="禁用中" :value="1"/>
+            </el-select>
         </el-form-item>
         <el-button
             type="cyan"
             size="mini"
             @click="handleAdd"
-            style="position: absolute;right: 0;margin-right: 50px"
+            style="position: absolute;right: 0;margin-right: 25px"
           >新建需求</el-button>
     </el-form>
-
-
 
     <el-row :gutter="10" class="mb8">
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" border :data="followList" size="small" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" border :data="followList" size="small" >
       <el-table-column label="需求名称" align="left" prop="projectName" />
       <el-table-column label="地址/技术方向" align="left">
         <template slot-scope="scope">
-          <span>{{scope.row.projectLocation}} / {{scope.row.technologyDirection}}</span>
+          <span>{{intentionareaFormat(scope.row)}} / {{professionIdopFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="进度" align="left" prop="id">
+      <el-table-column label="进度" align="left"  width="130">
         <template slot-scope="scope">
-          <p>需求人数:{{scope.row.demandNumber}}</p>
-          <p>目标人数:{{scope.row.targetNumber}}</p>
-          <p>入项人数:{{scope.row.projectLocation}}</p>
-          <p>需提交简历数:{{scope.row.projectLocation}}</p>
-          <p>已提交简历数:{{scope.row.projectLocation}}</p>
-          <p>还需简历数:{{scope.row.projectLocation}}</p>
+          <div>需求人数:{{scope.row.demandNumber}}</div>
+          <div>目标人数:{{scope.row.targetNumber}}</div>
+          <div>入项人数:{{scope.row.coopnature }}</div>
+          <div>面试通过人数:{{scope.row.chsiFlag}}</div>
+          <div>已提交简历数:{{scope.row.ifLook}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="需求级别" align="left" prop="demandLevel" />
-      <el-table-column label="学历要求" align="left" prop="education" />
-
-      <el-table-column label="具体要求" align="left" prop="specificrequiRement" width="500" />
+      <el-table-column label="客户级别" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
+      <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat"/>
+      <el-table-column label="具体要求" align="left" width="500">
+      <template slot-scope="scope">
+          <p v-html='scope.row.specificrequiRement'></p>
+      </template>
+      </el-table-column>
       <el-table-column label="备注" align="left" prop="attention" />
-      <el-table-column label="技术要求" align="left" prop="technicalRequirement" />
-      <el-table-column label="年限" align="left" prop="technicalRequirement" />
+      <el-table-column label="技术要求" align="left" prop="demandYears">
+        <template slot-scope="scope">
+          <span>{{scope.row.demandYears==1?"中级":"高级"}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
       <el-table-column label="录入人姓名" align="left" prop="operUsername" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -65,7 +98,7 @@
             <el-button size="mini" type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:remove']">查看</el-button>
           </p>
           <p>
-            <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" inactive-color="#ff4949" @change="handleStatusChange(scope.row)"></el-switch>
+            <el-switch v-model="scope.row.state" :active-value="0" :inactive-value="1" inactive-color="#ff4949" @change="handleStatusChange(scope.row)"></el-switch>
           </p>
 
         </template>
@@ -78,7 +111,7 @@
     <!-- 添加或修改需求对话框 -->
     <!-- 新建需求 -->
     <el-dialog :title="title" :visible.sync="open" width="65%" append-to-body>
-      <el-form ref="form" :inline="true" :model="form" :rules="rules" label-width="100px" >
+      <el-form ref="forms" :inline="true" :model="form"  :rules="rules" label-width="100px" >
         <el-form-item label="选择客户" prop="corpCode">
           <el-select v-model="form.corpCode" placeholder="请选择" size="small">
             <el-option
@@ -89,9 +122,20 @@
               />
             </el-select>
         </el-form-item>
-        <el-form-item label="需求名称" prop="projectName">
-          <el-input v-model="form.projectName" placeholder="请输入需求名称" size="small"/>
+        <el-form-item label="客户级别" prop="importantLevel">
+        <el-select  v-model="form.importantLevel"  size="small">
+          <el-option
+              v-for="dict,index in customerleve"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="parseInt(dict.dictValue)"
+            />
+          </el-select>
         </el-form-item>
+        <el-form-item label="需求名称" prop="projectName">
+          <el-input v-model="form.projectName" placeholder="请输入需求名称" size="small"  @blur="findname(form.projectName)"/>
+        </el-form-item>
+        <span v-if="msg==1" style="color: green;line-height: 40px;position: absolute;"><i class="el-icon-circle-check"></i></span>
         <el-form-item label="需求人数" prop="demandNumber">
           <el-input v-model.number="form.demandNumber" placeholder="请输入需求人数" size="small"/>
         </el-form-item>
@@ -122,9 +166,9 @@
         </el-form-item>
         <el-form-item label="语言要求" prop="langue">
           <el-select v-model="form.langue" placeholder="请选择" size="small">
-           <el-option label="无" value="0"/>
-           <el-option label="日语" value="1"/>
-           <el-option label="英语" value="2"/>
+           <el-option label="无" :value="0"/>
+           <el-option label="日语" :value="1"/>
+           <el-option label="英语" :value="2"/>
           </el-select>
         </el-form-item>
         <el-form-item label="学历要求" prop="education">
@@ -167,8 +211,8 @@
               />
           </el-select>
         </el-form-item>
-        <el-form-item label="简历命名格式" prop="tempName">
-          <el-input v-model="form.tempName" placeholder="请输入" size="small"/>
+        <el-form-item label="详细地址" prop="tempName">
+          <el-input v-model="form.address" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="简历模板" prop="tempId">
           <el-select v-model="form.tempId" placeholder="请选择" size="small">
@@ -189,7 +233,6 @@
         <el-form-item label="面试地点" prop="specificLocation">
           <el-input v-model="form.specificLocation" placeholder="请输入面试地点" size="small"/>
         </el-form-item>
-
         <el-form-item label="可见下包商" prop="list">
           <el-cascader
           v-model="form.list"
@@ -209,16 +252,20 @@
               <el-radio :label="2">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <div>
-        <el-form-item label="需求图片">
+        <div class="div">
+        <el-form-item label="需求图片" style="width: 100%;">
           <el-upload
             action="#"
             list-type="picture-card"
             :auto-upload="false"
             ref="file"
-            :on-change="handleRemove"
+            :on-change="handleRemov"
             :limit="1"
+            :file-list="filelist"
+            :on-exceed="handleExceed"
+            accept=".png,.jpg,"
             >
+            <div slot="tip" class="el-upload__tip">仅支持上传jpg/png文件</div>
               <i slot="default" class="el-icon-plus"></i>
               <div slot="file" slot-scope="{file}">
                 <img
@@ -245,12 +292,12 @@
         </el-form-item>
         </div>
         <div class="div">
-          <el-form-item label="岗位说明" prop="specificrequiRement" >
+          <el-form-item label="岗位说明" prop="specificrequiRement" style="width:100%;">
             <editor  v-model="form.specificrequiRement" :min-height="192"/>
           </el-form-item>
         </div>
-        <div>
-          <el-form-item label="特别备注" prop="attention" style="width:80%;">
+        <div class="div">
+          <el-form-item label="特别备注" prop="attention" style="width:100%;">
             <el-input v-model="form.attention" type="textarea" placeholder="请输入内容" ></el-input>
           </el-form-item>
         </div>
@@ -278,6 +325,9 @@
     exportFollow,
     template,
     corpName,
+    changeUserStatus,
+    findnames,
+    changeopenStatus
   } from "@/api/demand/follow";
 import { treeselect } from "@/api/system/dept";
 import Editor from '@/components/Editor';
@@ -290,6 +340,18 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
       Treeselect
     },
     data() {
+       var checkAge = (rule, value, callback) => {
+          if (!value) {
+            return callback(new Error('需求名称不能为空'));
+          }
+          setTimeout(() => {
+            if (this.msg==2) {
+              callback(new Error('该需求已存在'));
+            } else {
+              callback();
+            }
+          }, 1000);
+         };
       return {
         dialogImageUrl: '',
         dialogVisible: false,
@@ -298,9 +360,13 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
         corpnamelist:[],
         // 简历模板列表
         templist:[],
+        // 文件
+        filelist:[],
         // 下包商列表
         deptOptions:[],
-
+        // 客户级别
+        customerleve:[],
+        // 级联选择设置
         props:{multiple: true,value:"id"},
         // 技术方向字典
         professionIdoptions: [],
@@ -313,7 +379,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
         // 选中数组
         ids: [],
         // 非单个禁用
-        single: true,
+        single: "",
         // 非多个禁用
         multiple: true,
         // 显示搜索条件
@@ -337,9 +403,13 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
           demandLevel: null,
           education: null,
           demandNumber: null,
+          state:0,
         },
         // 表单参数
-        form: {},
+        form: {
+          list:[[100,101,103]]
+        },
+        msg:null,
         // 表单校验
         rules: {
           corpCode: [{
@@ -348,9 +418,8 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
             trigger: ["blur", "change"]
           }, ],
           projectName: [{
-            required: true,
-            message: "需求不能为空",
-            trigger: ["blur", "change"]
+            validator: checkAge,
+            trigger: 'blur',
           }, ],
           demandNumber: [{
             required: true,
@@ -392,14 +461,12 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
             required: true,
             message: "最小值不能为空",
             trigger: ["blur", "change"]
-          },{ type: 'number',
-              message: '必须为数字值'} ],
+          }, ],
           maxSalary: [{
             required: true,
             message: "最大值不能为空",
             trigger: ["blur", "change"]
-          }, { type: 'number',
-              message: '必须为数字值'}],
+          }, ],
           targetNumber: [{
             required: true,
             message: "目标人数不能为空",
@@ -411,8 +478,21 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
             message: "工作地点不能为空",
             trigger: ["blur", "change"]
           }, ],
-
-
+          list: [{
+            required: true,
+            message: "下包商不能为空",
+            trigger: ["blur", "change"]
+          }, ],
+          specificrequiRement: [{
+            required: true,
+            message: "岗位说明不能为空",
+            trigger: ["blur", "change"]
+          }, ],
+          importantLevel:[{
+            required: true,
+            message: "客户级别不能为空",
+            trigger: ["blur", "change"]
+          }, ],
         }
       };
     },
@@ -423,15 +503,36 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
         this.customerSpecialitiesoptions = response.data;
       });
       // 获取技术方向字典
-      this.getDicts("per_customerinfo_professionid").then(response => {
+      this.getDicts("per_customerinfo_professionid").then(response =>      {
         this.professionIdoptions = response.data;
       });
       // 获取城市字典
       this.getDicts("per_customerinfo_intentionarea").then(response => {
         this.intentionareaOptions = response.data;
       });
+      // 客户级别
+      this.getDicts("bus_customer_leve").then(response => {
+        this.customerleve = response.data;
+      });
     },
     methods: {
+      // 客户级别
+      customerleveFormat(row, column) {
+        return this.selectDictLabel(this.customerleve, row.importantLevel);
+      },
+      // 城市
+      intentionareaFormat(row, column) {
+        return this.selectDictLabel(this.intentionareaOptions, row.projectLocation);
+      },
+      // 技术方向
+      professionIdopFormat(row, column) {
+        return this.selectDictLabel(this.professionIdoptions, row.technologyDirection);
+      },
+      // 学历
+      customerFormat(row, column) {
+        return this.selectDictLabel(this.customerSpecialitiesoptions, row.education);
+      },
+
       /** 查询需求列表 */
       getList() {
         this.loading = true;
@@ -490,6 +591,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
           operUsername: null
         };
         this.resetForm("form");
+        this.filelist=[]
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -507,37 +609,92 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
         this.single = selection.length !== 1
         this.multiple = !selection.length
       },
-      /** 新增按钮操作 */
-      handleAdd() {
-        this.getTreeselect()
+      gettemplate(){
         template().then(res=>{
           this.templist=res.rows
         });
+      },
+      getcorpName(){
         corpName().then(res=>{
           this.corpnamelist=res
         });
+      },
+      /** 新增按钮操作 */
+      handleAdd() {
         this.reset();
+        this.getTreeselect()
+        this.getcorpName()
+        this.gettemplate()
+        this.form.list=[[100, 101, 103]]
         this.open = true;
         this.title = "添加需求";
       },
-
-      handleRemove(value){
-        this.form.demandPic=value.raw;
+      findname(name){
+        if(name==""||null){
+          this.msg=null
+        }else{
+          let form = new FormData()
+          form.append("projectName",name)
+          findnames(form).then(res=>{
+            this.msg=res
+          })
+        }
+      },
+      handleRemov(value){
+        this.single=value.raw;
       },
       handlePictureCardPreview(file){
+        console.log(file)
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
+      handleExceed() {
+        this.msgError(`当前限制选择 1 个文件`);
+      },
       handleRemove(file) {
-            console.log(file);
-          },
-
+          this.$refs.file.clearFiles()
+          this.filelist=[]
+        },
+      // 查找树结构父节点
+      changeDetSelect(key, treeData) {
+              let arr = []; // 在递归时操作的数组
+              let returnArr = []; // 存放结果的数组
+              let depth = 0; // 定义全局层级
+              // 定义递归函数
+              function childrenEach(childrenData, depthN) {
+                for (var j = 0; j < childrenData.length; j++) {
+                  depth = depthN; // 将执行的层级赋值 到 全局层级
+                  arr[depthN] = childrenData[j].id;
+                  if (childrenData[j].id== key) {
+                    returnArr = arr.slice(0, depthN + 1); //将目前匹配的数组，截断并保存到结果数组，
+                    break;
+                  } else {
+                    if (childrenData[j].children) {
+                      depth++;
+                      childrenEach(childrenData[j].children, depth);
+                    }
+                  }
+                }
+                return returnArr;
+              }
+              return childrenEach(treeData, depth);
+            },
       /** 修改按钮操作 */
       handleUpdate(row) {
-        this.reset();
-        const id = row.id || this.ids
-        getFollow(id).then(response => {
-          this.form = response.data;
+        // this.reset();
+        this.getTreeselect()
+        this.getcorpName()
+        this.gettemplate()
+        getFollow(row.demandId).then(response => {
+          this.form = response.data.marDeman;
+          if(this.form.demandPic){
+            this.filelist=[{name:"",url:`${process.env.VUE_APP_BASE_API}${this.form.demandPic}`}]
+          }
+          let list =[]
+          response.data.Signlis.forEach(item=>{
+          list.push(this.changeDetSelect(item.deptId,this.deptOptions))
+          })
+          this.form.list=list
           this.open = true;
           this.title = "修改需求";
         });
@@ -545,17 +702,24 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
       // 用户状态修改
       handleStatusChange(row) {
-        let text = row.status === "0" ? "启用" : "停用";
+        let text = row.state == 0 ? "启用" : "停用";
         this.$confirm('确认要"' + text + '""' + row.projectName + '"需求吗?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return changeUserStatus(row.userId, row.status);
+          let form = new FormData()
+          form.append("demandId",row.demandId)
+          if(text=="停用"){
+            return changeUserStatus(form);
+          }else{
+            return changeopenStatus(form)
+          }
         }).then(() => {
           this.msgSuccess(text + "成功");
+          this.getList()
         }).catch(function() {
-          row.status = row.status === "0" ? "1" : "0";
+          row.state = row.state == 0 ? 1 : 0;
         });
       },
 
@@ -565,7 +729,6 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
         this.form.list.forEach(item=>{
            list.push(item[2])
         })
-        this.form.list = null
         let zm = {
             marDemand:this.form,
             list:list
@@ -573,43 +736,32 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
         zm = JSON.stringify(zm)
         let formData = new FormData()
         formData.append("zm",zm)
-        formdata.append("demandPic",this.form.demandPic)
-        this.$refs["form"].validate(valid => {
+        formData.append("demandPic",this.single)
+        this.$refs["forms"].validate(valid => {
           if (valid) {
-            addFollow(formData).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-            // if (this.form.id != null) {
-            //   updateFollow(this.form).then(response => {
-            //     this.msgSuccess("修改成功");
-            //     this.open = false;
-            //     this.getList();
-            //   });
-            // } else {
-            //   addFollow(this.form).then(response => {
-            //     this.msgSuccess("新增成功");
-            //     this.open = false;
-            //     this.getList();
-            //   });
-            // }
+           console.log(this.form.demandId)
+            if (this.form.demandId != null) {
+              updateFollow(formData).then(response => {
+                this.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              });
+            }else{
+              addFollow(formData).then(response => {
+                this.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            }
+          }else{
+            this.msg=null
+            this.msgError("请确认信息是否正确完整")
           }
         });
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        const ids = row.id || this.ids;
-        this.$confirm('是否确认删除需求编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delFollow(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        this.$router.push({ path:'/follow/particulars',query:{row:row.demandId}})
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -633,7 +785,9 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
     max-height: 500px;
     overflow: auto;
   }
-
+  .form{
+    width: 90%;
+  }
   .form .el-input {
     width: 150px;
   }

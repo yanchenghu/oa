@@ -85,7 +85,7 @@
           <el-upload
             class="upload-demo"
             ref="upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
             :on-change="handleRemove"
             :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
