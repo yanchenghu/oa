@@ -3,14 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.demand.mapper.MarDemandMapper">
-    
+
+
     <resultMap type="MarDemand" id="MarDemandResult">
-        <result property="id"    column="id"    />
+        <result property="demandId"    column="demand_id"    />
         <result property="corpCode"    column="corp_code"    />
         <result property="projectName"    column="project_name"    />
         <result property="technologyDirection"    column="technology_direction"    />
         <result property="demandYears"    column="demand_years"    />
-        <result property="demandLevel"    column="demand_level"    />
         <result property="education"    column="education"    />
         <result property="demandNumber"    column="demand_number"    />
         <result property="specificrequiRement"    column="specificrequi_rement"    />
@@ -41,19 +41,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMarDemandVo">
-        select id, corp_code, project_name, technology_direction, demand_years, demand_level, education, demand_number, specificrequi_rement, project_location, address, direct_worklife, target_number, important_level, min_salary, max_salary, technical_requirement, Langue, demand_pic, interviewer, contact_phone, specific_location, attention, if_look, chsi_flag, coopnature, state, close_date, temp_id, temp_name, add_time, operationuser, oper_username from mar_demand
+        select demand_id, corp_code, project_name, technology_direction, demand_years, education, demand_number, specificrequi_rement, project_location, address, direct_worklife, target_number, important_level, min_salary, max_salary, technical_requirement, Langue, demand_pic, interviewer, contact_phone, specific_location, attention, if_look, chsi_flag, coopnature, state, close_date, temp_id, temp_name, add_time, operationuser, oper_username from mar_demand
     </sql>
 
     <select id="selectMarDemandList" parameterType="MarDemand" resultMap="MarDemandResult">
         <include refid="selectMarDemandVo"/>
-        <where>  
+        <where>
             <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
             <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
             <if test="technologyDirection != null  and technologyDirection != ''"> and technology_direction = #{technologyDirection}</if>
             <if test="demandYears != null  and demandYears != ''"> and demand_years = #{demandYears}</if>
-            <if test="demandLevel != null "> and demand_level = #{demandLevel}</if>
             <if test="education != null  and education != ''"> and education = #{education}</if>
-            <if test="demandNumber != null  and demandNumber != ''"> and demand_number = #{demandNumber}</if>
+            <if test="demandNumber != null "> and demand_number = #{demandNumber}</if>
             <if test="specificrequiRement != null  and specificrequiRement != ''"> and specificrequi_rement = #{specificrequiRement}</if>
             <if test="projectLocation != null  and projectLocation != ''"> and project_location = #{projectLocation}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
@@ -74,28 +73,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="coopnature != null "> and coopnature = #{coopnature}</if>
             <if test="state != null "> and state = #{state}</if>
             <if test="closeDate != null "> and close_date = #{closeDate}</if>
-            <if test="tempId != null "> and temp_id = #{tempId}</if>
+            <if test="tempId != null  and tempId != ''"> and temp_id = #{tempId}</if>
             <if test="tempName != null  and tempName != ''"> and temp_name like concat('%', #{tempName}, '%')</if>
             <if test="addTime != null "> and add_time = #{addTime}</if>
             <if test="operationuser != null  and operationuser != ''"> and operationuser = #{operationuser}</if>
             <if test="operUsername != null  and operUsername != ''"> and oper_username like concat('%', #{operUsername}, '%')</if>
         </where>
     </select>
-    
+
     <select id="selectMarDemandById" parameterType="String" resultMap="MarDemandResult">
         <include refid="selectMarDemandVo"/>
-        where id = #{id}
+        where demand_id = #{demandId}
     </select>
-        
+
     <insert id="insertMarDemand" parameterType="MarDemand">
         insert into mar_demand
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
+            <if test="demandId != null">demand_id,</if>
             <if test="corpCode != null and corpCode != ''">corp_code,</if>
             <if test="projectName != null">project_name,</if>
             <if test="technologyDirection != null">technology_direction,</if>
             <if test="demandYears != null">demand_years,</if>
-            <if test="demandLevel != null">demand_level,</if>
             <if test="education != null">education,</if>
             <if test="demandNumber != null">demand_number,</if>
             <if test="specificrequiRement != null">specificrequi_rement,</if>
@@ -123,14 +121,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addTime != null">add_time,</if>
             <if test="operationuser != null">operationuser,</if>
             <if test="operUsername != null">oper_username,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
+            <if test="demandId != null">#{demandId},</if>
             <if test="corpCode != null and corpCode != ''">#{corpCode},</if>
             <if test="projectName != null">#{projectName},</if>
             <if test="technologyDirection != null">#{technologyDirection},</if>
             <if test="demandYears != null">#{demandYears},</if>
-            <if test="demandLevel != null">#{demandLevel},</if>
             <if test="education != null">#{education},</if>
             <if test="demandNumber != null">#{demandNumber},</if>
             <if test="specificrequiRement != null">#{specificrequiRement},</if>
@@ -158,7 +155,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addTime != null">#{addTime},</if>
             <if test="operationuser != null">#{operationuser},</if>
             <if test="operUsername != null">#{operUsername},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateMarDemand" parameterType="MarDemand">
@@ -168,7 +165,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="projectName != null">project_name = #{projectName},</if>
             <if test="technologyDirection != null">technology_direction = #{technologyDirection},</if>
             <if test="demandYears != null">demand_years = #{demandYears},</if>
-            <if test="demandLevel != null">demand_level = #{demandLevel},</if>
             <if test="education != null">education = #{education},</if>
             <if test="demandNumber != null">demand_number = #{demandNumber},</if>
             <if test="specificrequiRement != null">specificrequi_rement = #{specificrequiRement},</if>
@@ -197,18 +193,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="operationuser != null">operationuser = #{operationuser},</if>
             <if test="operUsername != null">oper_username = #{operUsername},</if>
         </trim>
-        where id = #{id}
+        where demand_id = #{demandId}
     </update>
 
     <delete id="deleteMarDemandById" parameterType="String">
-        delete from mar_demand where id = #{id}
+        delete from mar_demand where demand_id = #{demandId}
     </delete>
 
     <delete id="deleteMarDemandByIds" parameterType="String">
-        delete from mar_demand where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
+        delete from mar_demand where demand_id in
+        <foreach item="demandId" collection="array" open="(" separator="," close=")">
+            #{demandId}
         </foreach>
     </delete>
-    
+    <select id="seluntreatedResume"  parameterType="String"  resultType="String">
+        SELECT
+            d.customer_name
+        FROM
+            mar_demand a
+            LEFT JOIN mar_demandresume b ON a.demand_id = b.demand_id
+            LEFT JOIN mar_demandresumefollow c ON b.id = demandresume_id
+            AND b.newfollowtime = c.trackingtime
+            LEFT JOIN per_customerinfo d ON b.customer_code = d.customer_code
+        WHERE
+            a.demand_id=#{demandId}
+           and c.follow_status IN ( 1, 3, 5 )
+    </select>
+    <select id="selectMarDemandByName" parameterType="String" resultMap="MarDemandResult">
+        <include refid="selectMarDemandVo"/>
+        where project_name = #{projectName}
+        limit 1
+    </select>
+
+
+    <select id="selectMarDemandbindingList" parameterType="Map" resultMap="MarDemandResult">
+        SELECT b.* from mar_sign a LEFT JOIN mar_demand b on a.demand_id=b.demand_id
+        where  1 = 1 and b.state=0
+        <if test="deptId !=null">and a.dept_id = #{deptId} </if>
+    </select>
+
+
+
+
+
+
+
+
 </mapper>

@@ -1,6 +1,8 @@
 package com.ruoyi.demand.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.demand.domain.MarDemandresume;
 
 /**
@@ -58,4 +60,12 @@ public interface MarDemandresumeMapper
      * @return 结果
      */
     public int deleteMarDemandresumeByIds(String[] ids);
+
+    /**
+     * 根据简历编号，和需求ID查询当前人是否被绑定
+     *
+     * @param
+     * @return 结果
+     */
+    Map selectMarDemandresumeByCodeID( Map map);
 }

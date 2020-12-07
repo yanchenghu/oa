@@ -85,5 +85,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectMarDemandresumeByCodeID"  parameterType="Map"  resultType="map">
+         SELECT
+            a.demand_id,
+            b.customer_code,
+            b.customer_name
+        FROM
+            mar_demandresume a
+            LEFT JOIN per_customerinfo b ON a.customer_code = b.customer_code
+        where a.customer_code = #{customerCode} and a.demand_id=#{demandId}
+    </select>
     
 </mapper>

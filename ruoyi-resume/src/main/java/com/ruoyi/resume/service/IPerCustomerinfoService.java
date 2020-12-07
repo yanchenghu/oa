@@ -82,13 +82,13 @@ public interface IPerCustomerinfoService
      */
     List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo);
 
-    /**
-     * 文件上传
-     *
-     * @param file
-     * @return 结果
-     */
-    AjaxResult fileUpload(MultipartFile file) ;
+//    /**
+//     * 文件上传
+//     *
+//     * @param file
+//     * @return 结果
+//     */
+//    AjaxResult fileUpload(MultipartFile file) ;
 
     /**
      *  抢占简历
@@ -128,4 +128,8 @@ public interface IPerCustomerinfoService
      * @return 结果 AjaxResult
      */
     AjaxResult resumeInsert(String zm,MultipartFile file, LoginUser loginUser);
+    /**
+     * 获取我抢占的简历
+     */
+    AjaxResult myRobresume(LoginUser loginUser);
 }

@@ -121,6 +121,18 @@ public class MarCompanyController extends BaseController
         }
     }
 
+    /**
+     * 获取我的合作公司
+     * @return
+     */
+    @GetMapping("/listcom")
+    public List<MarCompany> listcom()
+    {
+        MarCompany marCompany=new MarCompany();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        List<MarCompany> list = marCompanyService.selectMarCompanyList(marCompany,loginUser);
+        return list;
+    }
 
 
 

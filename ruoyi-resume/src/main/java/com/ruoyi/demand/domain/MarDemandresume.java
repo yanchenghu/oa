@@ -39,7 +39,7 @@ public class MarDemandresume extends BaseEntity
 
     /** 下载状态（A-未下载  B-已下载） */
     @Excel(name = "下载状态", readConverterExp = "A=-未下载,B=-已下载")
-    private String downloadStatus;
+    private Integer downloadStatus;
 
     /** 最新跟踪时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -95,16 +95,16 @@ public class MarDemandresume extends BaseEntity
     {
         return bindPeople;
     }
-    public void setDownloadStatus(String downloadStatus) 
-    {
+
+    public Integer getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public void setDownloadStatus(Integer downloadStatus) {
         this.downloadStatus = downloadStatus;
     }
 
-    public String getDownloadStatus() 
-    {
-        return downloadStatus;
-    }
-    public void setNewfollowtime(Date newfollowtime) 
+    public void setNewfollowtime(Date newfollowtime)
     {
         this.newfollowtime = newfollowtime;
     }

@@ -453,28 +453,30 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
     }
 
-    @Override
-    public AjaxResult fileUpload(MultipartFile file)  {
-        try {
-            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-            return AjaxResult.success("avatar",  avatar);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return AjaxResult.error("文件上传失败");
-        }
-
-    }
+//    @Override
+//    public AjaxResult fileUpload(MultipartFile file)  {
+//        try {
+//            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+//            return AjaxResult.success("avatar",  avatar);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return AjaxResult.error("文件上传失败");
+//        }
+//
+//    }
 
     @Override
     @Transactional
     public AjaxResult robCustomeInfo(String customerCode,LoginUser loginUser) {
         PerRobcustomer perrob = perRobcustomerMapper.selectByCustomerCode(customerCode);
         if(perrob!=null){
+            redisCache.deleteObject(customerCode);
             return AjaxResult.error("当前人已被抢占");
         }
         //添加抢占信息表
         PerCustomerinfo perCustomerinfo=perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
-            if(perCustomerinfo!=null){
+            if(perCustomerinfo==null){
+                redisCache.deleteObject(customerCode);
             return AjaxResult.error("当前人不存在");
         }
         Date now=new Date();
@@ -556,10 +558,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         List<PerEducation>  educaList = JSON.parseArray(JSON.parseObject(zm).getString("perEducList"), PerEducation.class);
         String fsafsa="";
         if(file != null){
-            String avatar = null;
             try {
-                avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-                fsafsa=avatar.replace("/profile","");
+                fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -627,10 +627,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         }
         String fsafsa="";
         if(file != null){
-            String avatar = null;
             try {
-                avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-                fsafsa=avatar.replace("/profile","");
+                fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -698,6 +696,15 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         perCuscontactMapper.insertPerCuscontact(percuscontact);
         return AjaxResult.success("简历添加成功");
 
+    }
+    /**
+     * 获取我抢占的简历
+     */
+    @Override
+    public AjaxResult myRobresume(LoginUser loginUser) {
+
+        List<Map> maps = perCustomerinfoMapper.myRobresume(loginUser.getUsername());
+        return AjaxResult.success(maps);
     }
 
 

@@ -82,7 +82,15 @@ public class PerTemplateController extends BaseController {
         return util.exportExcel(list, "template");
     }
 
-
+    /**
+     * 查询简历模板列表
+     */
+    @GetMapping("/templaList")
+    public TableDataInfo templaList(PerTemplate perTemplate)
+    {
+        List<PerTemplate> list = perTemplateService.selectPerTemplateList(perTemplate);
+        return getDataTable(list);
+    }
 
 
 

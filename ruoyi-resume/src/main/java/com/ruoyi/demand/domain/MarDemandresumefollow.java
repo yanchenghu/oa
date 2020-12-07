@@ -18,7 +18,7 @@ public class MarDemandresumefollow extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 跟踪Id */
-    private String id;
+    private Integer id;
 
     /** 需求绑定简历Id */
     @Excel(name = "需求绑定简历Id")
@@ -45,16 +45,15 @@ public class MarDemandresumefollow extends BaseEntity
     @Excel(name = "备注")
     private String remark1;
 
-    public void setId(String id) 
-    {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getId() 
-    {
-        return id;
-    }
-    public void setDemandresumeId(String demandresumeId) 
+    public void setDemandresumeId(String demandresumeId)
     {
         this.demandresumeId = demandresumeId;
     }

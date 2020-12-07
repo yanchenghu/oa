@@ -1,6 +1,10 @@
 package com.ruoyi.demand.mapper;
 
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.demand.domain.MarDemandresumefollow;
 
 /**
@@ -58,4 +62,16 @@ public interface MarDemandresumefollowMapper
      * @return 结果
      */
     public int deleteMarDemandresumefollowByIds(String[] ids);
+    /**
+     * 查询需求列表
+     *
+     * @param marDema 需求
+     * @return 需求集合
+     */
+
+    List<MarDemandresume> selectMarDemandList(MarDemandresume marDema);
+    /**
+     * 需求已绑定简历列表
+     */
+    List<Map> selectDemandDetailsList(Map map);
 }

@@ -198,15 +198,26 @@
 
         SELECT
         d.corp_name,
-        c.projecttype,
+        c.project_name,
         DATE_FORMAT( b.trackingtime,'%Y-%m-%d %H:%i:%s') as trackingtime
         FROM
         mar_company d
         LEFT JOIN mar_demand c ON d.corp_code = c.corp_code
-        LEFT JOIN mar_demandresume a on a.demand_id = c.id
+        LEFT JOIN mar_demandresume a on a.demand_id = c.demand_id
         LEFT JOIN ( SELECT demandresume_id ,trackingtime FROM mar_demandresumefollow WHERE follow_status = 7 ) b ON a.id = b.demandresume_id
         where a.customer_code=#{customerCode}
 
+    </select>
+
+    <select id="myRobresume" parameterType="String"  resultType="map">
+        SELECT
+            b.customer_code,
+            a.customer_name,
+            a.customer_tel
+        FROM
+            per_robcustomer a
+        LEFT JOIN per_customerinfo b ON a.customer_tel=b.customer_tel
+        where a.Status=0 and a.add_people=#{username}
     </select>
 
 </mapper>

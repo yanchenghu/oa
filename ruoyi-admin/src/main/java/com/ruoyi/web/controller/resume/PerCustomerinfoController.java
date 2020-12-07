@@ -86,13 +86,13 @@ public class PerCustomerinfoController extends BaseController
             return AjaxResult.error("简历解析失败");
         }
     }
-    /**
-     * 文件上传的接口
-     */
-    @PostMapping(value = "/fileUpload")
-    public AjaxResult fileUpload( @RequestParam("upfile") MultipartFile file)  {
-     return perCustomerinfoService.fileUpload(file);
-    }
+//    /**
+//     * 文件上传的接口
+//     */
+//    @PostMapping(value = "/fileUpload")
+//    public AjaxResult fileUpload( @RequestParam("upfile") MultipartFile file)  {
+//     return perCustomerinfoService.fileUpload(file);
+//    }
     /**
      * 根据姓名电话查询简历列表
      */
