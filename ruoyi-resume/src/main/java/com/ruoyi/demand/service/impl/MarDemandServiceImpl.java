@@ -6,24 +6,21 @@ import java.util.*;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.resume.DingDingJiQi;
 import com.ruoyi.common.utils.resume.SerialNumber;
 import com.ruoyi.conn.domain.ConOperationrecords;
 import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
-import com.ruoyi.demand.domain.MarDemandresume;
-import com.ruoyi.demand.domain.MarDemandresumefollow;
-import com.ruoyi.demand.domain.MarSign;
-import com.ruoyi.demand.mapper.MarDemandresumeMapper;
-import com.ruoyi.demand.mapper.MarDemandresumefollowMapper;
-import com.ruoyi.demand.mapper.MarSignMapper;
+import com.ruoyi.demand.domain.*;
+import com.ruoyi.demand.mapper.*;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
+import com.taobao.api.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.demand.mapper.MarDemandMapper;
-import com.ruoyi.demand.domain.MarDemand;
 import com.ruoyi.demand.service.IMarDemandService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,11 +47,12 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Autowired
     private PerCustomerinfoMapper perCustomerinfoMapper;
 
+    @Autowired
+    private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
 
 
     /**
      * 查询需求
-     * 
      * @param
      * @return 需求
      */
@@ -419,11 +417,74 @@ public class MarDemandServiceImpl implements IMarDemandService
           }else {
               return AjaxResult.error("跟踪失败");
           }
+    }
+    /**
+     *根据绑定简历获取入项信息的基本
+     */
+    @Override
+    public AjaxResult getInputInformation(String id) {
+       Map map=marDemandresumeMapper.getInputInformation(id);
+       if(map.isEmpty()){
+           return AjaxResult.success("未获取入项信息基本信息，请联系管理员");
+       }
+       return AjaxResult.success(map);
+    }
+    /**
+     *人员安排入项
+     */
+    @Override
+    @Transactional
+    public AjaxResult entryPersonnel(MarCustomerprojectpay marCustomerprojectpay, SysUser user,LoginUser loginUser) {
+        //更改跟踪状态
+        if(StringUtils.isEmpty(marCustomerprojectpay.getId())){
+            return AjaxResult.error("id为空,不可跟踪，请联系管理员");
+        }
+        Date date=new Date();
+        MarDemandresume marDemandres=new MarDemandresume();
+        marDemandres.setId(marCustomerprojectpay.getId());
+        marDemandres.setNewfollowtime(date);
+        MarDemandresumefollow marDemandresumefollow=new MarDemandresumefollow();
+        int a =marDemandresumeMapper.updateMarDemandresume(marDemandres);
+        if(a!=1){
+            return AjaxResult.error("入项失败，请联系管理员");
+        }
+        marDemandresumefollow.setDemandresumeId(marCustomerprojectpay.getId());
+        marDemandresumefollow.setFollowStatus(7);
+        marDemandresumefollow.setTrackingtime(date);
+        marDemandresumefollow.setTrackingPeople(loginUser.getUsername());
+        marDemandresumefollowMapper.insertMarDemandresumefollow(marDemandresumefollow);
+
+
+        marCustomerprojectpay.setId(UUID.randomUUID().toString());
+        marCustomerprojectpay.setOperTime(new Date());
+        marCustomerprojectpayMapper.insertMarCustomerprojectpay(marCustomerprojectpay);
+        ConOperationrecords operationrecords=new ConOperationrecords();
+        operationrecords.setType(5);
+        operationrecords.setDatetime(new Date());
+        operationrecords.setUserName(marCustomerprojectpay.getOpercode());
+        conOperationrecordsMapper.insertConOperationrecords(operationrecords);
+        //钉钉提醒
+        try {
+            DingDingJiQi.DingDingd("我是机器人，测试消息勿回，，，喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员");
+        } catch (ApiException e) {
+            return AjaxResult.error("入项失败，钉钉发送失败,请联系管理员");
+        }
+        //钉钉个人提醒？？？
 
 
 
 
-
+        PerCustomerinfo perCustomeri=perCustomerinfoMapper.selectPerCustomerinfoById(marCustomerprojectpay.getCustomerCode());
+        //入项成功更改个人简历信息
+        PerCustomerinfo perCustomer=new PerCustomerinfo();
+        perCustomer.setCustomerCode(marCustomerprojectpay.getCustomerCode());
+        if (perCustomer.getJoinStatus()>2){
+            perCustomer.setJoinStatus(4);
+        }else{
+            perCustomer.setJoinStatus(2);
+        }
+        perCustomerinfoMapper.updatePerCustomerinfo(perCustomer);
+        return AjaxResult.success("入项成功");
     }
 
 

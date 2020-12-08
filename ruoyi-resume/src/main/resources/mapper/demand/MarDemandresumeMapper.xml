@@ -96,5 +96,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             LEFT JOIN per_customerinfo b ON a.customer_code = b.customer_code
         where a.customer_code = #{customerCode} and a.demand_id=#{demandId}
     </select>
-    
+    <select id="getInputInformation"  parameterType="Map"  resultType="map">
+        SELECT
+        a.customer_code as customerCode, b.demand_id  as demandId,b.project_name as projectName,
+        c.corp_code as corpCode,c.corp_name as corpName,a.bind_people as opercode
+        FROM
+            mar_demandresume a
+            LEFT JOIN mar_demand b ON a.demand_id = b.demand_id
+            LEFT JOIN mar_company c ON b.corp_code = c.corp_code
+        WHERE
+            a.id=#{id}
+    </select>
+
+
 </mapper>
