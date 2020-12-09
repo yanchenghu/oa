@@ -34,8 +34,6 @@
               </li>
             </ul>
           </div>
-
-
           <div  style="margin-top: 20px; padding-left: 20px;">
             <el-form  :model="perCustomerinfo"  label-width="70px" :inline="true" ref="form" label-position="right" >
               <el-form-item label="姓名" prop="customerName">
@@ -150,7 +148,6 @@
               </li>
             </ul>
           </div>
-
           <div class="tit">
             <b style="margin-right: 20px;">跟踪记录</b>
           </div>
@@ -162,7 +159,7 @@
             </el-table-column>
             <el-table-column prop="update_static" label="跟踪状态" align="center" :formatter="updatestaticFormat">
             </el-table-column>
-            <el-table-column prop="memo_detail" label="需求状态" width="150" align="center" >
+            <el-table-column prop="memo_detail" label="跟踪情况" width="150" align="center" >
             </el-table-column>
             <el-table-column prop="follow_status" label="简历状态"  align="center" :formatter="followstatusFormat">
             </el-table-column>
@@ -179,6 +176,23 @@
           style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
         ></iframe>
       </el-dialog>
+      <el-dialog :title="title" :visible.sync="open2" width="40%" append-to-body>
+        <el-form :model="form" :rules="rules" ref="form" label-position="right" label-width="80px">
+          <el-form-item label="简历状态">
+            <el-select v-model="form.updateStatic" placeholder="请选择简历状态">
+              <el-option label="跟进中" :value="2"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="跟进情况" prop="memoDetail">
+              <el-input v-model="form.memoDetail" type="textarea" placeholder="请输入内容" style="width: 80%;"></el-input>
+          </el-form-item>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -188,12 +202,15 @@
     getRecord,
     addRecord
   } from "@/api/resume/record/customerinfo";
+  import{genzongbut}from'@/api/resume/mytrckresume.js'
   import store from "@/store";
   import util from "@/utils"
   export default{
     name:"part",
     data(){
       return {
+        title:"",
+        open2:false,
         name:store.getters.name,
         // 简历预览
         open:false,
@@ -238,10 +255,15 @@
          updatestatic:[],
          // 简历状态字典
          followstatus:[],
+         form:{},
+         rules:{
+           memoDetail: [
+           { required: true, message: "跟踪情况不能为空", trigger: "blur" }
+         ],
+         },
       }
     },
     created(){
-
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
         this.customerSpecialitiesoptions = response.data;
@@ -266,7 +288,6 @@
        this.getcustomerCode()
     },
     methods:{
-
       // 获取简历详情信息
       getcustomerCode(){
           var formData = new FormData()
@@ -311,12 +332,15 @@
           this.getcustomerCode()
           )
         }else if(val==1){
+
           // 预览简历
-          let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
-
-          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
-          this.open=true
-
+          if(this.perCustomerinfo.resumePath==""){
+            this.msgError("该简历暂无原版")
+          }else{
+            let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
+            this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
+            this.open=true
+          }
         }else if(val==2){
           // 下载原版
          if(this.perCustomerinfo.resumePath==""){
@@ -326,11 +350,16 @@
          }
         }else if(val==3){
           // 更新简历信息
-           this.$router.push({path:"/record/manually",query:{customerCode:this.$route.query.customerCode}});
+           this.$router.push({path:"/record/manually",query:{customerCode:this.perCustomerinfo.customerCode}});
         }else if(val==4){
+          this.form = {}
           // 跟踪简历
-            let time = "2020-11-16"
-            util.friendlyDate(new Date(time))
+          this.open2=true
+          this.title = "简历跟踪"
+          this.form.contactCustomercode = this.perCustomerinfo.customerCode
+          this.form.updateStatic = 2
+            // let time = "2020-11-16"
+            // util.friendlyDate(new Date(time))
         }else if(val==5){
           // 释放简历
           this.$confirm('是否确认释放简历编号为"' + this.$route.query.customerCode + '"的数据项?', "警告", {
@@ -344,9 +373,23 @@
               this.msgSuccess("删除成功");
             })
         }
-      }
+      },
+      submitForm(){
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            genzongbut(this.form).then(res=>{
+              this.msgSuccess("操作成功");
+              this.open2 = false;
+              this.getcustomerCode();
+            })
+          }
+        });
+      },
+      cancel(){
+         this.open2 = false;
+         this.form = {}
+      },
     },
-
   }
 </script>
 
@@ -363,7 +406,7 @@
     border-bottom: 1px solid grey;
   }
 
-  .el-form-item--medium .el-form-item__label{
+  >>>.el-form-item--medium .el-form-item__label{
     height: 36px;
   }
   .tit {
@@ -372,12 +415,12 @@
     line-height: 42px;
     padding-left: 10px;
   }
-  .el-form-item label:after {
+  >>>.el-form-item label:after {
         content: " ";
         display: inline-block;
         width: 100%;
       }
-  .el-form-item__label {
+  >>>.el-form-item__label {
       text-align: justify
   }
 </style>

@@ -1,21 +1,23 @@
 <template>
   <div class="app-container">
-    <div style="margin-bottom: 30px;display: flex;justify-content: space-between;">
+    <div style="margin-bottom: 30px;display: flex;">
       <div style="width: 35%;">
         <b>录入解析简历</b>
           <b> / </b>
-        <el-button type="primary" >
+        <el-button type="primary">
           <b><router-link to="/record/manually">手动上传简历</router-link></b>
         </el-button>
       </div>
-      <div style="display: flex;flex-wrap: wrap; width: 60%;justify-content: flex-end;">
-        <div>
-          <label>电话 </label>&nbsp;<input type="text" class="input" v-model="finddata.customerTel">
-        </div>
-        <div>
-          <label>姓名 </label>&nbsp;<input type="text" class="input" v-model="finddata.customerName">
-        </div>
-        <button class="but" @click="find">查询</button>
+      <div>
+        <el-form :inline="true">
+          <el-form-item label="电话">
+            <el-input  v-model="finddata.customerTel" size="mini"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名">
+            <el-input  v-model="finddata.customerName" size="mini"></el-input>
+          </el-form-item>
+          <el-button type="primary" @click="find" size="medium">查询</el-button>
+        </el-form>
       </div>
     </div>
     <div style="position: relative; display: flex;flex-wrap: wrap; margin-bottom: 20px;height: 220px;">
@@ -35,14 +37,12 @@
               line-height: 50px;"></i>
           <div><b>上传成功 </b></div>
         </div>
-
       </el-upload>
       <div style="position: absolute;bottom:42px ; left: 365px ;">
         <el-radio border v-model="vadio" :label="1">国内</el-radio>
         <el-radio border v-model="vadio" :label="2" style="margin:3px 10px 3px 0;">对日</el-radio>
-        <button class="but" @click="jiexii">解析</button>
+        <el-button type="primary" @click="jiexii" size="medium">解析</el-button>
       </div>
-      <!-- <div style="clear: both;"></div> -->
 
     </div>
     <!-- 基础信息 -->
@@ -152,30 +152,37 @@
 
 
 
-    <el-dialog :visible.sync="open" style="width: 100%;" title="简历查询" >
+    <el-dialog :visible.sync="open"  title="简历查询" append-to-body>
       <div v-if="sous" style="height: 200px;">
         <div style="margin-top:200px" align="center">未查询到人员信息</div>
       </div>
       <div v-else>
         <el-table :data="tableData" border style="width: 100%" v-loading="loading">
           </el-table-column>
-          <el-table-column prop="customer_name" label="姓名"width="70" align="center">
+          <el-table-column prop="customer_name" label="姓名"width="70" >
             </el-table-column>
-            <el-table-column prop="customer_tel" label="电话" align="center"width="110">
+            <el-table-column prop="customer_tel" label="电话">
           </el-table-column>
-          <el-table-column prop="customer_birth" label="出生日期" align="center"width="100">
+          <el-table-column prop="customer_birth" label="出生日期">
           </el-table-column>
-          <el-table-column prop="profession_id" label="技术方向" align="center":formatter="professionIdSituationFormat" >
-
+          <el-table-column prop="profession_id" label="技术方向" :formatter="professionIdSituationFormat" width="60">
           </el-table-column>
-          <el-table-column prop="add_time" label="录入/更新简历时间" width="230" align="center">
+          <el-table-column label="录入简历时间"  prop="add_time" >
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.add_time, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            </template>
           </el-table-column>
-          <el-table-column prop="add_name" label="占有人" width="70" align="center">
+          <el-table-column label="更新简历时间"  prop="add_time" >
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.update_time, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="90" fixed="right">
+          <el-table-column prop="add_name" label="占有人" width="70"  fixed="right">
+          </el-table-column>
+          <el-table-column label="操作"  width="90" fixed="right">
             <template slot-scope="scope">
               <el-button v-hasPermi="['resume:record:query']" @click="handsee(scope.row.customer_code)" type="text" size="small">查看</el-button>
-              <el-button @click="handleClick(scope.row.customer_code)" type="text" size="small">抢占</el-button>
+              <el-button v-if="!scope.row.add_name" @click="handleClick(scope.row.customer_code)" type="text" size="small">抢占</el-button>
             </template>
           </el-table-column>
         </el-table>

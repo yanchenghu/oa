@@ -38,3 +38,11 @@ export function getCodeImg() {
     method: 'get'
   })
 }
+
+// 获取轮播
+export function getlunbo() {
+  return request({
+    url: '/statistc/homepage/rotation',
+    method: 'get'
+  })
+}

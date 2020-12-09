@@ -16,6 +16,14 @@ export function getRecord(customerCode) {
     method: 'get'
   })
 }
+// 查询需求列表
+export function listFollow(query) {
+  return request({
+    url: '/demand/follow/list',
+    method: 'get',
+    params: query
+  })
+}
 
 // 新增简历
 export function addRecord(data) {

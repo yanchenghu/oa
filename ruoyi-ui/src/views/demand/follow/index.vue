@@ -95,7 +95,7 @@
             <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['demand:follow:edit']">修改</el-button>
           </p>
           <p>
-            <el-button size="mini" type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:remove']">查看</el-button>
+            <el-button size="mini" type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:query']">查看</el-button>
           </p>
           <p>
             <el-switch v-model="scope.row.state" :active-value="0" :inactive-value="1" inactive-color="#ff4949" @change="handleStatusChange(scope.row)"></el-switch>
@@ -304,7 +304,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm(1)">立即保存</el-button>
-        <el-button @click="submitForm(2)">保存并继续</el-button>
+        <el-button v-if="title=='添加需求'" @click="submitForm(2)">保存并继续</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -331,13 +331,11 @@
   } from "@/api/demand/follow";
 import { treeselect } from "@/api/system/dept";
 import Editor from '@/components/Editor';
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {debounce} from "@/utils/ruoyi.js"
   export default {
     name: "Follow",
     components: {
       Editor,
-      Treeselect
     },
     data() {
        var checkAge = (rule, value, callback) => {
@@ -625,7 +623,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
         this.getTreeselect()
         this.getcorpName()
         this.gettemplate()
-        this.form.list=[[100, 101, 103]]
+        this.form.list=[[100, 101,103],[100, 101,104],[100, 101,105],[100, 101,106],[100, 101,107]]
         this.open = true;
         this.title = "添加需求";
       },
@@ -681,7 +679,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
             },
       /** 修改按钮操作 */
       handleUpdate(row) {
-        // this.reset();
+        this.reset();
         this.getTreeselect()
         this.getcorpName()
         this.gettemplate()
@@ -724,7 +722,8 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
       },
 
       /** 提交按钮 */
-      submitForm() {
+      submitForm(i){
+        console.log(i)
         let list =[]
         this.form.list.forEach(item=>{
            list.push(item[2])
@@ -747,11 +746,19 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
                 this.getList();
               });
             }else{
-              addFollow(formData).then(response => {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              });
+              if(i==1){
+                addFollow(formData).then(response => {
+                  this.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                });
+              }else{
+                addFollow(formData).then(response => {
+                  this.msgSuccess("新增成功");
+                  this.handleAdd();
+                });
+              }
+
             }
           }else{
             this.msg=null
@@ -761,7 +768,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        this.$router.push({ path:'/follow/particulars',query:{row:row.demandId}})
+        this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:1}})
       },
       /** 导出按钮操作 */
       handleExport() {
@@ -779,7 +786,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
     }
   };
 </script>
-<style>
+<style scoped>
   .el-table__row td {
     vertical-align: top;
     max-height: 500px;
@@ -788,13 +795,13 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   .form{
     width: 90%;
   }
-  .form .el-input {
+  .form >>>.el-input {
     width: 150px;
   }
-  .el-form-item--medium .el-form-item__content{
+  >>>.el-form-item__content{
     width: 199px;
   }
-  .div .el-form-item--medium .el-form-item__content{
+   .div >>>.el-form-item__content{
     width: 80%;
   }
 </style>

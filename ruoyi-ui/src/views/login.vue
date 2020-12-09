@@ -57,7 +57,7 @@
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
-
+import {debounce} from "@/utils/ruoyi.js"
 
 export default {
   name: "Login",
@@ -115,7 +115,8 @@ export default {
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       };
     },
-    handleLogin() {
+    handleLogin:debounce(function(){this.handleLogi()},500),
+    handleLogi() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;

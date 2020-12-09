@@ -80,10 +80,10 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <p>
-            <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['demand:binding:binding']">绑定</el-button>
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">绑定</el-button>
           </p>
           <p>
-            <el-button size="mini" type="text" @click="see(scope.row)" v-hasPermi="['demand:binding:query']">查看</el-button>
+            <el-button size="mini" type="text" @click="see(scope.row)" v-hasPermi="['demand:follow:query']">查看</el-button>
           </p>
         </template>
       </el-table-column>
@@ -236,7 +236,7 @@ import { treeselect } from "@/api/system/dept";
       },
       // 查看
       see(row){
-        this.$router.push({ path:'/follow/particulars',query:{row:row.demandId}})
+        this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:2}})
       },
       // 绑定
       handleUpdate(row){
@@ -305,19 +305,19 @@ import { treeselect } from "@/api/system/dept";
     }
   };
 </script>
-<style>
-  .el-table__row td {
+<style scoped>
+  >>>.el-table__row  td {
     vertical-align: top;
     max-height: 500px;
     overflow: auto;
   }
-  .form .el-input {
+  .form >>>.el-input {
     width: 150px;
   }
-  .el-form-item--medium .el-form-item__content{
+  .el-form-item--medium >>>.el-form-item__content{
     width: 199px;
   }
-  .div .el-form-item--medium .el-form-item__content{
+  .div >>>.el-form-item--medium .el-form-item__content{
     width: 80%;
   }
 </style>

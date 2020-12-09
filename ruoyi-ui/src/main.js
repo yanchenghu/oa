@@ -18,7 +18,7 @@ import './assets/icons' // icon
 import './permission' // permission control
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
-import { worktime, parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree,debounce } from "@/utils/ruoyi";
+import { worktime, parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree, } from "@/utils/ruoyi";
 
 
 
@@ -26,7 +26,6 @@ import Pagination from "@/components/Pagination";
 //自定义表格工具扩展
 import RightToolbar from "@/components/RightToolbar"
 // 全局方法挂载
-Vue.prototype.debounce = debounce
 Vue.prototype.worktime = worktime
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
@@ -55,7 +54,6 @@ Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 
 Vue.use(permission)
-
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

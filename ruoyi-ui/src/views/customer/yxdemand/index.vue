@@ -295,6 +295,7 @@
 <script>
 
 import { getYxdemand,listYxdemand,addYxdemand, see ,release,turnover,findnames} from "@/api/customer/yxdemand";
+import {debounce} from "@/utils/ruoyi.js"
 export default {
   name: "Yxdemand",
   data() {
@@ -305,6 +306,8 @@ export default {
        setTimeout(() => {
          if (this.msg==2) {
            callback(new Error('该公司已存在'));
+         }else{
+           callback()
          }
        }, 1000);
       };
@@ -616,10 +619,10 @@ export default {
     set(){
       see(this.yxdemandone)
     },
-    sees(){
-      let that = this
-      this.debounce(that.set())
-    },
+    sees:debounce(function(){
+      this.set()
+    },1000),
+
     /**输入框实时修改按钮  */
 
   }

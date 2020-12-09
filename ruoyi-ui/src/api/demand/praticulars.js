@@ -48,3 +48,19 @@ export function delFollow(id) {
     data:id
   })
 }
+// 查询入项信息
+export function getInputInformation(id) {
+  return request({
+    url: '/demand/binding/getInputInformation',
+    method: 'post',
+    data:id
+  })
+}
+// 入项
+export function entryPersonnel(data) {
+  return request({  
+    url: '/demand/binding/entryPersonnel',
+    method: 'post',
+    data:data
+  })
+}

@@ -31,7 +31,7 @@
               :label="dict.dictLabel"
               :value="dict.dictValue"
             />
-          </el-select>
+
         </el-select>
       </el-form-item>
       <el-form-item  prop="paybackPeriod">
@@ -42,7 +42,6 @@
               :label="dict.dictLabel"
               :value="dict.dictValue"
             />
-          </el-select>
         </el-select>
       </el-form-item>
       <el-button
@@ -242,7 +241,7 @@
                    :label="dict.dictLabel"
                    :value="parseInt(dict.dictValue)"
                  />
-               </el-select>
+               
              </el-select>
            </el-form-item>
            <el-form-item  prop="paybackPeriod" label="回款周期">
@@ -253,7 +252,7 @@
                    :label="dict.dictLabel"
                    :value="parseInt(dict.dictValue)"
                  />
-               </el-select>
+               
              </el-select>
            </el-form-item>
          </el-form>

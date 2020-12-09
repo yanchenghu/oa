@@ -1,5 +1,11 @@
 ## 开发
 
+问题提点
+
+##跟踪记录表
+合作公司
+
+
 ```bash
 # 克隆项目
 git clone https://gitee.com/y_project/RuoYi-Vue

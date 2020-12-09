@@ -52,19 +52,24 @@ export function resetForm(refName) {
 		this.$refs[refName].resetFields();
 	}
 }
-export function debounce(func) {
-    var timer=null;
-    return function() {
-      if (timer){
-        clearTimeout(timer);
-      }
-      timer = setTimeout(() => {
-        func();
-      }, 1000);
-    }
-}
+
 export function worktime(startyear,startmonth,endyear,endmonth){
         return `${startyear}.${startmonth} — ${endyear}.${endmonth}`
+}
+
+export function debounce(fn, delay) {
+  // 记录上一次的延时器
+  var timer = null;
+  var delay = delay || 1000;
+  return function() {
+    var args = arguments;
+    var that = this;
+    // 清除上一次延时器
+    clearTimeout(timer)
+    timer = setTimeout(function() {
+        fn.apply(that,args)
+    }, delay);
+  }
 }
 
 // 添加日期范围

@@ -1,64 +1,58 @@
 <template>
   <div class="app-container">
-    <p><b>简历库</b></p>
-    <i name=""></i>
     <div style="display: flex;">
       <!-- 需求表格 -->
-      <div style="padding-top: 85px;margin-right: 20px;">
-           <el-radio-group v-model="fromdata.nood">
-             <div v-for="nood in tabledata" style="margin-bottom: 10px;">
-               <el-radio-button   :label="nood.data"></el-radio-button>
+      <div class="left">
+          <el-input prefix-icon="el-icon-search" size="medium" placeholder="搜索需求">
+          </el-input>
+
+          <el-radio-group v-model="fromdata.nood"  style="margin-top: 10px;">
+             <div  v-for="nood in tabledata" >
+               <el-radio-button  :label="nood.projectName"></el-radio-button>
              </div>
-           </el-radio-group>
+          </el-radio-group>
       </div>
 
  <!-- 筛选列表 -->
 
-      <div style="width: 80%;">
-        <el-form style="border-bottom: 1px solid black;padding-bottom: 25px;" ref="form" :model="form" label-width="80px" inline="true">
+      <div  class="right">
+        <el-form style="border-bottom: 1px solid black;padding-bottom: 25px;" ref="form" :model="form" label-width="80px" :inline="true">
           <el-form-item label="技术方向" prop="professionId">
             <el-select v-model="fromdata.professionId" size="small">
-              <el-option key="buxian" value="buxian" label="不限"></el-option>
               <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
           <el-form-item label="工作年限" prop="workYear">
             <el-select v-model='fromdata.workYear' size="small">
-              <el-option key="buxian" value="buxian" label="不限"></el-option>
+
               <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
           <el-form-item label="最低学历" prop="education">
             <el-select v-model='fromdata.education' size="small">
-              <el-option key="buxian" value="buxian" label="不限"></el-option>
+
               <el-option v-for="dict in customerSpecialitiesoptions" :key="dict.dictValue" :label="dict.dictLabel"
                 :value="dict.dictValue" />
             </el-select>
           </el-form-item>
           <el-form-item label="期望城市" prop="intentionArea">
             <el-select v-model='fromdata.intentionArea' size="small">
-              <el-option key="buxian" value="buxian" label="不限"></el-option>
+
               <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
           <el-form-item label="入库时间" prop="puttime">
             <el-select v-model='fromdata.puttime' size="small">
-              <el-option key="buxian" value="buxian" label="不限"></el-option>
+
               <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
-          <el-button type="primary" @click="onSubmit">筛选更多</el-button>
+          <el-button  type="primary" @click="next">换一批</el-button>
         </el-form>
         <!-- 数据表格 -->
-        <el-table stripe  border :data="msgtaba" tooltip-effect="light" ref="multipleTable">
-          <el-table-column fixed label="选择" width="55" align="center">
-            <template slot-scope="scope">
-              <el-checkbox-group v-model="datalist" @change="handleCheckedCitiesChange">
-                  <el-checkbox   :label="scope.row"  :key="scope.row">{{nale}}</el-checkbox>
-              </el-checkbox-group>
-            </template>
-          </el-table-column>
-          <el-table-column prop="customerName" label="姓名电话" width="200" align="center">
+        <el-table  border :data="msgtaba" tooltip-effect="light" ref="multipleTable">
+          <el-table-column type="selection"  width="55" align="center"/>
+          <el-table-column prop="customerName" label="姓名电话" width="100" align="center">
           </el-table-column>
           <el-table-column prop="customerBirth" label="出生日期" width="100" align="center">
           </el-table-column>
@@ -102,11 +96,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <div style=" background: rgb(211,211,211); padding: 10px  10px;">
-          <el-checkbox v-model="checkAll" @change="handleCheckAllChange" style="margin-right: 20px;">全选</el-checkbox>
-          <el-button  type="primary" @click="next">换一批</el-button>
-           <el-button type="primary" @click="batch">批量抢占</el-button>
-        </div>
+
         <pagination
           v-show="total>0"
           :total="total"
@@ -117,7 +107,7 @@
 
          <!-- <el-button @click="pdf">点击</el-button> -->
 
-         <el-dialog title="预览" :visible.sync="open" width="70%"  :before-close='closeDialog'>
+         <el-dialog title="预览" :visible.sync="open" width="70%"  >
          <iframe
              src='https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=https://oa.zhuyanhr.com/shzqoa/custTemp/demand20072003485269172/%E7%8E%8B%E8%82%96%E4%B8%9C.doc'
             style="overflow: auto; position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height:1000%"
@@ -125,7 +115,6 @@
         </el-dialog>
 
       </div>
-
 
       </div>
   </div>
@@ -141,7 +130,9 @@
     delRecord,
     addRecord,
     updateRecord,
-    exportRecord
+    exportRecord,
+    listFollow,
+
   } from "@/api/resume/peopost/peopost";
 
   export default {
@@ -149,74 +140,28 @@
 
     data() {
       return {
-
         nale:"",
         // 全选
         checkAll:false,
         // 表单内容
         fromdata: {
-          pageNum:1,
-          pageSize:10,
-          professionId: "buxian",
-          workYear: "buxian",
-          education: "buxian",
-          intentionArea: "buxian",
-          puttime: "buxian",
-          nood:"",
+          pageNum: 1,
+          pageSize: 10,
+          customerSex: null,
+          customerTel: null,
+          customerUniversity: null,
+          customerSpecialities: null,
+          workYear: null,
+          addTime: null,
+          expectationSalary: null,
+          professionId: null,
+          education: null,
         },
-
-        msgtaba: [{
-            id: 1,
-            customerName: "张三",
-            customerBirth: "2020-1-1",
-            professionId: "1",
-            workYear: 3,
-            education: 1,
-            customerUniversity: "郑州大学",
-            expectationSalary: "8000",
-            intentionArea: "郑州"
-          },{
-            id: 2,
-            customerName: "张三",
-            customerBirth: "2020-1-1",
-            professionId: "1",
-            workYear: 3,
-            education: 4,
-            customerUniversity: "郑州大学",
-            expectationSalary: "8000",
-            intentionArea: "郑州"
-          },{
-            id: 3,
-            customerName: "张三",
-            customerBirth: "2020-1-1",
-            professionId: "1",
-            workYear: 0,
-            education: 5,
-            customerUniversity: "郑州大学",
-            expectationSalary: "8000",
-            intentionArea: "郑州"
-          },
-
-        ],
+        // 表格数据
+        msgtaba: [],
 
         // 需求数组
-        tabledata: [{
-            data: "上海-中级对日java"
-          },
-          {
-            data: "上海-中高级对java"
-          },
-          {
-            data: "上海-中高级日java"
-          },
-          {
-            data: "上海-中高对日java"
-          },
-         
-        ],
-        // 接受数据列表
-
-
+        tabledata: [],
         // 表单参数
         form: {},
         // 遮罩层
@@ -257,8 +202,6 @@
           professionId: null,
           education: null,
         },
-
-
         // 表单校验
         rules: {
           customerName: [{
@@ -272,7 +215,6 @@
             trigger: "blur"
           }],
         },
-        datalist: []
       };
     },
     created() {
@@ -287,27 +229,14 @@
       this.getDicts("sys_user_sex").then(response => {
         this.customerSexOptions = response.data;
       });
+      this.getxuqiulist()
     },
     methods: {
-      pdf(){
-        this.open = true
-        window.open(
-          "https://view.officeapps.live.com/op/view.aspx?src=" + this.yuming + "/anli?id=" + row.id,
-                        "_blank"
-                      );
-            console.log(row.wjYsmc)
-            if (!/\.(pdf|PDF)$/.test(row.wjYsmc)) {
-
-              return false;
-            } else {
-              let url = this.yuming + "/anli?id=" + row.id
-              this.viewVisible = true
-              this.pdfsrc = url
-            }
+      getxuqiulist(){
+        listFollow().then(res=>{
+          this.tabledata = res.rows
+        })
       },
-
-
-
 
       // 筛选更多
       onSubmit() {
@@ -321,10 +250,9 @@
 
 
       // 需求全选列表
-      hand(selection) {
-        this.fromdata.noodlist = selection.map(item => item.data)
-        console.log(selection)
-      },
+     next(){
+
+     },
 
       // 表格数据全选
       handleCheckAllChange(val){
@@ -477,3 +405,18 @@
     }
   };
 </script>
+<style>
+  .left{
+     padding: 10px;
+     margin-right: 10px;
+     width: 170px;
+     text-align: left;
+     height:100%;
+     background: #F2F6FC;
+  }
+  .right{
+    width: 80%;
+    padding: 10px;
+    background: #F2F6FC;
+  }
+</style>

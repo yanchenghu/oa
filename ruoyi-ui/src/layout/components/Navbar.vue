@@ -3,15 +3,7 @@
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
-
-
-      <el-carousel indicator-position="none" height="50px" >
-         <el-carousel-item v-for="item in 4" :key="item">
-           <h3>{{ item }}</h3>
-         </el-carousel-item>
-       </el-carousel>
-
-
+      <carousel />
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
@@ -62,6 +54,7 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import Carousel from '@/components/RuoYi/carousel'
 
 export default {
   components: {
@@ -71,7 +64,8 @@ export default {
     SizeSelect,
     Search,
     RuoYiGit,
-    RuoYiDoc
+    RuoYiDoc,
+    Carousel
   },
   computed: {
     ...mapGetters([
@@ -117,27 +111,6 @@ export default {
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
-
-    .el-carousel{
-      width: 170px;
-      float: left;
-      margin-left: 50%;
-      position:absolute;
-      // left:-100px;
-      .el-carousel__item{
-        background-color: red;
-        text-align: center;
-      }
-    }
-
-    .el-carousel__item h3 {
-        color: #475669;
-        font-size: 18px;
-        opacity: 0.75;
-        line-height: 50px;
-        margin: 0;
-      }
 
 
 
