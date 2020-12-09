@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarCustomerprojectpayMapper">
+    
+    <resultMap type="MarCustomerprojectpay" id="MarCustomerprojectpayResult">
+        <result property="id"    column="id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="corpName"    column="corp_name"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="settledCycle"    column="settled_cycle"    />
+        <result property="salary"    column="salary"    />
+        <result property="servicePay"    column="service_pay"    />
+        <result property="outofProjecttime"    column="outof_projecttime"    />
+        <result property="quitProreason"    column="quit_proreason"    />
+        <result property="quitRemark"    column="quit_remark"    />
+        <result property="opercode"    column="opercode"    />
+        <result property="operTime"    column="oper_time"    />
+        <result property="syqstartTime"    column="syqstart_time"    />
+        <result property="syqEndtime"    column="syq_endtime"    />
+        <result property="socSecopt"    column="soc_secopt"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMarCustomerprojectpayVo">
+        select id, customer_code, corp_code, corp_name, demand_id, project_name, start_time, end_time, settled_cycle, salary, service_pay, outof_projecttime, quit_proreason, quit_remark, opercode, oper_time, syqstart_time, syq_endtime, soc_secopt, remark from mar_customerprojectpay
+    </sql>
+
+    <select id="selectMarCustomerprojectpayList" parameterType="MarCustomerprojectpay" resultMap="MarCustomerprojectpayResult">
+        <include refid="selectMarCustomerprojectpayVo"/>
+        <where>  
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="settledCycle != null "> and settled_cycle = #{settledCycle}</if>
+            <if test="salary != null "> and salary = #{salary}</if>
+            <if test="servicePay != null "> and service_pay = #{servicePay}</if>
+            <if test="outofProjecttime != null "> and outof_projecttime = #{outofProjecttime}</if>
+            <if test="quitProreason != null "> and quit_proreason = #{quitProreason}</if>
+            <if test="quitRemark != null  and quitRemark != ''"> and quit_remark = #{quitRemark}</if>
+            <if test="opercode != null  and opercode != ''"> and opercode = #{opercode}</if>
+            <if test="operTime != null "> and oper_time = #{operTime}</if>
+            <if test="syqstartTime != null "> and syqstart_time = #{syqstartTime}</if>
+            <if test="syqEndtime != null "> and syq_endtime = #{syqEndtime}</if>
+            <if test="socSecopt != null "> and soc_secopt = #{socSecopt}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarCustomerprojectpayById" parameterType="String" resultMap="MarCustomerprojectpayResult">
+        <include refid="selectMarCustomerprojectpayVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarCustomerprojectpay" parameterType="MarCustomerprojectpay">
+        insert into mar_customerprojectpay
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="customerCode != null">customer_code,</if>
+            <if test="corpCode != null">corp_code,</if>
+            <if test="corpName != null">corp_name,</if>
+            <if test="demandId != null">demand_id,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="settledCycle != null">settled_cycle,</if>
+            <if test="salary != null">salary,</if>
+            <if test="servicePay != null">service_pay,</if>
+            <if test="outofProjecttime != null">outof_projecttime,</if>
+            <if test="quitProreason != null">quit_proreason,</if>
+            <if test="quitRemark != null">quit_remark,</if>
+            <if test="opercode != null">opercode,</if>
+            <if test="operTime != null">oper_time,</if>
+            <if test="syqstartTime != null">syqstart_time,</if>
+            <if test="syqEndtime != null">syq_endtime,</if>
+            <if test="socSecopt != null">soc_secopt,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="corpName != null">#{corpName},</if>
+            <if test="demandId != null">#{demandId},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="settledCycle != null">#{settledCycle},</if>
+            <if test="salary != null">#{salary},</if>
+            <if test="servicePay != null">#{servicePay},</if>
+            <if test="outofProjecttime != null">#{outofProjecttime},</if>
+            <if test="quitProreason != null">#{quitProreason},</if>
+            <if test="quitRemark != null">#{quitRemark},</if>
+            <if test="opercode != null">#{opercode},</if>
+            <if test="operTime != null">#{operTime},</if>
+            <if test="syqstartTime != null">#{syqstartTime},</if>
+            <if test="syqEndtime != null">#{syqEndtime},</if>
+            <if test="socSecopt != null">#{socSecopt},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarCustomerprojectpay" parameterType="MarCustomerprojectpay">
+        update mar_customerprojectpay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
+            <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="demandId != null">demand_id = #{demandId},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="settledCycle != null">settled_cycle = #{settledCycle},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="servicePay != null">service_pay = #{servicePay},</if>
+            <if test="outofProjecttime != null">outof_projecttime = #{outofProjecttime},</if>
+            <if test="quitProreason != null">quit_proreason = #{quitProreason},</if>
+            <if test="quitRemark != null">quit_remark = #{quitRemark},</if>
+            <if test="opercode != null">opercode = #{opercode},</if>
+            <if test="operTime != null">oper_time = #{operTime},</if>
+            <if test="syqstartTime != null">syqstart_time = #{syqstartTime},</if>
+            <if test="syqEndtime != null">syq_endtime = #{syqEndtime},</if>
+            <if test="socSecopt != null">soc_secopt = #{socSecopt},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarCustomerprojectpayById" parameterType="String">
+        delete from mar_customerprojectpay where id = #{id}
+    </delete>
+
+    <delete id="deleteMarCustomerprojectpayByIds" parameterType="String">
+        delete from mar_customerprojectpay where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selRotation"  resultType="map">
+     SELECT b.corp_name,c.project_name,d.customer_name,f.nick_name from mar_customerprojectpay a
+         LEFT JOIN mar_company b on a.corp_code=b.corp_code
+         LEFT JOIN mar_demand c on a.demand_id=c.demand_id
+         LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
+         LEFT JOIN sys_user f on a.opercode=f.user_name
+        where outof_projecttime is null and quit_proreason is null
+        ORDER BY oper_time desc LIMIT 5
+    </select>
+    
+</mapper>

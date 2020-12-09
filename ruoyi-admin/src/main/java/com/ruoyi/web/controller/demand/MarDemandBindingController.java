@@ -2,20 +2,21 @@ package com.ruoyi.web.controller.demand;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.domain.MarDemand;
 import com.ruoyi.demand.domain.MarDemandresumefollow;
 import com.ruoyi.demand.service.IMarDemandService;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.resume.service.IPerCustomerinfoService;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class MarDemandBindingController extends BaseController {
 
     @Autowired
     private IPerCustomerinfoService perCustomerinfoService;
+    @Autowired
+    private ISysUserService userService;
     /**
      * 需求绑定表的查询
      */
@@ -86,6 +89,33 @@ public class MarDemandBindingController extends BaseController {
 
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return marDemandService.demandResumeTrack(marDemandresumefollow,loginUser);
+    }
+    /**
+     *获取入项信息的基本
+     */
+    @PostMapping(value = "/getInputInformation")
+    public AjaxResult getInputInformation(String id){
+        return marDemandService.getInputInformation(id);
+    }
+
+
+
+
+    /**
+     *人员安排入项
+     */
+    @PostMapping(value = "/entryPersonnel")
+    public AjaxResult entryPersonnel(@RequestBody MarCustomerprojectpay marCustomerprojectpay){
+
+        if(StringUtils.isNotEmpty(marCustomerprojectpay.getOpercode())){
+           LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+
+            SysUser user= userService.selectUserByUserName(marCustomerprojectpay.getOpercode());
+          return marDemandService.entryPersonnel(marCustomerprojectpay,user,loginUser);
+        }else{
+            return AjaxResult.error("简历需求绑定人为空");
+        }
+
     }
 
 

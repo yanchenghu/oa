@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.domain.MarDemand;
 import com.ruoyi.demand.domain.MarDemandresumefollow;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,4 +100,12 @@ public interface IMarDemandService
      *需求已绑定简历跟踪
      */
     AjaxResult demandResumeTrack(MarDemandresumefollow marDemandresumefollow, LoginUser loginUser);
+    /**
+     *获取入项信息的基本
+     */
+    AjaxResult getInputInformation(String id);
+    /**
+     *人员安排入项
+     */
+    AjaxResult entryPersonnel(MarCustomerprojectpay marCustomerprojectpay, SysUser user,LoginUser loginUser);
 }

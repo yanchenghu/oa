@@ -68,4 +68,9 @@ public interface MarDemandresumeMapper
      * @return 结果
      */
     Map selectMarDemandresumeByCodeID( Map map);
+
+    /**
+     *根据绑定简历获取入项信息的基本
+     */
+    Map getInputInformation(String id);
 }
