@@ -65,4 +65,8 @@ public interface MarCustomerprojectpayMapper
      * 获取轮播入项信息
      */
     List<Map> selRotation();
+    /**
+     * 人员入项信息列表
+     */
+    List<Map> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay);
 }

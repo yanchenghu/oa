@@ -155,5 +155,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where outof_projecttime is null and quit_proreason is null
         ORDER BY oper_time desc LIMIT 5
     </select>
+
+    <select id="selectentrylistList"  parameterType="MarCustomerprojectpay"  resultType="map">
+       SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
+         a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt
+       from mar_customerprojectpay a
+       LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
+
+    </select>
     
 </mapper>

@@ -89,4 +89,14 @@ public interface PerCustomerinfoMapper
      * 获取我抢占的简历
      */
     List<Map> myRobresume(String username);
+
+    /**
+     * 查询我跟踪的简历 列表
+     */
+    List<Map> selectmytrackresumeList(PerCustomerinfo perCustomerinfo);
+
+    /**
+     * 智能人岗匹配简历信息列表
+     */
+    List<Map> selectPeopostlist(PerCustomerinfo perCustomerinfo);
 }

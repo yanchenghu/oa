@@ -135,6 +135,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </update>
 
-
+    <update id="updatePerRobByStaReCus" parameterType="PerRobcustomer">
+        update per_robcustomer set
+        edit_time = #{editTime}
+        <where>
+            <if test="customerName != null  and customerName != ''"> and customer_name=#{customerName}</if>
+            <if test="customerTel != null  and customerTel != ''"> and customer_tel = #{customerTel}</if>
+            <if test="status != null "> and Status = #{status}</if>
+        </where>
+    </update>
 
 </mapper>

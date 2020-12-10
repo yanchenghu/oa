@@ -51,17 +51,17 @@ public class PerCustomerinfoController extends BaseController
     private IPerProjectService perProjectService;
     @Autowired
     private IPerWorkService perWorkService;
-    /**
-     * 查询简历列表
-     */
-    @PreAuthorize("@ss.hasPermi('resume:record:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(PerCustomerinfo perCustomerinfo)
-    {
-        startPage();
-        List<PerCustomerinfo> list = perCustomerinfoService.selectPerCustomerinfoList(perCustomerinfo);
-        return getDataTable(list);
-    }
+//    /**
+//     * 查询简历列表
+//     */
+//    @PreAuthorize("@ss.hasPermi('resume:record:list')")
+//    @GetMapping("/list")
+//    public TableDataInfo list(PerCustomerinfo perCustomerinfo)
+//    {
+//        startPage();
+//        List<PerCustomerinfo> list = perCustomerinfoService.selectPerCustomerinfoList(perCustomerinfo);
+//        return getDataTable(list);
+//    }
 
     /**
      * 修改简历基本信息

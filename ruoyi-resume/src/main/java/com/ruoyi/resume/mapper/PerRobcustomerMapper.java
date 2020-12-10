@@ -77,4 +77,6 @@ public interface PerRobcustomerMapper
     List<String> selectAllOverrob();
 
     void updatePerRobbylist(List<String> list);
+
+    int updatePerRobByStaReCus(PerRobcustomer perrobcustomer);
 }

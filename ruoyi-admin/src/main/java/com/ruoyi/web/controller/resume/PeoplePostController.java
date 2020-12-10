@@ -8,10 +8,12 @@ import com.ruoyi.resume.service.IPerCustomerinfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 人岗匹配Controller
@@ -29,14 +31,14 @@ public class PeoplePostController extends BaseController {
 
 
     /**
-     * 查询简历列表
+     * 智能人岗匹配简历信息列表
      */
     @PreAuthorize("@ss.hasPermi('resume:peopost:list')")
     @GetMapping("/list")
-    public TableDataInfo list(PerCustomerinfo perCustomerinfo)
+    public TableDataInfo peopostlist( PerCustomerinfo perCustomerinfo)
     {
         startPage();
-        List<PerCustomerinfo> list = perCustomerinfoService.selectPerCustomerinfoList(perCustomerinfo);
+        List<Map> list = perCustomerinfoService.selectPeopostlist(perCustomerinfo);
         return getDataTable(list);
     }
 }

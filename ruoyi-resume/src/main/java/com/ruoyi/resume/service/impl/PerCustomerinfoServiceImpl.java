@@ -706,6 +706,62 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         List<Map> maps = perCustomerinfoMapper.myRobresume(loginUser.getUsername());
         return AjaxResult.success(maps);
     }
+    /**
+     * 查询我跟踪的简历 列表
+     */
+    @Override
+    public List<Map> selectmytrackresumeList(PerCustomerinfo perCustomerinfo, LoginUser loginUser) {
+
+        perCustomerinfo.setOpertCode(loginUser.getUsername());
+        List<Map> maps=perCustomerinfoMapper.selectmytrackresumeList(perCustomerinfo);
+        return maps;
+    }
+    /**
+     * 跟踪的简历
+     */
+    @Override
+    @Transactional
+    public AjaxResult resumeTracking(PerCuscontact perCuscontact, LoginUser loginUser) {
+
+        if(StringUtils.isEmpty(perCuscontact.getContactCustomercode())){
+            return AjaxResult.error("跟进人的Id为空");
+        }
+        PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(perCuscontact.getContactCustomercode());
+        Date date=new Date();
+        perCuscontact.setContacDatecode(SerialNumber.createSerial("shzq", 6));
+        perCuscontact.setContactUsercode(loginUser.getUsername());
+        perCuscontact.setContactTime(date);
+        perCuscontact.setUpdateStatic(2);
+        perCuscontactMapper.insertPerCuscontact(perCuscontact);
+        //添加操作记录
+        ConOperationrecords record = new ConOperationrecords();
+        record.setType(2);
+        record.setDatetime(new Date());
+        record.setRemark("跟踪简历-"+perCustomerinfo.getCustomerName());
+        record.setUserName(loginUser.getUser().getUserName());
+        conOperationrecordsMapper.insertConOperationrecords(record);
+
+        //更新抢占时间
+        PerRobcustomer perrobcustomer=new PerRobcustomer();
+        perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
+        perrobcustomer.setCustomerTel(perCustomerinfo.getCustomerTel());
+        perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
+        perrobcustomer.setStatus(0);
+        //插入简历抢占信息
+        perRobcustomerMapper.updatePerRobByStaReCus(perrobcustomer);
+
+        return AjaxResult.success("跟进成功");
+    }
+    /**
+     * 智能人岗匹配简历信息列表
+     */
+    @Override
+    public List<Map> selectPeopostlist(PerCustomerinfo perCustomerinfo) {
+//   返回未抢占
+
+        List<Map>   infoList =perCustomerinfoMapper.selectPeopostlist(perCustomerinfo);
+        return infoList;
+    }
 
 
 }

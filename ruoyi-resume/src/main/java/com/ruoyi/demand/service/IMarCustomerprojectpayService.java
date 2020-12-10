@@ -1,6 +1,7 @@
 package com.ruoyi.demand.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
@@ -64,4 +65,8 @@ public interface IMarCustomerprojectpayService
      * 获取轮播入项信息
      */
     AjaxResult rotation();
+    /**
+     * 人员入项信息列表
+     */
+    List<Map> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay);
 }

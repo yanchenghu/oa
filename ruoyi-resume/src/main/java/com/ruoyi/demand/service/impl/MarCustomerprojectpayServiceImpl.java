@@ -101,4 +101,12 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         List<Map> sa=  marCustomerprojectpayMapper.selRotation();
         return AjaxResult.success(sa);
     }
+    /**
+     * 人员入项信息列表
+     */
+    @Override
+    public List<Map> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay) {
+
+        return marCustomerprojectpayMapper.selectentrylistList(marCustomerprojectpay);
+    }
 }

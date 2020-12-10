@@ -220,4 +220,35 @@
         where a.Status=0 and a.add_people=#{username}
     </select>
 
+    <select id="selectmytrackresumeList"  parameterType="PerCustomerinfo"  resultType="map">
+     SELECT
+        a.resume_id as customerCode ,
+        a.customer_name as customerName,
+        a.customer_tel as customerTel,
+        DATE_FORMAT( a.edit_time,'%Y-%m-%d %H:%i:%s') as editTime,
+        DATE_FORMAT(  a.add_time,'%Y-%m-%d %H:%i:%s') as addTime
+        FROM
+            per_robcustomer a
+        where a.Status=0 and a.add_people=#{opertCode}
+        <if test="customerName != null and customerName != ''"> and a.customer_name = #{customerName}</if>
+        <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
+    </select>
+
+    <select id="selectPeopostlist"  parameterType="PerCustomerinfo"  resultType="map">
+        SELECT
+        a.customer_code as customerCode,a.customer_name as customerName,a.customer_tel as customerTel,
+        DATE_FORMAT(a.customer_birth,'%Y-%m-%d') as customerBirth  ,a.profession_id as professionId,
+        a.work_year as workYear,a.education,a.customer_university as customerUniversity,
+        a.expectation_salary as expectationSalary,a.intention_area as intentionArea,
+        DATE_FORMAT(a.add_time,'%Y-%m-%d %H:%i:%s') as addTime,a.resume_path as resumePath,b.add_name as addName
+        FROM
+        per_customerinfo a LEFT JOIN
+        (SELECT customer_tel,add_name from  per_robcustomer where  Status=0)  b on a.customer_tel=b.customer_tel
+        where
+         b.add_name is null
+        <if test="professionId != null  and professionId != ''"> and a.profession_id = #{professionId}</if>
+        <if test="workYear != null  and workYear != ''"> and a.work_year = #{workYear}</if>
+        <if test="education != null  and education != ''"> and a.education = #{education}</if>
+        <if test="intentionArea != null  and intentionArea != ''"> and a.intention_area = #{intentionArea}</if>
+    </select>
 </mapper>
