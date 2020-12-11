@@ -9,15 +9,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="marcusId"    column="marcus_id"    />
         <result property="customerCode"    column="customer_code"    />
         <result property="corpName"    column="corp_name"    />
+        <result property="demandId"    column="demand_id"    />
         <result property="syqstartTime"    column="syqstart_time"    />
         <result property="beforeServicepay"    column="before_servicepay"    />
+        <result property="projectName"    column="project_name"    />
         <result property="afterServicepay"    column="after_servicepay"    />
         <result property="adjustTime"    column="adjust_time"    />
         <result property="addTime"    column="add_time"    />
+        <result property="adjustDetail"    column="adjust_detail"    />
     </resultMap>
 
     <sql id="selectMarServicepayVo">
-        select servicepay_id, marcus_id, customer_code, corp_name, syqstart_time, before_servicepay, after_servicepay, adjust_time, add_time from mar_servicepay
+        select servicepay_id, marcus_id, customer_code, corp_name, demand_id, syqstart_time, before_servicepay, project_name, after_servicepay, adjust_time, add_time, adjust_detail from mar_servicepay
     </sql>
 
     <select id="selectMarServicepayList" parameterType="MarServicepay" resultMap="MarServicepayResult">
@@ -26,11 +29,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="marcusId != null  and marcusId != ''"> and marcus_id = #{marcusId}</if>
             <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
             <if test="syqstartTime != null "> and syqstart_time = #{syqstartTime}</if>
             <if test="beforeServicepay != null "> and before_servicepay = #{beforeServicepay}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
             <if test="afterServicepay != null "> and after_servicepay = #{afterServicepay}</if>
             <if test="adjustTime != null "> and adjust_time = #{adjustTime}</if>
             <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="adjustDetail != null  and adjustDetail != ''"> and adjust_detail = #{adjustDetail}</if>
         </where>
     </select>
     
@@ -45,21 +51,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="marcusId != null">marcus_id,</if>
             <if test="customerCode != null">customer_code,</if>
             <if test="corpName != null">corp_name,</if>
+            <if test="demandId != null">demand_id,</if>
             <if test="syqstartTime != null">syqstart_time,</if>
             <if test="beforeServicepay != null">before_servicepay,</if>
+            <if test="projectName != null">project_name,</if>
             <if test="afterServicepay != null">after_servicepay,</if>
             <if test="adjustTime != null">adjust_time,</if>
             <if test="addTime != null">add_time,</if>
+            <if test="adjustDetail != null">adjust_detail,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="marcusId != null">#{marcusId},</if>
             <if test="customerCode != null">#{customerCode},</if>
             <if test="corpName != null">#{corpName},</if>
+            <if test="demandId != null">#{demandId},</if>
             <if test="syqstartTime != null">#{syqstartTime},</if>
             <if test="beforeServicepay != null">#{beforeServicepay},</if>
+            <if test="projectName != null">#{projectName},</if>
             <if test="afterServicepay != null">#{afterServicepay},</if>
             <if test="adjustTime != null">#{adjustTime},</if>
             <if test="addTime != null">#{addTime},</if>
+            <if test="adjustDetail != null">#{adjustDetail},</if>
          </trim>
     </insert>
 
@@ -69,11 +81,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="marcusId != null">marcus_id = #{marcusId},</if>
             <if test="customerCode != null">customer_code = #{customerCode},</if>
             <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="demandId != null">demand_id = #{demandId},</if>
             <if test="syqstartTime != null">syqstart_time = #{syqstartTime},</if>
             <if test="beforeServicepay != null">before_servicepay = #{beforeServicepay},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
             <if test="afterServicepay != null">after_servicepay = #{afterServicepay},</if>
             <if test="adjustTime != null">adjust_time = #{adjustTime},</if>
             <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="adjustDetail != null">adjust_detail = #{adjustDetail},</if>
         </trim>
         where servicepay_id = #{servicepayId}
     </update>

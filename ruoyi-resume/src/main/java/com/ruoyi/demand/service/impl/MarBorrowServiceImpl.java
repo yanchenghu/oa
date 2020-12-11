@@ -1,6 +1,9 @@
 package com.ruoyi.demand.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarBorrowMapper;
@@ -50,9 +53,11 @@ public class MarBorrowServiceImpl implements IMarBorrowService
      * @return 结果
      */
     @Override
-    public int insertMarBorrow(MarBorrow marBorrow)
+    public AjaxResult insertMarBorrow(MarBorrow marBorrow)
     {
-        return marBorrowMapper.insertMarBorrow(marBorrow);
+         marBorrow.setAddTime(new Date());
+         marBorrowMapper.insertMarBorrow(marBorrow);
+         return AjaxResult.success("新增物品成功");
     }
 
     /**
@@ -62,9 +67,10 @@ public class MarBorrowServiceImpl implements IMarBorrowService
      * @return 结果
      */
     @Override
-    public int updateMarBorrow(MarBorrow marBorrow)
+    public AjaxResult updateMarBorrow(MarBorrow marBorrow)
     {
-        return marBorrowMapper.updateMarBorrow(marBorrow);
+        marBorrowMapper.updateMarBorrow(marBorrow);
+        return AjaxResult.success("修改成功");
     }
 
     /**
@@ -90,4 +96,11 @@ public class MarBorrowServiceImpl implements IMarBorrowService
     {
         return marBorrowMapper.deleteMarBorrowById(id);
     }
+
+
+    /**
+     * 归还
+     *
+     */
+
 }

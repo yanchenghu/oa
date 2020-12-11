@@ -1,6 +1,8 @@
 package com.ruoyi.demand.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.demand.domain.MarServicepay;
 
 /**
@@ -33,7 +35,7 @@ public interface IMarServicepayService
      * @param marServicepay 服务费调整记录
      * @return 结果
      */
-    public int insertMarServicepay(MarServicepay marServicepay);
+    public AjaxResult insertMarServicepay(MarServicepay marServicepay);
 
     /**
      * 修改服务费调整记录

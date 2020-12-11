@@ -12,7 +12,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 调整工资记录对象 mar_adsalary
  * 
  * @author ych
- * @date 2020-12-10
+ * @date 2020-12-11
  */
 public class MarAdsalary extends BaseEntity
 {
@@ -38,9 +38,17 @@ public class MarAdsalary extends BaseEntity
     @Excel(name = "入职时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date syqstartTime;
 
+    /** 外派公司项目编号 */
+    @Excel(name = "外派公司项目编号")
+    private String demandId;
+
     /** 调整前工资 */
     @Excel(name = "调整前工资")
     private BigDecimal beforeSalary;
+
+    /** 外派公司项目名称 */
+    @Excel(name = "外派公司项目名称")
+    private String projectName;
 
     /** 调整后工资 */
     @Excel(name = "调整后工资")
@@ -105,6 +113,15 @@ public class MarAdsalary extends BaseEntity
     {
         return syqstartTime;
     }
+    public void setDemandId(String demandId) 
+    {
+        this.demandId = demandId;
+    }
+
+    public String getDemandId() 
+    {
+        return demandId;
+    }
     public void setBeforeSalary(BigDecimal beforeSalary) 
     {
         this.beforeSalary = beforeSalary;
@@ -113,6 +130,15 @@ public class MarAdsalary extends BaseEntity
     public BigDecimal getBeforeSalary() 
     {
         return beforeSalary;
+    }
+    public void setProjectName(String projectName) 
+    {
+        this.projectName = projectName;
+    }
+
+    public String getProjectName() 
+    {
+        return projectName;
     }
     public void setAfterSalary(BigDecimal afterSalary) 
     {
@@ -159,7 +185,9 @@ public class MarAdsalary extends BaseEntity
             .append("customerCode", getCustomerCode())
             .append("corpName", getCorpName())
             .append("syqstartTime", getSyqstartTime())
+            .append("demandId", getDemandId())
             .append("beforeSalary", getBeforeSalary())
+            .append("projectName", getProjectName())
             .append("afterSalary", getAfterSalary())
             .append("adjustTime", getAdjustTime())
             .append("adjustDetail", getAdjustDetail())

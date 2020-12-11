@@ -10,7 +10,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="customerCode"    column="customer_code"    />
         <result property="corpName"    column="corp_name"    />
         <result property="syqstartTime"    column="syqstart_time"    />
+        <result property="demandId"    column="demand_id"    />
         <result property="beforeSalary"    column="before_salary"    />
+        <result property="projectName"    column="project_name"    />
         <result property="afterSalary"    column="after_salary"    />
         <result property="adjustTime"    column="adjust_time"    />
         <result property="adjustDetail"    column="adjust_detail"    />
@@ -18,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMarAdsalaryVo">
-        select salary_id, marcus_id, customer_code, corp_name, syqstart_time, before_salary, after_salary, adjust_time, adjust_detail, add_time from mar_adsalary
+        select salary_id, marcus_id, customer_code, corp_name, syqstart_time, demand_id, before_salary, project_name, after_salary, adjust_time, adjust_detail, add_time from mar_adsalary
     </sql>
 
     <select id="selectMarAdsalaryList" parameterType="MarAdsalary" resultMap="MarAdsalaryResult">
@@ -28,7 +30,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
             <if test="syqstartTime != null "> and syqstart_time = #{syqstartTime}</if>
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
             <if test="beforeSalary != null "> and before_salary = #{beforeSalary}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
             <if test="afterSalary != null "> and after_salary = #{afterSalary}</if>
             <if test="adjustTime != null "> and adjust_time = #{adjustTime}</if>
             <if test="adjustDetail != null  and adjustDetail != ''"> and adjust_detail = #{adjustDetail}</if>
@@ -48,7 +52,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerCode != null">customer_code,</if>
             <if test="corpName != null">corp_name,</if>
             <if test="syqstartTime != null">syqstart_time,</if>
+            <if test="demandId != null">demand_id,</if>
             <if test="beforeSalary != null">before_salary,</if>
+            <if test="projectName != null">project_name,</if>
             <if test="afterSalary != null">after_salary,</if>
             <if test="adjustTime != null">adjust_time,</if>
             <if test="adjustDetail != null">adjust_detail,</if>
@@ -59,7 +65,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerCode != null">#{customerCode},</if>
             <if test="corpName != null">#{corpName},</if>
             <if test="syqstartTime != null">#{syqstartTime},</if>
+            <if test="demandId != null">#{demandId},</if>
             <if test="beforeSalary != null">#{beforeSalary},</if>
+            <if test="projectName != null">#{projectName},</if>
             <if test="afterSalary != null">#{afterSalary},</if>
             <if test="adjustTime != null">#{adjustTime},</if>
             <if test="adjustDetail != null">#{adjustDetail},</if>
@@ -74,7 +82,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerCode != null">customer_code = #{customerCode},</if>
             <if test="corpName != null">corp_name = #{corpName},</if>
             <if test="syqstartTime != null">syqstart_time = #{syqstartTime},</if>
+            <if test="demandId != null">demand_id = #{demandId},</if>
             <if test="beforeSalary != null">before_salary = #{beforeSalary},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
             <if test="afterSalary != null">after_salary = #{afterSalary},</if>
             <if test="adjustTime != null">adjust_time = #{adjustTime},</if>
             <if test="adjustDetail != null">adjust_detail = #{adjustDetail},</if>
