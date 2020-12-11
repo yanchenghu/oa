@@ -424,7 +424,7 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Override
     public AjaxResult getInputInformation(String id) {
        Map map=marDemandresumeMapper.getInputInformation(id);
-       if(map.isEmpty()){
+       if(map==null){
            return AjaxResult.success("未获取入项信息基本信息，请联系管理员");
        }
        return AjaxResult.success(map);
@@ -463,6 +463,16 @@ public class MarDemandServiceImpl implements IMarDemandService
         operationrecords.setDatetime(new Date());
         operationrecords.setUserName(marCustomerprojectpay.getOpercode());
         conOperationrecordsMapper.insertConOperationrecords(operationrecords);
+
+        PerCustomerinfo perCustomeri=perCustomerinfoMapper.selectPerCustomerinfoById(marCustomerprojectpay.getCustomerCode());
+        //入项成功更改个人简历信息
+
+        if (perCustomeri.getJoinStatus()>2){
+            perCustomeri.setJoinStatus(4);
+        }else{
+            perCustomeri.setJoinStatus(2);
+        }
+        perCustomerinfoMapper.updatePerCustomerinfo(perCustomeri);
         //钉钉提醒
         try {
             DingDingJiQi.DingDingd("我是机器人，测试消息勿回，，，喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员");
@@ -473,17 +483,6 @@ public class MarDemandServiceImpl implements IMarDemandService
 
 
 
-
-        PerCustomerinfo perCustomeri=perCustomerinfoMapper.selectPerCustomerinfoById(marCustomerprojectpay.getCustomerCode());
-        //入项成功更改个人简历信息
-        PerCustomerinfo perCustomer=new PerCustomerinfo();
-        perCustomer.setCustomerCode(marCustomerprojectpay.getCustomerCode());
-        if (perCustomer.getJoinStatus()>2){
-            perCustomer.setJoinStatus(4);
-        }else{
-            perCustomer.setJoinStatus(2);
-        }
-        perCustomerinfoMapper.updatePerCustomerinfo(perCustomer);
         return AjaxResult.success("入项成功");
     }
 

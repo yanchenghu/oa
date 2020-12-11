@@ -27,6 +27,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
+    <resultMap  type="MarCustomePerinfo" id="MarCusPerInfo">
+        <result property="customerName" column="customer_name" />
+        <result property="customerTel" column="customer_tel" />
+        <result  property="marCustomerprojectpay.id" column="id"/>
+        <result  property="marCustomerprojectpay.corpName" column="corp_name"/>
+        <result  property="marCustomerprojectpay.projectName" column="project_name"/>
+        <result  property="marCustomerprojectpay.syqstartTime"     column="syqstart_time"/>
+        <result  property="marCustomerprojectpay.outofProjecttime" column="outof_projecttime"/>
+        <result  property="marCustomerprojectpay.servicePay" column="service_pay"/>
+        <result  property="marCustomerprojectpay.salary"   column="salary"/>
+        <result  property="marCustomerprojectpay.socSecopt" column="soc_secopt"/>
+    </resultMap>
+
     <sql id="selectMarCustomerprojectpayVo">
         select id, customer_code, corp_code, corp_name, demand_id, project_name, start_time, end_time, settled_cycle, salary, service_pay, outof_projecttime, quit_proreason, quit_remark, opercode, oper_time, syqstart_time, syq_endtime, soc_secopt, remark from mar_customerprojectpay
     </sql>
@@ -156,12 +169,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY oper_time desc LIMIT 5
     </select>
 
-    <select id="selectentrylistList"  parameterType="MarCustomerprojectpay"  resultType="map">
+    <select id="selectentrylistList"  parameterType="MarCustomerprojectpay"  resultMap="MarCusPerInfo">
        SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
          a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt
        from mar_customerprojectpay a
        LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
-
+        <where>
+            <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <choose>
+                <when test="settledCycle == 1">
+                    <if test="startTime != null and endTime != null">
+                        and syqstart_time between #{startTime} and #{endTime}
+                    </if>
+                    <if test="startTime == null and endTime == null">
+                        and outof_projecttime is  null
+                    </if>
+                </when>
+                <when test="settledCycle == 2">
+                    <if test="startTime != null and endTime != null">
+                        and outof_projecttime between #{startTime} and #{endTime}
+                    </if>
+                    <if test="startTime == null and endTime == null">
+                        and outof_projecttime is not null
+                    </if>
+                </when>
+            </choose>
+        </where>
+    </select>
+    <select id="selectMarCustomePerinfoById"  parameterType="String"  resultType="map">
+    SELECT a.id,b.customer_name as customerName,b.customer_tel as customerTel,a.corp_name as corpName,
+    a.project_name as projectName,a.syqstart_time as syqstartTime,
+    a.outof_projecttime as outofProjecttime,a.service_pay as service_Pay,a.salary,a.soc_secopt as socSecopt
+    from mar_customerprojectpay a
+    LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
+    where a.id=#{id}
     </select>
     
 </mapper>
