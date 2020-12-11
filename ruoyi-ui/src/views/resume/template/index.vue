@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" @submit.native.prevent>
       <el-form-item label="" prop="templateName">
         <el-input
           v-model="queryParams.templateName"
@@ -12,7 +12,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery"></el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
       </el-form-item>
     </el-form>
 
@@ -29,24 +29,14 @@
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-
-
-
-    <el-row>
-      <el-col  :span="7" v-for="temp in templateList" style="margin-right: 10px;margin-bottom: 10px">
-        <el-card shadow="hover" >
-          <div style="display: flex;position: relative;font-size: 10px;line-height: 20px">
-            <el-avatar style="background: rgb(1,128,255)"> {{temp.templateName}} </el-avatar>
-
-            <div style="margin-left: 10px">
+    <ul class="ul">
+      <li v-for="temp in templateList" class="li">
+           <el-card shadow="hover">
+             <el-avatar style="background: rgb(1,128,255);margin-bottom: 10px;"> {{temp.templateName}} </el-avatar>
               <div>
-                {{temp.templateName}}
+                <span>{{temp.templateName}}</span>
+                <p class="time">{{temp.company}}-{{temp.technicalDirection}}-{{temp.workingYears}}年-{{temp.name}}</p>
               </div>
-              <div>
-                {{temp.company}}-{{temp.technicalDirection}}-{{temp.workingYears}}年-{{temp.name}}
-              </div>
-            </div >
-            <div style="position: absolute;right: -15px;line-height: 50px;">
               <el-button
                 type="primary"
                 size="mini"
@@ -60,14 +50,9 @@
                 @click="download(temp)"
                 v-hasPermi="['resume:template:download']"
               >下载</el-button>
-            </div>
-
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-
-
+           </el-card>
+      </li>
+    </ul>
     <el-dialog title="预览" :visible.sync="open" width="70%"  >
       <iframe
         :src="'https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost/dev-api/'+drees"
@@ -293,6 +278,22 @@ export default {
   }
 };
 </script>
-<style>
-
+<style scoped>
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
+  .ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .li{
+    width: 250px;
+    margin-right: 20px;
+    margin-top: 20px;
+    text-align: center;
+  }
 </style>

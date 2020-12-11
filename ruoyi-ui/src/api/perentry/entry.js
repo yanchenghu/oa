@@ -12,7 +12,7 @@ export function listEntry(query) {
 // 查询入项详细
 export function getEntry(id) {
   return request({
-    url: '/perentry/entry/' + id,
+    url: '/perentry/entry/entryinfor/' + id,
     method: 'get'
   })
 }

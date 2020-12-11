@@ -161,19 +161,28 @@
             <p></p>
 
             <div v-if="followstart==4||followstart==6||followstart==8">
-              <el-col :span="5">
-                <span>
-                  未通过原因：
-                </span>
-              </el-col>
-              <el-col :span="14">
-                <el-input
-                  type="textarea"
-                  autosize
-                  placeholder="请输入原因"
-                  v-model="textarea1">
-                </el-input>
-              </el-col>
+
+
+                <el-form label-width="100px" :model="qqq" ref="ruxing">
+                  <el-form-item v-if="followstart==8"
+                    :rules="[{ required: true, message: '请输入原因', trigger: 'blur' },]"
+                    prop="textarea1" label="未通过原因">
+                    <el-input
+                      type="textarea"
+                      autosize
+                      placeholder="请输入原因"
+                      v-model="qqq.textarea1">
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item v-else prop="textarea1" label="未通过原因">
+                    <el-input
+                      type="textarea"
+                      autosize
+                      placeholder="请输入原因"
+                      v-model="qqq.textarea1">
+                    </el-input>
+                  </el-form-item>
+                </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click="open=false">取 消</el-button>
@@ -280,7 +289,9 @@
         // 入项信息
         comform:{},
         // 未通过原因
-        textarea1:"",
+        qqq:{
+          textarea1:""
+        },
         // 定时器
         timer:null,
         loading2:false,
@@ -503,8 +514,9 @@
         let form =new FormData()
         form.append("followStatus",this.followstart)
         form.append("demandresumeId",this.tempID)
-        form.append("id",this.tempID)
+        form.append("followDetail",this.qqq.textarea1)
         if(this.followstart==7){
+          form.append("id",this.tempID)
           this.getDicts("mar_company_period").then(response => {
             this.companyperiod = response.data;
           });
@@ -515,25 +527,51 @@
           })
         }else{
           let that = this
-          this.$confirm('确认"'+that.title+'"结果为"'+ that.list[that.followstart] + '"吗?', "警告", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
-          }).then(function() {
-            return submitstart(form).then(res=>{
-            })
-          }).then(() => {
-            this.msgSuccess("操作成功");
-            this.templists=[]
-            this.gettelist()
-            this.open=false
-          })
+          if(this.followstart==8){
+            this.$refs["ruxing"].validate((valid) => {
+                if(valid){
+                  this.$confirm('确认"'+that.title+'"结果为"'+ that.list[that.followstart] + '"吗?', "警告", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                  }).then(function() {
+                    return submitstart(form).then(res=>{
+                    })
+                  }).then(() => {
+                    this.msgSuccess("操作成功");
+                    this.templists=[]
+                    this.gettelist()
+                    this.open=false
+                  }).catch(()=>{})
+                }
+              })
+          }else{
+            this.$confirm('确认"'+that.title+'"结果为"'+ that.list[that.followstart] + '"吗?', "警告", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(function() {
+              return submitstart(form).then(res=>{
+              })
+            }).then(() => {
+              this.msgSuccess("操作成功");
+              this.templists=[]
+              this.gettelist()
+              this.open=false
+            }).catch(()=>{})
+          }
+
+
+
+
+
+
         }
       },
       // 确定
       submitForm2(){
         this.comform.id=this.tempID
-        this.$refs[comform].validate((valid) => {
+        this.$refs["comform"].validate((valid) => {
           if (valid) {
             let that = this
             this.$confirm('确认信息完整并入项吗?', "警告", {
@@ -548,7 +586,7 @@
               this.gettelist()
               this.open4=false
               this.open=false
-            })
+            }).catch(()=>{})
           }
         });
       },

@@ -1,8 +1,8 @@
 <template>
   <div>
-      <el-carousel :interval="4000" arrow="nerver">
+      <el-carousel :interval="5000" arrow="nerver">
             <el-carousel-item v-for="item,i in swiperList" :key="i">
-               <h3 class="medium">恭喜 {{item.nick_name}} 成功入项 {{item.corp_name}}  {{item.project_name}} 项目</h3>
+               <h3 class="medium">喜报：恭喜 {{item.nick_name}} 今日入项1人 ({{item.customer_name}} 入职 {{item.project_name}} 项目 )  </h3>
              </el-carousel-item>
       </el-carousel>
   </div>
@@ -35,11 +35,11 @@ export default {
 <style lang="scss" scoped>
 
   .el-carousel{
-    width: 300px;
+    width: 400px;
     float: left;
     margin-left: 50%;
     position:absolute;
-    left:-100px;
+    left:-200px;
     .el-carousel__item{
       text-align: center;
     }

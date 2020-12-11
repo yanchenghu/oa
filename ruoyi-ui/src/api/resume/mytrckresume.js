@@ -16,4 +16,11 @@ export function genzongbut(data) {
     data: data
   })
 }
-
+// 释放简历
+export function delRecord(data) {
+  return request({
+    url: '/resume/record/release',
+    method: 'post',
+    data:data
+  })
+}

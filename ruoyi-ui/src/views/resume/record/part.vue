@@ -200,7 +200,8 @@
 <script>
   import {
     getRecord,
-    addRecord
+    addRecord,
+    delRecord,
   } from "@/api/resume/record/customerinfo";
   import{genzongbut}from'@/api/resume/mytrckresume.js'
   import store from "@/store";
@@ -326,7 +327,7 @@
         if (val==0) {
           // 抢占简历
           var formData = new FormData()
-          formData.append("customerCode",this.$route.query.customerCode)
+          formData.append("customerCode",this.perCustomerinfo.customerCode)
           addRecord(formData).then(
           this.msgSuccess("抢占成功"),
           this.getcustomerCode()
@@ -362,15 +363,21 @@
             // util.friendlyDate(new Date(time))
         }else if(val==5){
           // 释放简历
+          var formData = new FormData()
+          formData.append("customerCode",this.perCustomerinfo.customerCode)
+
           this.$confirm('是否确认释放简历编号为"' + this.$route.query.customerCode + '"的数据项?', "警告", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
               type: "warning"
             }).then(function() {
-              return delRecord(this.$route.query.customerCode);
+              return delRecord(formData);
             }).then(() => {
-              this.getList();
-              this.msgSuccess("删除成功");
+              this.button[3].disabled = true
+              this.button[4].disabled = true
+              this.button[5].disabled = true
+              this.getcustomerCode()
+              this.msgSuccess("释放成功");
             })
         }
       },
@@ -380,6 +387,7 @@
             genzongbut(this.form).then(res=>{
               this.msgSuccess("操作成功");
               this.open2 = false;
+              
               this.getcustomerCode();
             })
           }

@@ -44,6 +44,12 @@
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
             >跟踪</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="shifangbut(scope.row)"
+            >放弃</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -75,7 +81,7 @@
 </template>
 
 <script>
-  import{gettemplist,genzongbut}from'@/api/resume/mytrckresume.js'
+  import{gettemplist,genzongbut,delRecord}from'@/api/resume/mytrckresume.js'
   export default {
     name: "Yxdemand",
     data() {
@@ -143,6 +149,22 @@
          this.open = false;
          this.form = {}
       },
+      
+      shifangbut(row){
+        var formData = new FormData()
+        formData.append("customerCode",row.customerCode)
+        
+        this.$confirm('是否确认释放简历编号为"' + row.customerCode + '"的数据项?', "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(function() {
+            return delRecord(formData);
+          }).then(() => {           
+            this.getlist()
+            this.msgSuccess("释放成功");
+          })
+      }
 
     }
   }

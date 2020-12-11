@@ -642,7 +642,6 @@ import {debounce} from "@/utils/ruoyi.js"
         this.single=value.raw;
       },
       handlePictureCardPreview(file){
-        console.log(file)
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
@@ -738,7 +737,6 @@ import {debounce} from "@/utils/ruoyi.js"
         formData.append("demandPic",this.single)
         this.$refs["forms"].validate(valid => {
           if (valid) {
-           console.log(this.form.demandId)
             if (this.form.demandId != null) {
               updateFollow(formData).then(response => {
                 this.msgSuccess("修改成功");
@@ -781,7 +779,7 @@ import {debounce} from "@/utils/ruoyi.js"
           return exportFollow(queryParams);
         }).then(response => {
           this.download(response.msg);
-        })
+        }).catch(()=>{})
       }
     }
   };

@@ -1,199 +1,48 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="客户编号" prop="customerCode">
+      <el-form-item  prop="customerCode">
         <el-input
           v-model="queryParams.customerCode"
-          placeholder="请输入客户编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="外派公司编号" prop="corpCode">
-        <el-input
-          v-model="queryParams.corpCode"
-          placeholder="请输入外派公司编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="外派公司名称" prop="corpName">
-        <el-input
-          v-model="queryParams.corpName"
-          placeholder="请输入外派公司名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="外派公司项目编号" prop="demandId">
-        <el-input
-          v-model="queryParams.demandId"
-          placeholder="请输入外派公司项目编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="外派公司项目名称" prop="projectName">
-        <el-input
-          v-model="queryParams.projectName"
-          placeholder="请输入外派公司项目名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="开始日期" prop="startTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.startTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择开始日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="结束日期" prop="endTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.endTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择结束日期">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="结算周期" prop="settledCycle">
-        <el-input
-          v-model="queryParams.settledCycle"
-          placeholder="请输入结算周期"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="工资" prop="salary">
-        <el-input
-          v-model="queryParams.salary"
-          placeholder="请输入工资"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="服务费用" prop="servicePay">
-        <el-input
-          v-model="queryParams.servicePay"
-          placeholder="请输入服务费用"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="出项时间" prop="outofProjecttime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.outofProjecttime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择出项时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="离项原因" prop="quitProreason">
-        <el-input
-          v-model="queryParams.quitProreason"
-          placeholder="请输入离项原因"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="离项备注" prop="quitRemark">
-        <el-input
-          v-model="queryParams.quitRemark"
-          placeholder="请输入离项备注"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="操作人编号" prop="opercode">
-        <el-input
-          v-model="queryParams.opercode"
-          placeholder="请输入操作人编号"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="操作时间" prop="operTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.operTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择操作时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="入职时间" prop="syqstartTime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.syqstartTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择入职时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="转正时间" prop="syqEndtime">
-        <el-date-picker clearable size="small" style="width: 200px"
-          v-model="queryParams.syqEndtime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="选择转正时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="社保选项(1、交2、否)" prop="socSecopt">
-        <el-input
-          v-model="queryParams.socSecopt"
-          placeholder="请输入社保选项(1、交2、否)"
+          placeholder="请输入姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
       </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['perentry:entry:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['perentry:entry:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['perentry:entry:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      <el-form-item  prop="startTime">
+        <el-date-picker
+            v-model="value1"
+            type="daterange"
+            size="small"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            @change="handleQuery">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item  prop="corpName">
+        <el-select v-model="queryParams.corpName" clearable placeholder="请选择客户" size="small" @change="handleQuery">
+          <el-option
+              v-for="dict in entryList"
+              :key="dict.marCustomerprojectpay.id"
+              :label="dict.marCustomerprojectpay.corpName"
+              :value="dict.marCustomerprojectpay.corpName"
+            />
+        </el-select>
+      </el-form-item>
+      <el-form-item  prop="settledCycle">
+        <el-select v-model="queryParams.settledCycle"  placeholder="是否在项" size="small" @change="handleQuery">
+          <el-option label="入项" :value="1" />
+          <el-option label="出项" :value="2" />
+        </el-select>
+      </el-form-item>
+      <el-form-item style="float: right;">
         <el-button
           type="warning"
           icon="el-icon-download"
@@ -201,76 +50,62 @@
           @click="handleExport"
           v-hasPermi="['perentry:entry:export']"
         >导出</el-button>
-      </el-col>
-	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+    <!-- 表格 -->
+    <el-table v-loading="loading" :data="entryList" @selection-change="handleSelectionChange" style="width: 100%;">
+      <el-table-column type="selection" width="55"  />
+      <el-table-column label="姓名"  prop="customerName" />
+      <el-table-column label="电话"  prop="customerTel" />
 
-    <el-table v-loading="loading" :data="entryList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="社保选项(1、交2、否)" align="center" prop="id" />
-      <el-table-column label="客户编号" align="center" prop="customerCode" />
-      <el-table-column label="外派公司编号" align="center" prop="corpCode" />
-      <el-table-column label="外派公司名称" align="center" prop="corpName" />
-      <el-table-column label="外派公司项目编号" align="center" prop="demandId" />
-      <el-table-column label="外派公司项目名称" align="center" prop="projectName" />
-      <el-table-column label="开始日期" align="center" prop="startTime" width="180">
+      <el-table-column label="入职公司"  >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.marCustomerprojectpay.corpName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="结束日期" align="center" prop="endTime" width="180">
+      <el-table-column label="入职时间"  prop="syqstartTime" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.marCustomerprojectpay.syqstartTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="结算周期" align="center" prop="settledCycle" />
-      <el-table-column label="工资" align="center" prop="salary" />
-      <el-table-column label="服务费用" align="center" prop="servicePay" />
-      <el-table-column label="出项时间" align="center" prop="outofProjecttime" width="180">
+      <el-table-column label="出项时间"  prop="outofProjecttime" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.outofProjecttime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.marCustomerprojectpay.outofProjecttime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="离项原因" align="center" prop="quitProreason" />
-      <el-table-column label="离项备注" align="center" prop="quitRemark" />
-      <el-table-column label="操作人编号" align="center" prop="opercode" />
-      <el-table-column label="操作时间" align="center" prop="operTime" width="180">
+
+      <el-table-column label="工资">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.operTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.marCustomerprojectpay.salary }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="入职时间" align="center" prop="syqstartTime" width="180">
+      <el-table-column label="服务费用">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.syqstartTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.marCustomerprojectpay.servicePay }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="转正时间" align="center" prop="syqEndtime" width="180">
+      <el-table-column label="是否缴纳社保"  prop="socSecopt">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.syqEndtime, '{y}-{m}-{d}') }}</span>
+          <span>{{scope.row.marCustomerprojectpay.socSecopt==1?"是":"否"}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="社保选项(1、交2、否)" align="center" prop="socSecopt" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="是否签署合同"  prop="socSecopt">
+        <template slot-scope="scope">
+          <span>{{scope.row.socSecopt==1?"是":"否"}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="100" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['perentry:entry:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['perentry:entry:remove']"
-          >删除</el-button>
+          >添加人员信息</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
     <pagination
       v-show="total>0"
       :total="total"
@@ -278,7 +113,228 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+    <!-- 抽屉 -->
+    <el-drawer
+      title="信息"
+      :visible.sync="drawer"
+      :with-header="false"
+      size="60%"
+      @close="dra"
+      >
+      <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
+      <div style=" padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
+        <div>
+          <b>
+            {{yxdemandone.customerName}}
+          </b>
+        </div>
+         <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
+           <el-form-item label="当前状态">
+             <el-input  :placeholder="yxdemandone.outofProjecttime==null?'出项':'在项'"  disabled size="small"></el-input>
+           </el-form-item>
+           <el-form-item  label="入职公司">
+             <el-input  v-model="yxdemandone.corpName" disabled size="small"></el-input>
+           </el-form-item>
+          <el-form-item style="margin-left: 40px;">
+            <el-button
+            type="danger"
+            @click="handleDelete"
+            size="medium"
+            >
+              出项
+            </el-button>
+          </el-form-item>
+         </el-form>
+      </div>
+      <div>
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="联系人信息" name="popmsg">
+               <div style="display: flex; justify-content: space-around;">
+                 <el-form label-position="right" label-width="80px" :model="yxdemandone" :rules="rules">
+                    <b>联系人信息</b>
+                    <p></p>
+                    <el-form-item label="姓名" prop="contactPeople">
+                      <span>{{yxdemandone.customerName}}</span>
+                    </el-form-item>
+                    <el-form-item label="电话" prop="contactPosition">
+                      <el-input  v-model="yxdemandone.contactPosition" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="电话" prop="contactPhone">
+                      <el-input  v-model="yxdemandone.contactPhone"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱" prop="mailbox">
+                      <el-input  v-model="yxdemandone.mailbox" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="微信">
+                      <el-input  v-model="yxdemandone.wechat" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="QQ">
+                      <el-input  v-model="yxdemandone.qq" ></el-input>
+                    </el-form-item>
+                 </el-form>
+                 <el-form label-position="right" label-width="100px" :model="yxdemandone">
+                   <b>外包公司信息</b>
+                   <p></p>
+                    <el-form-item label="身份证">
+                      <el-button type="text" @click="upfile(1)">
+                          点击上传
+                      </el-button>
+                      <el-button type="text" @click="seefile(1)">
+                          点击预览
+                      </el-button>
+                    </el-form-item>
+                    <el-form-item label="毕业证">
+                      <el-button type="text" @click="upfile(2)">
+                          点击上传
+                      </el-button>
+                      <el-button type="text" @click="seefile(2)">
+                          点击预览
+                      </el-button>
+                    </el-form-item>
+                    <el-form-item label="学位证">
+                      <el-button type="text" @click="upfile(3)">
+                          点击上传
+                      </el-button>
+                      <el-button type="text" @click="seefile(3)">
+                          点击预览
+                      </el-button>
+                    </el-form-item>
+                    <el-form-item label="保密协议">
+                      <el-button type="text" @click="upfile(4)">
+                          点击上传
+                      </el-button>
+                      <el-button type="text" @click="seefile(4)">
+                          点击预览
+                      </el-button>
+                    </el-form-item>
+                    <el-form-item label="劳动合同">
+                      <el-button type="text" @click="upfile(5)">
+                          点击上传
+                      </el-button>
+                      <el-button type="text" @click="seefile(5)">
+                          点击预览
+                      </el-button>
+                    </el-form-item>
+                 </el-form>
+               </div>
+            </el-tab-pane>
+            <el-tab-pane label="借用合同">
+              <el-button type="primary" @click="handAdd">新建借用记录</el-button>
+              <p></p>
+              <el-table v-loading="loadings" :data="contractlist">
+                <el-table-column label="时间" align="center" prop="startTime" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="物品" align="left" prop="firstParty" width="160"/>
+                <el-table-column label="型号" align="left" prop="party"/>
 
+                <el-table-column label="是否签署协议" align="center" prop="endTime" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="归还日期" align="center" prop="cooperationTime" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.cooperationTime, '{y}-{m}-{d}') }}</span>
+                  </template>
+                </el-table-column>
+
+                <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+                  <template slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      type="text"
+                      @click="preview(scope.row)"
+                    >归还</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+            <el-tab-pane label="入项记录">
+
+              <el-table v-loading="loadings" :data="contractlist">
+                <el-table-column label="入项公司" align="left" prop="firstParty" width="100"/>
+                <el-table-column label="入职项目" align="left" prop="firstParty" width="100"/>
+                <el-table-column label="入职日期" align="center" prop="startTime" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="出项日期" align="center" prop="startTime" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="物品" align="left" prop="firstParty" width="160"/>
+                <el-table-column label="型号" align="left" prop="party"/>
+
+                <el-table-column label="是否签署协议" align="center" prop="endTime" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="归还日期" align="center" prop="cooperationTime" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ parseTime(scope.row.cooperationTime, '{y}-{m}-{d}') }}</span>
+                  </template>
+                </el-table-column>
+
+                <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+                  <template slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      type="text"
+                      @click="preview(scope.row)"
+                    >归还</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-tab-pane>
+          </el-tabs>
+       </div>
+      </div>
+    </el-drawer>
+    <el-dialog :title="title2" :visible.sync="open2" width="500px">
+      <el-upload
+        :action="url"
+        list-type="picture-card"
+        :auto-upload="false"
+        ref="file"
+        :headers="headers"
+        :limit="1"
+        :on-exceed="handleExceed"
+        :on-success="handleFileSuccess"
+        accept=".png,.jpg,"
+        >
+        <div slot="tip" class="el-upload__tip">仅支持上传jpg/png文件</div>
+          <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}">
+            <img
+              class="el-upload-list__item-thumbnail"
+              :src="file.url" alt=""
+            >
+            <span class="el-upload-list__item-actions">
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm2">确 定</el-button>
+        <el-button @click="open2=false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
     <!-- 添加或修改入项对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -375,16 +431,43 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
   </div>
 </template>
 
 <script>
 import { listEntry, getEntry, delEntry, addEntry, updateEntry, exportEntry } from "@/api/perentry/entry";
-
+import { getToken } from "@/utils/auth";
 export default {
   name: "Entry",
   data() {
     return {
+      disabled: false,
+      name:"",
+      loadings:false,
+      activeName:"popmsg",
+      // 服务费记录
+      marServicepays:[],
+      // 工资记录
+      marAdsalaries:[],
+      // 入项信息
+      Listmarcustomerp:[],
+      // 借用物品
+      contractlist:[],
+      // 证件照
+      marCertificates1:{},
+      // 入项基本信息
+      yxdemandone:{},
+      url: process.env.VUE_APP_BASE_API + "/system/user/importData",
+      headers: { Authorization: "Bearer " + getToken()},
+      dialogVisible:false,
+      // 查看照片路径
+      dialogImageUrl:"",
+      // 抽屉
+      drawer:false,
+      // 时间
+      value1:"",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -401,37 +484,38 @@ export default {
       entryList: [],
       // 弹出层标题
       title: "",
+      // 上传简历
+      open2:false,
+      title2:"",
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        customerCode: null,
-        corpCode: null,
-        corpName: null,
-        demandId: null,
-        projectName: null,
-        startTime: null,
+        customerCode:null,
         endTime: null,
-        settledCycle: null,
-        salary: null,
-        servicePay: null,
-        outofProjecttime: null,
-        quitProreason: null,
-        quitRemark: null,
-        opercode: null,
-        operTime: null,
-        syqstartTime: null,
-        syqEndtime: null,
-        socSecopt: null,
+        startTime: null,
+        corpName: null,
+        settledCycle:null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+
+
       }
     };
+  },
+  watch:{
+    "value1.length":{
+      handler(newValue, oldValue) {
+        if (newValue>1) {
+            this.queryParams.settledCycle=1
+        }
+      }
+    }
   },
   created() {
     this.getList();
@@ -439,6 +523,8 @@ export default {
   methods: {
     /** 查询入项列表 */
     getList() {
+      this.queryParams.startTime = this.value1[0]
+      this.queryParams.endTime = this.value1[1]
       this.loading = true;
       listEntry(this.queryParams).then(response => {
         this.entryList = response.rows;
@@ -482,9 +568,13 @@ export default {
       this.queryParams.pageNum = 1;
       this.getList();
     },
+    dra(){
+      this.getList()
+    },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.value1 = ""
       this.handleQuery();
     },
     // 多选框选中数据
@@ -493,20 +583,66 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.open2 = false;
+      this.$refs.file.clearFiles();
+    },
+    handleExceed(){
+      this.msgError(`当前限制选择 1 个文件`);
+    },
+    handleRemove(file) {
+        this.$refs.file.clearFiles()
+    },
+    submitForm2(){
+      this.$refs.file.submit();
+    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
       this.title = "添加入项";
     },
-    /** 修改按钮操作 */
+    handAdd(){},
+    // 上传文件
+    upfile(ind){
+      if(ind==1){
+        // 上传身份证
+        this.title2 = "上传身份证"
+      }else if(ind==2){
+        // 上传毕业证
+        this.title2 = "上传毕业证"
+      }else if(ind==3){
+        // 上传学位证
+        this.title2 = "上传学位证"
+      }else if(ind==4){
+        // 上传保密协议
+        this.title2 = "上传保密协议"
+      }else if(ind==5){
+        // 上传劳动合同
+        this.title2 = "上传劳动合同"
+      }
+      this.open2 = true
+    },
+
+    // 预览文件
+    seefile(){
+
+    },
+
+    /** 添加人员信息按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const id = row.id || this.ids
+      const id = row.marCustomerprojectpay.id
       getEntry(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改入项";
+        this.yxdemandone = response.data.marprojectpay
+        this.marAdsalaries = response.data.marAdsalaries
+        this.marBorrows = response.data.marBorrows
+        this.marCertificates1 = response.data.marCertificates1
+        this.marServicepays = response.data.marServicepays
+        this.Listmarcustomerp = response.data.Listmarcustomerp
+        this.drawer=true
+
+
       });
     },
     /** 提交按钮 */
@@ -529,7 +665,7 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
+    /** 出项按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$confirm('是否确认删除入项编号为"' + ids + '"的数据项?', "警告", {
@@ -559,3 +695,26 @@ export default {
   }
 };
 </script>
+<style>
+  .el-tabs__item:focus.is-active.is-focus:not(:active) {
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+  }
+    .el-tabs__header{
+      background: #F5F5F9;
+      padding-left:5%;
+    }
+    .el-tabs__content{
+      padding:20px 3% 0 3%;
+    }
+     .el-drawer.rtl{
+          overflow: auto;
+      }
+      .span{
+        color: #2C2C2C;
+      }
+      .sp{
+        font-size: 11px;
+        color: #8A8A8A;
+      }
+</style>
