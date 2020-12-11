@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarCertificatesMapper">
+    
+    <resultMap type="MarCertificates" id="MarCertificatesResult">
+        <result property="id"    column="id"    />
+        <result property="marcusId"    column="marcus_id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="idcardPositive"    column="idcard_positive"    />
+        <result property="idcardReverse"    column="idcard_reverse"    />
+        <result property="academic"    column="academic"    />
+        <result property="confidentialityAgreement"    column="confidentiality_agreement"    />
+        <result property="serviceContract"    column="service_contract"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarCertificatesVo">
+        select id, marcus_id, customer_code, idcard_positive, idcard_reverse, academic, confidentiality_agreement, service_contract, add_time from mar_certificates
+    </sql>
+
+    <select id="selectMarCertificatesList" parameterType="MarCertificates" resultMap="MarCertificatesResult">
+        <include refid="selectMarCertificatesVo"/>
+        <where>  
+            <if test="marcusId != null  and marcusId != ''"> and marcus_id = #{marcusId}</if>
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="idcardPositive != null  and idcardPositive != ''"> and idcard_positive = #{idcardPositive}</if>
+            <if test="idcardReverse != null  and idcardReverse != ''"> and idcard_reverse = #{idcardReverse}</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="confidentialityAgreement != null  and confidentialityAgreement != ''"> and confidentiality_agreement = #{confidentialityAgreement}</if>
+            <if test="serviceContract != null  and serviceContract != ''"> and service_contract = #{serviceContract}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarCertificatesById" parameterType="Integer" resultMap="MarCertificatesResult">
+        <include refid="selectMarCertificatesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarCertificates" parameterType="MarCertificates" useGeneratedKeys="true" keyProperty="id">
+        insert into mar_certificates
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id,</if>
+            <if test="customerCode != null">customer_code,</if>
+            <if test="idcardPositive != null">idcard_positive,</if>
+            <if test="idcardReverse != null">idcard_reverse,</if>
+            <if test="academic != null">academic,</if>
+            <if test="confidentialityAgreement != null">confidentiality_agreement,</if>
+            <if test="serviceContract != null">service_contract,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">#{marcusId},</if>
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="idcardPositive != null">#{idcardPositive},</if>
+            <if test="idcardReverse != null">#{idcardReverse},</if>
+            <if test="academic != null">#{academic},</if>
+            <if test="confidentialityAgreement != null">#{confidentialityAgreement},</if>
+            <if test="serviceContract != null">#{serviceContract},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarCertificates" parameterType="MarCertificates">
+        update mar_certificates
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id = #{marcusId},</if>
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="idcardPositive != null">idcard_positive = #{idcardPositive},</if>
+            <if test="idcardReverse != null">idcard_reverse = #{idcardReverse},</if>
+            <if test="academic != null">academic = #{academic},</if>
+            <if test="confidentialityAgreement != null">confidentiality_agreement = #{confidentialityAgreement},</if>
+            <if test="serviceContract != null">service_contract = #{serviceContract},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarCertificatesById" parameterType="Integer">
+        delete from mar_certificates where id = #{id}
+    </delete>
+
+    <delete id="deleteMarCertificatesByIds" parameterType="String">
+        delete from mar_certificates where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

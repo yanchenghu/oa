@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarAdsalaryMapper">
+    
+    <resultMap type="MarAdsalary" id="MarAdsalaryResult">
+        <result property="salaryId"    column="salary_id"    />
+        <result property="marcusId"    column="marcus_id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="corpName"    column="corp_name"    />
+        <result property="syqstartTime"    column="syqstart_time"    />
+        <result property="beforeSalary"    column="before_salary"    />
+        <result property="afterSalary"    column="after_salary"    />
+        <result property="adjustTime"    column="adjust_time"    />
+        <result property="adjustDetail"    column="adjust_detail"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarAdsalaryVo">
+        select salary_id, marcus_id, customer_code, corp_name, syqstart_time, before_salary, after_salary, adjust_time, adjust_detail, add_time from mar_adsalary
+    </sql>
+
+    <select id="selectMarAdsalaryList" parameterType="MarAdsalary" resultMap="MarAdsalaryResult">
+        <include refid="selectMarAdsalaryVo"/>
+        <where>  
+            <if test="marcusId != null  and marcusId != ''"> and marcus_id = #{marcusId}</if>
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="syqstartTime != null "> and syqstart_time = #{syqstartTime}</if>
+            <if test="beforeSalary != null "> and before_salary = #{beforeSalary}</if>
+            <if test="afterSalary != null "> and after_salary = #{afterSalary}</if>
+            <if test="adjustTime != null "> and adjust_time = #{adjustTime}</if>
+            <if test="adjustDetail != null  and adjustDetail != ''"> and adjust_detail = #{adjustDetail}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarAdsalaryById" parameterType="Integer" resultMap="MarAdsalaryResult">
+        <include refid="selectMarAdsalaryVo"/>
+        where salary_id = #{salaryId}
+    </select>
+        
+    <insert id="insertMarAdsalary" parameterType="MarAdsalary" useGeneratedKeys="true" keyProperty="salaryId">
+        insert into mar_adsalary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id,</if>
+            <if test="customerCode != null">customer_code,</if>
+            <if test="corpName != null">corp_name,</if>
+            <if test="syqstartTime != null">syqstart_time,</if>
+            <if test="beforeSalary != null">before_salary,</if>
+            <if test="afterSalary != null">after_salary,</if>
+            <if test="adjustTime != null">adjust_time,</if>
+            <if test="adjustDetail != null">adjust_detail,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">#{marcusId},</if>
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="corpName != null">#{corpName},</if>
+            <if test="syqstartTime != null">#{syqstartTime},</if>
+            <if test="beforeSalary != null">#{beforeSalary},</if>
+            <if test="afterSalary != null">#{afterSalary},</if>
+            <if test="adjustTime != null">#{adjustTime},</if>
+            <if test="adjustDetail != null">#{adjustDetail},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarAdsalary" parameterType="MarAdsalary">
+        update mar_adsalary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id = #{marcusId},</if>
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="syqstartTime != null">syqstart_time = #{syqstartTime},</if>
+            <if test="beforeSalary != null">before_salary = #{beforeSalary},</if>
+            <if test="afterSalary != null">after_salary = #{afterSalary},</if>
+            <if test="adjustTime != null">adjust_time = #{adjustTime},</if>
+            <if test="adjustDetail != null">adjust_detail = #{adjustDetail},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where salary_id = #{salaryId}
+    </update>
+
+    <delete id="deleteMarAdsalaryById" parameterType="Integer">
+        delete from mar_adsalary where salary_id = #{salaryId}
+    </delete>
+
+    <delete id="deleteMarAdsalaryByIds" parameterType="String">
+        delete from mar_adsalary where salary_id in 
+        <foreach item="salaryId" collection="array" open="(" separator="," close=")">
+            #{salaryId}
+        </foreach>
+    </delete>
+    
+</mapper>

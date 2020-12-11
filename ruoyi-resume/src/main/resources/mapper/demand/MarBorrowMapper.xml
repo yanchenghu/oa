@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarBorrowMapper">
+    
+    <resultMap type="MarBorrow" id="MarBorrowResult">
+        <result property="id"    column="id"    />
+        <result property="marcusId"    column="marcus_id"    />
+        <result property="borrowSth"    column="borrow_sth"    />
+        <result property="borrowModel"    column="borrow_model"    />
+        <result property="borrowTime"    column="borrow_time"    />
+        <result property="isAgreement"    column="is_agreement"    />
+        <result property="returnTime"    column="return_time"    />
+        <result property="isReturn"    column="is_return"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarBorrowVo">
+        select id, marcus_id, borrow_sth, borrow_model, borrow_time, is_agreement, return_time, is_return, add_time from mar_borrow
+    </sql>
+
+    <select id="selectMarBorrowList" parameterType="MarBorrow" resultMap="MarBorrowResult">
+        <include refid="selectMarBorrowVo"/>
+        <where>  
+            <if test="marcusId != null  and marcusId != ''"> and marcus_id = #{marcusId}</if>
+            <if test="borrowSth != null  and borrowSth != ''"> and borrow_sth = #{borrowSth}</if>
+            <if test="borrowModel != null  and borrowModel != ''"> and borrow_model = #{borrowModel}</if>
+            <if test="borrowTime != null "> and borrow_time = #{borrowTime}</if>
+            <if test="isAgreement != null "> and is_agreement = #{isAgreement}</if>
+            <if test="returnTime != null "> and return_time = #{returnTime}</if>
+            <if test="isReturn != null "> and is_return = #{isReturn}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarBorrowById" parameterType="Integer" resultMap="MarBorrowResult">
+        <include refid="selectMarBorrowVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarBorrow" parameterType="MarBorrow" useGeneratedKeys="true" keyProperty="id">
+        insert into mar_borrow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id,</if>
+            <if test="borrowSth != null">borrow_sth,</if>
+            <if test="borrowModel != null">borrow_model,</if>
+            <if test="borrowTime != null">borrow_time,</if>
+            <if test="isAgreement != null">is_agreement,</if>
+            <if test="returnTime != null">return_time,</if>
+            <if test="isReturn != null">is_return,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">#{marcusId},</if>
+            <if test="borrowSth != null">#{borrowSth},</if>
+            <if test="borrowModel != null">#{borrowModel},</if>
+            <if test="borrowTime != null">#{borrowTime},</if>
+            <if test="isAgreement != null">#{isAgreement},</if>
+            <if test="returnTime != null">#{returnTime},</if>
+            <if test="isReturn != null">#{isReturn},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarBorrow" parameterType="MarBorrow">
+        update mar_borrow
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id = #{marcusId},</if>
+            <if test="borrowSth != null">borrow_sth = #{borrowSth},</if>
+            <if test="borrowModel != null">borrow_model = #{borrowModel},</if>
+            <if test="borrowTime != null">borrow_time = #{borrowTime},</if>
+            <if test="isAgreement != null">is_agreement = #{isAgreement},</if>
+            <if test="returnTime != null">return_time = #{returnTime},</if>
+            <if test="isReturn != null">is_return = #{isReturn},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarBorrowById" parameterType="Integer">
+        delete from mar_borrow where id = #{id}
+    </delete>
+
+    <delete id="deleteMarBorrowByIds" parameterType="String">
+        delete from mar_borrow where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -34,9 +34,10 @@ public class PerflowController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo entrylist(MarCustomerprojectpay MarCustomerprojectpay)
     {
-        startPage();
-        List<Map> list = marCustomerprojectpayService.selectentrylistList(MarCustomerprojectpay);
-        return getDataTable(list);
+//        startPage();
+//        List<Map> list = marCustomerprojectpayService.selectentrylistList(MarCustomerprojectpay);
+//        return getDataTable(list);
+        return null;
     }
 
 }

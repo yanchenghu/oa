@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarServicepayMapper">
+    
+    <resultMap type="MarServicepay" id="MarServicepayResult">
+        <result property="servicepayId"    column="servicepay_id"    />
+        <result property="marcusId"    column="marcus_id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="corpName"    column="corp_name"    />
+        <result property="syqstartTime"    column="syqstart_time"    />
+        <result property="beforeServicepay"    column="before_servicepay"    />
+        <result property="afterServicepay"    column="after_servicepay"    />
+        <result property="adjustTime"    column="adjust_time"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarServicepayVo">
+        select servicepay_id, marcus_id, customer_code, corp_name, syqstart_time, before_servicepay, after_servicepay, adjust_time, add_time from mar_servicepay
+    </sql>
+
+    <select id="selectMarServicepayList" parameterType="MarServicepay" resultMap="MarServicepayResult">
+        <include refid="selectMarServicepayVo"/>
+        <where>  
+            <if test="marcusId != null  and marcusId != ''"> and marcus_id = #{marcusId}</if>
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="syqstartTime != null "> and syqstart_time = #{syqstartTime}</if>
+            <if test="beforeServicepay != null "> and before_servicepay = #{beforeServicepay}</if>
+            <if test="afterServicepay != null "> and after_servicepay = #{afterServicepay}</if>
+            <if test="adjustTime != null "> and adjust_time = #{adjustTime}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarServicepayById" parameterType="Integer" resultMap="MarServicepayResult">
+        <include refid="selectMarServicepayVo"/>
+        where servicepay_id = #{servicepayId}
+    </select>
+        
+    <insert id="insertMarServicepay" parameterType="MarServicepay" useGeneratedKeys="true" keyProperty="servicepayId">
+        insert into mar_servicepay
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id,</if>
+            <if test="customerCode != null">customer_code,</if>
+            <if test="corpName != null">corp_name,</if>
+            <if test="syqstartTime != null">syqstart_time,</if>
+            <if test="beforeServicepay != null">before_servicepay,</if>
+            <if test="afterServicepay != null">after_servicepay,</if>
+            <if test="adjustTime != null">adjust_time,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">#{marcusId},</if>
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="corpName != null">#{corpName},</if>
+            <if test="syqstartTime != null">#{syqstartTime},</if>
+            <if test="beforeServicepay != null">#{beforeServicepay},</if>
+            <if test="afterServicepay != null">#{afterServicepay},</if>
+            <if test="adjustTime != null">#{adjustTime},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarServicepay" parameterType="MarServicepay">
+        update mar_servicepay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id = #{marcusId},</if>
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="syqstartTime != null">syqstart_time = #{syqstartTime},</if>
+            <if test="beforeServicepay != null">before_servicepay = #{beforeServicepay},</if>
+            <if test="afterServicepay != null">after_servicepay = #{afterServicepay},</if>
+            <if test="adjustTime != null">adjust_time = #{adjustTime},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where servicepay_id = #{servicepayId}
+    </update>
+
+    <delete id="deleteMarServicepayById" parameterType="Integer">
+        delete from mar_servicepay where servicepay_id = #{servicepayId}
+    </delete>
+
+    <delete id="deleteMarServicepayByIds" parameterType="String">
+        delete from mar_servicepay where servicepay_id in 
+        <foreach item="servicepayId" collection="array" open="(" separator="," close=")">
+            #{servicepayId}
+        </foreach>
+    </delete>
+    
+</mapper>

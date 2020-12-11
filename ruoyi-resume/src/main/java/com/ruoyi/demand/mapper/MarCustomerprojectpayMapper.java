@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.demand.domain.MarCustomePerinfo;
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
 
 /**
@@ -68,5 +69,9 @@ public interface MarCustomerprojectpayMapper
     /**
      * 人员入项信息列表
      */
-    List<Map> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay);
+    List<MarCustomePerinfo> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay);
+    /**
+     * 人员入项基本信息
+     */
+    Map selectMarCustomePerinfoById(String id);
 }

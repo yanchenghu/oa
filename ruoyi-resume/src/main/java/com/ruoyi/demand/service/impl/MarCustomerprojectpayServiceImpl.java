@@ -1,13 +1,14 @@
 package com.ruoyi.demand.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.demand.domain.*;
+import com.ruoyi.demand.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
-import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.service.IMarCustomerprojectpayService;
 
 /**
@@ -21,6 +22,18 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
 {
     @Autowired
     private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
+    @Autowired
+    private MarBorrowMapper marBorrowMapper;
+    @Autowired
+    private MarCertificatesMapper marCertificatesMapper;
+    @Autowired
+    private MarAdsalaryMapper marAdsalaryMapper;
+    @Autowired
+    private MarServicepayMapper marServicepayMapper;
+
+
+
+
 
     /**
      * 查询入项
@@ -105,8 +118,49 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
      * 人员入项信息列表
      */
     @Override
-    public List<Map> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay) {
+    public List<MarCustomePerinfo> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay) {
 
         return marCustomerprojectpayMapper.selectentrylistList(marCustomerprojectpay);
+    }
+    /**
+     * 人员入项配置信息
+     */
+    @Override
+    public AjaxResult entryinfor(String id) {
+        Map map=new HashMap();
+        MarCustomerprojectpay marprojectpay=marCustomerprojectpayMapper.selectMarCustomerprojectpayById(id);
+        if(marprojectpay==null){
+            return AjaxResult.error("入项人为空，请联系管理员");
+        }
+        Map marCustomePerinfo=marCustomerprojectpayMapper.selectMarCustomePerinfoById(id);
+        map.put("MarCustomePerinfo",marCustomePerinfo);
+
+        MarCertificates marCertificates=new MarCertificates();
+        marCertificates.setMarcusId(id);
+        List<MarCertificates> marCertificates1 = marCertificatesMapper.selectMarCertificatesList(marCertificates);
+        map.put("marCertificates1",marCertificates1);
+
+        MarCustomerprojectpay marpr=new MarCustomerprojectpay();
+        marpr.setCustomerCode(marprojectpay.getCustomerCode());
+        List<MarCustomerprojectpay> Listmarcustomerp = marCustomerprojectpayMapper.selectMarCustomerprojectpayList(marpr);
+        map.put("Listmarcustomerp",Listmarcustomerp);
+
+        MarBorrow marBorrow=new MarBorrow();
+        marBorrow.setMarcusId(id);
+        List<MarBorrow> marBorrows = marBorrowMapper.selectMarBorrowList(marBorrow);
+        map.put("marBorrows",marBorrows);
+
+        MarAdsalary marAdsalary=new MarAdsalary();
+        marAdsalary.setMarcusId(id);
+        List<MarAdsalary> marAdsalaries = marAdsalaryMapper.selectMarAdsalaryList(marAdsalary);
+        map.put("marAdsalaries",marAdsalaries);
+
+        MarServicepay marServicepay=new MarServicepay();
+        marServicepay.setMarcusId(id);
+        List<MarServicepay> marServicepays = marServicepayMapper.selectMarServicepayList(marServicepay);
+        map.put("marServicepays",marServicepays);
+
+
+        return AjaxResult.success(map);
     }
 }
