@@ -88,11 +88,12 @@ export function updateRecord(data) {
   })
 }
 
-// 删除简历
-export function delRecord(customerCode) {
+// 释放简历
+export function delRecord(data) {
   return request({
-    url: '/resume/record/' + customerCode,
-    method: 'delete'
+    url: '/resume/record/release',
+    method: 'post',
+    data:data
   })
 }
 

@@ -1,12 +1,9 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item style="float: right;">
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
-      </el-form-item>
-      <el-form-item label="" prop="companyName" style="float: right;">
+
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" style="width:80% ;" label-width="68px">
+      <el-form-item label="" prop="companyName">
         <el-input
-          @input="change"
           v-model="queryParams.companyName"
           placeholder="请输入公司名称"
           clearable
@@ -14,98 +11,79 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-
-    </el-form>
-    <div style="clear: both;"></div>
-
-
-
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item  prop="companySituation">
-        <el-select v-model="queryParams.companySituation"   placeholder="请选择公司性质" clearable size="small" @change="change">
-          <el-option
-            v-for="dict in companySituationOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item  prop="isFollowSubmit">
-        <el-select v-model="queryParams.isFollowSubmit" placeholder="请选择线索状态" clearable size="small" @change="change">
-          <el-option
-            v-for="dict in isFollowSubmitOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item  prop="entryDays">
-        <el-select v-model="queryParams.entryDays" placeholder="请选择距进入公海天数"  clearable size="small" @change="change">
-          <el-option
-            v-for="dict in entryDaysOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
+      <el-form-item >
+        <el-button type="cyan" icon="el-icon-search" size="mini"@click="handleQuery">查询</el-button>
       </el-form-item>
       <el-button
-        type="cyan"
-        size="mini"
-        @click="handleAdd"
-        style="position: absolute;right: 0;margin-right: 50px"
-        v-hasPermi="['resume:yxbemand:add']"
-      >新建客户线索</el-button>
+          type="cyan"
+          size="mini"
+          @click="next"
+          style="position: absolute;right: 120px;"
+        >换一批</el-button>
+        <el-button
+            type="warning"
+            size="mini"
+            @click="handleAdd"
+            style="position: absolute;right: 30px;"
+          >批量抢占</el-button>
     </el-form>
-    <!-- <el-row :gutter="10" class="mb8">
-       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-     </el-row> -->
+   <el-row :gutter="10" class="mb8">
+	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
 
-    <!--    展示-->
+<!--    展示-->
     <el-table v-loading="loading" :data="yxdemandList" >
-      <el-table-column label="序列" align="center" prop="entryId" />
-      <el-table-column label="公司名称" align="center" prop="companyName" />
-      <el-table-column label="联系人/职位" align="center" prop="contactPosition" />
+      <el-table-column
+        type="selection"
+        width="55"
+        align="center"
+        >
+      </el-table-column>
+      <el-table-column label="公司名称" align="left" prop="companyName" width="160" style="color: blue;"/>
+      <el-table-column label="联系人/职位" align="left" width="130">
+        <template slot-scope="scope">
+          <span>{{scope.row.contactPeople}} / {{scope.row.contactPosition}}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="公司性质"
         align="center"
         prop="companySituation"
         :formatter="companySituationFormat"
-        width="100"
+        width="90"
       />
-      <el-table-column label="联系方式" align="center" prop="interviewContact" />
-      <el-table-column label="录入人" align="center" prop="entryPeople" />
+      <el-table-column label="联系方式" align="left" prop="contactPhone" width="110"/>
+      <el-table-column label="录入人" align="center" prop="entryPeople" width="80"/>
       <el-table-column
         label="线索状态"
         align="center"
         prop="isFollowSubmit"
         :formatter="isFollowSubmitFormat"
-        width="100"
+         width="90"
       />
-      <el-table-column label="最近一次联系情况" align="center" prop="contactInformation" />
-      <el-table-column label="更新时间" align="center" prop="updateDate" width="180">
+      <el-table-column label="最近一次联系情况" align="left" prop="contactInformation"  :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
+          <span>{{scope.row.contactInformation}}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="距进入公海天数"
-        align="center"
-        prop="entryDays"
-        :formatter="entryDaysFormat"
-        width="100"
-      />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="更新时间" align="left" prop="updateDate" width="150">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="120">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
+            @click="handleClick(scope.row)"
+          >抢占</el-button>
+         <el-button
+            size="mini"
+            type="text"
             @click="followUp(scope.row.entryId)"
-            v-hasPermi="['customer:yxdemand:follow']"
-          >跟进</el-button>
+          >查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -118,69 +96,23 @@
       @pagination="getList"
     />
 
-
-    <!-- 录入线索 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="公司名称" prop="companyName">
-          <el-input v-model="form.companyName"  placeholder="请输入公司名称" />
-        </el-form-item>
-        <el-form-item label="联系人姓名" prop="contactPeople">
-          <el-input v-model="form.contactPeople"  placeholder="请输入联系人" />
-        </el-form-item>
-        <el-form-item label="联系人职位" prop="contactPosition">
-          <el-input v-model="form.contactPosition"  placeholder="请输入联系人/职位" />
-        </el-form-item>
-        <el-form-item label="联系人电话" prop="interviewContact">
-          <el-input v-model="form.interviewContact"  placeholder="请输入联系方式" />
-        </el-form-item>
-        <el-form-item label="公司性质"  prop="companySituation">
-          <el-select v-model="form.companySituation"   placeholder="请选择公司性质" >
-            <el-option
-              v-for="dict in companySituationOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="线索状态"  prop="isFollowSubmit">
-          <el-select v-model="form.isFollowSubmit" placeholder="请选择线索状态" >
-            <el-option
-              v-for="dict in isFollowSubmitOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="最近一次联系情况" prop="contact">
-          <el-input v-model="form.contactInformation" placeholder="请输入" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-
-    <el-drawer
-      title="信息"
-      :visible.sync="drawer"
-      :with-header="false"
-      size="50%"
-      @close="dra"
-    >
-      <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
-        <div style="display: flex;flex-wrap: wrap;justify-content: space-between; padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
-          <div>
-            <b>
-              {{yxdemandone.companyName}}
-            </b>
-          </div>
+     <el-drawer
+       title="信息"
+       :visible.sync="drawer"
+       :with-header="false"
+       size="60%"
+       @close="dra"
+       >
+       <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
+       <div style=" padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
+         <div>
+           <b>
+             {{yxdemandone.companyName}}
+           </b>
+         </div>
           <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
             <el-form-item label="公司性质">
-              <el-select v-model="yxdemandone.companySituation"     size="small">
+              <el-select disabled v-model="yxdemandone.companySituation"   size="small">
                 <el-option
                   v-for="dict in companySituationOptions"
                   :key="dict.dictValue"
@@ -190,7 +122,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="线索状态">
-              <el-select v-model="yxdemandone.isFollowSubmit"   size="small">
+              <el-select disabled v-model="yxdemandone.isFollowSubmit"  size="small">
                 <el-option
                   v-for="dict in isFollowSubmitOptions"
                   :key="dict.dictValue"
@@ -199,318 +131,293 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item>
-              <el-button :disabled="yxdemandone.isFollowSubmit!==4" type="primary" @click="onSubmit">移交</el-button>
+            <el-form-item >
+                  <el-button  type="warning" @click="handleClick(yxdemandone)">抢占</el-button>
             </el-form-item>
           </el-form>
-
         </div>
-        <div style="padding:20px 3% 30px 2%; display: flex;">
-
-
-          <div style="width: 50%;">
-            <div class="msg">
-              <b>联系人信息</b>
-            </div>
-
-            <div>
+        <div>
+          <el-tabs>
+            <el-tab-pane label="联系人信息">
+              <div style="display: flex; justify-content: space-between;">
               <el-form label-position="left" label-width="80px" :model="yxdemandone">
-                <el-form-item label="姓名" >
-                  <el-input v-model="yxdemandone.contactPeople" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="职位">
-                  <el-input v-model="yxdemandone.contactPosition" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="电话">
-                  <el-input v-model="yxdemandone.contactPhone" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱">
-                  <el-input v-model="yxdemandone.mailbox" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="微信">
-                  <el-input v-model="yxdemandone.wechat" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="QQ">
-                  <el-input v-model="yxdemandone.qq" @input="see"></el-input>
-                </el-form-item>
-                <div class="msg">
-                  <b>外包公司信息</b>
-                </div>
-                <el-form-item label="面试名义公司">
-                  <el-input v-model="yxdemandone.interviewCompany" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="面试官">
-                  <el-input v-model="yxdemandone.interviewer" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="面试职位">
-                  <el-input v-model="yxdemandone.interviewerPosition" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="面试地点">
-                  <el-input v-model="yxdemandone.interviewaddress" @input="see"></el-input>
-                </el-form-item>
-                <el-form-item label="最终甲方">
-                  <el-input v-model="yxdemandone.finalparty" @input="see"></el-input>
-                </el-form-item>
+                 <b>联系人信息</b>
+                 <p></p>
+                 <el-form-item label="姓名" >
+                   <el-input disabled v-model="yxdemandone.contactPeople" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="职位">
+                   <el-input disabled v-model="yxdemandone.contactPosition" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="电话">
+                   <el-input disabled v-model="yxdemandone.contactPhone"></el-input>
+                 </el-form-item>
+                 <el-form-item label="邮箱">
+                   <el-input disabled v-model="yxdemandone.mailbox" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="微信">
+                   <el-input disabled v-model="yxdemandone.wechat" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="QQ">
+                   <el-input disabled v-model="yxdemandone.qq" ></el-input>
+                 </el-form-item>
+              </el-form>
+              <el-form label-position="left" label-width="100px" :model="yxdemandone">
+                <b>外包公司信息</b>
+                <p></p>
+                 <el-form-item label="面试名义公司">
+                   <el-input disabled v-model="yxdemandone.interviewCompany" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="面试官">
+                   <el-input disabled v-model="yxdemandone.interviewer" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="面试职位">
+                   <el-input disabled v-model="yxdemandone.interviewerPosition" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="面试地点">
+                   <el-input disabled v-model="yxdemandone.interviewaddress" ></el-input>
+                 </el-form-item>
+                 <el-form-item label="最终甲方">
+                   <el-input disabled v-model="yxdemandone.finalparty" ></el-input>
+                 </el-form-item>
               </el-form>
             </div>
+            </el-tab-pane>
 
-          </div>
-          <!-- 联系记录 -->
-          <div style="padding-left:2%;width: 50%;">
-            <div class="msg">
-              <b>联系记录</b>
-            </div>
-            <el-input type="textarea" style="width: 100%;" placeholder="添加跟进信息"  v-model="putmsg" @focus="put=true" ></el-input>
-            <el-button v-show="put" style="float: right;margin-top: 10px;" type="primary" @click="putmsgbut">发布</el-button>
-            <div style="clear: both;margin-top: 10px;"></div>
-            <ul>
-              <li v-for="msg in putmsgs">
-                <span class="span">{{msg.contactTime}}</span>
-                <span class="span">{{msg.nickName}}</span>
-                <span class="span">{{}}</span>
-
-              </li>
-            </ul>
-
-
-
-          </div>
+            <el-tab-pane label="联系记录">
+              <div style="padding-left:2%;">
+                <div class="msg">
+                  <b>联系记录</b>
+                </div>
+                <div style="clear: both;margin-top: 10px;"></div>
+                <ul style="list-style: none;padding-left: 10px;">
+                  <li v-for="msg in putmsgs">
+                    <span class="sp">{{msg.contactTime}} {{msg.nickName}} </span>
+                    <span v-if="msg.status==1" class="sp">跟进</span>
+                    <span v-else-if="msg.status==2" class="sp">{{msg.contactDetail}}</span>
+                    <span v-else-if="msg.status==3" class="sp">录入客户</span>
+                    <p><span class="span" v-show="msg.status!==2">{{msg.contactDetail}}</span></p>
+                  </li>
+                </ul>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </div>
-      </div>
-    </el-drawer>
-
+       </div>
+     </el-drawer>
   </div>
 </template>
 
 <script>
-  import { getYxdemand,listYxdemand,addYxdemand,see} from "@/api/customer/highseas";
 
-  export default {
-    name: "Yxdemand",
-    data() {
-      return {
-        // 跟进抽屉
-        drawer :false,
-        // 单个数据
-        yxdemandone:{},
-        // 遮罩层
-        loading: true,
-        // 选中数组
-        ids: [],
-        // 非单个禁用
-        single: true,
-        // 非多个禁用
-        multiple: true,
-        // 显示搜索条件
-        showSearch: true,
-        // 总条数
-        total: 0,
-        // 营销录入公司表格数据
-        yxdemandList: [],
-        // 弹出层标题
-        title: "",
-        // 是否显示弹出层
-        open: false,
-        //公司性质
-        companySituationOptions : [],
-        //线索状态
-        isFollowSubmitOptions : [],
-        //距进入公海天数
-        entryDaysOptions : [],
-        // 查询参数
-        queryParams: {
-          pageNum: 1,
-          pageSize: 10,
-          companyName: null,
-          contactPosition: null,
-          companySituation: null,
-          interviewContact: null,
-          entryPeople: null,
-          isFollowSubmit: null,
-          contactInformation: null,
-          updateDate: null,
-          entryDays: null,
-        },
-        // 表单参数
-        form: {},
-        // 表单校验
-        rules: {
-        },
-        // 发布信息
-        putmsg:null,
-        putmsgs:[],
-        // 发布按钮
-        put:false
-      };
-    },
-    created() {
-      this.getList();
-      this.getDicts("yxdemand_company_situation").then(response => {
-        this.companySituationOptions = response.data;
-      });
-      this.getDicts("yxdemand_isfollow_submit").then(response => {
-        this.isFollowSubmitOptions = response.data;
-      });
-      this.getDicts("yxdemand_entry_days").then(response => {
-        this.entryDaysOptions = response.data;
-      });
-    },
-    methods: {
-      // 下拉框选中加载
-      change(){
-        this.getList()
+import { getYxdemand,listYxdemand,addYxdemand, see ,yxhandrob,turnover,swhandrob} from "@/api/customer/highseas.js";
+export default {
+  name: "Yxdemand",
+  data() {
+    return {
+      // 跟进抽屉
+      drawer :false,
+      // 单个数据
+      yxdemandone:{},
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 营销录入公司表格数据
+      yxdemandList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      //公司性质
+      companySituationOptions : [],
+      //线索状态
+      isFollowSubmitOptions : [],
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        companyName: null,
       },
-      /** 查询营销录入公司列表 */
-      getList() {
-        this.loading = true;
-        listYxdemand(this.queryParams).then(response => {
-          this.yxdemandList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        });
-      },
-      // 简历线索字典翻译
-      companySituationFormat(row, column) {
-        return this.selectDictLabel(this.companySituationOptions, row.companySituation);
-      },
-      // 线索状态字典翻译
-      isFollowSubmitFormat(row, column) {
-        return this.selectDictLabel(this.isFollowSubmitOptions, row.isFollowSubmit);
-      },
-      // 距进入公海天数翻译
-      entryDaysFormat(row, column) {
-        return this.selectDictLabel(this.entryDaysOptions, row.entryDays);
-      },
-      // 取消按钮
-      cancel() {
-        this.open = false;
-        this.reset();
-      },
-
-
-
-      // 表单重置
-      reset() {
-        this.form = {
-          entryId: null,
-          companyName: null,
-          recruitmentJob: null,
-          contactPeople: null,
-          contactPosition: null,
-          contactPhone: null,
-          infoSourse: null,
-          companySituation: null,
-          isSendResume: null,
-          interviewCompany: null,
-          interviewer: null,
-          interviewerPosition: null,
-          interviewContact: null,
-          interviewAddress: null,
-          finalParty: null,
-          entryPeople: null,
-          entryPeopleId: null,
-          insertTime: null,
-          isFollowSubmit: null,
-          robPeopleId: null,
-          robPeople: null,
-          robTime: null,
-          isAccept: null,
-          businessId: null,
-          businessPeople: null,
-          submitTime: null,
-          isBusiness: null,
-          cooperationProjects: null,
-          isSigning: null,
-          singTime: null,
-          personnelInto: null,
-          isReturnMoney: null,
-          updateDate: null,
-          entryDays: null,
-          contact: null
-        };
-        this.resetForm("form");
-      },
-      /** 搜索按钮操作 */
-      handleQuery() {
-        this.queryParams.pageNum = 1;
-        this.getList();
-      },
-      /** 重置按钮操作 */
-      resetQuery() {
-        this.resetForm("queryForm");
-        this.handleQuery();
-      },
-      // 多选框选中数据
-      handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.entryId)
-        this.single = selection.length!==1
-        this.multiple = !selection.length
-      },
-
-      /** 新建客户线索 */
-      handleAdd() {
-        this.reset();
-        this.open = true;
-        this.title = "新建客户线索";
-      },
-      /** 提交按钮 */
-      submitForm() {
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            if (this.form.entryId != null) {
-              this.msgSuccess("新增失败");
-            } else {
-              addYxdemand(this.form).then(response => {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              });
-            }
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        companyName: [{
+          required: true,
+          message: "公司名称不能为空",
+          trigger: ["blur", "change"]
+        }, ],
+        contactPeople: [{
+          required: true,
+          message: "联系人姓名不能为空",
+          trigger: ["blur", "change"]
+        }, ],
+        contactPosition: [{
+          required: true,
+          message: "联系人职位不能为空",
+          trigger: ["blur", "change"]
+        }, ],
+        contactPhone: [
+          { required: true, message: "手机号码不能为空", trigger: "blur" },
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: ["blur", "change"]
           }
-        });
+        ],
+        companySituation: [{
+          required: true,
+          message: "公司性质不能为空",
+          trigger: ["blur", "change"]
+        }, ],
+        isFollowSubmit: [{
+          required: true,
+          message: "线索状态不能为空",
+          trigger: ["blur", "change"]
+        }, ],
+        contactInformation: [{
+          required: true,
+          message: "联系情况不能为空",
+          trigger: ["blur", "change"]
+        }, ],
       },
-
-      // 移交
-      onSubmit(){
-
-      },
-
+      // 发布信息
+      putmsg:null,
+      putmsgs:[],
       // 发布按钮
-      putmsgbut(){
-        console.log(this.putmsg)
-        this.followUp()
-        // putmsgs(this.putmsg).then(msg=>{
-
-        // })
-      },
-      /** 跟进按钮 */
-      followUp(value){
-        getYxdemand(value).then(res=>{
-          this.drawer = true
-          this.yxdemandone=res.data.data.Yxdemand
-          this.putmsgs = res.data.data.listYxcon
-        })
-      },
-
-      // 抽屉关闭回调
-      dra(){
+      put:false,
+      username:[],
+      timer:-1,
+    };
+  },
+  created() {
+    this.getList();
+    this.getDicts("yxdemand_company_situation").then(response => {
+      this.companySituationOptions = response.data;
+    });
+    this.getDicts("yxdemand_isfollow_submit").then(response => {
+      this.isFollowSubmitOptions = response.data;
+    });
+  },
+  methods: {
+    // 下拉框选中加载
+    change(){
         this.getList()
-      },
+    },
+    /** 查询营销录入公司列表 */
+    getList() {
+      this.loading = true;
+      listYxdemand(this.queryParams).then(response => {
+        this.yxdemandList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 简历线索字典翻译
+    companySituationFormat(row, column) {
+      return this.selectDictLabel(this.companySituationOptions, row.companySituation);
+    },
+    // 线索状态字典翻译
+    isFollowSubmitFormat(row, column) {
+      return this.selectDictLabel(this.isFollowSubmitOptions, row.isFollowSubmit);
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.entryId)
+      this.single = selection.length!==1
+      this.multiple = !selection.length
+    },
 
-      /**输入框实时修改按钮  */
-      see(){
-        see(this.yxdemandone).then()
+    /** 新建客户线索 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "新建客户线索";
+    },
+    // 移交
+    onSubmit(id){
+      this.opens=true
+    },
+    // 换一批
+    next(){
+      this.queryParams.pageNum += 1
+      if(this.queryParams.pageNum-1>=this.total/this.queryParams.pageSize){
+        this.queryParams.pageNum = 1
+        this.getList()
+      }else{
+        this.getList()
       }
-
-
-    }
-  };
+    },
+    // 抢占客户
+    handleClick(value){
+      var formData = new FormData()
+      formData.append("entryId",value.entryId)
+      if(value.isAccept==0){
+        // 营销抢占
+        yxhandrob(formData).then(res=>{
+          this.msgSuccess("抢占成功")
+          this.getList()
+        })
+      }else{
+        // 商务抢占
+        swhandrob(formData).then(res=>{
+          this.msgSuccess("抢占成功")
+          this.getList()
+        })
+      }
+    },
+    /** 查看 */
+    followUp(value){
+      getYxdemand(value).then(res=>{
+        this.drawer = true
+        this.yxdemandone=res.data.data.Yxdemand
+        this.putmsgs = res.data.data.listYxcon
+      })
+    },
+    // 抽屉关闭回调
+    dra(){
+      this.getList()
+   },
+  }
+};
 </script>
 <style>
-  .el-drawer.rtl{
-    overflow: auto;
+  .el-tabs__item:focus.is-active.is-focus:not(:active) {
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+}
+  .el-tabs__header{
+    background: #F5F5F9;
+    padding-left:5%;
   }
+  .el-tabs__content{
+    padding:20px 3% 0 3%;
+  }
+   .el-drawer.rtl{
+        overflow: auto;
+    }
   .msg{
     margin-bottom: 20px;
+  }
+  .span{
+    color: #2C2C2C;
+  }
+  .sp{
+    font-size: 11px;
+    color: #8A8A8A;
   }
 </style>

@@ -24,11 +24,17 @@ export function listFollow(query) {
     params: query
   })
 }
-
-// 新增简历
+// 查询需求详细
+export function getFollow(id) {
+  return request({
+    url: '/demand/follow/' + id,
+    method: 'get'
+  })
+}
+// 抢占
 export function addRecord(data) {
   return request({
-    url: '/resume/peopost',
+    url: '/resume/record/rob',
     method: 'post',
     data: data
   })
