@@ -26,11 +26,11 @@ export function addEntry(data) {
   })
 }
 
-// 修改入项
+// 新建
 export function updateEntry(data) {
   return request({
-    url: '/perentry/entry',
-    method: 'put',
+    url: '/perentry/entry/save',
+    method: 'post',
     data: data
   })
 }
@@ -40,6 +40,30 @@ export function delEntry(id) {
   return request({
     url: '/perentry/entry/' + id,
     method: 'delete'
+  })
+}
+// 新建工资调整
+export function addgongzi(data) {
+  return request({
+    url: '/perentry/entry/addwages',
+    method: 'post',
+    data: data
+  })
+}
+// 新建服务费调整
+export function addfuwufei(data) {
+  return request({
+    url: '/perentry/entry/addfee',
+    method: 'post',
+    data: data
+  })
+}
+// 归还物品
+export function putwupin(data) {
+  return request({
+    url: '/perentry/entry/edit',
+    method: 'post',
+    data: data
   })
 }
 
