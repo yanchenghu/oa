@@ -1,5 +1,6 @@
 package com.ruoyi.demand.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -56,11 +57,11 @@ public class MarCustomerprojectpay
 
     /** 工资 */
     @Excel(name = "工资")
-    private Long salary;
+    private BigDecimal salary;
 
     /** 服务费用 */
     @Excel(name = "服务费用")
-    private Long servicePay;
+    private BigDecimal servicePay;
 
     /** 出项时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -183,21 +184,21 @@ public class MarCustomerprojectpay
     {
         return settledCycle;
     }
-    public void setSalary(Long salary) 
+    public void setSalary(BigDecimal salary)
     {
         this.salary = salary;
     }
 
-    public Long getSalary() 
+    public BigDecimal getSalary()
     {
         return salary;
     }
-    public void setServicePay(Long servicePay) 
+    public void setServicePay(BigDecimal servicePay)
     {
         this.servicePay = servicePay;
     }
 
-    public Long getServicePay() 
+    public BigDecimal getServicePay()
     {
         return servicePay;
     }

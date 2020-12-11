@@ -66,9 +66,10 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
      * @return 结果
      */
     @Override
-    public int insertMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay)
+    public AjaxResult insertMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay)
     {
-        return marCustomerprojectpayMapper.insertMarCustomerprojectpay(marCustomerprojectpay);
+         marCustomerprojectpayMapper.insertMarCustomerprojectpay(marCustomerprojectpay);
+         return AjaxResult.success("人员添加成功");
     }
 
     /**
@@ -78,9 +79,10 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
      * @return 结果
      */
     @Override
-    public int updateMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay)
+    public AjaxResult updateMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay)
     {
-        return marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+         marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+         return AjaxResult.success("修改成功");
     }
 
     /**

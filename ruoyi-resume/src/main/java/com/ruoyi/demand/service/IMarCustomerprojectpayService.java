@@ -37,7 +37,7 @@ public interface IMarCustomerprojectpayService
      * @param marCustomerprojectpay 入项
      * @return 结果
      */
-    public int insertMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay);
+    public AjaxResult insertMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay);
 
     /**
      * 修改入项
@@ -45,7 +45,7 @@ public interface IMarCustomerprojectpayService
      * @param marCustomerprojectpay 入项
      * @return 结果
      */
-    public int updateMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay);
+    public AjaxResult updateMarCustomerprojectpay(MarCustomerprojectpay marCustomerprojectpay);
 
     /**
      * 批量删除入项

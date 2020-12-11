@@ -1,7 +1,9 @@
 package com.ruoyi.demand.mapper;
 
-import java.util.List;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.demand.domain.MarAdsalary;
+
+import java.util.List;
 
 /**
  * 调整工资记录Mapper接口
@@ -58,4 +60,6 @@ public interface MarAdsalaryMapper
      * @return 结果
      */
     public int deleteMarAdsalaryByIds(Integer[] salaryIds);
+
+
 }

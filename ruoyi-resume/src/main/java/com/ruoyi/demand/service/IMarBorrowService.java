@@ -1,6 +1,8 @@
 package com.ruoyi.demand.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.demand.domain.MarBorrow;
 
 /**
@@ -33,7 +35,7 @@ public interface IMarBorrowService
      * @param marBorrow 借用物品
      * @return 结果
      */
-    public int insertMarBorrow(MarBorrow marBorrow);
+    public AjaxResult insertMarBorrow(MarBorrow marBorrow);
 
     /**
      * 修改借用物品
@@ -41,7 +43,7 @@ public interface IMarBorrowService
      * @param marBorrow 借用物品
      * @return 结果
      */
-    public int updateMarBorrow(MarBorrow marBorrow);
+    public AjaxResult updateMarBorrow(MarBorrow marBorrow);
 
     /**
      * 批量删除借用物品
@@ -58,4 +60,6 @@ public interface IMarBorrowService
      * @return 结果
      */
     public int deleteMarBorrowById(Integer id);
+
+
 }

@@ -1,6 +1,8 @@
 package com.ruoyi.demand.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.demand.domain.MarAdsalary;
 
 /**
@@ -33,7 +35,7 @@ public interface IMarAdsalaryService
      * @param marAdsalary 调整工资记录
      * @return 结果
      */
-    public int insertMarAdsalary(MarAdsalary marAdsalary);
+    public AjaxResult insertMarAdsalary(MarAdsalary marAdsalary);
 
     /**
      * 修改调整工资记录
@@ -58,4 +60,6 @@ public interface IMarAdsalaryService
      * @return 结果
      */
     public int deleteMarAdsalaryById(Integer salaryId);
+
+
 }

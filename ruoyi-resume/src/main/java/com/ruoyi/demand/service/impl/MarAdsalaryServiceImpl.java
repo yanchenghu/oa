@@ -1,10 +1,15 @@
 package com.ruoyi.demand.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.demand.domain.MarAdsalary;
+import com.ruoyi.demand.domain.MarCustomerprojectpay;
+import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarAdsalaryMapper;
-import com.ruoyi.demand.domain.MarAdsalary;
 import com.ruoyi.demand.service.IMarAdsalaryService;
 
 /**
@@ -18,6 +23,9 @@ public class MarAdsalaryServiceImpl implements IMarAdsalaryService
 {
     @Autowired
     private MarAdsalaryMapper marAdsalaryMapper;
+
+    @Autowired
+    private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
 
     /**
      * 查询调整工资记录
@@ -50,9 +58,19 @@ public class MarAdsalaryServiceImpl implements IMarAdsalaryService
      * @return 结果
      */
     @Override
-    public int insertMarAdsalary(MarAdsalary marAdsalary)
+    public AjaxResult insertMarAdsalary(MarAdsalary marAdsalary)
     {
-        return marAdsalaryMapper.insertMarAdsalary(marAdsalary);
+        MarCustomerprojectpay marCustomerprojectpay = marCustomerprojectpayMapper.selectMarCustomerprojectpayById(marAdsalary.getMarcusId());
+        marCustomerprojectpay.setSalary(marAdsalary.getAfterSalary());
+        marAdsalary.setCustomerCode(marCustomerprojectpay.getCustomerCode());
+        marAdsalary.setCorpName(marCustomerprojectpay.getCorpName());
+        marAdsalary.setDemandId(marCustomerprojectpay.getDemandId());
+        marAdsalary.setProjectName(marCustomerprojectpay.getProjectName());
+        marAdsalary.setSyqstartTime(marCustomerprojectpay.getSyqstartTime());
+        marAdsalary.setAddTime(new Date());
+        marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+        marAdsalaryMapper.insertMarAdsalary(marAdsalary);
+         return AjaxResult.success("工资调整成功");
     }
 
     /**
@@ -90,4 +108,7 @@ public class MarAdsalaryServiceImpl implements IMarAdsalaryService
     {
         return marAdsalaryMapper.deleteMarAdsalaryById(salaryId);
     }
+
+
+
 }

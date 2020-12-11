@@ -12,7 +12,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 服务费调整记录对象 mar_servicepay
  * 
  * @author ych
- * @date 2020-12-10
+ * @date 2020-12-11
  */
 public class MarServicepay extends BaseEntity
 {
@@ -33,6 +33,10 @@ public class MarServicepay extends BaseEntity
     @Excel(name = "外派公司名称")
     private String corpName;
 
+    /** 外派公司项目编号 */
+    @Excel(name = "外派公司项目编号")
+    private String demandId;
+
     /** 入职时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "入职时间", width = 30, dateFormat = "yyyy-MM-dd")
@@ -41,6 +45,10 @@ public class MarServicepay extends BaseEntity
     /** 调整前工资 */
     @Excel(name = "调整前工资")
     private BigDecimal beforeServicepay;
+
+    /** 外派公司项目名称 */
+    @Excel(name = "外派公司项目名称")
+    private String projectName;
 
     /** 调整后工资 */
     @Excel(name = "调整后工资")
@@ -55,6 +63,10 @@ public class MarServicepay extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date addTime;
+
+    /** 调整原因 */
+    @Excel(name = "调整原因")
+    private String adjustDetail;
 
     public void setServicepayId(Integer servicepayId) 
     {
@@ -92,6 +104,15 @@ public class MarServicepay extends BaseEntity
     {
         return corpName;
     }
+    public void setDemandId(String demandId) 
+    {
+        this.demandId = demandId;
+    }
+
+    public String getDemandId() 
+    {
+        return demandId;
+    }
     public void setSyqstartTime(Date syqstartTime) 
     {
         this.syqstartTime = syqstartTime;
@@ -109,6 +130,15 @@ public class MarServicepay extends BaseEntity
     public BigDecimal getBeforeServicepay() 
     {
         return beforeServicepay;
+    }
+    public void setProjectName(String projectName) 
+    {
+        this.projectName = projectName;
+    }
+
+    public String getProjectName() 
+    {
+        return projectName;
     }
     public void setAfterServicepay(BigDecimal afterServicepay) 
     {
@@ -137,6 +167,15 @@ public class MarServicepay extends BaseEntity
     {
         return addTime;
     }
+    public void setAdjustDetail(String adjustDetail) 
+    {
+        this.adjustDetail = adjustDetail;
+    }
+
+    public String getAdjustDetail() 
+    {
+        return adjustDetail;
+    }
 
     @Override
     public String toString() {
@@ -145,11 +184,14 @@ public class MarServicepay extends BaseEntity
             .append("marcusId", getMarcusId())
             .append("customerCode", getCustomerCode())
             .append("corpName", getCorpName())
+            .append("demandId", getDemandId())
             .append("syqstartTime", getSyqstartTime())
             .append("beforeServicepay", getBeforeServicepay())
+            .append("projectName", getProjectName())
             .append("afterServicepay", getAfterServicepay())
             .append("adjustTime", getAdjustTime())
             .append("addTime", getAddTime())
+            .append("adjustDetail", getAdjustDetail())
             .toString();
     }
 }

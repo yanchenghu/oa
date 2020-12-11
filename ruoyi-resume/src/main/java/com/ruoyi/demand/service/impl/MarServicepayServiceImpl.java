@@ -1,10 +1,15 @@
 package com.ruoyi.demand.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.demand.domain.MarCustomerprojectpay;
+import com.ruoyi.demand.domain.MarServicepay;
+import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarServicepayMapper;
-import com.ruoyi.demand.domain.MarServicepay;
 import com.ruoyi.demand.service.IMarServicepayService;
 
 /**
@@ -18,6 +23,9 @@ public class MarServicepayServiceImpl implements IMarServicepayService
 {
     @Autowired
     private MarServicepayMapper marServicepayMapper;
+
+    @Autowired
+    private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
 
     /**
      * 查询服务费调整记录
@@ -50,9 +58,19 @@ public class MarServicepayServiceImpl implements IMarServicepayService
      * @return 结果
      */
     @Override
-    public int insertMarServicepay(MarServicepay marServicepay)
+    public AjaxResult insertMarServicepay(MarServicepay marServicepay)
     {
-        return marServicepayMapper.insertMarServicepay(marServicepay);
+        MarCustomerprojectpay marCustomerprojectpay = marCustomerprojectpayMapper.selectMarCustomerprojectpayById(marServicepay.getMarcusId());
+        marCustomerprojectpay.setServicePay(marServicepay.getAfterServicepay());
+        marServicepay.setCustomerCode(marCustomerprojectpay.getCustomerCode());
+        marServicepay.setCorpName(marCustomerprojectpay.getCorpName());
+        marServicepay.setDemandId(marCustomerprojectpay.getDemandId());
+        marServicepay.setProjectName(marCustomerprojectpay.getProjectName());
+        marServicepay.setSyqstartTime(marCustomerprojectpay.getSyqstartTime());
+        marServicepay.setAddTime(new Date());
+        marServicepayMapper.insertMarServicepay(marServicepay);
+        marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+         return AjaxResult.success("服务费调整成功");
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.ruoyi.demand.mapper;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.demand.domain.MarBorrow;
 
 /**
@@ -58,4 +60,10 @@ public interface MarBorrowMapper
      * @return 结果
      */
     public int deleteMarBorrowByIds(Integer[] ids);
+
+    /**
+     * 归还
+     *
+     */
+
 }
