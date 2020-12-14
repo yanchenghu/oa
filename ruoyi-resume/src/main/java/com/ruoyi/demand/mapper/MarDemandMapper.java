@@ -3,7 +3,9 @@ package com.ruoyi.demand.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.demand.domain.BasicInfo;
 import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.domain.MarEntryInfo;
 
 /**
  * 需求Mapper接口
@@ -73,4 +75,10 @@ public interface MarDemandMapper
      * 需求绑定表的查询
      */
     List<MarDemand> selectMarDemandbindingList(Map map);
+    /**
+     * 获取自定义需求绑定表
+     */
+    List<MarEntryInfo> selectMarDemanddsaList(Map mapss);
+
+    List<BasicInfo> selectMarDem(Map mapss);
 }

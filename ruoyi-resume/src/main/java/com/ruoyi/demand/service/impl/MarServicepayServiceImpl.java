@@ -1,16 +1,24 @@
 package com.ruoyi.demand.service.impl;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.demand.domain.MarCertificates;
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.domain.MarServicepay;
+import com.ruoyi.demand.mapper.MarCertificatesMapper;
 import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarServicepayMapper;
 import com.ruoyi.demand.service.IMarServicepayService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 服务费调整记录Service业务层处理
@@ -26,6 +34,10 @@ public class MarServicepayServiceImpl implements IMarServicepayService
 
     @Autowired
     private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
+    @Autowired
+    private MarCertificatesMapper marCertificatesMapper;
+
+
 
     /**
      * 查询服务费调整记录
@@ -107,5 +119,53 @@ public class MarServicepayServiceImpl implements IMarServicepayService
     public int deleteMarServicepayById(Integer servicepayId)
     {
         return marServicepayMapper.deleteMarServicepayById(servicepayId);
+    }
+    /**
+     * 添加证件
+     */
+
+    @Override
+    public AjaxResult addCertifi(Integer id, String marcusId, Integer photo, MultipartFile file) {
+
+        String avatar="";
+        try {
+             avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return AjaxResult.error("文件上传失败");
+        }
+        MarCertificates marCertificates=new MarCertificates();
+        if(photo==1){
+            marCertificates.setIdcardPositive(avatar);
+        }else if(photo==2){
+            marCertificates.setIdcardReverse(avatar);
+        }else if(photo==3){
+            marCertificates.setDiploma(avatar);
+        }else if(photo==4){
+            marCertificates.setAcademic(avatar);
+        }else if(photo==5){
+            marCertificates.setConfidentialityAgreement(avatar);
+        }else if(photo==6){
+            marCertificates.setServiceContract(avatar);
+        }
+       if(id==null){
+           MarCustomerprojectpay marCustomerprojectpay = marCustomerprojectpayMapper.selectMarCustomerprojectpayById(marcusId);
+           marCertificates.setMarcusId(marcusId);
+           marCertificates.setCustomerCode(marCustomerprojectpay.getCustomerCode());
+           marCertificates.setAddTime(new Date());
+           marCertificatesMapper.insertMarCertificates(marCertificates);
+       }else{
+           marCertificates.setId(id);
+           marCertificatesMapper.updateMarCertificates(marCertificates);
+       }
+        return AjaxResult.success("文件上传成功");
+
+
+    }
+
+    @Override
+    public int personnelItems(MarCustomerprojectpay marCustomerprojectpay) {
+
+        return   marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
     }
 }

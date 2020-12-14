@@ -1,6 +1,8 @@
 package com.ruoyi.resume.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.resume.domain.PerRobcustomer;
 
 /**
@@ -79,4 +81,12 @@ public interface PerRobcustomerMapper
     void updatePerRobbylist(List<String> list);
 
     int updatePerRobByStaReCus(PerRobcustomer perrobcustomer);
+
+    /**
+     * 查询本月抢占人
+     *
+     * @param
+     * @return
+     */
+    List<PerRobcustomer> selectPerRobdatadisplayList(Map map);
 }

@@ -78,9 +78,9 @@ public interface YxdemandMapper
     /**
      * 商务公海
      */
-    List<Yxdemand> selectByDepartBus();
+    List<Yxdemand> selectByDepartBus(Yxdemand yxdemand);
     /**
      * 营销公海
      */
-    List<Yxdemand> selectByDepartMark();
+    List<Yxdemand> selectByDepartMark(Yxdemand yxdemand);
 }

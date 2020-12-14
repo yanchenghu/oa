@@ -140,7 +140,11 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         MarCertificates marCertificates=new MarCertificates();
         marCertificates.setMarcusId(id);
         List<MarCertificates> marCertificates1 = marCertificatesMapper.selectMarCertificatesList(marCertificates);
-        map.put("marCertificates1",marCertificates1);
+        if(marCertificates1.size()>0){
+            map.put("marCertificates1",marCertificates1.get(0));
+        }else{
+            map.put("marCertificates1",marCertificates);
+        }
 
         MarCustomerprojectpay marpr=new MarCustomerprojectpay();
         marpr.setCustomerCode(marprojectpay.getCustomerCode());
@@ -156,6 +160,8 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         marAdsalary.setMarcusId(id);
         List<MarAdsalary> marAdsalaries = marAdsalaryMapper.selectMarAdsalaryList(marAdsalary);
         map.put("marAdsalaries",marAdsalaries);
+
+
 
         MarServicepay marServicepay=new MarServicepay();
         marServicepay.setMarcusId(id);

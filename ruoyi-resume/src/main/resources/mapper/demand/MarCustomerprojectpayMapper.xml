@@ -205,5 +205,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
     where a.id=#{id}
     </select>
-    
+    <select id="getRankingEntry"    resultType="map">
+        SELECT c.opercode,b.avatar,b.nick_name,c.peonum from
+            (SELECT
+            a.opercode,COUNT(a.customer_code) as peonum
+            FROM
+            mar_customerprojectpay a
+            where
+                  DATE_FORMAT( a.oper_time, '%Y%m' )= DATE_FORMAT( CURDATE( ) , '%Y%m' )
+            GROUP BY opercode)c
+        LEFT JOIN sys_user b ON c.opercode = b.user_name
+        ORDER BY c.peonum desc
+    </select>
+
 </mapper>

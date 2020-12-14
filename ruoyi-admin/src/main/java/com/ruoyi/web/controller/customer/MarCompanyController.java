@@ -108,13 +108,13 @@ public class MarCompanyController extends BaseController
      */
     @PostMapping(value = "/save")
     public AjaxResult save(@RequestParam("contractPreview") MultipartFile file, String firstParty,
-    String party, String startTime, String endTime,String clientSigner, String companySigner)
+    String party, String startTime, String endTime,String clientSigner, String companySigner,String corpCode)
     {
         try {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
             Date startTime1 = DateUtils.parseDate(startTime);
             Date endTime1 = DateUtils.parseDate(endTime);
-            return marContractService.insertMarContract(file,firstParty,party, startTime1,endTime1,clientSigner,companySigner,loginUser);
+            return marContractService.insertMarContract(file,firstParty,party, startTime1,endTime1,clientSigner,companySigner,loginUser,corpCode);
         } catch (IOException e) {
             e.printStackTrace();
             return AjaxResult.error("上传错误");

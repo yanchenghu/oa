@@ -40,6 +40,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="operUsername"    column="oper_username"    />
     </resultMap>
 
+    <resultMap  type="MarEntryInfo" id="MarrInfo">
+        <result property="demandId" column="demand_id" />
+        <result property="projectName" column="project_name" />
+        <!-- property表示集合类型属性名称，ofType表示集合中的对象是什么类型 -->
+        <collection property="basicInfo" ofType="com.ruoyi.demand.domain.BasicInfo">
+            <id property="customerName" column="customer_name"/>
+            <result property="followStatus" column="follow_status"/>
+        </collection>
+    </resultMap>
+    <resultMap  type="BasicInfo" id="Basic">
+        <result property="customerName" column="customer_name" />
+        <result property="followStatus" column="follow_status" />
+    </resultMap>
+
+
     <sql id="selectMarDemandVo">
         select demand_id, corp_code, project_name, technology_direction, demand_years, education, demand_number, specificrequi_rement, project_location, address, direct_worklife, target_number, important_level, min_salary, max_salary, technical_requirement, Langue, demand_pic, interviewer, contact_phone, specific_location, attention, if_look, chsi_flag, coopnature, state, close_date, temp_id, temp_name, add_time, operationuser, oper_username from mar_demand
     </sql>
@@ -232,6 +247,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="deptId !=null">and a.dept_id = #{deptId} </if>
     </select>
 
+    <select id="selectMarDemanddsaList" parameterType="Map" resultMap="MarrInfo">
+        SELECT b.demand_id ,b.project_name from mar_sign a LEFT JOIN mar_demand b on a.demand_id=b.demand_id
+        where  1 = 1 and b.state=0
+        <if test="deptId !=null">and a.dept_id = #{deptId} </if>
+    </select>
+
+
+    <select id="selectMarDem" parameterType="Map" resultMap="Basic">
+       SELECT c.customer_name,b.follow_status from  mar_demandresume a
+        LEFT JOIN mar_demandresumefollow b on  a.id=b.demandresume_id and a.newfollowtime=b.trackingtime
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        where a.demand_id=#{demandId} and a.bind_people=#{bindPeople}
+    </select>
 
 
 

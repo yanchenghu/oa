@@ -39,7 +39,7 @@ public interface IMarContractService
      * @param marContract 合同
      * @return 结果
      */
-    AjaxResult insertMarContract(MultipartFile file, String firstParty, String party, Date startTime, Date endTime, String clientSigner, String companySigner, LoginUser loginUser) throws IOException;
+    AjaxResult insertMarContract(MultipartFile file, String firstParty, String party, Date startTime, Date endTime, String clientSigner, String companySigner, LoginUser loginUser,String corpCode) throws IOException;
 
     /**
      * 修改合同

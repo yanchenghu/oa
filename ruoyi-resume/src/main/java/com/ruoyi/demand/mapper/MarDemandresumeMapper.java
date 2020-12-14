@@ -73,4 +73,6 @@ public interface MarDemandresumeMapper
      *根据绑定简历获取入项信息的基本
      */
     Map getInputInformation(String id);
+    //获取简历绑定人数
+    List<Map> selectMarDemandresumedataDisplay(Map map);
 }

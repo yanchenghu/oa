@@ -1,18 +1,17 @@
 package com.ruoyi.demand.domain;
 
+import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Date;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 证件信息对象 mar_certificates
  * 
  * @author ych
- * @date 2020-12-10
+ * @date 2020-12-14
  */
 public class MarCertificates extends BaseEntity
 {
@@ -44,6 +43,10 @@ public class MarCertificates extends BaseEntity
     /** 保密协议 */
     @Excel(name = "保密协议")
     private String confidentialityAgreement;
+
+    /** 毕业证 */
+    @Excel(name = "毕业证")
+    private String diploma;
 
     /** 劳务合同 */
     @Excel(name = "劳务合同")
@@ -117,6 +120,15 @@ public class MarCertificates extends BaseEntity
     {
         return confidentialityAgreement;
     }
+    public void setDiploma(String diploma) 
+    {
+        this.diploma = diploma;
+    }
+
+    public String getDiploma() 
+    {
+        return diploma;
+    }
     public void setServiceContract(String serviceContract) 
     {
         this.serviceContract = serviceContract;
@@ -146,6 +158,7 @@ public class MarCertificates extends BaseEntity
             .append("idcardReverse", getIdcardReverse())
             .append("academic", getAcademic())
             .append("confidentialityAgreement", getConfidentialityAgreement())
+            .append("diploma", getDiploma())
             .append("serviceContract", getServiceContract())
             .append("addTime", getAddTime())
             .toString();
