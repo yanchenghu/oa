@@ -51,6 +51,14 @@ public class MarDemandFollowController extends BaseController
         List<MarDemand> list = marDemandService.selectMarDemandList(marDemand,loginUser);
         return getDataTable(list);
     }
+    @GetMapping("/list1")
+    public TableDataInfo list1(MarDemand marDemand)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        List<MarDemand> list = marDemandService.selectMarDemandList(marDemand,loginUser);
+        return getDataTable(list);
+    }
 
     /**
      * 导出需求列表
