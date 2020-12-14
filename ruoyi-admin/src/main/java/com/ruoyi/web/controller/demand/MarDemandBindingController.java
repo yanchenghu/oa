@@ -53,6 +53,15 @@ public class MarDemandBindingController extends BaseController {
         return getDataTable(list);
     }
 
+    @GetMapping("/list1")
+    public TableDataInfo list1(MarDemand marDemand)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        List<MarDemand> list = marDemandService.selectMarDemandbindingList(marDemand,loginUser);
+        return getDataTable(list);
+    }
+
     /**
      * 获取我抢占的简历
      */
@@ -109,9 +118,8 @@ public class MarDemandBindingController extends BaseController {
 
         if(StringUtils.isNotEmpty(marCustomerprojectpay.getOpercode())){
            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-
-            SysUser user= userService.selectUserByUserName(marCustomerprojectpay.getOpercode());
-          return marDemandService.entryPersonnel(marCustomerprojectpay,user,loginUser);
+           SysUser user= userService.selectUserByUserName(marCustomerprojectpay.getOpercode());
+           return marDemandService.entryPersonnel(marCustomerprojectpay,user,loginUser);
         }else{
             return AjaxResult.error("简历需求绑定人为空");
         }
