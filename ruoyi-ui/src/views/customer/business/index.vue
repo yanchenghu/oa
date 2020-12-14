@@ -189,9 +189,9 @@
                 <ul style="list-style: none;padding-left: 10px;">
                   <li v-for="msg in putmsgs">
                     <span class="sp">{{msg.contactTime}} {{msg.nickName}} </span>
-                    <span v-if="msg.status==1" class="sp">跟进</span>
+                    <span v-if="msg.status==3" class="sp">跟进</span>
                     <span v-else-if="msg.status==2" class="sp">{{msg.contactDetail}}</span>
-                    <span v-else-if="msg.status==3" class="sp">录入客户</span>
+                    <span v-else-if="msg.status==1" class="sp">录入客户</span>
                     <p><span class="span" v-show="msg.status!==2">{{msg.contactDetail}}</span></p>
                   </li>
                 </ul>
@@ -290,7 +290,8 @@
 </template>
 
 <script>
-  import { getYxdemand,listbusiness,addYxdemand,see,exportYxdemand}from "@/api/customer/business";
+  import { getYxdemand,listbusiness,addYxdemand,see,exportYxdemand,release}from "@/api/customer/business";
+  import {debounce} from "@/utils/ruoyi.js"
 export default {
   name: "Yxdemand",
   data() {
@@ -455,11 +456,7 @@ export default {
         }
       })
     },
-    bul(){
-      // debounce(function(){
-      //   this.put=false
-      // },500)
-    },
+    bul:debounce(function(){this.put=false},500),
     // 下拉框选中加载
     change(){
         this.getList()
@@ -588,18 +585,17 @@ export default {
     // 移交
     onSubmit(id){
       this.opens=true
-
     },
     // 发布按钮
     putmsgbut(id){
       let formData = new FormData()
       formData.append("entryId",id)
       formData.append("contactDetail",this.putmsg)
-      release(formData).then(
-      this.followUp(id)
-      )
-      // putmsgs(this.putmsg).then(msg=>{
-      // })
+      release(formData).then(res=>{
+        this.followUp(id)
+        this.putmsg=""
+        this.msgSuccess("发布成功")
+      })
     },
     /** 跟进按钮 */
     followUp(value){
@@ -616,12 +612,8 @@ export default {
     set(){
       see(this.yxdemandone)
     },
-    sees(){
-      let that = this
-      this.debounce(that.set())
-    },
     /**输入框实时修改按钮  */
-
+    sees:debounce(function(){this.set()},1000),
   }
 };
 </script>

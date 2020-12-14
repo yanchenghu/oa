@@ -651,7 +651,7 @@ import {debounce} from "@/utils/ruoyi.js"
       handleRemove(file) {
           this.$refs.file.clearFiles()
           this.filelist=[]
-        },
+      },
       // 查找树结构父节点
       changeDetSelect(key, treeData) {
               let arr = []; // 在递归时操作的数组

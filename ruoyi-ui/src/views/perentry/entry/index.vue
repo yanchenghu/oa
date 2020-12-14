@@ -181,7 +181,7 @@
                    <b>外包公司信息</b>
                    <p></p>
                     <el-form-item label="身份证正面">
-                      <el-button type="text" @click="upfile(0)" v-if="!marCertificates1.idcardPositive">
+                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(0)" v-if="!marCertificates1.idcardPositive">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(0)" v-else>
@@ -189,15 +189,15 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="身份证反面">
-                      <el-button type="text" @click="upfile(1)" v-if="!marCertificates1.idcardPositive">
+                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(1)" v-if="!marCertificates1.idcardReverse">
                           点击上传
                       </el-button>
-                      <el-button type="text" @click="seefile(1)" v-else>
+                      <el-button  type="text" @click="seefile(1)" v-else>
                           点击预览
                       </el-button>
                     </el-form-item>
                     <el-form-item label="毕业证">
-                      <el-button type="text" @click="upfile(2)" v-if="!marCertificates1.idcardPositive">
+                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(2)" v-if="!marCertificates1.diploma">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(2)" v-else>
@@ -205,7 +205,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="学位证">
-                      <el-button type="text" @click="upfile(3)" v-if="!marCertificates1.idcardPositive">
+                      <el-button  :disabled="yxdemandone.outofProjecttime"type="text" @click="upfile(3)" v-if="!marCertificates1.academic">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(3)" v-else>
@@ -213,7 +213,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="保密协议">
-                      <el-button type="text" @click="upfile(4)" v-if="!marCertificates1.idcardPositive">
+                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(4)" v-if="!marCertificates1.confidentialityAgreement">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(4)" v-else>
@@ -221,7 +221,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="劳动合同">
-                      <el-button type="text" @click="upfile(5)" v-if="!marCertificates1.idcardPositive">
+                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(5)" v-if="!marCertificates1.serviceContract">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(5)" v-else>
@@ -347,14 +347,14 @@
     </el-drawer>
     <el-dialog :title="title2" :visible.sync="open2" width="500px">
       <el-upload
-        :action="url"
+        action="#"
         list-type="picture-card"
         :auto-upload="false"
         ref="file"
-        :headers="headers"
         :limit="1"
+        :file-list="filelist"
+        :on-change="handleRemov"
         :on-exceed="handleExceed"
-        :on-success="handleFileSuccess"
         accept=".png,.jpg,"
         >
         <div slot="tip" class="el-upload__tip">仅支持上传jpg/png文件</div>
@@ -381,7 +381,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="dialogVisible">
+    <el-dialog :visible.sync="dialogVisible" width="500px" :title="title2">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
     <!-- 添加或修改入项对话框 -->
@@ -403,7 +403,7 @@
     </el-dialog>
     <!-- 出项信息 -->
     <el-dialog :title="title3" :visible.sync="open3" width="500px" >
-      <el-form ref="form3" :model="form3" class="form" label-width="100px">
+      <el-form ref="form3" :model="form3" :rules="rules" class="form" label-width="100px">
         <el-form-item label="离项原因" prop="quitProreason">
           <el-select v-model="form3.quitProreason" placeholder="请选择" size="small">
             <el-option
@@ -424,8 +424,8 @@
           value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-            <el-input v-model="form3.remark" placeholder="请输入备注" type="textarea"/>
+        <el-form-item label="备注" prop="quitRemark">
+            <el-input v-model="form3.quitRemark" placeholder="请输入备注" type="textarea"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -435,7 +435,7 @@
     </el-dialog>
     <!-- 新建借用记录 -->
     <el-dialog :title="title4" :visible.sync="open4" width="500px" >
-      <el-form ref="form4" :rules="rules" :model="form4" label-width="100px" class="form">
+      <el-form ref="form4" :rules="rules" :model="form4" label-width="110px" class="form">
         <el-form-item label="借用时间" prop="borrowTime">
               <el-date-picker type="date" placeholder="选择借用时间" v-model="form4.borrowTime" value-format="yyyy-MM-dd" size="small" style="width: 100%;"></el-date-picker>
         </el-form-item>
@@ -497,6 +497,7 @@
 <script>
 import { listEntry, getEntry, delEntry, addEntry, updateEntry, exportEntry, addgongzi,addfuwufei,putwupin} from "@/api/perentry/entry";
 import { getToken } from "@/utils/auth";
+import {debounce} from "@/utils/ruoyi.js"
 export default {
   name: "Entry",
   data() {
@@ -541,8 +542,7 @@ export default {
       marCertificates1:{},
       // 入项基本信息
       yxdemandone:{},
-      url: process.env.VUE_APP_BASE_API + "/system/user/importData",
-      headers: { Authorization: "Bearer " + getToken()},
+      filelist:[],
       dialogVisible:false,
       // 查看照片路径
       dialogImageUrl:"",
@@ -555,7 +555,7 @@ export default {
       // 选中数组
       ids: [],
       // 非单个禁用
-      single: true,
+      single:null,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -622,6 +622,21 @@ export default {
          returnTime: [{
            required: true,
            message: "归还时间不能为空",
+           trigger: ["blur", "change"]
+         },],
+         quitProreason:[
+           {required: true,
+           message: "离项原因不能为空",
+           trigger: ["blur", "change"]}
+         ],
+         outofProjecttime: [{
+           required: true,
+           message: "离项时间不能为空",
+           trigger: ["blur", "change"]
+         },],
+         quitRemark: [{
+           required: true,
+           message: "离项备注不能为空",
            trigger: ["blur", "change"]
          },],
 
@@ -710,23 +725,49 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
-    // 文件上传成功处理
-    handleFileSuccess(response, file, fileList) {
-      this.open2 = false;
-      this.$refs.file.clearFiles();
-    },
+
     handleExceed(){
       this.msgError(`当前限制选择 1 个文件`);
     },
+    handleRemov(value){
+      this.single=value.raw;
+    },
     handleRemove(file) {
         this.$refs.file.clearFiles()
+        this.single = null
     },
-    submitForm2(){
-      this.$refs.file.submit();
+    submitForm2:debounce(function(){
+      this.submitForms2()
+    },500),
+    submitForms2(){
+      if(this.single==null){
+        this.msgError("上传图片不能为空")
+      }else{
+        let form = new FormData()
+        form.append("marcusId",this.yxdemandone.id)
+        form.append("file",this.single)
+        form.append("id",this.marCertificates1.id)
+        if(this.title2=="上传身份证正面"){
+          form.append("photo",1)
+        }else if(this.title2=="上传身份证反面"){
+          form.append("photo",2)
+        }else if(this.title2=="上传毕业证"){
+          form.append("photo",3)
+        }else if(this.title2=="上传学位证"){
+          form.append("photo",4)
+        }else if(this.title2=="上传保密协议"){
+          form.append("photo",5)
+        }else if(this.title2=="上传劳动合同"){
+          form.append("photo",6)
+        }
+        addEntry(form).then(res=>{
+          this.open2 = false
+          this.handleUpdate(this.yxdemandone.id)
+        })
+      }
     },
     /** 新增按钮操作 */
     handleAdd() {
-
       this.reset();
       this.open = true;
       this.title = "添加入项";
@@ -736,7 +777,7 @@ export default {
         this.open=true
         this.form = {}
         this.form.id = row.id
-        this.title = "归还物品s"
+        this.title = "归还物品"
     },
 
     // 添加借用记录
@@ -758,37 +799,50 @@ export default {
       }
     },
     // 借用记录
-    submitForm4(){
-      this.form4.marcusId = this.yxdemandone.id
-      updateEntry(this.form4).then(response => {
-        this.msgSuccess("添加成功");
-        this.open4 = false;
-        this.handleUpdate(this.form4.marcusId);
-      });
+    submitForm4:debounce(function(){this.submitForms4()},500),
+    submitForms4(){
+      this.$refs["form4"].validate(valid=>{
+        if(valid){
+          this.form4.marcusId = this.yxdemandone.id
+          updateEntry(this.form4).then(response => {
+            this.msgSuccess("添加成功");
+            this.open4 = false;
+            this.handleUpdate(this.form4.marcusId);
+          });
+        }
+      })
     },
-    submitForm5(){
-      this.form5.marcusId = this.yxdemandone.id
-      if(this.title5=="新建工资调整记录"){
-        addgongzi(this.form5).then(response => {
-          this.msgSuccess("添加成功");
-          this.open5 = false;
-          this.handleUpdate(this.form5.marcusId);
-        });
-      }else{
-        addfuwufei(this.form5).then(response => {
-          this.msgSuccess("添加成功");
-          this.open5 = false;
-          this.handleUpdate(this.form5.marcusId);
-        });
-      }
-
+    submitForm5:debounce(function(){this.submitForms5()},500),
+    submitForms5(){
+      this.$refs["form4"].validate(valid=>{
+        if(valid){
+          this.form5.marcusId = this.yxdemandone.id
+          if(this.title5=="新建工资调整记录"){
+            addgongzi(this.form5).then(response => {
+              this.msgSuccess("添加成功");
+              this.open5 = false;
+              this.handleUpdate(this.form5.marcusId);
+            });
+          }else{
+            addfuwufei(this.form5).then(response => {
+              this.msgSuccess("添加成功");
+              this.open5 = false;
+              this.handleUpdate(this.form5.marcusId);
+            });
+          }
+        }
+      })
     },
 
     // 上传文件
     upfile(ind){
-      if(ind==1){
+      this.filelist=[]
+      if(ind==0){
         // 上传身份证
-        this.title2 = "上传身份证"
+        this.title2 = "上传身份证正面"
+      }else if(ind==1){
+        // 上传身份证
+        this.title2 = "上传身份证反面"
       }else if(ind==2){
         // 上传毕业证
         this.title2 = "上传毕业证"
@@ -806,8 +860,35 @@ export default {
     },
 
     // 预览文件
-    seefile(){
-
+    seefile(ind){
+       let srcs = process.env.VUE_APP_BASE_API
+       this.dialogImageUrl = ""
+       if(ind==0){
+         // 预览身份证
+         this.title2 = "预览身份证正面"
+         this.dialogImageUrl = srcs+this.marCertificates1.idcardPositive
+       }else if(ind==1){
+         // 预览身份证
+         this.title2 = "预览身份证反面"
+         this.dialogImageUrl = srcs+this.marCertificates1.idcardReverse
+       }else if(ind==2){
+         // 预览毕业证
+         this.title2 = "预览毕业证"
+          this.dialogImageUrl = srcs+this.marCertificates1.diploma
+       }else if(ind==3){
+         // 预览学位证
+         this.title2 = "预览学位证"
+          this.dialogImageUrl = srcs+this.marCertificates1.academic
+       }else if(ind==4){
+         // 预览保密协议
+         this.title2 = "预览保密协议"
+          this.dialogImageUrl = srcs+this.marCertificates1.confidentialityAgreement
+       }else if(ind==5){
+         // 预览劳动合同
+         this.title2 = "预览劳动合同"
+          this.dialogImageUrl = srcs+this.marCertificates1.serviceContract
+       }
+       this.dialogVisible=true
     },
 
     /** 添加人员信息按钮操作 */
@@ -823,7 +904,8 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm() {
+    submitForm:debounce(function(){this.submitForms()},500),
+    submitForms() {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.isReturn=1
@@ -841,36 +923,30 @@ export default {
       this.title3 = "出项信息"
       this.form3 = {}
     },
-    submitForm3(){
+    submitForm3:debounce(function(){this.submitForms3()},500),
+    submitForms3(){
       this.$refs["form3"].validate(valid => {
         if (valid) {
-          if (this.form.id != null) {
-            updateEntry(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addEntry(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
+         this.form3.id = this.yxdemandone.id
+         delEntry(this.form3).then(res=>{
+            this.msgError("出项成功")
+            this.open3 = false
+            this.handleUpdate(this.yxdemandone.id);
+         })
         }
       });
 
-      const ids = row.id || this.ids;
-      this.$confirm('是否确认删除入项编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delEntry(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+      // const ids = row.id || this.ids;
+      // this.$confirm('是否确认删除入项编号为"' + ids + '"的数据项?', "警告", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     type: "warning"
+      //   }).then(function() {
+      //     return delEntry(ids);
+      //   }).then(() => {
+      //     this.getList();
+      //     this.msgSuccess("删除成功");
+      //   })
     },
 
 

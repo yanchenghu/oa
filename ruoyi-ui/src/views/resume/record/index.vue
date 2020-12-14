@@ -188,11 +188,11 @@
         </el-table>
       </div>
       <pagination
-      v-show="total > 0"
-                :total="total"
-                :page.sync="finddata.pageNum"
-                :limit.sync="finddata.pageSize"
-                @pagination="select"
+        v-show="total > 0"
+        :total="total"
+        :page.sync="finddata.pageNum"
+        :limit.sync="finddata.pageSize"
+        @pagination="select"
               />
     </el-dialog>
   </div>

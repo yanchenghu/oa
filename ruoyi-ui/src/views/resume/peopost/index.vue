@@ -82,17 +82,17 @@
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
                <el-tooltip class="item" effect="dark" content="预览" placement="top-start">
-                    <el-button size="mini" type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:record:preview']">
+                    <el-button size="mini" type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
                       <svg-icon icon-class="preview" style="font-size: 16px;"/>
                     </el-button>
                 </el-tooltip>
 
               <el-tooltip class="item" effect="dark" content="抢占" placement="top">
-                    <el-button size="mini" type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:record:preempt']"><svg-icon icon-class="button" style="font-size: 16px;"/></el-button>
+                    <el-button size="mini" type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button" style="font-size: 16px;"/></el-button>
               </el-tooltip>
 
               <el-tooltip class="item" effect="dark" content="查看" placement="top-end">
-                    <el-button size="mini" type="text"  @click="handlesee(scope.row)" v-hasPermi="['resume:record:eye']"><svg-icon icon-class="eye-open" style="font-size: 16px;"/></el-button>
+                    <el-button size="mini" type="text"  @click="handlesee(scope.row)" ><svg-icon icon-class="eye-open" style="font-size: 16px;"/></el-button>
               </el-tooltip>
 
             </template>
