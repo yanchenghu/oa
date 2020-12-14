@@ -144,5 +144,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and Status = #{status}</if>
         </where>
     </update>
+    <select id="selectPerRobdatadisplayList" parameterType="map" resultMap="PerRobcustomerResult">
+        <include refid="selectPerRobcustomerVo"/>
+        where add_people=#{AddPeople}
+        and Status=0
+        and DATE_FORMAT( add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    </select>
 
 </mapper>

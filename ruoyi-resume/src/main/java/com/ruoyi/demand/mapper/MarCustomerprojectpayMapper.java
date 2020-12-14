@@ -74,4 +74,6 @@ public interface MarCustomerprojectpayMapper
      * 人员入项基本信息
      */
     Map selectMarCustomePerinfoById(String id);
+    //本月入项排行榜
+    List<Map> getRankingEntry();
 }

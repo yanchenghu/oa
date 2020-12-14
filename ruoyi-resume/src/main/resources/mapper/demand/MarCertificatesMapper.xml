@@ -12,12 +12,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="idcardReverse"    column="idcard_reverse"    />
         <result property="academic"    column="academic"    />
         <result property="confidentialityAgreement"    column="confidentiality_agreement"    />
+        <result property="diploma"    column="diploma"    />
         <result property="serviceContract"    column="service_contract"    />
         <result property="addTime"    column="add_time"    />
     </resultMap>
 
     <sql id="selectMarCertificatesVo">
-        select id, marcus_id, customer_code, idcard_positive, idcard_reverse, academic, confidentiality_agreement, service_contract, add_time from mar_certificates
+        select id, marcus_id, customer_code, idcard_positive, idcard_reverse, academic, confidentiality_agreement, diploma, service_contract, add_time from mar_certificates
     </sql>
 
     <select id="selectMarCertificatesList" parameterType="MarCertificates" resultMap="MarCertificatesResult">
@@ -29,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idcardReverse != null  and idcardReverse != ''"> and idcard_reverse = #{idcardReverse}</if>
             <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
             <if test="confidentialityAgreement != null  and confidentialityAgreement != ''"> and confidentiality_agreement = #{confidentialityAgreement}</if>
+            <if test="diploma != null  and diploma != ''"> and diploma = #{diploma}</if>
             <if test="serviceContract != null  and serviceContract != ''"> and service_contract = #{serviceContract}</if>
             <if test="addTime != null "> and add_time = #{addTime}</if>
         </where>
@@ -48,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idcardReverse != null">idcard_reverse,</if>
             <if test="academic != null">academic,</if>
             <if test="confidentialityAgreement != null">confidentiality_agreement,</if>
+            <if test="diploma != null">diploma,</if>
             <if test="serviceContract != null">service_contract,</if>
             <if test="addTime != null">add_time,</if>
          </trim>
@@ -58,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idcardReverse != null">#{idcardReverse},</if>
             <if test="academic != null">#{academic},</if>
             <if test="confidentialityAgreement != null">#{confidentialityAgreement},</if>
+            <if test="diploma != null">#{diploma},</if>
             <if test="serviceContract != null">#{serviceContract},</if>
             <if test="addTime != null">#{addTime},</if>
          </trim>
@@ -72,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idcardReverse != null">idcard_reverse = #{idcardReverse},</if>
             <if test="academic != null">academic = #{academic},</if>
             <if test="confidentialityAgreement != null">confidentiality_agreement = #{confidentialityAgreement},</if>
+            <if test="diploma != null">diploma = #{diploma},</if>
             <if test="serviceContract != null">service_contract = #{serviceContract},</if>
             <if test="addTime != null">add_time = #{addTime},</if>
         </trim>

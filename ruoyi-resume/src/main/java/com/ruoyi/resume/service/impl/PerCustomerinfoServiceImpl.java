@@ -453,17 +453,17 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
     }
 
-//    @Override
-//    public AjaxResult fileUpload(MultipartFile file)  {
-//        try {
-//            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-//            return AjaxResult.success("avatar",  avatar);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return AjaxResult.error("文件上传失败");
-//        }
-//
-//    }
+    @Override
+    public AjaxResult fileUpload(MultipartFile file)  {
+        try {
+            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
+            return AjaxResult.success("avatar",  avatar);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return AjaxResult.error("文件上传失败");
+        }
+
+    }
 
     @Override
     @Transactional

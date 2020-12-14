@@ -3,7 +3,9 @@ package com.ruoyi.demand.service;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.domain.MarServicepay;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 服务费调整记录Service接口
@@ -60,4 +62,14 @@ public interface IMarServicepayService
      * @return 结果
      */
     public int deleteMarServicepayById(Integer servicepayId);
+
+    /**
+     * 添加证件
+     */
+    AjaxResult addCertifi(Integer id, String marcusId, Integer photo, MultipartFile file);
+
+    /**
+     * 人员出项
+     */
+    int personnelItems(MarCustomerprojectpay marCustomerprojectpay);
 }

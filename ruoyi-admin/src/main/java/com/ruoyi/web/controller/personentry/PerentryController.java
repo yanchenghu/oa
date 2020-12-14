@@ -10,15 +10,14 @@ import com.ruoyi.demand.service.IMarAdsalaryService;
 import com.ruoyi.demand.service.IMarBorrowService;
 import com.ruoyi.demand.service.IMarCustomerprojectpayService;
 import com.ruoyi.demand.service.IMarServicepayService;
-import com.ruoyi.resume.domain.PerCustomerinfo;
-import com.ruoyi.resume.service.IPerCuscontactService;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
+
 
 /**
  * 人员入项Controller
@@ -41,6 +40,8 @@ public class PerentryController extends BaseController {
 
     @Autowired
     private IMarServicepayService marServicepayService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 人员入项信息列表
@@ -114,6 +115,25 @@ public class PerentryController extends BaseController {
         return  marServicepayService.insertMarServicepay(marServicepay);
     }
 
+    /**
+     * 添加证件
+     */
+    @PostMapping(value = "/addCertifi")
+    public AjaxResult addCertifi(String id, String marcusId,Integer photo,MultipartFile file){
+     Integer ad=null;
+     if(!id.equals("null")){
+         ad = Integer.valueOf(id);
+     }
+        return  marServicepayService.addCertifi(ad,marcusId,photo,file);
+    }
+
+    /**
+     * 人员出项
+     */
+    @PostMapping(value = "/personnelItems")
+    public AjaxResult personnelItems(@RequestBody MarCustomerprojectpay marCustomerprojectpay){
+        return toAjax(marServicepayService.personnelItems(marCustomerprojectpay)) ;
+    }
 
 
 
@@ -124,4 +144,7 @@ public class PerentryController extends BaseController {
 
 
 
-}
+
+
+
+    }

@@ -108,5 +108,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             a.id=#{id}
     </select>
 
+    <select id="selectMarDemandresumedataDisplay"  parameterType="map"  resultType="map">
+
+        SELECT a.customer_code,a.demand_id,b.follow_status,b.trackingtime from  mar_demandresume a LEFT JOIN
+            mar_demandresumefollow b on a.id=b.demandresume_id
+        where
+          a.bind_people =#{AddPeople}
+          DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+          and b.follow_status=#{followStatus}
+    </select>
 
 </mapper>

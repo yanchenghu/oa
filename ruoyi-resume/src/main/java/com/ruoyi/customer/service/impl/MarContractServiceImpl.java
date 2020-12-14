@@ -66,9 +66,10 @@ public class MarContractServiceImpl implements IMarContractService
      */
     @Override
     public AjaxResult insertMarContract(MultipartFile file, String firstParty,
-                                        String party, Date startTime, Date endTime,String clientSigner, String companySigner,  LoginUser loginUser) throws IOException {
+                                        String party, Date startTime, Date endTime,String clientSigner, String companySigner,  LoginUser loginUser,String corpCode) throws IOException {
         String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
         MarContract marContract = new MarContract();
+        marContract.setCorpCode(corpCode);
         marContract.setFirstParty(firstParty);
         marContract.setParty(party);
         marContract.setStartTime(startTime);
@@ -76,9 +77,6 @@ public class MarContractServiceImpl implements IMarContractService
         marContract.setClientSigner(clientSigner);
         marContract.setCompanySigner(companySigner);
         marContract.setContractPreview(avatar);
-//        marContract.setContractName(contractName);
-//        marContract.setContractTime(contractTime);
-
 
         marContract.setContractName(loginUser.getUser().getNickName());
         marContract.setContractTime(new Date());

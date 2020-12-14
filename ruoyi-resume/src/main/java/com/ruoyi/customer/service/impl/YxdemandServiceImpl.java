@@ -377,12 +377,12 @@ public class YxdemandServiceImpl implements IYxdemandService
      */
     @Override
     public List<Yxdemand> selectByDepartBus(Yxdemand yxdemand, LoginUser loginUser) {
-        return yxdemandMapper.selectByDepartBus();
+        return yxdemandMapper.selectByDepartBus(yxdemand);
     }
 
     @Override
     public List<Yxdemand> selectByDepartMark(Yxdemand yxdemand, LoginUser loginUser) {
-        return yxdemandMapper.selectByDepartMark();
+        return yxdemandMapper.selectByDepartMark(yxdemand);
     }
     /**
      * 商务抢占功能营销

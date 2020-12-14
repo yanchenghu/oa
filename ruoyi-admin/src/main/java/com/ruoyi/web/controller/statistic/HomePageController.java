@@ -5,7 +5,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.demand.service.IMarCustomerprojectpayService;
+import com.ruoyi.demand.service.IMarDemandService;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.statistic.service.IHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +26,10 @@ public class HomePageController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
-
     @Autowired
     private IMarCustomerprojectpayService marCustomerprojectpayService;
-
+    @Autowired
+    private IHomePageService homePageService;
 
 
     /**
@@ -38,7 +40,15 @@ public class HomePageController extends BaseController {
     {
         return marCustomerprojectpayService.rotation();
     }
-
+    /**
+     * 首页数据展示
+     */
+    @GetMapping(value = "/datadisplay")
+    public AjaxResult datadisplay()
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return homePageService.datadisplay(loginUser);
+    }
 
 
 

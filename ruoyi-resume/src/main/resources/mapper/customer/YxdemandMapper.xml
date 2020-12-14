@@ -196,14 +196,19 @@
         <include refid="selectYxdemandVo"/>
         where company_name = #{companyName}
     </select>
-    <select id="selectByDepartBus"  resultMap="YxdemandResult">
+    <select id="selectByDepartBus"  parameterType="Yxdemand"  resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
         where   ISNULL(business_id)=0 and LENGTH(trim(business_id))=0 and is_accept=1
+        <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+
+
     </select>
 
-    <select id="selectByDepartMark"  resultMap="YxdemandResult">
+    <select id="selectByDepartMark" parameterType="Yxdemand" resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
         where   ISNULL(rob_people_id)=0 and LENGTH(trim(rob_people_id))=0 and is_accept=0
+        <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+
     </select>
 
     <!--   定时器自动执行 -->
