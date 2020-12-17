@@ -1,11 +1,14 @@
 package com.ruoyi.demand.service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.demand.domain.MarCustomePerinfo;
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
+import com.ruoyi.demand.domain.PersonnelEssentialinfor;
+
 
 /**
  * 入项Service接口
@@ -74,4 +77,14 @@ public interface IMarCustomerprojectpayService
      * 人员入项配置信息
      */
     AjaxResult entryinfor(String id);
+
+
+    /**
+     * 人员流动信息列表
+     */
+    List<PersonnelEssentialinfor> selectpersonnelTurnoverList(MarCustomerprojectpay marCustomerprojectpay);
+    /*入项人员信息*/
+    Map entryDetail(MarCustomerprojectpay marCustomerprojectpay) ;
+
+    List<Map> outItemlist(MarCustomerprojectpay marCustomerprojectpay);
 }

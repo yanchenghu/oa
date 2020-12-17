@@ -307,8 +307,8 @@ public class DateUtils {
 	/**   
 	* 获取两个日历的月份之差   
 	*    
-	* @param calendarBirth   
-	* @param calendarNow   
+	* @param
+	* @param
 	* @return   
 	 * @throws ParseException 
 	*/   

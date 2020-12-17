@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.demand.domain.MarCustomePerinfo;
-import com.ruoyi.demand.domain.MarCustomerprojectpay;
+import com.ruoyi.demand.domain.*;
 
 /**
  * 入项Mapper接口
@@ -76,4 +75,22 @@ public interface MarCustomerprojectpayMapper
     Map selectMarCustomePerinfoById(String id);
     //本月入项排行榜
     List<Map> getRankingEntry();
+    /**
+     * 人员流动信息列表
+     */
+
+    List<PersonnelEssentialinfor> selectpersonnelTurnoverList(Map map);
+
+    Map inItemNowCount();
+
+    Map entryPeopleCount(Map map);
+
+    List<Map> outItemlist(Map map);
+
+    /**
+     * 查询当前人是否在项
+     */
+    MarCustomerprojectpay isInitem(String customerCode);
+
+
 }

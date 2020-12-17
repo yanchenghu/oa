@@ -1,10 +1,15 @@
 package com.ruoyi.demand.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.demand.domain.*;
 import com.ruoyi.demand.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,5 +175,77 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
 
 
         return AjaxResult.success(map);
+    }
+    /**
+     * 人员流动信息列表
+     */
+
+    @Override
+    public List<PersonnelEssentialinfor> selectpersonnelTurnoverList(MarCustomerprojectpay marCustomerprojectpay) {
+        Map map=new HashMap();
+        map.put("startTime",marCustomerprojectpay.getStartTime());
+        map.put("endTime",marCustomerprojectpay.getEndTime());
+        map.put("status",marCustomerprojectpay.getSettledCycle());
+        List<PersonnelEssentialinfor>  list=marCustomerprojectpayMapper.selectpersonnelTurnoverList(map);
+        BigDecimal b1 = new BigDecimal("100");
+        for(PersonnelEssentialinfor personnelEsse:list){
+            BigDecimal salary = personnelEsse.getSalary();
+            BigDecimal servicePay = personnelEsse.getServicePay();
+            BigDecimal divide =  (servicePay.subtract(salary)).divide(salary,2, RoundingMode.HALF_UP);
+            personnelEsse.setProfitMargin(divide.multiply(b1));
+        }
+        return list;
+    }
+    /*入项人员信息*/
+    @Override
+    public Map entryDetail(MarCustomerprojectpay marCustomerprojectpay) {
+        // 目前在项 查询当前在项人数 、当月净成本、 当月净服务费 、 、当月净利润     净利润率
+        Map nowItem=marCustomerprojectpayMapper.inItemNowCount();
+
+        Map map=new HashMap();
+        map.put("startTime",marCustomerprojectpay.getStartTime());
+        map.put("endTime",marCustomerprojectpay.getEndTime());
+        map.put("status",marCustomerprojectpay.getSettledCycle());
+        // 总成本   服务    总利润   总利润率
+        Map totalItem=marCustomerprojectpayMapper.entryPeopleCount(map);
+        //出项
+        List<Map>  digressilist =marCustomerprojectpayMapper.outItemlist(map);
+        int a=digressilist.size();
+        double digreSalary = 0.0;
+        double digreServicepay=0.0;
+        for (Map map1:digressilist){
+             double   salary= (double ) map1.get("salary");
+             double   service_pay= (double ) map1.get("service_pay");
+             Date outof_projecttime = (Date) map1.get("outof_projecttime");
+             Date syqstart_time = (Date) map1.get("syqstart_time");
+            int monthsOfAge = 0;
+            try {
+                monthsOfAge = DateUtils.getMonthsOfAge(syqstart_time, outof_projecttime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            digreSalary+=monthsOfAge*salary;
+            digreServicepay+=monthsOfAge*service_pay;
+        }
+        Map digression=new HashMap();
+        digression.put("digreCost",digreSalary);
+        digression.put("digreService",digreServicepay);
+        digression.put("digreprofit",(digreServicepay-digreSalary));
+        digression.put("digrePeopleNum",a);
+
+        Map maps=new HashMap();
+        maps.put("totalItem",totalItem);
+        maps.put("nowItem",nowItem);
+        maps.put("digression",digression);
+        return maps;
+    }
+
+    @Override
+    public List<Map> outItemlist(MarCustomerprojectpay marCustomerprojectpay) {
+        Map map=new HashMap();
+        map.put("startTime",marCustomerprojectpay.getStartTime());
+        map.put("endTime",marCustomerprojectpay.getEndTime());
+        return marCustomerprojectpayMapper.outItemlist(map);
+
     }
 }

@@ -245,6 +245,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT b.* from mar_sign a LEFT JOIN mar_demand b on a.demand_id=b.demand_id
         where  1 = 1 and b.state=0
         <if test="deptId !=null">and a.dept_id = #{deptId} </if>
+        <if test="projectName != null  and projectName != ''"> and b.project_name like concat('%', #{projectName}, '%')</if>
+        <if test="technologyDirection != null  and technologyDirection != ''"> and b.technology_direction = #{technologyDirection}</if>
+        <if test="demandYears != null  and demandYears != ''"> and b.demand_years = #{demandYears}</if>
+        <if test="projectLocation != null  and projectLocation != ''"> and b.project_location = #{projectLocation}</if>
+        <if test="importantLevel != null "> and b.important_level = #{importantLevel}</if>
+
+
+
     </select>
 
     <select id="selectMarDemanddsaList" parameterType="Map" resultMap="MarrInfo">

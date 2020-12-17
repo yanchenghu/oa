@@ -52,7 +52,9 @@ public class MarDemandBindingController extends BaseController {
         List<MarDemand> list = marDemandService.selectMarDemandbindingList(marDemand,loginUser);
         return getDataTable(list);
     }
-
+    /**
+     * 人岗匹配开的全选
+     */
     @GetMapping("/list1")
     public TableDataInfo list1(MarDemand marDemand)
     {
