@@ -101,7 +101,8 @@
           <el-upload
             class="upload-demo"
             ref="upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
+            :limit="1"
             :on-change="handleRemove"
             :auto-upload="false"
             :before-remove="upoplodad"
@@ -241,7 +242,7 @@
                    :label="dict.dictLabel"
                    :value="parseInt(dict.dictValue)"
                  />
-               
+
              </el-select>
            </el-form-item>
            <el-form-item  prop="paybackPeriod" label="回款周期">
@@ -252,13 +253,13 @@
                    :label="dict.dictLabel"
                    :value="parseInt(dict.dictValue)"
                  />
-               
+
              </el-select>
            </el-form-item>
          </el-form>
       </div>
       <div>
-          <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tabs v-model="activeName"  @tab-click="handleClick">
             <el-tab-pane label="联系人信息" name="popmsg">
                <div style="display: flex; justify-content: space-between;">
                  <el-form label-position="right" label-width="80px" :model="yxdemandone" :rules="rules">
@@ -322,9 +323,9 @@
                 </el-table-column>
                 <el-table-column label="客户签约人" align="left" prop="clientSigner" width="110"/>
                 <el-table-column label="公司签约人" align="center" prop="companySigner" width="100"/>
-                <el-table-column label="添加人" align="center" prop="paybackPeriod"/>
+                <el-table-column label="添加人" align="center" prop="contractName"/>
 
-                <el-table-column label="合同添加日期" align="center" prop="cooperationTime" width="180">
+                <el-table-column label="合同添加日期" align="center" prop="contractTime" width="180">
                   <template slot-scope="scope">
                     <span>{{ parseTime(scope.row.cooperationTime, '{y}-{m}-{d}') }}</span>
                   </template>
@@ -410,7 +411,7 @@ export default {
       pickerOptions4:{
         disabledDate:(time) => {
           if (this.forms.startTime){
-              return time.getTime() < new Date(this.forms.startTime).getTime() ||time.getTime() >  Date.now()
+              return time.getTime() < new Date(this.forms.startTime).getTime()
           }
         }
       },
@@ -646,7 +647,13 @@ export default {
         this.drawer = true
         this.yxdemandone=res.data.data.marCompany
         this.putmsgs = res.data.data.mar
+        this.activeName="popmsg"
       })
+    },
+    handleClick(tab){
+      if(tab.label=="合同"){
+        this.get()
+      }
     },
     get(){
       this.loadings = true;
@@ -656,14 +663,7 @@ export default {
       this.loadings = false;
       })
     },
-    // 合同表
-    handleClick(tab){
-      if(tab.label=="合同"){
-        console.log(this.contractlist)
-        // if(this.contractlist.length==0){this.get()}else{
-        // }
-      }
-    },
+
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.corpCode)
@@ -675,13 +675,13 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加合作公司";
-      this.handleClick()
     },
     // 添加合同
     handAdd(){
       this.reset();
       this.opens = true;
       this.title = "新建合同";
+      
     },
 
     /** 提交按钮 */
@@ -700,6 +700,7 @@ export default {
       if(this.forms.contractPreview){
         this.$refs["forms"].validate(valid => {
           let formData = new FormData()
+          formData.append("corpCode",this.yxdemandone.corpCode)
           formData.append("contractPreview",this.forms.contractPreview)
           formData.append("firstParty",this.forms.firstParty)
           formData.append("party",this.forms.party)
@@ -713,6 +714,7 @@ export default {
               this.opens = false;
               this.get();
               this.upoplodad()
+              this.more(this.yxdemandone)
             });
           }
         });

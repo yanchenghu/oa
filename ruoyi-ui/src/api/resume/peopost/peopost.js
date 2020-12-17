@@ -19,7 +19,7 @@ export function getRecord(customerCode) {
 // 查询需求列表
 export function listFollow(query) {
   return request({
-    url: '/demand/follow/list',
+    url: '/demand/binding/list1',
     method: 'get',
     params: query
   })

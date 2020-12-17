@@ -20,13 +20,13 @@ export function getEntry(id) {
 // 新增入项
 export function addEntry(data) {
   return request({
-    url: '/perentry/entry',
+    url: '/perentry/entry/addCertifi',
     method: 'post',
     data: data
   })
 }
 
-// 新建
+// 新建借用记录
 export function updateEntry(data) {
   return request({
     url: '/perentry/entry/save',
@@ -35,11 +35,12 @@ export function updateEntry(data) {
   })
 }
 
-// 删除入项
-export function delEntry(id) {
+// 出项
+export function delEntry(data) {
   return request({
-    url: '/perentry/entry/' + id,
-    method: 'delete'
+    url: '/perentry/entry/personnelItems',
+    method: 'post',
+    data:data
   })
 }
 // 新建工资调整

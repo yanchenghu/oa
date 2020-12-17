@@ -444,11 +444,7 @@ export default {
         })
     },
 
-    bul(){
-      // debounce(function(){
-      //   this.put=false
-      // },500)
-    },
+    bul:debounce(function(){this.put=false},500),
     findname(name){
       if(name==""||null){
         this.msg=null
@@ -465,8 +461,8 @@ export default {
         this.getList()
     },
     changes(value){
-      this.$set(this.yxdemandone,value,$event)
-      this.sees()
+      // this.$set(this.yxdemandone,value,$event)
+      this.set()
       this.followUp(this.yxdemandone.entryId)
       this.$forceUpdate()
     },
@@ -601,8 +597,7 @@ export default {
         this.followUp(id)
         this.putmsg=""
         this.msgSuccess("发布成功")
-      }
-      )
+      })
     },
     /** 跟进按钮 */
     followUp(value){

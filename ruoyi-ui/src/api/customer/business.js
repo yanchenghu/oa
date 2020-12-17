@@ -51,5 +51,13 @@ export function exportYxdemand(data) {
     data: data
   })
 }
+// 发布跟踪记录
+export function release(data) {
+  return request({
+    url: '/customer/yxdemand/release',
+    method: 'post',
+    data: data
+  })
+}
 
 
