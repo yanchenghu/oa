@@ -64,9 +64,7 @@ public class PerentryController extends BaseController {
     {
         return marCustomerprojectpayService.entryinfor(id);
     }
-    /**
-     * 人员出项配
-     */
+
 
 
     /**

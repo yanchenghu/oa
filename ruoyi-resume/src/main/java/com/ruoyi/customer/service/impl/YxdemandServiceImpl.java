@@ -300,8 +300,25 @@ public class YxdemandServiceImpl implements IYxdemandService
      */
     @Override
     public List<Yxdemand> selectBusinessList(Yxdemand yxdemand, LoginUser loginUser) {
+        //当前时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new Date());
+        //昨天时间
+        String zuotian=sdf.format(DateUtils.getDayBefore(new Date(),1));
+        //前天时间
+        String qiantian=sdf.format(DateUtils.getDayBefore(new Date(),2));
         yxdemand.setBusinessId(loginUser.getUsername());
         List<Yxdemand> list=yxdemandMapper.selectYxdemandList(yxdemand);
+        for (Yxdemand yxd:list){
+            String dangqia=sdf.format(yxd.getInsertTime());
+            if(dangqia.equals(date)){
+                yxd.setQq("3");
+            }else if(zuotian.equals(dangqia)){
+                yxd.setQq("2");
+            }else if(qiantian.equals(dangqia)){
+                yxd.setQq("1");
+            }
+        }
         return list;
     }
     /**

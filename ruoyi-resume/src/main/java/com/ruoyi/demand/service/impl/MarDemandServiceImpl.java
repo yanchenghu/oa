@@ -306,6 +306,11 @@ public class MarDemandServiceImpl implements IMarDemandService
     public List<MarDemand> selectMarDemandbindingList(MarDemand marDemand, LoginUser loginUser) {
         Map map=new HashMap();
         map.put("deptId",loginUser.getUser().getDeptId());
+        map.put("projectName",marDemand.getProjectName());
+        map.put("technologyDirection",marDemand.getTechnologyDirection());
+        map.put("demandYears",marDemand.getDemandYears());
+        map.put("projectLocation",marDemand.getProjectLocation());
+        map.put("importantLevel",marDemand.getImportantLevel());
         List<MarDemand> list= marDemandMapper.selectMarDemandbindingList(map);
         MarDemandresume marDema=new MarDemandresume();
         for (MarDemand marDe:list){
@@ -336,7 +341,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         map.put("demandId",demandId);
         if(liStr.size()>0){
             for (String customerCode:liStr){
-                //查询是否有简历地址
+                //查询是否有简历附件
                 PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
                 if(StringUtils.isEmpty(perCustomerinfo.getResumePath())){
                     return AjaxResult.error( perCustomerinfo.getCustomerName()+"没有简历附件，绑定失败，请上传后在绑定");
@@ -435,6 +440,10 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Override
     @Transactional
     public AjaxResult entryPersonnel(MarCustomerprojectpay marCustomerprojectpay, SysUser user,LoginUser loginUser) {
+        MarCustomerprojectpay marCustompay=marCustomerprojectpayMapper.isInitem(marCustomerprojectpay.getCustomerCode());
+       if(marCustompay!=null){
+           return AjaxResult.error("当前人已经在项，不可重复入项");
+       }
         //更改跟踪状态
         if(StringUtils.isEmpty(marCustomerprojectpay.getId())){
             return AjaxResult.error("id为空,不可跟踪，请联系管理员");

@@ -114,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             mar_demandresumefollow b on a.id=b.demandresume_id
         where
           a.bind_people =#{AddPeople}
-          DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+         and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
           and b.follow_status=#{followStatus}
     </select>
 
