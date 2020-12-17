@@ -46,7 +46,7 @@
           <el-form-item label="期望城市" prop="intentionArea">
             <el-select v-model='fromdata.intentionArea' size="small" @change="change" clearable>
 
-              <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+              <el-option v-for="dict in intentionareaOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
 

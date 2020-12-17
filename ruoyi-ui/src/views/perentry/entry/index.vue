@@ -607,11 +607,11 @@ export default {
           trigger: ["blur", "change"]
         }, ],
         afterSalary: [{
-          validator: price, trigger: 'blur',
+          validator: price, 
           trigger: ["blur", "change"]
         },],
         afterServicepay: [{
-          validator: price, trigger: 'blur',
+          validator: price, 
           trigger: ["blur", "change"]
         },],
          adjustTime: [{
@@ -665,8 +665,14 @@ export default {
   methods: {
     /** 查询入项列表 */
     getList() {
-      this.queryParams.startTime = this.value1[0]
-      this.queryParams.endTime = this.value1[1]
+      if(this.value1==null){
+        this.value1 = ""
+        this.queryParams.startTime = null
+        this.queryParams.endTime =null
+      }else{
+        this.queryParams.startTime = this.value1[0]
+        this.queryParams.endTime = this.value1[1]
+      }
       this.loading = true;
       listEntry(this.queryParams).then(response => {
         this.entryList = response.rows;
@@ -927,12 +933,21 @@ export default {
     submitForms3(){
       this.$refs["form3"].validate(valid => {
         if (valid) {
-         this.form3.id = this.yxdemandone.id
-         delEntry(this.form3).then(res=>{
-            this.msgError("出项成功")
+          let _this = this
+          let name = this.yxdemandone.customerName
+          this.form3.id = this.yxdemandone.id
+          this.$confirm('确认出项"'+name+'"吗?', "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(function() {
+            delEntry(_this.form3).then(res=>{
+            })
+          }).then(() => {
+            this.msgInfo("出项成功")
             this.open3 = false
             this.handleUpdate(this.yxdemandone.id);
-         })
+          }).catch();
         }
       });
 

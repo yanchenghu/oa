@@ -27,6 +27,7 @@
               <td><span class="name">发布时间</span>{{form.addTime}}</td>
             </tr>
           </table>
+          <div class="div"> <span style="width: 70px; color:#909399;float: left;">需求图片</span><el-button @click="see" type="text" style="height: 20px;margin-top: -11px;">点击预览</el-button></div>
           <div class="div">
             <span style="width: 70px; color:#909399;float: left;">技术要求</span>
             <span v-html='form.specificrequiRement'></span>
@@ -275,6 +276,9 @@
               <el-button @click="open4=false">取 消</el-button>
             </div>
           </el-dialog>
+          <el-dialog :visible.sync="dialogVisible" width="500px" :title="title2">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
       </div>
   </div>
 </template>
@@ -285,7 +289,23 @@
   export default {
     name:'particulars',
     data(){
+      var price = (rule, value, callback) => {
+            const reg = /^\d+.?\d{0,2}$/
+            if (!value) {
+              callback(new Error('不能为空'))
+            } else if (!Number(value)) {
+              callback(new Error('请输入数字值'))
+            } else {
+              if (reg.test(value)) {
+                callback()
+              } else {
+                callback(new Error('小数点后最多只能输入两位'))
+              }
+            }
+          }
       return{
+        dialogVisible:false,
+        dialogImageUrl:"",
         // 入项信息
         comform:{},
         // 未通过原因
@@ -325,6 +345,7 @@
         customerleve:[],
         // 简历模板
         templist:[],
+        title2:"",
         pageNum: 1,
         pageSize: 10,
         // 总条数
@@ -354,8 +375,8 @@
           endTime:[{ type: 'date', required: true, message: '请选择结束日期', trigger: 'change' }],
           syqstartTime:[{ type: 'date', required: true, message: '请选择入职时间', trigger: 'change' }],
           settledCycle:[{ required: true, message: '请选择结算周期', trigger: 'blur' },],
-          salary:[{ required: true, message: '请输入工资', trigger: 'blur' },],
-          servicePay:[{ required: true, message: '请输入服务费用', trigger: 'blur' },],
+          salary:[{ validator: price,  trigger: 'blur' },],
+          servicePay:[{ validator: price,  trigger: 'blur' },],
           syqEndtime:[{ type: 'date', required: true, message: '请选择转正时间', trigger: 'change' }],
           socSecopt:[{ required: true, message: '请选择社保', trigger: 'blur' },],
         },
@@ -561,11 +582,6 @@
             }).catch(()=>{})
           }
 
-
-
-
-
-
         }
       },
       // 确定
@@ -573,20 +589,23 @@
         this.comform.id=this.tempID
         this.$refs["comform"].validate((valid) => {
           if (valid) {
-            let that = this
-            this.$confirm('确认信息完整并入项吗?', "警告", {
-              confirmButtonText: "确定",
-              cancelButtonText: "取消",
-              type: "warning"
-            }).then(function() {
-              return entryPersonnel(that.comform).then()
-            }).then(() => {
-              this.msgSuccess("操作成功");
-              this.templists=[]
-              this.gettelist()
-              this.open4=false
-              this.open=false
-            }).catch(()=>{})
+            if(this.comform.salary>this.comform.servicePay){this.msgError("工资不能大于服务费")}else{
+              let that = this
+              this.$confirm('确认信息完整并入项吗?', "警告", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+              }).then(function() {
+                return entryPersonnel(that.comform).then()
+              }).then(() => {
+                this.msgSuccess("操作成功");
+                this.templists=[]
+                this.gettelist()
+                this.open4=false
+                this.open=false
+              }).catch(()=>{})
+            }
+
           }
         });
       },
@@ -675,6 +694,12 @@
           },1000*i)
           i+=1
         })
+      },
+      see(){
+         let srcs = process.env.VUE_APP_BASE_API
+        this.dialogVisible=true
+        this.title2 = "需求图片"
+        this.dialogImageUrl = srcs+this.form.demandPic
       },
     }
   }

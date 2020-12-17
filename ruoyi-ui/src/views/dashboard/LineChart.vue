@@ -1,135 +1,120 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <el-row>
+    <el-col :xs="24" :md="11" :lg="8" class="col">
+      <div class="div-a">本月入项成绩排行榜</div>
+      <el-table :data="dataList.RankingEntry">
+        <el-table-column
+          label="排名"
+          type="index"
+          align="center"
+          />
+          <el-table-column prop="nick_name" label="姓名" >
+              <template slot-scope="scope">
+                <el-avatar size="medium" :src="avart+scope.row.avatar"></el-avatar>
+                <span class="table-span">{{scope.row.nick_name}}</span>
+              </template>
+          </el-table-column>
+          <el-table-column prop="peonum" label="入项人数" align="center"/>
+      </el-table>
+    </el-col>
+    <el-col :xs="24" :md="12" :lg="15" class="col col-ri">
+      <div class="div-a aa">我跟踪的人员</div>
+      <ul class="cont-ul">
+        <div style="height: 600px; overflow: auto;">
+          <el-col :xs="24" :sm="24" :lg="11" v-for="list,index in dataList.ListperRob" :key="index">
+              <li>
+                <el-avatar style="background-color: #0081FF;"> {{list.customerName}} </el-avatar>
+                <div class="ul-div">
+                  <span>{{list.customerName}} </span>
+                  <span> {{list.customerTel}}</span>
+                  <p>{{list.addTime}} - {{list.editTime}}</p>
+                </div>
+                <div style=" position: absolute;right: 10px;">
+                  <el-button type="warning" @click="handleSetLineChartData(list)" >跟踪</el-button>
+                </div>
+              </li>
+          </el-col>
+        </div>
+
+      </ul>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
-import resize from './mixins/resize'
 
 export default {
-  mixins: [resize],
   props: {
-    className: {
-      type: String,
-      default: 'chart'
-    },
-    width: {
-      type: String,
-      default: '100%'
-    },
-    height: {
-      type: String,
-      default: '350px'
-    },
-    autoResize: {
-      type: Boolean,
-      default: true
-    },
-    chartData: {
-      type: Object,
-      required: true
+    dataList:{
+      type:Object,
     }
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      avart:process.env.VUE_APP_BASE_API,
     }
   },
-  watch: {
-    chartData: {
-      deep: true,
-      handler(val) {
-        this.setOptions(val)
-      }
-    }
+  created() {
+
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
-  },
-  beforeDestroy() {
-    if (!this.chart) {
-      return
-    }
-    this.chart.dispose()
-    this.chart = null
-  },
+
   methods: {
-    initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData)
-    },
-    setOptions({ expectedData, actualData } = {}) {
-      this.chart.setOption({
-        xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
-          axisTick: {
-            show: false
-          }
-        },
-        grid: {
-          left: 10,
-          right: 10,
-          bottom: 20,
-          top: 30,
-          containLabel: true
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          },
-          padding: [5, 10]
-        },
-        yAxis: {
-          axisTick: {
-            show: false
-          }
-        },
-        legend: {
-          data: ['expected', 'actual']
-        },
-        series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
-      })
+    handleSetLineChartData(type){
+      this.$emit("handleSetLineChartData",type)
     }
+
   }
 }
 </script>
+<style scoped>
+  .col{
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom:32px;
+    height: 700px;
+  }
+  .col-ri{
+    float: right;
+  }
+  .div-a{
+    padding:0 16px 0;
+    line-height: 50px;
+    border-bottom:1px solid #dcdfe6 ;
+  }
+  .aa{
+    padding-left: 40px;
+  }
+  .table-span{
+    position: absolute;
+    top: 18px;
+    margin-left: 15px;
+  }
+  .cont-ul{
+    list-style: none;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .cont-ul li{
+    display: flex;
+    margin-right: 16px;
+    margin-top: 10px;
+    position: relative;
+  }
+  .ul-div{
+    width: 55%;
+    margin-top: 4px;
+    margin-left: 10px;
+  }
+  .ul-div span{
+    font-size: 14px;
+    font-weight: 400;
+    color: #606266;
+  }
+  .ul-div p{
+    margin-top: 4px;
+    font-size: 12px;
+    color: #c0c4cc;
+  }
+</style>

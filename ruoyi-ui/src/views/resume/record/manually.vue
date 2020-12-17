@@ -583,7 +583,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .upload-demo{
     width: 270px;
   }

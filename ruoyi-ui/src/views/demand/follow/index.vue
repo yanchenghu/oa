@@ -2,8 +2,11 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="70px" class="form">
         <el-form-item label="需求名称" prop="projectName">
-          <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 190px;"/>
+          <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
+
+          <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
+
         <el-form-item label="技术方向" prop="technologyDirection">
           <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" size="small" @change="handleQuery">
             <el-option
@@ -405,7 +408,6 @@ import {debounce} from "@/utils/ruoyi.js"
         },
         // 表单参数
         form: {
-          list:[[100,101,103]]
         },
         msg:null,
         // 表单校验
@@ -722,7 +724,7 @@ import {debounce} from "@/utils/ruoyi.js"
 
       /** 提交按钮 */
       submitForm(i){
-        console.log(i)
+        console.log(this.form.list)
         let list =[]
         this.form.list.forEach(item=>{
            list.push(item[2])
@@ -785,13 +787,16 @@ import {debounce} from "@/utils/ruoyi.js"
   };
 </script>
 <style scoped>
-  .el-table__row td {
+  >>>.el-table__row td {
     vertical-align: top;
     max-height: 500px;
     overflow: auto;
   }
   .form{
-    width: 90%;
+    width: 100%;
+  }
+  .form >>>.el-form-item__content {
+    width: 170px;
   }
   .form >>>.el-input {
     width: 150px;

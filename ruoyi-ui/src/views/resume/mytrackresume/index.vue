@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
       <el-form :model="queryParams" ref="queryForm" :inline="true"  style="width:80% ;" label-width="68px" @submit.native.prevent>
-        <el-form-item label="名字" prop="companyName">
+        <el-form-item label="名字" prop="customerName">
           <el-input
-            v-model="queryParams.companyName"
+            v-model="queryParams.customerName"
             placeholder="请输入名字"
             clearable
             size="small"
@@ -129,6 +129,7 @@
         this.getlist()
       },
       handleUpdate(row){
+        this.form={}
         this.open=true
         this.title = "简历跟踪"
         this.form.contactCustomercode = row.customerCode
@@ -147,25 +148,23 @@
       },
       cancel(){
          this.open = false;
-         this.form = {}
       },
-      
+
       shifangbut(row){
         var formData = new FormData()
         formData.append("customerCode",row.customerCode)
-        
+
         this.$confirm('是否确认释放简历编号为"' + row.customerCode + '"的数据项?', "警告", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning"
           }).then(function() {
             return delRecord(formData);
-          }).then(() => {           
+          }).then(() => {
             this.getlist()
             this.msgSuccess("释放成功");
           })
       }
-
     }
   }
 </script>

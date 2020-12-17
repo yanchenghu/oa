@@ -1,26 +1,35 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group @handleSetLineChartData="handleSetLineChartData" :data-list="datalist"/>
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+    <el-row>
+      <line-chart :data-list="datalist" @handleSetLineChartData="handleSetLineChartData"/>
     </el-row>
 
+    <el-dialog :title="title" :visible.sync="open" width="40%" append-to-body>
+      <el-form :model="form" :rules="rules" ref="form" label-position="right" label-width="80px">
+        <el-form-item label="简历状态">
+          <el-select v-model="form.updateStatic" placeholder="请选择简历状态">
+            <el-option label="跟进中" :value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="跟进情况" prop="memoDetail">
+            <el-input v-model="form.memoDetail" type="textarea" placeholder="请输入内容" style="width: 80%;"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="open = false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
+      <el-col :xs="24" :sm="12" :lg="8" v-for="data in datalist.listMarEntry">
+        <div class="chart-wrapper" >
+          <raddar-chart  :data="data"/>
         </div>
       </el-col>
     </el-row>
@@ -36,25 +45,9 @@ import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
 
+import { getList } from "@/api/index.js"
+import{genzongbut}from'@/api/resume/mytrckresume.js'
 export default {
   name: 'Index',
   components: {
@@ -66,12 +59,44 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      datalist:{},
+      open:false,
+      title:"",
+      form:{},
+      rules:{
+        memoDetail: [
+        { required: true, message: "跟踪情况不能为空", trigger: "blur" }
+      ],
+      },
+
     }
   },
+  created() {
+      this.getlist()
+  },
   methods: {
+    getlist(){
+      getList().then(res=>{
+          this.datalist = res.data
+      })
+    },
     handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+      this.form = {}
+      this.open = true
+      this.form.contactCustomercode = type.resumeId
+      this.form.updateStatic = 2
+      this.title = "跟踪简历"
+    },
+    submitForm(){
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          genzongbut(this.form).then(res=>{
+            this.msgSuccess("操作成功");
+            this.open = false;
+            this.getlist();
+          })
+        }
+      });
     }
   }
 }
