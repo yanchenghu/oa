@@ -121,4 +121,6 @@ public interface IYxdemandService
      * 根据公司名字获取营销录入公司
      */
     int yxdemByName(String companyName);
+
+    AjaxResult workresultlist(LoginUser loginUser);
 }

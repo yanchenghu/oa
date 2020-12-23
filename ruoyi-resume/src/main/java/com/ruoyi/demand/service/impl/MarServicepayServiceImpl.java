@@ -164,8 +164,11 @@ public class MarServicepayServiceImpl implements IMarServicepayService
     }
 
     @Override
-    public int personnelItems(MarCustomerprojectpay marCustomerprojectpay) {
-
-        return   marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+    public AjaxResult personnelItems(MarCustomerprojectpay marCustomerprojectpay) {
+        int a= marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+        if (a==1){
+            return  AjaxResult.success("出项成功") ;
+        }
+        return  AjaxResult.error("出项失败") ;
     }
 }

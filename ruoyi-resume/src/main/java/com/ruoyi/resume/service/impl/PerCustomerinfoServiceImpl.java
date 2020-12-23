@@ -426,7 +426,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             //添加操作记录
             ConOperationrecords record = new ConOperationrecords();
             record.setType(1);
-            record.setDatetime(new Date());
+            record.setDateTime(new Date());
             record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
             record.setUserName(loginUser.getUser().getUserName());
             conOperationrecordsMapper.insertConOperationrecords(record);
@@ -494,7 +494,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 //        PerCuscontact
         ConOperationrecords conOperationrecords =new ConOperationrecords();
         conOperationrecords.setType(3);
-        conOperationrecords.setDatetime(now);
+        conOperationrecords.setDateTime(now);
         conOperationrecords.setUserName(loginUser.getUsername());
         conOperationrecords.setRemark("抢占简历-"+perCustomerinfo.getCustomerName());
         int i = perRobcustomerMapper.insertPerRobcustomer(perrobcus);
@@ -681,7 +681,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         //添加操作记录
         ConOperationrecords record = new ConOperationrecords();
         record.setType(1);
-        record.setDatetime(new Date());
+        record.setDateTime(new Date());
         record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
         record.setUserName(loginUser.getUser().getUserName());
         conOperationrecordsMapper.insertConOperationrecords(record);
@@ -736,7 +736,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         //添加操作记录
         ConOperationrecords record = new ConOperationrecords();
         record.setType(2);
-        record.setDatetime(new Date());
+        record.setDateTime(new Date());
         record.setRemark("跟踪简历-"+perCustomerinfo.getCustomerName());
         record.setUserName(loginUser.getUser().getUserName());
         conOperationrecordsMapper.insertConOperationrecords(record);

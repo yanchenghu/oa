@@ -25,6 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="syqEndtime"    column="syq_endtime"    />
         <result property="socSecopt"    column="soc_secopt"    />
         <result property="remark"    column="remark"    />
+        <result property="entryAssistant"    column="entry_assistant"    />
+
     </resultMap>
 
     <resultMap  type="MarCustomePerinfo" id="MarCusPerInfo">
@@ -34,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result  property="marCustomerprojectpay.corpName" column="corp_name"/>
         <result  property="marCustomerprojectpay.projectName" column="project_name"/>
         <result  property="marCustomerprojectpay.syqstartTime"     column="syqstart_time"/>
+        <result  property="marCustomerprojectpay.syqEndtime"     column="syq_endtime"/>
         <result  property="marCustomerprojectpay.outofProjecttime" column="outof_projecttime"/>
         <result  property="marCustomerprojectpay.servicePay" column="service_pay"/>
         <result  property="marCustomerprojectpay.salary"   column="salary"/>
@@ -60,9 +63,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="joinStatus" column="join_status" />
     </resultMap>
 
+
     <sql id="selectMarCustomerprojectpayVo">
-        select id, customer_code, corp_code, corp_name, demand_id, project_name, start_time, end_time, settled_cycle, salary, service_pay, outof_projecttime, quit_proreason, quit_remark, opercode, oper_time, syqstart_time, syq_endtime, soc_secopt, remark from mar_customerprojectpay
+        select id, customer_code, corp_code, corp_name, demand_id, project_name, start_time, end_time, settled_cycle, salary, service_pay, outof_projecttime, quit_proreason, quit_remark, opercode, oper_time, syqstart_time, syq_endtime, soc_secopt, remark, entry_assistant from mar_customerprojectpay
     </sql>
+
 
     <select id="selectMarCustomerprojectpayList" parameterType="MarCustomerprojectpay" resultMap="MarCustomerprojectpayResult">
         <include refid="selectMarCustomerprojectpayVo"/>
@@ -92,7 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectMarCustomerprojectpayVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertMarCustomerprojectpay" parameterType="MarCustomerprojectpay">
         insert into mar_customerprojectpay
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -116,7 +121,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="syqEndtime != null">syq_endtime,</if>
             <if test="socSecopt != null">soc_secopt,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+            <if test="entryAssistant != null">entry_assistant,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="customerCode != null">#{customerCode},</if>
@@ -138,7 +144,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="syqEndtime != null">#{syqEndtime},</if>
             <if test="socSecopt != null">#{socSecopt},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+            <if test="entryAssistant != null">#{entryAssistant},</if>
+        </trim>
     </insert>
 
     <update id="updateMarCustomerprojectpay" parameterType="MarCustomerprojectpay">
@@ -163,9 +170,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="syqEndtime != null">syq_endtime = #{syqEndtime},</if>
             <if test="socSecopt != null">soc_secopt = #{socSecopt},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="entryAssistant != null">entry_assistant = #{entryAssistant},</if>
         </trim>
         where id = #{id}
     </update>
+
+
+
+
+
+
+
+
 
     <delete id="deleteMarCustomerprojectpayById" parameterType="String">
         delete from mar_customerprojectpay where id = #{id}
@@ -191,7 +207,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectentrylistList"  parameterType="MarCustomerprojectpay"  resultMap="MarCusPerInfo">
        SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
-         a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt
+        a.syq_endtime,a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt
        from mar_customerprojectpay a
        LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
         <where>
@@ -219,7 +235,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="selectMarCustomePerinfoById"  parameterType="String"  resultType="map">
     SELECT a.id,b.customer_name as customerName,b.customer_tel as customerTel,a.corp_name as corpName,
-    a.project_name as projectName,a.syqstart_time as syqstartTime,
+    a.project_name as projectName,a.syqstart_time as syqstartTime,a.syq_endtime as syqEndtime,
     a.outof_projecttime as outofProjecttime,a.service_pay as service_Pay,a.salary,a.soc_secopt as socSecopt
     from mar_customerprojectpay a
     LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code

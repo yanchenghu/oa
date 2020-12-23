@@ -99,180 +99,175 @@ public class MarCustomerprojectpay
     @Excel(name = "社保选项(1、交2、否)")
     private Integer socSecopt;
 
-    /** 操作人编号 */
+    /** 入项协助人 */
+    @Excel(name = "入项协助人")
+    private String entryAssistant;
+    /** 入项协助人 */
     @Excel(name = "备注")
     private String remark;
 
-    public void setId(String id) 
-    {
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getId() 
-    {
-        return id;
+    public String getCustomerCode() {
+        return customerCode;
     }
-    public void setCustomerCode(String customerCode) 
-    {
+
+    public void setCustomerCode(String customerCode) {
         this.customerCode = customerCode;
     }
 
-    public String getCustomerCode() 
-    {
-        return customerCode;
+    public String getCorpCode() {
+        return corpCode;
     }
-    public void setCorpCode(String corpCode) 
-    {
+
+    public void setCorpCode(String corpCode) {
         this.corpCode = corpCode;
     }
 
-    public String getCorpCode() 
-    {
-        return corpCode;
+    public String getCorpName() {
+        return corpName;
     }
-    public void setCorpName(String corpName) 
-    {
+
+    public void setCorpName(String corpName) {
         this.corpName = corpName;
     }
 
-    public String getCorpName() 
-    {
-        return corpName;
+    public String getDemandId() {
+        return demandId;
     }
-    public void setDemandId(String demandId) 
-    {
+
+    public void setDemandId(String demandId) {
         this.demandId = demandId;
     }
 
-    public String getDemandId() 
-    {
-        return demandId;
+    public String getProjectName() {
+        return projectName;
     }
-    public void setProjectName(String projectName) 
-    {
+
+    public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
 
-    public String getProjectName() 
-    {
-        return projectName;
+    public Date getStartTime() {
+        return startTime;
     }
-    public void setStartTime(Date startTime) 
-    {
+
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Date getStartTime() 
-    {
-        return startTime;
+    public Date getEndTime() {
+        return endTime;
     }
-    public void setEndTime(Date endTime) 
-    {
+
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
-    public Date getEndTime() 
-    {
-        return endTime;
+    public Integer getSettledCycle() {
+        return settledCycle;
     }
-    public void setSettledCycle(Integer settledCycle) 
-    {
+
+    public void setSettledCycle(Integer settledCycle) {
         this.settledCycle = settledCycle;
     }
 
-    public Integer getSettledCycle() 
-    {
-        return settledCycle;
+    public BigDecimal getSalary() {
+        return salary;
     }
-    public void setSalary(BigDecimal salary)
-    {
+
+    public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
 
-    public BigDecimal getSalary()
-    {
-        return salary;
+    public BigDecimal getServicePay() {
+        return servicePay;
     }
-    public void setServicePay(BigDecimal servicePay)
-    {
+
+    public void setServicePay(BigDecimal servicePay) {
         this.servicePay = servicePay;
     }
 
-    public BigDecimal getServicePay()
-    {
-        return servicePay;
+    public Date getOutofProjecttime() {
+        return outofProjecttime;
     }
-    public void setOutofProjecttime(Date outofProjecttime) 
-    {
+
+    public void setOutofProjecttime(Date outofProjecttime) {
         this.outofProjecttime = outofProjecttime;
     }
 
-    public Date getOutofProjecttime() 
-    {
-        return outofProjecttime;
+    public Integer getQuitProreason() {
+        return quitProreason;
     }
-    public void setQuitProreason(Integer quitProreason) 
-    {
+
+    public void setQuitProreason(Integer quitProreason) {
         this.quitProreason = quitProreason;
     }
 
-    public Integer getQuitProreason() 
-    {
-        return quitProreason;
+    public String getQuitRemark() {
+        return quitRemark;
     }
-    public void setQuitRemark(String quitRemark) 
-    {
+
+    public void setQuitRemark(String quitRemark) {
         this.quitRemark = quitRemark;
     }
 
-    public String getQuitRemark() 
-    {
-        return quitRemark;
+    public String getOpercode() {
+        return opercode;
     }
-    public void setOpercode(String opercode) 
-    {
+
+    public void setOpercode(String opercode) {
         this.opercode = opercode;
     }
 
-    public String getOpercode() 
-    {
-        return opercode;
+    public Date getOperTime() {
+        return operTime;
     }
-    public void setOperTime(Date operTime) 
-    {
+
+    public void setOperTime(Date operTime) {
         this.operTime = operTime;
     }
 
-    public Date getOperTime() 
-    {
-        return operTime;
+    public Date getSyqstartTime() {
+        return syqstartTime;
     }
-    public void setSyqstartTime(Date syqstartTime) 
-    {
+
+    public void setSyqstartTime(Date syqstartTime) {
         this.syqstartTime = syqstartTime;
     }
 
-    public Date getSyqstartTime() 
-    {
-        return syqstartTime;
+    public Date getSyqEndtime() {
+        return syqEndtime;
     }
-    public void setSyqEndtime(Date syqEndtime) 
-    {
+
+    public void setSyqEndtime(Date syqEndtime) {
         this.syqEndtime = syqEndtime;
     }
 
-    public Date getSyqEndtime() 
-    {
-        return syqEndtime;
+    public Integer getSocSecopt() {
+        return socSecopt;
     }
-    public void setSocSecopt(Integer socSecopt) 
-    {
+
+    public void setSocSecopt(Integer socSecopt) {
         this.socSecopt = socSecopt;
     }
 
-    public Integer getSocSecopt() 
-    {
-        return socSecopt;
+    public String getEntryAssistant() {
+        return entryAssistant;
+    }
+
+    public void setEntryAssistant(String entryAssistant) {
+        this.entryAssistant = entryAssistant;
     }
 
     public String getRemark() {
@@ -283,29 +278,31 @@ public class MarCustomerprojectpay
         this.remark = remark;
     }
 
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("customerCode", getCustomerCode())
-            .append("corpCode", getCorpCode())
-            .append("corpName", getCorpName())
-            .append("demandId", getDemandId())
-            .append("projectName", getProjectName())
-            .append("startTime", getStartTime())
-            .append("endTime", getEndTime())
-            .append("settledCycle", getSettledCycle())
-            .append("salary", getSalary())
-            .append("servicePay", getServicePay())
-            .append("outofProjecttime", getOutofProjecttime())
-            .append("quitProreason", getQuitProreason())
-            .append("quitRemark", getQuitRemark())
-            .append("opercode", getOpercode())
-            .append("operTime", getOperTime())
-            .append("syqstartTime", getSyqstartTime())
-            .append("syqEndtime", getSyqEndtime())
-            .append("socSecopt", getSocSecopt())
-            .append("remark", getRemark())
-            .toString();
+        return "MarCustomerprojectpay{" +
+                "id='" + id + '\'' +
+                ", customerCode='" + customerCode + '\'' +
+                ", corpCode='" + corpCode + '\'' +
+                ", corpName='" + corpName + '\'' +
+                ", demandId='" + demandId + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", settledCycle=" + settledCycle +
+                ", salary=" + salary +
+                ", servicePay=" + servicePay +
+                ", outofProjecttime=" + outofProjecttime +
+                ", quitProreason=" + quitProreason +
+                ", quitRemark='" + quitRemark + '\'' +
+                ", opercode='" + opercode + '\'' +
+                ", operTime=" + operTime +
+                ", syqstartTime=" + syqstartTime +
+                ", syqEndtime=" + syqEndtime +
+                ", socSecopt=" + socSecopt +
+                ", entryAssistant='" + entryAssistant + '\'' +
+                ", remark='" + remark + '\'' +
+                '}';
     }
 }

@@ -71,5 +71,5 @@ public interface IMarServicepayService
     /**
      * 人员出项
      */
-    int personnelItems(MarCustomerprojectpay marCustomerprojectpay);
+    AjaxResult personnelItems(MarCustomerprojectpay marCustomerprojectpay);
 }

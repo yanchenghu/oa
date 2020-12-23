@@ -88,4 +88,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+
+
+    <select id="isReturnborrow" parameterType="String" resultMap="MarBorrowResult">
+        <include refid="selectMarBorrowVo"/>
+        where marcus_id = #{id}  and  is_return=2
+    </select>
 </mapper>

@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 操作记录对象 con_operationrecords
  * 
  * @author ych
- * @date 2020-11-16
+ * @date 2020-12-21
  */
 public class ConOperationrecords extends BaseEntity
 {
@@ -25,9 +25,9 @@ public class ConOperationrecords extends BaseEntity
     private Integer type;
 
     /** 添加时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date datetime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date dateTime;
 
     /** 添加人编号 */
     @Excel(name = "添加人编号")
@@ -51,14 +51,14 @@ public class ConOperationrecords extends BaseEntity
     {
         return type;
     }
-    public void setDatetime(Date datetime) 
+    public void setDateTime(Date dateTime) 
     {
-        this.datetime = datetime;
+        this.dateTime = dateTime;
     }
 
-    public Date getDatetime() 
+    public Date getDateTime() 
     {
-        return datetime;
+        return dateTime;
     }
     public void setUserName(String userName) 
     {
@@ -75,7 +75,7 @@ public class ConOperationrecords extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("type", getType())
-            .append("datetime", getDatetime())
+            .append("dateTime", getDateTime())
             .append("userName", getUserName())
             .append("remark", getRemark())
             .toString();

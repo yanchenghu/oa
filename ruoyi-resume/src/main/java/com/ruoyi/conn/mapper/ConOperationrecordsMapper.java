@@ -1,6 +1,8 @@
 package com.ruoyi.conn.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.conn.domain.ConOperationrecords;
 
 /**
@@ -58,4 +60,6 @@ public interface ConOperationrecordsMapper
      * @return 结果
      */
     public int deleteConOperationrecordsByIds(Long[] ids);
+
+    List<ConOperationrecords> selectConOperatBymap(Map<String, Object> map);
 }

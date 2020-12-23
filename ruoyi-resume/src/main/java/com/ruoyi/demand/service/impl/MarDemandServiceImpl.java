@@ -374,7 +374,7 @@ public class MarDemandServiceImpl implements IMarDemandService
                      //添加操作记录
                     ConOperationrecords conOperationrec=new ConOperationrecords();
                     conOperationrec.setType(4);
-                    conOperationrec.setDatetime(date);
+                    conOperationrec.setDateTime(date);
                     conOperationrec.setUserName(loginUser.getUsername());
                     conOperationrec.setRemark("简历绑定");
                 conOperationrecordsMapper.insertConOperationrecords(conOperationrec);
@@ -467,15 +467,16 @@ public class MarDemandServiceImpl implements IMarDemandService
         marCustomerprojectpay.setId(UUID.randomUUID().toString());
         marCustomerprojectpay.setOperTime(new Date());
         marCustomerprojectpayMapper.insertMarCustomerprojectpay(marCustomerprojectpay);
-        ConOperationrecords operationrecords=new ConOperationrecords();
-        operationrecords.setType(5);
-        operationrecords.setDatetime(new Date());
-        operationrecords.setUserName(marCustomerprojectpay.getOpercode());
-        conOperationrecordsMapper.insertConOperationrecords(operationrecords);
+
 
         PerCustomerinfo perCustomeri=perCustomerinfoMapper.selectPerCustomerinfoById(marCustomerprojectpay.getCustomerCode());
         //入项成功更改个人简历信息
-
+        ConOperationrecords operationrecords=new ConOperationrecords();
+        operationrecords.setType(5);
+        operationrecords.setDateTime(new Date());
+        operationrecords.setUserName(marCustomerprojectpay.getOpercode());
+        operationrecords.setRemark("入项-"+perCustomeri.getCustomerName());
+        conOperationrecordsMapper.insertConOperationrecords(operationrecords);
         if (perCustomeri.getJoinStatus()>2){
             perCustomeri.setJoinStatus(4);
         }else{

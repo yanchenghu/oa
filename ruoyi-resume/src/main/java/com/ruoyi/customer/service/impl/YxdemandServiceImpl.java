@@ -7,6 +7,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.common.utils.resume.SerialNumber;
 import com.ruoyi.conn.domain.ConOperationrecords;
+import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
 import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.domain.Yxcontact;
 import com.ruoyi.customer.domain.Yxdemand;
@@ -22,6 +23,7 @@ import com.ruoyi.tool.WorkDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -49,11 +51,12 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Autowired
     private MarCompanyMapper marCompanyMapper;
 
-    @Autowired
-    private RedisCache redisCache;
+
 
     @Autowired
     private YxrobMapper yxrobMapper;
+    @Autowired
+    private ConOperationrecordsMapper conOperationrecordsMapper;
 
 
 
@@ -437,6 +440,21 @@ public class YxdemandServiceImpl implements IYxdemandService
         }
         return a;
 
+    }
+
+    @Override
+    public AjaxResult workresultlist(LoginUser loginUser) {
+        Map<String,Object> map = new HashMap<String,Object>();
+        Date dat1 = workDay.getBeforeWorkDay(new Date(),1);
+        Date dat2 = workDay.getBeforeWorkDay(new Date(),2);
+        map.put("date1", dat1);
+        map.put("date2", dat2);
+        map.put("usercode", loginUser.getUsername());
+
+        List<ConOperationrecords>  ListCon=conOperationrecordsMapper.selectConOperatBymap(map);
+
+
+        return AjaxResult.success(ListCon);
     }
 
 

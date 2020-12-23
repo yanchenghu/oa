@@ -248,7 +248,7 @@
          b.add_name is null
         <if test="professionId != null  and professionId != ''"> and a.profession_id = #{professionId}</if>
         <if test="workYear != null  and workYear != ''"> and a.work_year = #{workYear}</if>
-        <if test="education != null  and education != ''"> and a.education = #{education}</if>
+        <if test="education != null "> and a.education = #{education}</if>
         <if test="intentionArea != null  and intentionArea != ''"> and a.intention_area = #{intentionArea}</if>
     </select>
 </mapper>

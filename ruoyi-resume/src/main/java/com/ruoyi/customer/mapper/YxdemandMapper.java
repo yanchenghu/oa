@@ -1,5 +1,6 @@
 package com.ruoyi.customer.mapper;
 
+import com.ruoyi.conn.domain.ConOperationrecords;
 import com.ruoyi.customer.domain.Yxdemand;
 
 import java.util.List;
@@ -83,4 +84,6 @@ public interface YxdemandMapper
      * 营销公海
      */
     List<Yxdemand> selectByDepartMark(Yxdemand yxdemand);
+
+    List<ConOperationrecords> getinput(Map<String, Object> map);
 }
