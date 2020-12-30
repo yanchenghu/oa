@@ -330,6 +330,10 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Override
     @Transactional
     public AjaxResult turnCustomers(MarCompany marCom, LoginUser loginUser) {
+        MarCompany mar=marCompanyMapper.selectMarCompanyByName(marCom.getCorpName());
+        if(mar!=null){
+            return AjaxResult.error("当前项目已经转化为合作公司");
+        }
         Yxdemand yxdemand=yxdemandMapper.selectYxdemandByName(marCom.getCorpName());
         if(yxdemand==null){
             return AjaxResult.error("需求不存在");
@@ -342,15 +346,11 @@ public class YxdemandServiceImpl implements IYxdemandService
                yxdemandMapper.updateYxdemand(yxdemand);
            }
         }
-
-        MarCompany mar=marCompanyMapper.selectMarCompanyByName(marCom.getCorpName());
-        if(mar!=null){
-            return AjaxResult.error("当前项目已经转化为合作公司");
-        }
         marCom.setCorpCode(SerialNumber.createSerial("hzgs", 6));
         marCom.setTransformingPeople(loginUser.getUsername());
         marCom.setAddTime(new Date());
         marCompanyMapper.insertMarCompany(marCom);
+
         return AjaxResult.success("转化成功");
     }
 

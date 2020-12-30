@@ -9,9 +9,7 @@ import com.ruoyi.demand.service.IMarDemandService;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.statistic.service.IHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 首页统计Controller
@@ -49,6 +47,17 @@ public class HomePageController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return homePageService.datadisplay(loginUser);
     }
+    /**
+     * 首页点击弹框数据详情展示
+     */
+    @PostMapping(value = "/viewdetailsplay")
+    public AjaxResult viewdetailsplay(@RequestParam("followStatus")Integer followStatus)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return homePageService.viewdetailsplay(loginUser,followStatus);
+    }
+
+
 
 
 

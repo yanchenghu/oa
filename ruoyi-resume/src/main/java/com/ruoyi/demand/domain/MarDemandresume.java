@@ -50,6 +50,10 @@ public class MarDemandresume extends BaseEntity
     @Excel(name = "跟踪人姓名")
     private String trackzPeoname;
 
+    /** 简历附件地址 */
+    @Excel(name = "简历附件地址")
+    private String resumeEnclosurepath;
+
     public void setId(String id) 
     {
         this.id = id;
@@ -123,17 +127,26 @@ public class MarDemandresume extends BaseEntity
         return trackzPeoname;
     }
 
+    public String getResumeEnclosurepath() {
+        return resumeEnclosurepath;
+    }
+
+    public void setResumeEnclosurepath(String resumeEnclosurepath) {
+        this.resumeEnclosurepath = resumeEnclosurepath;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("demandId", getDemandId())
-            .append("customerCode", getCustomerCode())
-            .append("bindTime", getBindTime())
-            .append("bindPeople", getBindPeople())
-            .append("downloadStatus", getDownloadStatus())
-            .append("newfollowtime", getNewfollowtime())
-            .append("trackzPeoname", getTrackzPeoname())
-            .toString();
+        return "MarDemandresume{" +
+                "id='" + id + '\'' +
+                ", demandId='" + demandId + '\'' +
+                ", customerCode='" + customerCode + '\'' +
+                ", bindTime=" + bindTime +
+                ", bindPeople='" + bindPeople + '\'' +
+                ", downloadStatus=" + downloadStatus +
+                ", newfollowtime=" + newfollowtime +
+                ", trackzPeoname='" + trackzPeoname + '\'' +
+                ", resumeEnclosurepath='" + resumeEnclosurepath + '\'' +
+                '}';
     }
 }

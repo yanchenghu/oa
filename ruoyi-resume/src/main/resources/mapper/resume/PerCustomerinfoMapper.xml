@@ -187,7 +187,7 @@
         per_customerinfo a
         LEFT JOIN (SELECT customer_tel,add_name from per_robcustomer where Status=0 ) b ON a.customer_tel = b.customer_tel
         <where>
-            <if test="customerName != null and customerName != ''"> and a.customer_name = #{customerName}</if>
+            <if test="customerName != null and customerName != ''"> and a.customer_name like concat('%', #{customerName}, '%')</if>
             <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
         </where>
 
@@ -221,14 +221,21 @@
     </select>
 
     <select id="selectmytrackresumeList"  parameterType="PerCustomerinfo"  resultType="map">
-     SELECT
+        SELECT
         a.resume_id as customerCode ,
         a.customer_name as customerName,
         a.customer_tel as customerTel,
         DATE_FORMAT( a.edit_time,'%Y-%m-%d %H:%i:%s') as editTime,
-        DATE_FORMAT(  a.add_time,'%Y-%m-%d %H:%i:%s') as addTime
+        DATE_FORMAT(  a.add_time,'%Y-%m-%d %H:%i:%s') as addTime,
+        b.memo_detail as memoDetail,
+        b.contact_time as contactTime
         FROM
-            per_robcustomer a
+        per_robcustomer a
+        LEFT JOIN
+        (SELECT f.memo_detail,d.contact_customercode,d.contact_time from
+        (SELECT contact_customercode , max(contact_time) as contact_time from  per_cuscontact  GROUP BY contact_customercode) d
+        LEFT JOIN per_cuscontact
+        f on 	d.contact_customercode=f.contact_customercode and d.contact_time=f.contact_time )b on a.resume_id=b.contact_customercode
         where a.Status=0 and a.add_people=#{opertCode}
         <if test="customerName != null and customerName != ''"> and a.customer_name = #{customerName}</if>
         <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
@@ -251,4 +258,16 @@
         <if test="education != null "> and a.education = #{education}</if>
         <if test="intentionArea != null  and intentionArea != ''"> and a.intention_area = #{intentionArea}</if>
     </select>
+
+
+
+    <select id="selectPerCustomerinfoByMonth" parameterType="PerCustomerinfo" resultMap="PerCustomerinfoResult">
+        <include refid="selectPerCustomerinfoVo"/>
+        <where>
+            <if test="opertCode != null "> and opert_code = #{opertCode}</if>
+            <if test="addTime != null "> and  DATE_FORMAT(add_time, '%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )</if>
+        </where>
+    </select>
+
+
 </mapper>

@@ -56,6 +56,11 @@ public class PersonnelEssentialinfor {
     /** 入职状态 */
     private String joinStatus;
 
+     /** 入项协助人 */
+    private String entryAssistant;
+
+
+
     public String getJoinStatus() {
         return joinStatus;
     }
@@ -166,5 +171,14 @@ public class PersonnelEssentialinfor {
 
     public void setCorpName(String corpName) {
         this.corpName = corpName;
+    }
+
+
+    public String getEntryAssistant() {
+        return entryAssistant;
+    }
+
+    public void setEntryAssistant(String entryAssistant) {
+        this.entryAssistant = entryAssistant;
     }
 }

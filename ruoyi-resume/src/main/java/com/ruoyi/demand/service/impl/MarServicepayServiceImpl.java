@@ -14,10 +14,13 @@ import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.domain.MarServicepay;
 import com.ruoyi.demand.mapper.MarCertificatesMapper;
 import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
+import com.ruoyi.resume.domain.PerCustomerinfo;
+import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarServicepayMapper;
 import com.ruoyi.demand.service.IMarServicepayService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -36,6 +39,8 @@ public class MarServicepayServiceImpl implements IMarServicepayService
     private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
     @Autowired
     private MarCertificatesMapper marCertificatesMapper;
+    @Autowired
+    private PerCustomerinfoMapper perCustomerinfoMapper;
 
 
 
@@ -81,7 +86,7 @@ public class MarServicepayServiceImpl implements IMarServicepayService
         marServicepay.setSyqstartTime(marCustomerprojectpay.getSyqstartTime());
         marServicepay.setAddTime(new Date());
         marServicepayMapper.insertMarServicepay(marServicepay);
-        marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+//        marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
          return AjaxResult.success("服务费调整成功");
     }
 
@@ -164,7 +169,17 @@ public class MarServicepayServiceImpl implements IMarServicepayService
     }
 
     @Override
+    @Transactional
     public AjaxResult personnelItems(MarCustomerprojectpay marCustomerprojectpay) {
+        MarCustomerprojectpay marCustomerprojectpay1 = marCustomerprojectpayMapper.selectMarCustomerprojectpayById(marCustomerprojectpay.getId());
+        String customerCode=marCustomerprojectpay1.getCustomerCode();
+        if ( StringUtils.isEmpty(customerCode)) {
+            return  AjaxResult.error("出项人编号为空，请检查后再出项") ;
+        }
+        PerCustomerinfo perCustomerinf =new PerCustomerinfo();
+        perCustomerinf.setCustomerCode(customerCode);
+        perCustomerinf.setJoinStatus(3);
+        perCustomerinfoMapper.updatePerCustomerinfo(perCustomerinf);
         int a= marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
         if (a==1){
             return  AjaxResult.success("出项成功") ;

@@ -17,6 +17,7 @@ import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -67,20 +68,20 @@ public class MarDemandBindingController extends BaseController {
     /**
      * 获取我抢占的简历
      */
-    @GetMapping(value = "/myRobresume")
-    public AjaxResult myRobresume()
+    @GetMapping(value = "/myRobresume/{demandId}")
+    public AjaxResult myRobresume(@PathVariable String demandId)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return perCustomerinfoService.myRobresume(loginUser);
+        return perCustomerinfoService.myRobresume(loginUser,demandId);
     }
 
     /**
      * 简历绑定需求
      */
     @PostMapping(value = "/resumeBingDemand")
-    public AjaxResult resumeBingDemand(String zm){
+    public AjaxResult resumeBingDemand(String zm, MultipartFile resumeEnclosurepath ){
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return marDemandService.resumeBingDemand(loginUser,zm);
+        return marDemandService.resumeBingDemand(loginUser,zm,resumeEnclosurepath );
     }
 
     /**
@@ -128,8 +129,29 @@ public class MarDemandBindingController extends BaseController {
 
     }
 
+    /**
+     *批量简历、面试、通过
+     */
+    @PostMapping(value = "/batchOperation")
+    public AjaxResult batchOperation(String zm) {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return marDemandService.batchOperation(zm,loginUser);
+    }
+
+    /**
+     *批量重置简历绑定状态
+     */
+    @PostMapping(value = "/batchResumeStatus")
+    public AjaxResult batchResumeStatus(String zm) {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return marDemandService.batchResumeStatus(zm,loginUser);
+    }
 
 
 
 
-}
+
+
+
+
+    }

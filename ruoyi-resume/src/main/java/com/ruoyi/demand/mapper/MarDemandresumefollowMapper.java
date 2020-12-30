@@ -74,4 +74,6 @@ public interface MarDemandresumefollowMapper
      * 需求已绑定简历列表
      */
     List<Map> selectDemandDetailsList(Map map);
+
+    int deleteMarDemandresumefollowByDemand_id(String id);
 }

@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 简历模板对象 per_template
  * 
  * @author ruoyi
- * @date 2020-11-13
+ * @date 2020-12-23
  */
 public class PerTemplate extends BaseEntity
 {
@@ -24,6 +24,10 @@ public class PerTemplate extends BaseEntity
     @Excel(name = "模板名称")
     private String templateName;
 
+    /** 模板命名格式 */
+    @Excel(name = "模板命名格式")
+    private String templateNominate;
+
     /** 模板文件 */
     @Excel(name = "模板文件")
     private String templateFile;
@@ -32,10 +36,6 @@ public class PerTemplate extends BaseEntity
     @Excel(name = "模板图片")
     private String templatePrc;
 
-    /** 模板顺序 */
-    @Excel(name = "模板顺序")
-    private Integer templateOrder;
-
     /** 模板状态（1.启用 2.作废） */
     @Excel(name = "模板状态", readConverterExp = "1=.启用,2=.作废")
     private String templateStatus;
@@ -43,36 +43,11 @@ public class PerTemplate extends BaseEntity
     /** 添加时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date addtime;
+    private Date addTime;
 
     /** 添加人 */
     @Excel(name = "添加人")
-    private String addpeople;
-
-    /** 作废时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "作废时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date invalidtime;
-
-    /** 作废人 */
-    @Excel(name = "作废人")
-    private String invalidpeople;
-
-    /** 公司 */
-    @Excel(name = "公司")
-    private String company;
-
-    /** 技术方向 */
-    @Excel(name = "技术方向")
-    private String technicalDirection;
-
-    /** 工作年限 */
-    @Excel(name = "工作年限")
-    private Integer workingYears;
-
-    /** 姓名 */
-    @Excel(name = "姓名")
-    private String name;
+    private String addPeople;
 
     public void setTemplateId(String templateId) 
     {
@@ -92,6 +67,15 @@ public class PerTemplate extends BaseEntity
     {
         return templateName;
     }
+    public void setTemplateNominate(String templateNominate) 
+    {
+        this.templateNominate = templateNominate;
+    }
+
+    public String getTemplateNominate() 
+    {
+        return templateNominate;
+    }
     public void setTemplateFile(String templateFile) 
     {
         this.templateFile = templateFile;
@@ -110,15 +94,6 @@ public class PerTemplate extends BaseEntity
     {
         return templatePrc;
     }
-    public void setTemplateOrder(Integer templateOrder) 
-    {
-        this.templateOrder = templateOrder;
-    }
-
-    public Integer getTemplateOrder() 
-    {
-        return templateOrder;
-    }
     public void setTemplateStatus(String templateStatus) 
     {
         this.templateStatus = templateStatus;
@@ -128,77 +103,23 @@ public class PerTemplate extends BaseEntity
     {
         return templateStatus;
     }
-    public void setAddtime(Date addtime) 
+    public void setAddTime(Date addTime) 
     {
-        this.addtime = addtime;
+        this.addTime = addTime;
     }
 
-    public Date getAddtime() 
+    public Date getAddTime() 
     {
-        return addtime;
+        return addTime;
     }
-    public void setAddpeople(String addpeople) 
+    public void setAddPeople(String addPeople) 
     {
-        this.addpeople = addpeople;
-    }
-
-    public String getAddpeople() 
-    {
-        return addpeople;
-    }
-    public void setInvalidtime(Date invalidtime) 
-    {
-        this.invalidtime = invalidtime;
+        this.addPeople = addPeople;
     }
 
-    public Date getInvalidtime() 
+    public String getAddPeople() 
     {
-        return invalidtime;
-    }
-    public void setInvalidpeople(String invalidpeople) 
-    {
-        this.invalidpeople = invalidpeople;
-    }
-
-    public String getInvalidpeople() 
-    {
-        return invalidpeople;
-    }
-    public void setCompany(String company) 
-    {
-        this.company = company;
-    }
-
-    public String getCompany() 
-    {
-        return company;
-    }
-    public void setTechnicalDirection(String technicalDirection) 
-    {
-        this.technicalDirection = technicalDirection;
-    }
-
-    public String getTechnicalDirection() 
-    {
-        return technicalDirection;
-    }
-    public void setWorkingYears(Integer workingYears) 
-    {
-        this.workingYears = workingYears;
-    }
-
-    public Integer getWorkingYears() 
-    {
-        return workingYears;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
+        return addPeople;
     }
 
     @Override
@@ -206,18 +127,12 @@ public class PerTemplate extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("templateId", getTemplateId())
             .append("templateName", getTemplateName())
+            .append("templateNominate", getTemplateNominate())
             .append("templateFile", getTemplateFile())
             .append("templatePrc", getTemplatePrc())
-            .append("templateOrder", getTemplateOrder())
             .append("templateStatus", getTemplateStatus())
-            .append("addtime", getAddtime())
-            .append("addpeople", getAddpeople())
-            .append("invalidtime", getInvalidtime())
-            .append("invalidpeople", getInvalidpeople())
-            .append("company", getCompany())
-            .append("technicalDirection", getTechnicalDirection())
-            .append("workingYears", getWorkingYears())
-            .append("name", getName())
+            .append("addTime", getAddTime())
+            .append("addPeople", getAddPeople())
             .toString();
     }
 }

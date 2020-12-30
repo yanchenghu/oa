@@ -26,12 +26,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="socSecopt"    column="soc_secopt"    />
         <result property="remark"    column="remark"    />
         <result property="entryAssistant"    column="entry_assistant"    />
-
     </resultMap>
 
     <resultMap  type="MarCustomePerinfo" id="MarCusPerInfo">
         <result property="customerName" column="customer_name" />
         <result property="customerTel" column="customer_tel" />
+        <result property="technologyDirection" column="technology_direction" />
         <result  property="marCustomerprojectpay.id" column="id"/>
         <result  property="marCustomerprojectpay.corpName" column="corp_name"/>
         <result  property="marCustomerprojectpay.projectName" column="project_name"/>
@@ -61,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="corpName" column="corp_name" />
         <result property="customerTel" column="customer_tel" />
         <result property="joinStatus" column="join_status" />
+        <result property="entryAssistant" column="entry_assistant" />
     </resultMap>
 
 
@@ -196,7 +197,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selRotation"  resultType="map">
-     SELECT b.corp_name,c.project_name,d.customer_name,f.nick_name from mar_customerprojectpay a
+     SELECT b.corp_name,c.project_name,d.customer_name,f.nick_name, DATE_FORMAT(a.syqstart_time,'%Y-%m-%d') as syqstart_time from mar_customerprojectpay a
          LEFT JOIN mar_company b on a.corp_code=b.corp_code
          LEFT JOIN mar_demand c on a.demand_id=c.demand_id
          LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
@@ -207,9 +208,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectentrylistList"  parameterType="MarCustomerprojectpay"  resultMap="MarCusPerInfo">
        SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
-        a.syq_endtime,a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt
+        a.syq_endtime,a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt,c.technology_direction
        from mar_customerprojectpay a
        LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
+        LEFT JOIN       mar_demand    c on a.demand_id=c.demand_id
         <where>
             <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
@@ -242,7 +244,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     where a.id=#{id}
     </select>
     <select id="getRankingEntry"    resultType="map">
-        SELECT c.opercode,b.avatar,b.nick_name,c.peonum from
+        SELECT c.opercode,b.avatar,b.nick_name,b.sex,c.peonum from
             (SELECT
             a.opercode,COUNT(a.customer_code) as peonum
             FROM
@@ -252,6 +254,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             GROUP BY opercode)c
         LEFT JOIN sys_user b ON c.opercode = b.user_name
         ORDER BY c.peonum desc
+        LIMIT 10
     </select>
 
 
@@ -259,7 +262,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectpersonnelTurnoverList"    parameterType="map" resultMap="PersonnelEssentialinfor">
         SELECT g.dept_name,f.nick_name,d.customer_name,d.join_status,d.customer_tel,a.salary,a.service_pay,(a.service_pay-a.salary) as profit,
         a.syqstart_time,a.syq_endtime,a.oper_time,b.corp_name,c.address as entry_address,
-        c.technology_direction,a.soc_secopt from  mar_customerprojectpay a
+        c.technology_direction,a.soc_secopt,a.entry_assistant from  mar_customerprojectpay a
         LEFT JOIN mar_company b on a.corp_code=b.corp_code
         LEFT JOIN mar_demand c on a.demand_id=c.demand_id
         LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
@@ -299,7 +302,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="isInitem" parameterType="String" resultMap="MarCustomerprojectpayResult">
         <include refid="selectMarCustomerprojectpayVo"/>
         where customer_code = #{customerCode}
-        and outof_projecttime is not null
+        and outof_projecttime is  null
     </select>
 
 

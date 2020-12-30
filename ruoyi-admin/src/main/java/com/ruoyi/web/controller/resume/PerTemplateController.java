@@ -59,9 +59,9 @@ public class PerTemplateController extends BaseController {
     @Log(title = "简历模板", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestParam("templateFile") MultipartFile file, String templateName,
-                   String company,String technicalDirection,Integer workingYears,String name)  {
+                   String templateNominate)  {
         try {
-            return perTemplateService.insertPerTemplate(file,templateName,company,technicalDirection,workingYears,name);
+            return perTemplateService.insertPerTemplate(file,templateName,templateNominate);
         } catch (IOException e) {
             e.printStackTrace();
             return AjaxResult.error("上传错误");

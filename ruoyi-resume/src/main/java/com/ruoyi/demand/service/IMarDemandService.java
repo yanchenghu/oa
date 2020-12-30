@@ -89,7 +89,7 @@ public interface IMarDemandService
     /**
      * 简历绑定需求
      */
-    AjaxResult resumeBingDemand(LoginUser loginUser,String zm);
+    AjaxResult resumeBingDemand(LoginUser loginUser,String zm,MultipartFile file);
 
     /**
      * 需求已绑定简历列表
@@ -108,4 +108,12 @@ public interface IMarDemandService
      *人员安排入项
      */
     AjaxResult entryPersonnel(MarCustomerprojectpay marCustomerprojectpay, SysUser user,LoginUser loginUser);
+    /**
+     *批量简历、面试、通过
+     */
+    AjaxResult batchOperation(String zm, LoginUser loginUser);
+    /**
+     *批量重置简历绑定状态
+     */
+    AjaxResult batchResumeStatus(String zm, LoginUser loginUser);
 }

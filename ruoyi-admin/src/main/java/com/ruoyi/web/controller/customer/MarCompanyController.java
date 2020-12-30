@@ -7,6 +7,7 @@ import java.util.List;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.common.utils.resume.SerialNumber;
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.customer.domain.MarContract;
 import com.ruoyi.customer.service.IMarContractService;
@@ -64,7 +65,7 @@ public class MarCompanyController extends BaseController
     public AjaxResult add(@RequestBody MarCompany marCompany)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        marCompany.setCorpCode(String.valueOf(UUID.randomUUID()));
+        marCompany.setCorpCode(SerialNumber.createSerial("hzgs", 6));
         return marCompanyService.insertMarCompany(marCompany,loginUser);
     }
 
