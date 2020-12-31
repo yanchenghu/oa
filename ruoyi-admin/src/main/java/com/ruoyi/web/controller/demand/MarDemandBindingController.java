@@ -68,8 +68,8 @@ public class MarDemandBindingController extends BaseController {
     /**
      * 获取我抢占的简历
      */
-    @GetMapping(value = "/myRobresume/{demandId}")
-    public AjaxResult myRobresume(@PathVariable String demandId)
+    @PostMapping(value = "/myRobresume")
+    public AjaxResult myRobresume(String demandId)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return perCustomerinfoService.myRobresume(loginUser,demandId);

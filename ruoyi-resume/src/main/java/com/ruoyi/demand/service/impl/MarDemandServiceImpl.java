@@ -170,15 +170,15 @@ public class MarDemandServiceImpl implements IMarDemandService
             }
         }
         //如果图片不为空的话，则重新上传图片
+        String fsafsa="";
         if(demandPic != null){
-            String fsafsa="";
             try {
                 fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), demandPic);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            marDemand.setDemandPic(fsafsa);
         }
+        marDemand.setDemandPic(fsafsa);
         int b=marSignMapper.deleteMarSignBy(demandId);
         if(b>0){
             List<MarSign> work=new ArrayList<MarSign>();

@@ -228,7 +228,8 @@
         DATE_FORMAT( a.edit_time,'%Y-%m-%d %H:%i:%s') as editTime,
         DATE_FORMAT(  a.add_time,'%Y-%m-%d %H:%i:%s') as addTime,
         b.memo_detail as memoDetail,
-        b.contact_time as contactTime
+        DATE_FORMAT(b.contact_time,'%Y-%m-%d %H:%i:%s') as contactTime
+
         FROM
         per_robcustomer a
         LEFT JOIN
