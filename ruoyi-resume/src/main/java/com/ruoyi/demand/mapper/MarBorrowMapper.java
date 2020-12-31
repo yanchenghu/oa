@@ -62,8 +62,10 @@ public interface MarBorrowMapper
     public int deleteMarBorrowByIds(Integer[] ids);
 
     /**
-     * 归还
-     *
+     * 检查人员借用物品是否有归还
      */
+    List<MarBorrow> isReturnborrow(String id);
+
+
 
 }

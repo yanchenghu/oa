@@ -92,5 +92,4 @@ public interface MarCustomerprojectpayMapper
      */
     MarCustomerprojectpay isInitem(String customerCode);
 
-
 }

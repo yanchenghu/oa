@@ -130,12 +130,19 @@ public class PerentryController extends BaseController {
      */
     @PostMapping(value = "/personnelItems")
     public AjaxResult personnelItems(@RequestBody MarCustomerprojectpay marCustomerprojectpay){
-        return toAjax(marServicepayService.personnelItems(marCustomerprojectpay)) ;
+        return marServicepayService.personnelItems(marCustomerprojectpay) ;
     }
 
 
 
-
+    /**
+     * 检查人员借用物品是否有归还
+     */
+    @GetMapping(value = "/isReturnborrow/{id}")
+    public int isReturnborrow(@PathVariable String id)
+    {
+        return marCustomerprojectpayService.isReturnborrow(id);
+    }
 
 
 

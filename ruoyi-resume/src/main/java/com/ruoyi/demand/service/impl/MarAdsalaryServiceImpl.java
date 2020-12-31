@@ -68,7 +68,7 @@ public class MarAdsalaryServiceImpl implements IMarAdsalaryService
         marAdsalary.setProjectName(marCustomerprojectpay.getProjectName());
         marAdsalary.setSyqstartTime(marCustomerprojectpay.getSyqstartTime());
         marAdsalary.setAddTime(new Date());
-        marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+//        marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
         marAdsalaryMapper.insertMarAdsalary(marAdsalary);
          return AjaxResult.success("工资调整成功");
     }

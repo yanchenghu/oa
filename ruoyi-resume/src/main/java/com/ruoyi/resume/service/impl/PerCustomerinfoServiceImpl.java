@@ -20,6 +20,8 @@ import com.ruoyi.common.utils.resume.ResumeParserUtil;
 import com.ruoyi.common.utils.resume.SerialNumber;
 import com.ruoyi.conn.domain.ConOperationrecords;
 import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
+import com.ruoyi.demand.domain.MarDemandresume;
+import com.ruoyi.demand.mapper.MarDemandresumeMapper;
 import com.ruoyi.resume.domain.*;
 import com.ruoyi.resume.mapper.*;
 import com.ruoyi.tool.WorkDay;
@@ -64,6 +66,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
     private WorkDay workDay;
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private MarDemandresumeMapper marDemandresumeMapper;
 
 
 
@@ -183,16 +187,19 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         JSONObject contact_info   = analyticalResults.getJSONObject("parsing_result").getJSONObject("contact_info");
              String phone_number = contact_info.getString("phone_number");
              if(phone_number.equals("")){
+                 f.delete();
                 return AjaxResult.error("该简历无联系方式，请查证");
+
              }
             perCustomerinfo.setCustomerTel(phone_number);
             PerRobcustomer perrobcus = perRobcustomerMapper.selectByphone(phone_number);
             if(perrobcus!=null){
+                f.delete();
                 return AjaxResult.error("客户信息已被"+perrobcus.getAddName()+"抢占");
-//                return AjaxResult.error("客户信息已被"+perrobcus.getAddName()+"抢占,还未录入!");
             }
             int count = perCustomerinfoMapper.getSameCustomerCount(perCustomerinfo);
             if(count>0){
+                f.delete();
                 return AjaxResult.error("客户已存在，请查证");
             }
             //教育经历
@@ -202,6 +209,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                 education_experienceListArr = JSON.parseArray(education_experience, GenEducationExperience.class);
             }
             if(education_experienceListArr.size()<=0){
+                f.delete();
                 return AjaxResult.error("简历无教育经历");
             }
             //工作经历
@@ -211,6 +219,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                 work_experienceListArr = JSON.parseArray(work_experience, GenWorkExperience.class);
             }
             if(work_experienceListArr.size()<=0){
+                f.delete();
                 return AjaxResult.error("简历无工作经历");
             }
             //项目经验
@@ -220,7 +229,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                 project_experienceListArr = JSON.parseArray(project_experience, GenProjectExperience.class);
             }
             if(project_experienceListArr.size()<=0){
-
+                f.delete();
                 return AjaxResult.error("简历无项目经验");
 
             }
@@ -426,7 +435,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             //添加操作记录
             ConOperationrecords record = new ConOperationrecords();
             record.setType(1);
-            record.setDatetime(new Date());
+            record.setDateTime(new Date());
             record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
             record.setUserName(loginUser.getUser().getUserName());
             conOperationrecordsMapper.insertConOperationrecords(record);
@@ -494,7 +503,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 //        PerCuscontact
         ConOperationrecords conOperationrecords =new ConOperationrecords();
         conOperationrecords.setType(3);
-        conOperationrecords.setDatetime(now);
+        conOperationrecords.setDateTime(now);
         conOperationrecords.setUserName(loginUser.getUsername());
         conOperationrecords.setRemark("抢占简历-"+perCustomerinfo.getCustomerName());
         int i = perRobcustomerMapper.insertPerRobcustomer(perrobcus);
@@ -681,7 +690,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         //添加操作记录
         ConOperationrecords record = new ConOperationrecords();
         record.setType(1);
-        record.setDatetime(new Date());
+        record.setDateTime(new Date());
         record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
         record.setUserName(loginUser.getUser().getUserName());
         conOperationrecordsMapper.insertConOperationrecords(record);
@@ -701,9 +710,20 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
      * 获取我抢占的简历
      */
     @Override
-    public AjaxResult myRobresume(LoginUser loginUser) {
-
+    public AjaxResult myRobresume(LoginUser loginUser,String demandId) {
+        MarDemandresume marDemandresume=new MarDemandresume();
+        marDemandresume.setDemandId(demandId);
+        List<MarDemandresume> lisMar= marDemandresumeMapper.selectMarDemandresumeList(marDemandresume);
         List<Map> maps = perCustomerinfoMapper.myRobresume(loginUser.getUsername());
+        for(int i=maps.size()-1;i>=0;i--){
+            Map map=maps.get(i);
+            String customer_code= (String) map.get("customer_code");
+            for(MarDemandresume sd:lisMar){
+                if(customer_code.equals(sd.getCustomerCode())){
+                    maps.remove(i);
+                }
+            }
+        }
         return AjaxResult.success(maps);
     }
     /**
@@ -736,7 +756,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         //添加操作记录
         ConOperationrecords record = new ConOperationrecords();
         record.setType(2);
-        record.setDatetime(new Date());
+        record.setDateTime(new Date());
         record.setRemark("跟踪简历-"+perCustomerinfo.getCustomerName());
         record.setUserName(loginUser.getUser().getUserName());
         conOperationrecordsMapper.insertConOperationrecords(record);

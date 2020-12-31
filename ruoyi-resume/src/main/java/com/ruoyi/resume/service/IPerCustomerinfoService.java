@@ -129,7 +129,7 @@ public interface IPerCustomerinfoService
     /**
      * 获取我抢占的简历
      */
-    AjaxResult myRobresume(LoginUser loginUser);
+    AjaxResult myRobresume(LoginUser loginUser,String demandId);
     /**
      * 查询我跟踪的简历 列表
      */

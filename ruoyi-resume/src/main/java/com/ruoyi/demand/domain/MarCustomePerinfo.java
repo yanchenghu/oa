@@ -14,6 +14,9 @@ public class MarCustomePerinfo {
     /** 客户电话 */
     @Excel(name = "客户电话")
     private String customerTel;
+    /** 客户电话 */
+    @Excel(name = "技术方向")
+    private Integer technologyDirection;
 
 
     /** 客户姓名 */
@@ -44,12 +47,12 @@ public class MarCustomePerinfo {
         this.marCustomerprojectpay = marCustomerprojectpay;
     }
 
-    @Override
-    public String toString() {
-        return "MarCustomePerinfo{" +
-                "customerName='" + customerName + '\'' +
-                ", customerTel='" + customerTel + '\'' +
-                ", marCustomerprojectpay=" + marCustomerprojectpay +
-                '}';
+    public Integer getTechnologyDirection() {
+        return technologyDirection;
     }
+
+    public void setTechnologyDirection(Integer technologyDirection) {
+        this.technologyDirection = technologyDirection;
+    }
+
 }

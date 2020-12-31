@@ -248,4 +248,16 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         return marCustomerprojectpayMapper.outItemlist(map);
 
     }
+    /**
+     * 检查人员借用物品是否有归还
+     */
+    @Override
+    public int isReturnborrow(String id) {
+       List<MarBorrow> listMar= marBorrowMapper.isReturnborrow(id);
+       if(listMar.size()>0){
+           return 1;
+       }
+       return 2;
+
+    }
 }

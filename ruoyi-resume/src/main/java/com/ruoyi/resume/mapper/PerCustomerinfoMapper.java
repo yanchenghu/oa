@@ -99,4 +99,7 @@ public interface PerCustomerinfoMapper
      * 智能人岗匹配简历信息列表
      */
     List<Map> selectPeopostlist(PerCustomerinfo perCustomerinfo);
+
+    List<PerCustomerinfo> selectPerCustomerinfoByMonth(PerCustomerinfo perCustomerinfo);
+
 }

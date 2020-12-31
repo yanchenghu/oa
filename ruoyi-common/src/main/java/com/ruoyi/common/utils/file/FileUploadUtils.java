@@ -2,6 +2,8 @@ package com.ruoyi.common.utils.file;
 
 import java.io.File;
 import java.io.IOException;
+
+import com.ruoyi.common.utils.resume.SerialNumber;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
@@ -122,8 +124,9 @@ public class FileUploadUtils
     public static final String extractFilename(MultipartFile file)
     {
         String fileName = file.getOriginalFilename();
+        String Name = fileName.replaceAll("[.][^.]+$","");
         String extension = getExtension(file);
-        fileName = DateUtils.datePath() + "/" + IdUtils.fastUUID() + "." + extension;
+        fileName = DateUtils.datePath() + "/" +Name+SerialNumber.createSesl("", 3)+ "." + extension;
         return fileName;
     }
 

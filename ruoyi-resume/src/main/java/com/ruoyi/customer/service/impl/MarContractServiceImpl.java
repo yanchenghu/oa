@@ -82,6 +82,7 @@ public class MarContractServiceImpl implements IMarContractService
         marContract.setContractTime(new Date());
         marContractMapper.insertMarContract(marContract);
         MarContractfollow marContractfollow = new MarContractfollow();
+        marContractfollow.setCorpCode(corpCode);
         marContractfollow.setNickName(loginUser.getUsername());
         marContractfollow.setContactTime(new Date());
         marContractfollow.setContactDetail("添加合同");

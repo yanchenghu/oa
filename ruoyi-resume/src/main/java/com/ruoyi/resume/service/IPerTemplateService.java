@@ -29,11 +29,11 @@ public interface IPerTemplateService {
     /**
      * 新增简历模板
      *
-     * @param perTemplate 简历模板
+     * @param
      * @return 结果
      */
     public AjaxResult insertPerTemplate(MultipartFile file, String templateName,
-                                 String company,String technicalDirection,Integer workingYears,String name) throws IOException;
+                                        String templateNominate) throws IOException;
 
     /**
      * 修改简历模板

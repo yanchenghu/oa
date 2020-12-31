@@ -3,104 +3,74 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.resume.mapper.PerTemplateMapper">
-    
+
     <resultMap type="PerTemplate" id="PerTemplateResult">
         <result property="templateId"    column="template_id"    />
         <result property="templateName"    column="template_name"    />
+        <result property="templateNominate"    column="template_nominate"    />
         <result property="templateFile"    column="template_file"    />
         <result property="templatePrc"    column="template_prc"    />
-        <result property="templateOrder"    column="template_order"    />
         <result property="templateStatus"    column="template_status"    />
-        <result property="addtime"    column="addTime"    />
-        <result property="addpeople"    column="AddPeople"    />
-        <result property="invalidtime"    column="InvalidTime"    />
-        <result property="invalidpeople"    column="InvalidPeople"    />
-        <result property="company"    column="company"    />
-        <result property="technicalDirection"    column="technical_direction"    />
-        <result property="workingYears"    column="working_years"    />
-        <result property="name"    column="name"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="addPeople"    column="add_people"    />
     </resultMap>
 
     <sql id="selectPerTemplateVo">
-        select template_id, template_name, template_file, template_prc, template_order, template_status, addTime, AddPeople, InvalidTime, InvalidPeople, company, technical_direction, working_years, name from per_template
+        select template_id, template_name, template_nominate, template_file, template_prc, template_status, add_time, add_people from per_template
     </sql>
 
     <select id="selectPerTemplateList" parameterType="PerTemplate" resultMap="PerTemplateResult">
         <include refid="selectPerTemplateVo"/>
-        <where>  
+        <where>
             <if test="templateName != null  and templateName != ''"> and template_name like concat('%', #{templateName}, '%')</if>
+            <if test="templateNominate != null  and templateNominate != ''"> and template_nominate = #{templateNominate}</if>
             <if test="templateFile != null  and templateFile != ''"> and template_file = #{templateFile}</if>
             <if test="templatePrc != null  and templatePrc != ''"> and template_prc = #{templatePrc}</if>
-            <if test="templateOrder != null "> and template_order = #{templateOrder}</if>
             <if test="templateStatus != null  and templateStatus != ''"> and template_status = #{templateStatus}</if>
-            <if test="addtime != null "> and addTime = #{addtime}</if>
-            <if test="addpeople != null  and addpeople != ''"> and AddPeople = #{addpeople}</if>
-            <if test="invalidtime != null "> and InvalidTime = #{invalidtime}</if>
-            <if test="invalidpeople != null  and invalidpeople != ''"> and InvalidPeople = #{invalidpeople}</if>
-            <if test="company != null  and company != ''"> and company = #{company}</if>
-            <if test="technicalDirection != null  and technicalDirection != ''"> and technical_direction = #{technicalDirection}</if>
-            <if test="workingYears != null "> and working_years = #{workingYears}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="addPeople != null  and addPeople != ''"> and add_people = #{addPeople}</if>
         </where>
     </select>
-    
+
     <select id="selectPerTemplateById" parameterType="String" resultMap="PerTemplateResult">
         <include refid="selectPerTemplateVo"/>
         where template_id = #{templateId}
     </select>
-        
+
     <insert id="insertPerTemplate" parameterType="PerTemplate">
         insert into per_template
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="templateId != null">template_id,</if>
             <if test="templateName != null">template_name,</if>
+            <if test="templateNominate != null">template_nominate,</if>
             <if test="templateFile != null">template_file,</if>
             <if test="templatePrc != null">template_prc,</if>
-            <if test="templateOrder != null">template_order,</if>
             <if test="templateStatus != null">template_status,</if>
-            <if test="addtime != null">addTime,</if>
-            <if test="addpeople != null and addpeople != ''">AddPeople,</if>
-            <if test="invalidtime != null">InvalidTime,</if>
-            <if test="invalidpeople != null">InvalidPeople,</if>
-            <if test="company != null">company,</if>
-            <if test="technicalDirection != null">technical_direction,</if>
-            <if test="workingYears != null">working_years,</if>
-            <if test="name != null">name,</if>
-         </trim>
+            <if test="addTime != null">add_time,</if>
+            <if test="addPeople != null">add_people,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="templateId != null">#{templateId},</if>
             <if test="templateName != null">#{templateName},</if>
+            <if test="templateNominate != null">#{templateNominate},</if>
             <if test="templateFile != null">#{templateFile},</if>
             <if test="templatePrc != null">#{templatePrc},</if>
-            <if test="templateOrder != null">#{templateOrder},</if>
             <if test="templateStatus != null">#{templateStatus},</if>
-            <if test="addtime != null">#{addtime},</if>
-            <if test="addpeople != null and addpeople != ''">#{addpeople},</if>
-            <if test="invalidtime != null">#{invalidtime},</if>
-            <if test="invalidpeople != null">#{invalidpeople},</if>
-            <if test="company != null">#{company},</if>
-            <if test="technicalDirection != null">#{technicalDirection},</if>
-            <if test="workingYears != null">#{workingYears},</if>
-            <if test="name != null">#{name},</if>
-         </trim>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="addPeople != null">#{addPeople},</if>
+        </trim>
     </insert>
 
     <update id="updatePerTemplate" parameterType="PerTemplate">
         update per_template
         <trim prefix="SET" suffixOverrides=",">
             <if test="templateName != null">template_name = #{templateName},</if>
+            <if test="templateNominate != null">template_nominate = #{templateNominate},</if>
             <if test="templateFile != null">template_file = #{templateFile},</if>
             <if test="templatePrc != null">template_prc = #{templatePrc},</if>
-            <if test="templateOrder != null">template_order = #{templateOrder},</if>
             <if test="templateStatus != null">template_status = #{templateStatus},</if>
-            <if test="addtime != null">addTime = #{addtime},</if>
-            <if test="addpeople != null and addpeople != ''">AddPeople = #{addpeople},</if>
-            <if test="invalidtime != null">InvalidTime = #{invalidtime},</if>
-            <if test="invalidpeople != null">InvalidPeople = #{invalidpeople},</if>
-            <if test="company != null">company = #{company},</if>
-            <if test="technicalDirection != null">technical_direction = #{technicalDirection},</if>
-            <if test="workingYears != null">working_years = #{workingYears},</if>
-            <if test="name != null">name = #{name},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="addPeople != null">add_people = #{addPeople},</if>
         </trim>
         where template_id = #{templateId}
     </update>
@@ -110,10 +80,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePerTemplateByIds" parameterType="String">
-        delete from per_template where template_id in 
+        delete from per_template where template_id in
         <foreach item="templateId" collection="array" open="(" separator="," close=")">
             #{templateId}
         </foreach>
     </delete>
+
     
 </mapper>

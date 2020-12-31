@@ -87,4 +87,8 @@ public interface IMarCustomerprojectpayService
     Map entryDetail(MarCustomerprojectpay marCustomerprojectpay) ;
 
     List<Map> outItemlist(MarCustomerprojectpay marCustomerprojectpay);
+    /**
+     * 检查人员借用物品是否有归还
+     */
+    int isReturnborrow(String id);
 }

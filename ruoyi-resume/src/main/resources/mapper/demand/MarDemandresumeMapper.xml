@@ -13,10 +13,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="downloadStatus"    column="download_status"    />
         <result property="newfollowtime"    column="newfollowtime"    />
         <result property="trackzPeoname"    column="trackz_peoname"    />
+        <result property="resumeEnclosurepath"    column="resume_enclosurepath"    />
     </resultMap>
 
     <sql id="selectMarDemandresumeVo">
-        select id, demand_id, customer_code, bind_time, bind_people, download_status, newfollowtime, trackz_peoname from mar_demandresume
+        select id, demand_id, customer_code, bind_time, bind_people, download_status, newfollowtime, trackz_peoname, resume_enclosurepath from mar_demandresume
     </sql>
 
     <select id="selectMarDemandresumeList" parameterType="MarDemandresume" resultMap="MarDemandresumeResult">
@@ -48,7 +49,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="downloadStatus != null">download_status,</if>
             <if test="newfollowtime != null">newfollowtime,</if>
             <if test="trackzPeoname != null">trackz_peoname,</if>
-         </trim>
+            <if test="resumeEnclosurepath != null">resume_enclosurepath,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="demandId != null">#{demandId},</if>
@@ -58,7 +60,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="downloadStatus != null">#{downloadStatus},</if>
             <if test="newfollowtime != null">#{newfollowtime},</if>
             <if test="trackzPeoname != null">#{trackzPeoname},</if>
-         </trim>
+            <if test="resumeEnclosurepath != null">#{resumeEnclosurepath},</if>
+        </trim>
     </insert>
 
     <update id="updateMarDemandresume" parameterType="MarDemandresume">
@@ -71,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="downloadStatus != null">download_status = #{downloadStatus},</if>
             <if test="newfollowtime != null">newfollowtime = #{newfollowtime},</if>
             <if test="trackzPeoname != null">trackz_peoname = #{trackzPeoname},</if>
+            <if test="resumeEnclosurepath != null">resume_enclosurepath = #{resumeEnclosurepath},</if>
         </trim>
         where id = #{id}
     </update>
@@ -99,7 +103,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getInputInformation"  parameterType="Map"  resultType="map">
         SELECT
         a.customer_code as customerCode, b.demand_id  as demandId,b.project_name as projectName,
-        c.corp_code as corpCode,c.corp_name as corpName,a.bind_people as opercode
+        c.corp_code as corpCode,c.corp_name as corpName,a.bind_people as opercode,
+        c.payback_period as paybackPeriod
         FROM
             mar_demandresume a
             LEFT JOIN mar_demand b ON a.demand_id = b.demand_id
@@ -110,8 +115,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectMarDemandresumedataDisplay"  parameterType="map"  resultType="map">
 
-        SELECT a.customer_code,a.demand_id,b.follow_status,b.trackingtime from  mar_demandresume a LEFT JOIN
+        SELECT c.customer_name as customerName ,c.customer_tel as customerTel, a.customer_code as customerCode,
+        a.demand_id as demandId,b.follow_status as followStatus,
+        DATE_FORMAT(b.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime from  mar_demandresume a LEFT JOIN
             mar_demandresumefollow b on a.id=b.demandresume_id
+            LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
         where
           a.bind_people =#{AddPeople}
          and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )

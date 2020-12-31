@@ -2,6 +2,7 @@ package com.ruoyi.common.utils.resume;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -21,7 +22,21 @@ public class SerialNumber {
         String str = sdft.format(nowdate);
         return sysFlg + str + RandomStringUtils.randomNumeric(randomCount);
     }
+    /**
+     * 生成业务流水号毫秒数
+     * 系统标识（sysFlg.length位）+时间（9位，时分秒毫秒）+系统流水（randomCount位）
+     * @param sysFlg        系统标识
+     * @param randomCount   随机数位数
+     * @return
+     */
 
+    public static synchronized String createSesl(String sysFlg, int randomCount){
+        safeSleep(1);
+        SimpleDateFormat sdft = new SimpleDateFormat("hhmmssSSS");
+        Date nowdate = new Date();
+        String str = sdft.format(nowdate);
+        return sysFlg + str + RandomStringUtils.randomNumeric(randomCount);
+    }
     public static void safeSleep(long millis){
         try {
             Thread.sleep(millis);
@@ -31,8 +46,12 @@ public class SerialNumber {
     }
 
     public static void main(String[] args) {
-        System.out.println(createSerial("zhzqoa", 6));;
-        System.out.println(createSerial("hzgs", 1));;
+        File file =new File("D:\\linshi\\东软-王艳秋-中级-java.docx");
+        String test = file.getName().substring(0,file.getName().lastIndexOf("."));
+
+System.out.println(test);
+
+
     }
 
 }

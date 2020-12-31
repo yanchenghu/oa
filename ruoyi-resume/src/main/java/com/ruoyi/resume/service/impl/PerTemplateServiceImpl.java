@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.resume.domain.PerTemplate;
@@ -55,31 +54,27 @@ public class PerTemplateServiceImpl implements IPerTemplateService
     public List<PerTemplate> selectPerTemplateList(PerTemplate perTemplate)
     {
 
-
         return perTemplateMapper.selectPerTemplateList(perTemplate);
     }
 
     /**
      * 新增简历模板
      * 
-     * @param perTemplate 简历模板
+     * @param
      * @return 结果
      */
     @Override
     @Transactional
     public AjaxResult insertPerTemplate(MultipartFile file, String templateName,
-                                 String company,String technicalDirection,Integer workingYears,String name) throws IOException {
+                                        String templateNominate) throws IOException {
 
         String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
         PerTemplate perTemplate = new PerTemplate();
         perTemplate.setTemplateId(String.valueOf(UUID.randomUUID()));
         perTemplate.setTemplateName(templateName);
-        perTemplate.setCompany(company);
-        perTemplate.setTechnicalDirection(technicalDirection);
-        perTemplate.setWorkingYears(workingYears);
-        perTemplate.setName(name);
+        perTemplate.setTemplateNominate(templateNominate);
         perTemplate.setTemplateFile(avatar);
-         perTemplateMapper.insertPerTemplate(perTemplate);
+        perTemplateMapper.insertPerTemplate(perTemplate);
         return AjaxResult.success();
     }
 
