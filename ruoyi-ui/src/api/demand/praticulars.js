@@ -9,9 +9,9 @@ export function gettemplist(data) {
   })
 }
 // 查询简历模板
-export function template() {
+export function template(data) {
   return request({
-    url: '/resume/template/templaList',
+    url: '/resume/template/templaList/',
     method: 'get',
   })
 }
@@ -25,6 +25,22 @@ export function getFollow(id) {
 }
 
 // 查询需求详细
+export function submitstarts(data) {
+  return request({
+    url: '/demand/binding/batchOperation',
+    method: 'post',
+    data:data
+  })
+}
+// 重置状态
+export function chongzhizhuang(data) {
+  return request({
+    url: '/demand/binding/batchResumeStatus',
+    method: 'post',
+    data:data
+  })
+}
+// 查询需求详细
 export function submitstart(data) {
   return request({
     url: '/demand/binding/demandResumeTrack',
@@ -34,9 +50,9 @@ export function submitstart(data) {
 }
 
 // 获取简历模板
-export function addFollow() {
+export function addFollow(data) {
   return request({
-    url: '/demand/binding/myRobresume',
+    url: '/demand/binding/myRobresume/'+data,
     method: 'get',
   })
 }
@@ -48,6 +64,7 @@ export function delFollow(id) {
     data:id
   })
 }
+
 // 查询入项信息
 export function getInputInformation(id) {
   return request({
@@ -58,7 +75,7 @@ export function getInputInformation(id) {
 }
 // 入项
 export function entryPersonnel(data) {
-  return request({  
+  return request({
     url: '/demand/binding/entryPersonnel',
     method: 'post',
     data:data

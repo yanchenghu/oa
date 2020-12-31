@@ -89,6 +89,20 @@
             </el-form>
           </div>
           <div class="tit">
+                <b style="margin-right: 20px;">入项信息</b>
+          </div>
+          <div>
+            <ul style="list-style: none;">
+              <li v-if="mapList.length ==0">
+                <span>暂无无入项信息</span>
+              </li>
+              <li  v-else v-for="map in mapList" >
+                {{perCustomerinfo.customerName}} 于 {{map.trackingtime}} 入项 {{map.corp_name}} 公司项目
+              </li>
+            </ul>
+          </div>
+          <br/>
+          <div class="tit">
             <b style="margin-right: 20px;">教育经历</b>
           </div>
           <ul style="list-style: none;">
@@ -135,19 +149,7 @@
             </li>
           </ul>
           <br>
-          <div class="tit">
-                <b style="margin-right: 20px;">入项信息</b>
-          </div>
-          <div>
-            <ul style="list-style: none;">
-              <li v-if="mapList.length ==0">
-                <span>暂无无入项信息</span>
-              </li>
-              <li  v-else v-for="map in mapList" >
-                {{perCustomerinfo.customerName}} 于 {{map.trackingtime}} 入项 {{map.corp_name}} 公司项目
-              </li>
-            </ul>
-          </div>
+          
           <div class="tit">
             <b style="margin-right: 20px;">跟踪记录</b>
           </div>
@@ -168,7 +170,7 @@
 
       <!-- 右边操作栏 -->
       <div>
-        <el-button style="margin-left: 0; display: block;margin-top: 30px;" v-for="but,index in button" :type="but.type" :disabled="but.disabled" @click="buttoncli(index)">{{but.name}}</el-button>
+        <el-button style="margin-left: 0; display: block;margin-top: 30px;" v-for="but,index in button" :type="but.type" :disabled="but.disabled" :key="index" @click="buttoncli(index)">{{but.name}}</el-button>
       </div>
       <el-dialog title="预览" :visible.sync="open" width="70%">
        <iframe
@@ -302,6 +304,7 @@
           this.mapList = res.data.mapList
           this.perEducList=res.data.perEducList
           if(this.perro !== null){
+            this.button[0].disabled = true
             if(this.perro.addPeople===this.name){
               this.button[3].disabled = false
               this.button[4].disabled = false
@@ -339,7 +342,7 @@
             this.msgError("该简历暂无原版")
           }else{
             let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
-            this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
+            this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
             this.open=true
           }
         }else if(val==2){
@@ -347,7 +350,8 @@
          if(this.perCustomerinfo.resumePath==""){
            this.msgError("该简历暂无原版")
          }else{
-           location.href=`http://localhost/dev-api${this.perCustomerinfo.resumePath}`
+           let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
+           location.href=`${srcs}`
          }
         }else if(val==3){
           // 更新简历信息
@@ -387,7 +391,6 @@
             genzongbut(this.form).then(res=>{
               this.msgSuccess("操作成功");
               this.open2 = false;
-              
               this.getcustomerCode();
             })
           }

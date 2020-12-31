@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-containe ">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" @submit.native.prevent>
       <el-form-item label="" prop="templateName">
         <el-input
@@ -23,7 +23,6 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['resume:template:add']"
         >新增</el-button>
       </el-col>
 
@@ -35,34 +34,32 @@
              <el-avatar style="background: rgb(1,128,255);margin-bottom: 10px;"> {{temp.templateName}} </el-avatar>
               <div>
                 <span>{{temp.templateName}}</span>
-                <p class="time">{{temp.company}}-{{temp.technicalDirection}}-{{temp.workingYears}}年-{{temp.name}}</p>
+                <p class="time">{{temp.templateNominate}}</p>
               </div>
               <el-button
                 type="primary"
                 size="mini"
                 icon="el-icon-preview"
                 @click="preview(temp)"
-                v-hasPermi="['resume:template:preview']"
               >预览</el-button>
               <el-button
                 size="mini"
                 type="success"
                 @click="download(temp)"
-                v-hasPermi="['resume:template:download']"
               >下载</el-button>
            </el-card>
       </li>
     </ul>
     <el-dialog title="预览" :visible.sync="open" width="70%"  >
       <iframe
-        :src="'https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost/dev-api/'+drees"
+        :src="'https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc='+drees"
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
 
     <!-- 添加或修改简历模板对话框 -->
     <el-dialog :title="title" :visible.sync="openn" width="500px" append-to-body>
-      <el-form ref="form" :model="form"  label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules"  label-width="80px" >
         <el-form-item label="模板名称" prop="templateName">
           <el-input v-model="form.templateName" placeholder="请输入模板名称" />
         </el-form-item>
@@ -72,24 +69,18 @@
             ref="upload"
             action="#"
             :on-change="handleRemove"
-            :auto-upload="false">
+            :auto-upload="false"
+            accept=".docx,.doc,.pdf"
+            :limit="1"
+            :on-exceed="handleExceed"
+            >
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="公司" prop="company">
-          <el-input v-model="form.company" placeholder="请输入公司" />
+        <el-form-item label="命名格式" prop="templateNominate">
+          <el-input v-model="form.templateNominate" placeholder="请输入模板格式" />
         </el-form-item>
-        <el-form-item label="技术方向" prop="technicalDirection">
-          <el-input v-model="form.technicalDirection" placeholder="请输入技术方向" />
-        </el-form-item>
-        <el-form-item label="工作年限" prop="workingYears">
-          <el-input v-model="form.workingYears" placeholder="请输入工作年限" />
-        </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入姓名" />
-        </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确定</el-button>
@@ -139,17 +130,11 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        templateOrder: [
-          { required: true, message: "模板顺序不能为空", trigger: "blur" }
+        templateName: [
+          { required: true, message: "模板名称不能为空", trigger: "blur" }
         ],
-        templateStatus: [
-          { required: true, message: "模板状态不能为空", trigger: "blur" }
-        ],
-        addtime: [
-          { required: true, message: "添加时间不能为空", trigger: "blur" }
-        ],
-        addpeople: [
-          { required: true, message: "添加人不能为空", trigger: "blur" }
+        templateNominate: [
+          { required: true, message: "命名格式不能为空", trigger: "blur" }
         ],
       }
     };
@@ -163,9 +148,13 @@ export default {
   methods: {
     // 预览简历
     preview(value){
-      this.open=true;
-      this.drees = value.templateFile
-      this.title="简历预览"
+      if(value.templateFile!==null){
+        this.open=true;
+        this.drees = process.env.VUE_APP_BASE_API+value.templateFile
+        this.title="简历预览"
+      }else{
+        this.msgError("该简历暂无原版")
+      }
     },
 
     handleRemove(value){
@@ -173,8 +162,14 @@ export default {
     },
     // 下载简历
     download(val){
-      window.open(
-      `http://localhost/dev-api/${val.templateFile}`)
+      if(val.templateFile!==null){
+        let srcs = process.env.VUE_APP_BASE_API+val.templateFile
+        window.open(
+        `${srcs}`)
+      }else{
+        this.msgError("该简历暂无原版")
+      }
+
     },
 
     /** 查询简历模板列表 */
@@ -188,7 +183,7 @@ export default {
     },
     // 取消按钮
     cancel() {
-      this.open = false;
+      this.openn = false;
       this.reset();
     },
     // 表单重置
@@ -207,6 +202,11 @@ export default {
         namingFormat: null
       };
       this.resetForm("form");
+      this.form.templateFile=null
+      if(this.$refs.upload !==undefined){
+        this.$refs.upload.clearFiles()
+      }
+
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -227,53 +227,44 @@ export default {
 
     /** 提交按钮 */
     submitForm() {
-      let form = this.form
-      let formdata = new FormData()
-      formdata.append("templateFile",form.templateFile)
-      formdata.append("templateName",form.templateName)
-      formdata.append("company",form.company)
-      formdata.append("technicalDirection",form.technicalDirection)
-      formdata.append("workingYears",form.workingYears)
-      formdata.append("name",form.name)
-      addTemplate(formdata).then(response => {
-        this.msgSuccess("新增成功");
-        this.open = false;
-        this.getList();
+      if(this.form.templateFile==null){
+        this.msgError("文件不能为空")
+      }else{
+        this.$refs["form"].validate(valid => {
+        if (valid) {
+         let form = this.form
+         let formdata = new FormData()
+         formdata.append("templateFile",form.templateFile)
+         formdata.append("templateNominate",form.templateNominate)
+         formdata.append("templateName",form.templateName)
+         addTemplate(formdata).then(response => {
+           this.msgSuccess("新增成功");
+           this.openn = false;
+           this.getList();
+         });
+        }
       });
-
-
-      // this.$refs["form"].validate(valid => {
-      //   if (valid) {
-      //     if (this.form.templateId != null) {
-      //       this.msgSuccess("新增失败");
-      //       this.open = false;
-      //       this.getList();
-      //     } else {
-      //       let formdata = new FormData()
-      //       formdata.append("templateFile",form.templateFile)
-      //
-      //
-      //     }
-      //   }
-      // });
+      }
     },
-
+    handleExceed() {
+      this.msgError(`当前限制选择 1 个文件`);
+    },
     // 模板状态修改
-    handleStatusChange(row) {
-      console.log(row.templateStatus)
-      let text = row.templateStatus === "0" ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.templateName + '"模板吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return changeTemplateStatus(row.templateId, row.templateStatus);
-      }).then(() => {
-        this.msgSuccess(text + "成功");
-      }).catch(function() {
-        row.templateStatus = row.templateStatus === "0" ? "1" : "0";
-      });
-    },
+    // handleStatusChange(row) {
+    //   console.log(row.templateStatus)
+    //   let text = row.templateStatus === "0" ? "启用" : "停用";
+    //   this.$confirm('确认要"' + text + '""' + row.templateName + '"模板吗?', "警告", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   }).then(function() {
+    //     return changeTemplateStatus(row.templateId, row.templateStatus);
+    //   }).then(() => {
+    //     this.msgSuccess(text + "成功");
+    //   }).catch(function() {
+    //     row.templateStatus = row.templateStatus === "0" ? "1" : "0";
+    //   });
+    // },
 
   }
 };
@@ -296,4 +287,8 @@ export default {
     margin-top: 20px;
     text-align: center;
   }
+  .app-containe{
+    padding: 15px;
+  }
+
 </style>

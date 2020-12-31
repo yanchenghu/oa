@@ -52,7 +52,6 @@
             <el-select
               v-model="queryParams.status"
               placeholder="用户状态"
-              clearable
               size="small"
               style="width: 240px"
             >
@@ -417,7 +416,7 @@ export default {
         pageSize: 10,
         userName: undefined,
         phonenumber: undefined,
-        status: undefined,
+        status: "0",
         deptId: undefined
       },
       // 表单校验

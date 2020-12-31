@@ -21,7 +21,15 @@
 
 <!--    展示-->
     <el-table v-loading="loading" :data="yxdemandList" >
-      <el-table-column label="公司名称" align="center" prop="companyName" width="160"/>
+      <el-table-column label="公司名称" align="left" prop="companyName" width="160">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="followUp(scope.row.entryId)"
+          >{{scope.row.companyName}}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="联系人/职位" align="center" width="130">
         <template slot-scope="scope">
           <span>{{scope.row.contactPeople}} / {{scope.row.contactPosition}}</span>
@@ -126,7 +134,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                  <el-button :disabled="yxdemandone.isBusiness!==2" type="primary" @click="onSubmit">转化为合作用户</el-button>
+                <el-button :disabled="yxdemandone.isBusiness!==2" type="primary" @click="onSubmit">转化为合作用户</el-button>
+                
             </el-form-item>
           </el-form>
         </div>
@@ -442,7 +451,6 @@ export default {
     // 确认
     onSu(){
       this.yxdemandone.corpName=this.yxdemandone.companyName
-
       let that = this
       this.$refs["formmsg"].validate(valid=>{
         if(valid){

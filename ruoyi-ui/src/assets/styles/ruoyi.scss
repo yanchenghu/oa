@@ -177,6 +177,30 @@
   color: #FFFFFF;
 }
 
+
+/* button color */
+.el-button--orgin.is-disabled,.el-button--orgin.is-disabled:hover,
+.el-button--orgin:active {
+  background: #d3cc3d;
+  border-color: #d3cc3d;
+  color: #FFFFFF;
+}
+
+.el-button--orgin:focus,
+.el-button--orgin:hover {
+  background: #cc9f44;
+  border-color: #cc9f44;
+  color: #FFFFFF;
+}
+
+.el-button--orgin {
+  background-color: #ff9f43;
+  border-color: #ff9f43;
+  color: #FFFFFF;
+}
+
+
+
 /* text color */
 .text-navy {
 	color: #1ab394;

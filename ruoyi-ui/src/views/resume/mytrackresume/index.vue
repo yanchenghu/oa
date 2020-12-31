@@ -24,19 +24,33 @@
         </el-form-item>
       </el-form>
       <el-table v-loading="loading" :data="tablelist" >
-        <el-table-column label="姓名" align="center" prop="customerName" />
-        <el-table-column label="电话"  prop="customerTel" width="100"/>
-        <el-table-column label="添加时间" align="center" prop="addTime" width="180">
+        <el-table-column label="姓名"  prop="customerName">
+          <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="handle(scope.row)"
+          >{{scope.row.customerName}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="电话"  prop="customerTel" width="110"/>
+        <el-table-column label="添加时间"  prop="addTime" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="释放时间" align="center" prop="editTime" width="180">
+        <el-table-column label="释放时间" prop="editTime" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.editTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="最近一次联系记录"  prop="memoDetail" />
+        <el-table-column label="联系时间" prop="contactTime" width="180">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.contactTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作"  class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -134,6 +148,11 @@
         this.title = "简历跟踪"
         this.form.contactCustomercode = row.customerCode
         this.form.updateStatic = 2
+      },
+      handle(row){
+        let customerCode = row.customerCode
+        this.$router.push({path:"/record/particulars",query:{customerCode:customerCode}});
+        this.open = false;
       },
       submitForm(){
         this.$refs["form"].validate(valid => {

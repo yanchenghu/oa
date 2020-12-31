@@ -28,6 +28,7 @@
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
+          <span style="display: inline-block;position: absolute;line-height: 10px; bottom: 8px;width: 60px;left: 0;">{{nickname}}</span>
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/user/profile">
@@ -71,7 +72,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
+      'device',
+      "nickname"
     ]),
     setting: {
       get() {
@@ -85,6 +87,9 @@ export default {
       }
     }
   },
+  created() {
+    // console.log(this.nickname)
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -96,7 +101,10 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+
+          // location.href = `${window.location.protocol}//${window.location.host}/#/index?time=${new Date().getTime()}`;
+          location.href ="/index"
+          // this.$router.push({ path: '/' })
         })
       })
     }
@@ -105,15 +113,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  // /deep/ .el-carousel__item{
+  //   transition-duration: 2s;
+  // }
 .navbar {
-  height: 50px;
+  height: 55px;
   overflow: hidden;
   position: relative;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
-
-
   .hamburger-container {
     line-height: 46px;
     height: 100%;
@@ -169,11 +177,11 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-
+        font-size: 12px;
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
+          width: 35px;
+          height: 35px;
           border-radius: 10px;
         }
 

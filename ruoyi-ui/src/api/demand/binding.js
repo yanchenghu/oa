@@ -49,10 +49,11 @@ export function getFollow(id) {
 }
 
 // 新增需求
-export function addFollow() {
+export function addFollow(data){
   return request({
     url: '/demand/binding/myRobresume',
-    method: 'get',
+    method: 'post',
+    data:data
   })
 }
 

@@ -21,14 +21,14 @@
       </div>
     </div>
     <div style="position: relative; display: flex;flex-wrap: wrap; margin-bottom: 20px;height: 220px;">
-      <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".docx" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
+      <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
         <div v-if="wen">
           <i class="el-icon-circle-plus" style="color:#0081FF;
           font-size: 67px;
             margin: 40px 0 16px;
             line-height: 50px;"></i>
           <div><b>点击上传解析简历 </b></div>
-          <div class="el-upload__text" style="width: 200px;margin: 0 auto;">简历支持.docx格式，大小不超过500kb，拖拽文件可直接上传</div>
+          <div class="el-upload__text" style="width: 210px;margin: 0 auto;">简历支持.docx .doc .pdf格式，大小不超过500kb，拖拽文件可直接上传</div>
         </div>
         <div v-else>
           <i class="el-icon-success" style="color:rgb(0,218,175);
@@ -65,7 +65,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="出生年月" prop="customerBirth">
-            <el-input v-model="perCustomerinfo.customerBirth" size="small" suffix-icon="xxx"/>
+            <el-date-picker type="date"
+            v-model="perCustomerinfo.customerBirth"
+            size="small"
+            style="width: 92%;"
+            value-format="yyyy-MM-dd">
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="工作经验" prop="workYear">
             <el-select v-model='perCustomerinfo.workYear' placeholder="" size="small">
@@ -83,12 +88,11 @@
           </el-form-item>
 
           <el-form-item label="技术方向" prop="professionId">
-            <el-select v-model='perCustomerinfo.professionId' placeholder="" size="small">
+            <el-select v-model='perCustomerinfo.professionId' filterable  placeholder="" size="small">
               <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
           <el-form-item label="期望薪资" prop="expectationSalary">
-
             <el-input v-model="perCustomerinfo.expectationSalary" size="small"  suffix-icon="xxx"/>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
@@ -96,7 +100,7 @@
           </el-form-item>
 
           <el-form-item label="意向城市" prop="intentionArea">
-            <el-select v-model='perCustomerinfo.intentionArea' placeholder="" size="small">
+            <el-select v-model='perCustomerinfo.intentionArea' placeholder=""  filterable size="small">
               <el-option v-for="dict in intentionareaOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"/>
             </el-select>
           </el-form-item>
@@ -146,11 +150,10 @@
             <p><span>{{project.duty}}</span></p>
           </li>
         </ul>
-        <br>
-        <el-button size="medium " type="" @click="handleQuery" >取消</el-button>
-        <el-button size="medium " @click="resetQuery" type="success" v-hasPermi="['resume:record:edit']">保存</el-button>
-
-
+        <div style="position: fixed; bottom: 10px; right: 20%;">
+          <el-button size="medium " type="" @click="handleQuery" >取消</el-button>
+          <el-button size="medium " @click="resetQuery" type="success" v-hasPermi="['resume:record:edit']">保存</el-button>
+        </div>
 
     <el-dialog :visible.sync="open"  title="简历查询" append-to-body>
       <div v-if="sous" style="height: 200px;">
@@ -304,7 +307,6 @@
         return this.selectDictLabel(this.professionIdoptions, row.profession_id);
       },
 
-
       oplodad(file) {
         this.wen = false
       },
@@ -368,7 +370,7 @@
       },
       select(){
           this.loading=true
-          listRecord(this.finddata).then(res =>          {
+          listRecord(this.finddata).then(res =>{
           this.total = res.total;
           this.loading=false
           if(res.rows.length==0){
@@ -381,14 +383,14 @@
       },
       // 查询
       find() {
-        this.select()
-        this.open = true;
-        // if(this.finddata.customerName==""&&this.finddata.customerTel==""){
-        //   this.msgError("请输入用户名或密码")
-        // }else{
-        //   this.open = true;
-        //   this.select()
-        // }
+        // this.select()ss
+        // this.open = true;
+        if(this.finddata.customerName==""&&this.finddata.customerTel==""){
+          this.msgError("请输入用户名或密码")
+        }else{
+          this.open = true;
+          this.select()
+        }
         // this.open = true;
         // this.loading=true
         // listRecord(this.finddata).then(res =>          {
@@ -407,6 +409,7 @@
         this.perCustomerinfo = {}
         this.project_experience = {}
         this.work_experienceListArr=[]
+        this.perEducList=[]
         this.$refs.file.clearFiles()
         this.wen = true
         this.resetForm("form");
@@ -416,6 +419,10 @@
 </script>
 
 <style scoped>
+  .app-container{
+    background-color: #fff;
+    margin: 10px;
+  }
   .tit {
     height: 42px;
     background: #F5F5F9;

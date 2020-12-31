@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-containe">
     <div style="display: flex;">
       <!-- 需求表格 -->
       <div class="left">
@@ -7,11 +7,14 @@
           </el-input>
           <el-radio-group v-model="fromdata.nood" size="medium" style="margin-top: 10px;" @change="changes" v-loading="loading2">
              <div  v-for="nood in tabledata" style="width: 100% ;height: 40px;">
-               <el-radio-button style="display: inline-block; width: 100%;"  :label="nood.demandId" >{{nood.projectName}}</el-radio-button>
+                <el-tooltip class="item" effect="dark" :content="nood.projectName" v-if="nood.projectName.length>=7" placement="top">
+                      <el-radio-button style="display: inline-block; width: 100%;"  :label="nood.demandId" >{{`${nood.projectName.slice(0,7)}...`}}</el-radio-button>
+                </el-tooltip>
+                <el-radio-button style="display: inline-block; width: 100%;" v-else :label="nood.demandId" >{{nood.projectName}}</el-radio-button>
              </div>
           </el-radio-group>
           <el-pagination
-            background
+
             layout="prev, next"
             v-show="total2>0"
             :total="total2"
@@ -54,7 +57,7 @@
           <el-button  type="primary" @click="next">换一批</el-button>
         </el-form>
         <!-- 数据表格 -->
-        <el-table  border :data="msgtaba" v-loading="loading" tooltip-effect="light">
+        <el-table   :data="msgtaba" v-loading="loading" tooltip-effect="light">
           <el-table-column type="selection"  width="55" align="center"/>
           <el-table-column prop="customerName" label="姓名" width="100" align="center"/>
           <el-table-column prop="customerTel" label="电话" width="100" align="center"/>
@@ -323,14 +326,17 @@
      width: 170px;
      text-align: center;
      height:100%;
-     background: #F2F6FC;
+     background: #fff;
   }
   .right{
     width: 80%;
     padding: 10px;
-    background: #F2F6FC;
+    background: #fff;
   }
   >>>.el-radio-button__inner {
       width: 100%;
+  }
+  .app-containe{
+    padding: 10px;
   }
 </style>

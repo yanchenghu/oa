@@ -27,7 +27,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item  prop="corpName">
-        <el-select v-model="queryParams.corpName" clearable placeholder="请选择客户" size="small" @change="handleQuery">
+        <el-select v-model="queryParams.corpName" clearable placeholder="请选择客户" size="small" filterable @change="handleQuery">
           <el-option
               v-for="dict in entryList"
               :key="dict.marCustomerprojectpay.id"
@@ -38,7 +38,7 @@
       </el-form-item>
       <el-form-item  prop="settledCycle">
         <el-select v-model="queryParams.settledCycle"  placeholder="是否在项" size="small" @change="handleQuery">
-          <el-option label="入项" :value="1" />
+          <el-option label="在项" :value="1" />
           <el-option label="出项" :value="2" />
         </el-select>
       </el-form-item>
@@ -56,17 +56,31 @@
     <!-- 表格 -->
     <el-table v-loading="loading" :data="entryList" @selection-change="handleSelectionChange" style="width: 100%;">
       <el-table-column type="selection" width="55"  />
-      <el-table-column label="姓名"  prop="customerName" />
+      <el-table-column label="姓名"  prop="customerName">
+        <template slot-scope="scope">
+          <el-button
+          size="mini"
+          type="text"
+          @click="handleUpdate(scope.row.marCustomerprojectpay.id)"
+          >{{scope.row.customerName}}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="电话"  prop="customerTel" />
 
       <el-table-column label="入职公司"  >
         <template slot-scope="scope">
-          <span>{{ scope.row.marCustomerprojectpay.corpName }}</span>
+          <span>{{scope.row.marCustomerprojectpay.corpName}}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="入职时间"  prop="syqstartTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.marCustomerprojectpay.syqstartTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="技术方向">
+        <template slot-scope="scope">
+          <span>{{ professionIdopFormat(scope.row)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="出项时间" >
@@ -98,10 +112,18 @@
       <el-table-column label="操作" width="100" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row.marCustomerprojectpay.id)"
+          v-if="scope.row.marCustomerprojectpay.outofProjecttime"
+          size="mini"
+          type="text"
+          icon="el-icon-view"
+          @click="handleUpdate(scope.row.marCustomerprojectpay.id)"
+          >查看人员信息</el-button>
+          <el-button
+          v-else
+          size="mini"
+          type="text"
+          icon="el-icon-edit"
+          @click="handleUpdate(scope.row.marCustomerprojectpay.id)"
           >添加人员信息</el-button>
         </template>
       </el-table-column>
@@ -181,7 +203,7 @@
                    <b>外包公司信息</b>
                    <p></p>
                     <el-form-item label="身份证正面">
-                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(0)" v-if="!marCertificates1.idcardPositive">
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(0)" v-if="!marCertificates1.idcardPositive">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(0)" v-else>
@@ -189,7 +211,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="身份证反面">
-                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(1)" v-if="!marCertificates1.idcardReverse">
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(1)" v-if="!marCertificates1.idcardReverse">
                           点击上传
                       </el-button>
                       <el-button  type="text" @click="seefile(1)" v-else>
@@ -197,7 +219,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="毕业证">
-                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(2)" v-if="!marCertificates1.diploma">
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(2)" v-if="!marCertificates1.diploma">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(2)" v-else>
@@ -205,7 +227,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="学位证">
-                      <el-button  :disabled="yxdemandone.outofProjecttime"type="text" @click="upfile(3)" v-if="!marCertificates1.academic">
+                      <el-button  :disabled="yxdemandone.outofProjecttime!==undefined"type="text" @click="upfile(3)" v-if="!marCertificates1.academic">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(3)" v-else>
@@ -213,7 +235,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="保密协议">
-                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(4)" v-if="!marCertificates1.confidentialityAgreement">
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(4)" v-if="!marCertificates1.confidentialityAgreement">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(4)" v-else>
@@ -221,7 +243,7 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="劳动合同">
-                      <el-button :disabled="yxdemandone.outofProjecttime" type="text" @click="upfile(5)" v-if="!marCertificates1.serviceContract">
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(5)" v-if="!marCertificates1.serviceContract">
                           点击上传
                       </el-button>
                       <el-button type="text" @click="seefile(5)" v-else>
@@ -235,7 +257,7 @@
               <el-button  v-if="!yxdemandone.outofProjecttime" type="primary" @click="handAdd">新建借用记录</el-button>
               <p></p>
               <el-table v-loading="loadings" :data="marBorrows">
-                <el-table-column label="时间"  prop="borrowTime" width="100">
+                <el-table-column label="借用时间"  prop="borrowTime" width="100">
                   <template slot-scope="scope">
                     <span>{{ parseTime(scope.row.borrowTime, '{y}-{m}-{d}') }}</span>
                   </template>
@@ -389,6 +411,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="归还时间" prop="returnTime">
           <el-date-picker clearable size="small" style="width: 200px"
+           :picker-options="pickerOptions3"
             v-model="form.returnTime"
             type="date"
             value-format="yyyy-MM-dd"
@@ -402,8 +425,8 @@
       </div>
     </el-dialog>
     <!-- 出项信息 -->
-    <el-dialog :title="title3" :visible.sync="open3" width="500px" >
-      <el-form ref="form3" :model="form3" :rules="rules" class="form" label-width="100px">
+    <el-dialog :title="title3" :visible.sync="open3" width="500px">
+      <el-form ref="form3" :model="form3" :rules="rules" class="form" label-width="100px" :validate-on-rule-change="false">
         <el-form-item label="离项原因" prop="quitProreason">
           <el-select v-model="form3.quitProreason" placeholder="请选择" size="small">
             <el-option
@@ -416,7 +439,9 @@
           </el-select>
         </el-form-item>
         <el-form-item label="离项时间" prop="outofProjecttime">
-          <el-date-picker type="date"
+          <el-date-picker
+           :picker-options="pickerOptions3"
+           type="date"
           placeholder="选择离项时间"
           v-model="form3.outofProjecttime"
           size="small"
@@ -435,9 +460,9 @@
     </el-dialog>
     <!-- 新建借用记录 -->
     <el-dialog :title="title4" :visible.sync="open4" width="500px" >
-      <el-form ref="form4" :rules="rules" :model="form4" label-width="110px" class="form">
+      <el-form ref="form4" :rules="rules" :model="form4" label-width="110px" class="form" :validate-on-rule-change="false">
         <el-form-item label="借用时间" prop="borrowTime">
-              <el-date-picker type="date" placeholder="选择借用时间" v-model="form4.borrowTime" value-format="yyyy-MM-dd" size="small" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择借用时间" v-model="form4.borrowTime" value-format="yyyy-MM-dd" size="small" :picker-options="pickerOptions3" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="物品" prop="borrowSth">
             <el-input v-model="form4.borrowSth" placeholder="请输入物品"  size="small" />
@@ -475,6 +500,7 @@
         </el-form-item>
         <el-form-item label="调整时间" prop="adjustTime">
               <el-date-picker type="date"
+              :picker-options="pickerOptions3"
               placeholder="选择调整时间"
               v-model="form5.adjustTime"
               size="small"
@@ -495,7 +521,7 @@
 </template>
 
 <script>
-import { listEntry, getEntry, delEntry, addEntry, updateEntry, exportEntry, addgongzi,addfuwufei,putwupin} from "@/api/perentry/entry";
+import {getwupin, listEntry, getEntry, delEntry, addEntry, updateEntry, exportEntry, addgongzi,addfuwufei,putwupin} from "@/api/perentry/entry";
 import { getToken } from "@/utils/auth";
 import {debounce} from "@/utils/ruoyi.js"
 export default {
@@ -516,6 +542,11 @@ export default {
           }
         }
     return {
+      pickerOptions3:{
+        disabledDate:(time) => {
+              return time.getTime() >  Date.now()
+        }
+      },
       // 调整工资
       title5:"",
       form5:{},
@@ -564,6 +595,7 @@ export default {
       total: 0,
       // 入项表格数据
       entryList: [],
+      professionIdoptions:[],
       // 弹出层标题
       title: "",
       // 上传简历
@@ -607,11 +639,11 @@ export default {
           trigger: ["blur", "change"]
         }, ],
         afterSalary: [{
-          validator: price, 
+          validator: price,
           trigger: ["blur", "change"]
         },],
         afterServicepay: [{
-          validator: price, 
+          validator: price,
           trigger: ["blur", "change"]
         },],
          adjustTime: [{
@@ -641,7 +673,6 @@ export default {
          },],
 
       },
-
       open3:false,
       title3:"",
     };
@@ -656,6 +687,9 @@ export default {
     }
   },
   created() {
+    this.getDicts("per_customerinfo_professionid").then(response => {
+      this.professionIdoptions = response.data;
+    });
     this.getList();
     // 离项原因
     this.getDicts("outof_project_cause").then(response => {
@@ -663,6 +697,10 @@ export default {
     });
   },
   methods: {
+    professionIdopFormat(row, column) {
+      return this.selectDictLabel(this.professionIdoptions, row.technologyDirection);
+
+    },
     /** 查询入项列表 */
     getList() {
       if(this.value1==null){
@@ -683,34 +721,33 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-
     },
     // 表单重置
-    reset() {
-      this.form = {
-        id: null,
-        customerCode: null,
-        corpCode: null,
-        corpName: null,
-        demandId: null,
-        projectName: null,
-        startTime: null,
-        endTime: null,
-        settledCycle: null,
-        salary: null,
-        servicePay: null,
-        outofProjecttime: null,
-        quitProreason: null,
-        quitRemark: null,
-        opercode: null,
-        operTime: null,
-        syqstartTime: null,
-        syqEndtime: null,
-        socSecopt: null,
-        remark: null
-      };
-      this.resetForm("form");
-    },
+    // reset() {
+    //   this.form = {
+    //     id: null,
+    //     customerCode: null,
+    //     corpCode: null,
+    //     corpName: null,
+    //     demandId: null,
+    //     projectName: null,
+    //     startTime: null,
+    //     endTime: null,
+    //     settledCycle: null,
+    //     salary: null,
+    //     servicePay: null,
+    //     outofProjecttime: null,
+    //     quitProreason: null,
+    //     quitRemark: null,
+    //     opercode: null,
+    //     operTime: null,
+    //     syqstartTime: null,
+    //     syqEndtime: null,
+    //     socSecopt: null,
+    //     remark: null
+    //   };
+    //   this.resetForm("form");
+    // },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -768,6 +805,7 @@ export default {
         }
         addEntry(form).then(res=>{
           this.open2 = false
+          this.msgSuccess("上传成功")
           this.handleUpdate(this.yxdemandone.id)
         })
       }
@@ -788,18 +826,25 @@ export default {
 
     // 添加借用记录
     handAdd(i){
+      this.reset();
       if(i==2){
-        this.form5={}
         this.form5.beforeSalary = this.yxdemandone.salary
         this.open5 = true
         this.title5 = "新建工资调整记录"
+        if (this.$refs["form5"] !== undefined) {
+              this.$refs["form5"].resetFields()
+           }
       }else if(i==3){
-        this.form5={}
+        if (this.$refs["form5"] !== undefined) {
+              this.$refs["form5"].resetFields()
+           }
         this.form5.beforeServicepay = this.yxdemandone.service_Pay
         this.open5 = true
         this.title5 = "新建服务费调整记录"
       }else{
-        this.form4={}
+        if (this.$refs["form4"] !== undefined) {
+              this.$refs["form4"].resetFields()
+           }
         this.open4 = true
         this.title4 = "新建借用记录"
       }
@@ -820,7 +865,7 @@ export default {
     },
     submitForm5:debounce(function(){this.submitForms5()},500),
     submitForms5(){
-      this.$refs["form4"].validate(valid=>{
+      this.$refs["form5"].validate(valid=>{
         if(valid){
           this.form5.marcusId = this.yxdemandone.id
           if(this.title5=="新建工资调整记录"){
@@ -925,9 +970,24 @@ export default {
     },
     /** 出项按钮操作 */
     handleDelete(row) {
-      this.open3 = true
-      this.title3 = "出项信息"
-      this.form3 = {}
+      getwupin(this.yxdemandone.id).then(res=>{
+          this.reset()
+          if(res==1){
+            this.$confirm('该人员还有物品未归还是否确认继续出项?', "警告", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(function() {
+            }).then(() => {
+              this.open3 = true
+              this.title3 = "出项信息"
+            }).catch();
+          }else{
+            this.open3 = true
+            this.title3 = "出项信息"
+          }
+      })
+      // this.resetForm("form3");
     },
     submitForm3:debounce(function(){this.submitForms3()},500),
     submitForms3(){
@@ -942,28 +1002,74 @@ export default {
             type: "warning"
           }).then(function() {
             delEntry(_this.form3).then(res=>{
+              _this.msgInfo("出项成功")
             })
           }).then(() => {
-            this.msgInfo("出项成功")
             this.open3 = false
             this.handleUpdate(this.yxdemandone.id);
           }).catch();
         }
       });
 
-      // const ids = row.id || this.ids;
-      // this.$confirm('是否确认删除入项编号为"' + ids + '"的数据项?', "警告", {
-      //     confirmButtonText: "确定",
-      //     cancelButtonText: "取消",
-      //     type: "warning"
-      //   }).then(function() {
-      //     return delEntry(ids);
-      //   }).then(() => {
-      //     this.getList();
-      //     this.msgSuccess("删除成功");
-      //   })
     },
-
+    reset() {
+      this.form = {
+        borrowTime: null,
+        borrowSth: null,
+        borrowModel: null,
+        isAgreement: null,
+        afterSalary: null,
+        afterServicepay: null,
+        returnTime: null,
+        adjustTime: null,
+        quitProreason: null,
+        outofProjecttime: null,
+        quitRemark: null,
+      };
+      this.form3 = {
+        borrowTime: null,
+        borrowSth: null,
+        borrowModel: null,
+        isAgreement: null,
+        afterSalary: null,
+        afterServicepay: null,
+        returnTime: null,
+        adjustTime: null,
+        quitProreason: null,
+        outofProjecttime: null,
+        quitRemark: null,
+      };
+      this.form4 = {
+        borrowTime: null,
+        borrowSth: null,
+        borrowModel: null,
+        isAgreement: null,
+        afterSalary: null,
+        afterServicepay: null,
+        returnTime: null,
+        adjustTime: null,
+        quitProreason: null,
+        outofProjecttime: null,
+        quitRemark: null,
+      };
+      this.form5 = {
+        borrowTime: null,
+        borrowSth: null,
+        borrowModel: null,
+        isAgreement: null,
+        afterSalary: null,
+        afterServicepay: null,
+        returnTime: null,
+        adjustTime: null,
+        quitProreason: null,
+        outofProjecttime: null,
+        quitRemark: null,
+      };
+      this.resetForm("form");
+      this.resetForm("form3");
+      this.resetForm("form4");
+      this.resetForm("form5");
+     },
 
     /** 导出按钮操作 */
     handleExport() {

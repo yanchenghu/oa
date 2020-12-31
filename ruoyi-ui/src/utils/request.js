@@ -21,12 +21,13 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-    console.log(error)
+    
     Promise.reject(error)
 })
 
 // 响应拦截器
 service.interceptors.response.use(res => {
+    
     // 未设置状态码则默认成功状态
     const code = res.data.code || 200;
     // 获取错误信息
