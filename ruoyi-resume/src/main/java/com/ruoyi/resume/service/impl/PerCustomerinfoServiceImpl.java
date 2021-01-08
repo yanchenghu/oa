@@ -458,6 +458,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
     @Override
     public List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo) {
+
         return perCustomerinfoMapper.selectlistbyNametel(perCustomerinfo);
 
     }
@@ -514,19 +515,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         return AjaxResult.success("抢占简历成功");
 
     }
-    /**
-     *  简历跟踪
-     *
-     * @param customerCode
-     * @return 结果
-     */
-    @Override
-    public AjaxResult followCustomeInfo(String customerCode, LoginUser loginUser) {
 
-
-
-        return null;
-    }
     /**
      *  简历释放
      *
@@ -657,7 +646,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
         perrobcustomer.setResumeId(perCustomerinfo.getCustomerCode());
         perrobcustomer.setAddTime(new Date());
-        perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
+        perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),1));
         perrobcustomer.setAddPeople(loginUser.getUsername());
         perrobcustomer.setAddName(loginUser.getUser().getNickName());
         perrobcustomer.setStatus(0);

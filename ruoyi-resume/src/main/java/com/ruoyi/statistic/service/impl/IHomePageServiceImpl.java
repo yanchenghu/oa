@@ -71,10 +71,19 @@ public class IHomePageServiceImpl implements IHomePageService {
         mapss.put("deptId",loginUser.getUser().getDeptId());
         List<MarEntryInfo> listMarEntry= marDemandMapper.selectMarDemanddsaList(mapss);
         mapss.put("bindPeople",loginUser.getUsername());
-        for (MarEntryInfo marDe:listMarEntry){
+//        for (MarEntryInfo marDe:listMarEntry){
+//            mapss.put("demandId",marDe.getDemandId());
+//            List<BasicInfo>  li= marDemandMapper.selectMarDem(mapss);
+//            marDe.setBasicInfo(li);
+//        }
+        for(int i=listMarEntry.size()-1;i>=0;i--) {
+            MarEntryInfo marDe= listMarEntry.get(i);
             mapss.put("demandId",marDe.getDemandId());
             List<BasicInfo>  li= marDemandMapper.selectMarDem(mapss);
             marDe.setBasicInfo(li);
+            if(li.size()==0){
+                listMarEntry.remove(i);
+            }
         }
         Map maps=new HashMap();
         maps.put("entryrobnnum",ListperRob.size());

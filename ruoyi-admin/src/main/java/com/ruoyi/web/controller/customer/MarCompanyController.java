@@ -134,6 +134,16 @@ public class MarCompanyController extends BaseController
         List<MarCompany> list = marCompanyService.selectMarCompanyList(marCompany,loginUser);
         return list;
     }
+    /**
+     * 获取所有的合作公司
+     * @return
+     */
+    @GetMapping("/alllistcom")
+    public List<MarCompany> alllistcom()
+    {
+        List<MarCompany> list = marCompanyService.selectMarCompanyAlllistcom();
+        return list;
+    }
 
 
 

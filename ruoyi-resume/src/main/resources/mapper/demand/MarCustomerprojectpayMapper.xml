@@ -274,9 +274,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY g.dept_name,f.nick_name
     </select>
     <select id="inItemNowCount"    resultType="map">
-        SELECT COUNT(id) as nowNum,SUM(service_pay) as sumServicePay,SUM(salary) as  sumSalary from  mar_customerprojectpay a
-        where
-         a.outof_projecttime is null
+       SELECT b.sumSalary,a.sumServicePay,c.nowNum from
+        ( SELECT IFNULL(SUM(service_pay),0) AS sumServicePay ,IFNULL(SUM( salary ),0) AS sumSalary FROM mar_customerprojectpay  WHERE DATE_FORMAT( syqstart_time, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m')
+        ) as a,
+        (SELECT IFNULL(SUM( salary ),0) AS sumSalary FROM mar_customerprojectpay WHERE DATE_FORMAT( outof_projecttime, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m' )
+        ) as b,
+        ( SELECT IFNULL( COUNT( id ), 0 ) AS nowNum FROM mar_customerprojectpay WHERE outof_projecttime IS NULL
+        )as c
     </select>
     <select id="entryPeopleCount"    parameterType="map"  resultType="map">
         SELECT COUNT(id) as entryNum,SUM(service_pay) as entryServicePay,SUM(salary) as  entrySalary from  mar_customerprojectpay a

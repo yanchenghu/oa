@@ -272,10 +272,12 @@ public class YxdemandServiceImpl implements IYxdemandService
         String contact_detail=yxcontact.getContactDetail();
         //查询最新的一次更新情况
         Yxcontact yxco=yxcontactMapper.selNewdetailByentryId(entryId);
-        if(contact_detail.equals(yxco.getContactDetail())){
-            return AjaxResult.error("与上次发布内容相同,发布失败");
+        if(yxco!=null){
+            String cong=yxco.getContactDetail();
+            if(contact_detail.equals(cong)){
+                return AjaxResult.error("与上次发布内容相同,发布失败");
+            }
         }
-
         Date date=new Date();
         Yxdemand yxdemand=new Yxdemand();
         yxdemand.setEntryId(yxcontact.getEntryId());

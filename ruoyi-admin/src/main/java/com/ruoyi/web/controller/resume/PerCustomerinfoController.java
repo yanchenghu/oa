@@ -99,7 +99,7 @@ public class PerCustomerinfoController extends BaseController
     @GetMapping("/listbynatel")
     public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
     {
-        startPage();
+
         List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
         return getDataTable(list);
     }
@@ -127,15 +127,7 @@ public class PerCustomerinfoController extends BaseController
         }
         return  perCustomerinfoService.robCustomeInfo(customerCode,loginUser);
     }
-    /**
-     * 简历跟进
-     */
-    @PostMapping(value = "/follow")
-    public AjaxResult followCustomeInfo(@RequestParam("customerCode")String customerCode)
-    {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return  perCustomerinfoService.followCustomeInfo(customerCode,loginUser);
-    }
+
 
     /**
      * 简历释放

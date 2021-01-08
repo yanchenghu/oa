@@ -191,6 +191,8 @@
             <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
         </where>
 
+        limit 0,10
+
     </select>
 
 
@@ -240,6 +242,7 @@
         where a.Status=0 and a.add_people=#{opertCode}
         <if test="customerName != null and customerName != ''"> and a.customer_name = #{customerName}</if>
         <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
+         order by a.edit_time desc
     </select>
 
     <select id="selectPeopostlist"  parameterType="PerCustomerinfo"  resultType="map">

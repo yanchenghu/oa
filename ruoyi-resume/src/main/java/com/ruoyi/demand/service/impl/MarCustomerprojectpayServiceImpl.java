@@ -202,6 +202,8 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         // 目前在项 查询当前在项人数 、当月净成本、 当月净服务费 、 、当月净利润     净利润率
         Map nowItem=marCustomerprojectpayMapper.inItemNowCount();
 
+
+
         Map map=new HashMap();
         map.put("startTime",marCustomerprojectpay.getStartTime());
         map.put("endTime",marCustomerprojectpay.getEndTime());

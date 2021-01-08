@@ -240,4 +240,11 @@ public class MarCompanyServiceImpl implements IMarCompanyService
 
         return marCompanyMapper.selectMarContractList(marContract);
     }
+
+    @Override
+    public List<MarCompany> selectMarCompanyAlllistcom() {
+        MarCompany marCompany=new MarCompany();
+        return marCompanyMapper.selectMarCompanyList(marCompany);
+
+    }
 }

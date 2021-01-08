@@ -33,5 +33,28 @@ public class RobTask {
         yxdemandService.markeRelease();
     }
 
+    /**
+     * 查看所有的我抢占的简历信息有没有简历原件
+     * 5点提醒
+     */
+    public void resumeOriginal (){
+        System.out.println("查看所有的我抢占的简历信息有没有简历原件");
+        try {
+            iPerRobcustomerService.resumeOriginal();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 一个小时跟新一下钉钉token
+     */
+    public void updateDingtoken (){
+        System.out.println("一个小时跟新一下钉钉token");
+        try {
+            iPerRobcustomerService.updateDingtoken();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
 }

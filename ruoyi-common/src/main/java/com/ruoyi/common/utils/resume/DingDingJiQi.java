@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 public class DingDingJiQi {
 
 
-	private static String dingtoken="https://oapi.dingtalk.com/robot/send?access_token=154c35150438993842b55213945c20f512dcf32977758a81701955f08ab1363a";
+//	private static String dingtoken="https://oapi.dingtalk.com/robot/send?access_token=154c35150438993842b55213945c20f512dcf32977758a81701955f08ab1363a";
 
 
-	public static void DingDingd(String content) throws ApiException {
+	public static void DingDingd(String content,String dingtoken) throws ApiException {
 		DingTalkClient client = new DefaultDingTalkClient(dingtoken);
 		OapiRobotSendRequest request = new OapiRobotSendRequest();
 		request.setMsgtype("text");
@@ -38,7 +38,7 @@ public class DingDingJiQi {
 		OapiRobotSendResponse response = client.execute(request);
 	}
 	
-	public static void main(String[] args) throws ApiException {
-		DingDingd("我是机器人，测试消息勿回，，，喜报！！！恭喜，吴跃文成功入项一名人员到海隆科技");
-	}
+//	public static void main(String[] args) throws ApiException {
+//		DingDingd("我是机器人，测试消息勿回，，，喜报！！！恭喜，吴跃文成功入项一名人员到海隆科技");
+//	}
 }
