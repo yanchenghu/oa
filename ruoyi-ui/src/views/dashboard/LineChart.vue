@@ -30,7 +30,9 @@
           <div style="height: 600px; overflow: auto; width: 100%;">
             <el-col :xs="24" :sm="24" :lg="12" v-for="list,index in dataList.ListperRob" :key="index">
                 <li>
-                  <el-avatar style="background-color: #0081FF;"> {{list.customerName}} </el-avatar>
+                  <router-link :to="{path:'/record/particulars',query:{customerCode:list.resumeId}}"><el-avatar style="background-color: #0081FF;"> {{list.customerName}} </el-avatar></router-link>
+                  
+
                   <div class="ul-div">
                     <span>{{list.customerName}} </span>
                     <span> {{list.customerTel}}</span>
@@ -87,7 +89,6 @@ export default {
     float: right;
   }
   .div-a{
-
     padding:0 16px 0;
     line-height: 50px;
     border-bottom:1px solid #dcdfe6 ;

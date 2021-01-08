@@ -10,11 +10,11 @@
       </div>
       <div>
         <el-form :inline="true">
-          <el-form-item label="电话">
-            <el-input  v-model="finddata.customerTel" size="mini"></el-input>
-          </el-form-item>
           <el-form-item label="姓名">
-            <el-input  v-model="finddata.customerName" size="mini"></el-input>
+            <el-input  v-model="finddata.customerName"  @keyup.enter.native="find" size="mini"></el-input>
+          </el-form-item>
+          <el-form-item label="电话">
+            <el-input  v-model="finddata.customerTel" size="mini" @keyup.enter.native="find"></el-input>
           </el-form-item>
           <el-button type="primary" @click="find" size="medium">查询</el-button>
         </el-form>
@@ -41,7 +41,10 @@
       <div style="position: absolute;bottom:42px ; left: 365px ;">
         <el-radio border v-model="vadio" :label="1">国内</el-radio>
         <el-radio border v-model="vadio" :label="2" style="margin:3px 10px 3px 0;">对日</el-radio>
-        <el-button type="primary" @click="jiexii" size="medium">解析</el-button>
+        <el-button :loading="loadings" type="primary" @click="jiexii" size="medium">
+          <span v-if="!loadings">解 析</span>
+          <span v-else>解 析 中...</span>
+          </el-button>
       </div>
 
     </div>
@@ -64,11 +67,11 @@
               <el-option v-for="dict in customerSexOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="parseInt(dict.dictValue)" />
             </el-select>
           </el-form-item>
-          <el-form-item label="出生年月" prop="customerBirth">
+          <el-form-item label="出生年月" prop="customerBirth" >
             <el-date-picker type="date"
             v-model="perCustomerinfo.customerBirth"
             size="small"
-            style="width: 92%;"
+            style="width: 199px;"
             value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
@@ -211,6 +214,7 @@
     addRecord,
     updateRecord
   } from "@/api/resume/record/customerinfo";
+  import {debounce} from "@/utils/ruoyi.js"
   export default {
     name: "Record",
     data() {
@@ -242,6 +246,7 @@
         customerSexOptions: [],
         // 简历地区字典
         intentionareaOptions:[],
+        loadings:false,
 
         // 表格元素
         tableData: [],
@@ -317,20 +322,25 @@
         this.msgError(`当前限制选择 1 个文件`);
       },
       // 简历解析
-      jiexii() {
+      jiexii:debounce(function(){this.jiexiis()}),
+      jiexiis(){
         if (this.$refs.file.uploadFiles[0] == null) {
           this.msgError("请选择简历")
         } else {
           let formData = new FormData();
           formData.append('upfile', this.$refs.file.uploadFiles[0].raw);
           formData.append('resume_direction', this.vadio);
+          this.loadings = true
           jiexi(formData).then(res => {
             this.msgSuccess("简历解析成功")
             this.perCustomerinfo = res.data.perCustomerinfo
             this.project_experience =res.data.project_experienceListArr
             this.work_experienceListArr = res.data.work_experienceListArr
             this.perEducList=res.data.education_experienceListArr
-          })
+            this.loadings = false
+          }).catch(() => {
+              this.loadings = false;
+           });
         }
 
       },
@@ -358,7 +368,8 @@
         this.reset()
       },
       //保存
-      resetQuery() {
+      resetQuery:debounce(function(){this.resetQuerys()}),
+      resetQuerys() {
         this.$refs["form"].validate((valid) => {
           if (valid) {
             updateRecord(this.perCustomerinfo).then(response => {
@@ -386,23 +397,11 @@
         // this.select()ss
         // this.open = true;
         if(this.finddata.customerName==""&&this.finddata.customerTel==""){
-          this.msgError("请输入用户名或密码")
+          this.msgError("请输入姓名或电话")
         }else{
           this.open = true;
           this.select()
         }
-        // this.open = true;
-        // this.loading=true
-        // listRecord(this.finddata).then(res =>          {
-        // this.total = res.total;
-        // this.loading=false
-        // if(res.rows.length==0){
-        //   this.sous=true
-        // }else{
-        //   this.sous=false
-        //   this.tableData=res.rows
-        // }
-        // });
       },
       // 重置表单
       reset() {

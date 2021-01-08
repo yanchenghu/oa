@@ -87,7 +87,7 @@
            <span>{{scope.row.profitMargin}}%</span>
          </template>
       </el-table-column>
-      <el-table-column label="工资" prop="salary">
+      <el-table-column label="人员成本" prop="salary">
 
       </el-table-column>
       <el-table-column label="服务费" prop="servicePay" :key="7"/>
@@ -135,7 +135,7 @@
       <el-table-column label="姓名" prop="customer_name"/>
       <el-table-column label="电话" prop="customer_tel"/>
       <el-table-column label="入职公司" prop="corp_name"/>
-      <el-table-column label="工资" prop="salary"/>
+      <el-table-column label="人员成本" prop="salary"/>
       <el-table-column label="服务费" prop="service_pay"/>
       <el-table-column label="利润" prop="profit"/>
       <el-table-column label="利润率" >

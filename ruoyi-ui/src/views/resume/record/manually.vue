@@ -51,21 +51,21 @@
       <div style="margin-top: 20px;">
         <el-form  :model="perCustomerinfo"  label-width="100px" :inline="true" ref="forms" label-position="right" :rules="rules">
           <el-form-item label="姓名" prop="customerName">
-            <el-input v-model="perCustomerinfo.customerName" size="small"   suffix-icon="xxx"/>
+            <el-input :disabled="button2==2" v-model="perCustomerinfo.customerName" size="small"   suffix-icon="xxx"/>
           </el-form-item>
           <el-form-item label="电话" prop="customerTel">
-            <el-input v-model="perCustomerinfo.customerTel" size="small"   suffix-icon="xxx"/>
+            <el-input :disabled="button2==2"  v-model="perCustomerinfo.customerTel" size="small"   suffix-icon="xxx"/>
           </el-form-item>
           <el-form-item label="性别" prop="customerSex">
             <el-select v-model="perCustomerinfo.customerSex" placeholder="" size="small">
               <el-option v-for="dict in customerSexOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="parseInt(dict.dictValue)" />
             </el-select>
           </el-form-item>
-          <el-form-item label="出生年月" prop="customerBirth">
+          <el-form-item label="出生年月" prop="customerBirth"  style="width: 299px;">
             <el-date-picker type="date"
             v-model="perCustomerinfo.customerBirth"
             size="small"
-            style="width: 92%;"
+            style="width: 199px;"
             value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
@@ -234,7 +234,8 @@
         <br>
         <div style="position: fixed; bottom: 10px; right: 20%;">
           <el-button  v-if="button2==1" size="medium" @click="handleQuery" class="but">取消</el-button>
-          <el-button  size="medium" @click="resetQuery(button2)" type="success">保存</el-button>
+          <el-button v-if="button2==1" size="medium" @click="resetQuery" type="success">录入抢占</el-button>
+          <el-button v-else size="medium" @click="resetQuery" type="success">保存</el-button>
         </div>
 
 
@@ -245,7 +246,7 @@
 <script>
 
   import {workDel, getRecord, handupdata, handInsert, projdeDel, educaDel} from "@/api/resume/record/customerinfo";
-
+  import {debounce} from "@/utils/ruoyi.js"
   export default{
     name:"manually",
     data(){
@@ -434,13 +435,14 @@
               this.wen=true
             }else{
               this.wen=false
-              this.filelist = [{name:"已上传文件",file:this.perCustomerinfo.resumePath}]
+
+              this.filelist = [{name:`${this.perCustomerinfo.resumePath.slice(this.perCustomerinfo.resumePath.lastIndexOf('/')+1,-1)}`,file:this.perCustomerinfo.resumePath}]
             }
             })
           }
       },
       //保存
-      resetQuery(but) {
+      resetQuerys(but){
           this.$refs["forms"].validate((valid) => {
             if (valid) {
               let zm = {
@@ -464,16 +466,17 @@
                   this.handleQuery()
                   this.msgSuccess("添加成功")
                 })
+
               }else if(but==2){
-              handupdata(formData).then(response => {
+                handupdata(formData).then(response => {
                  this.getcustomerCode()
                  this.msgSuccess("修改成功")
               })
               }
             }
           });
-
       },
+      resetQuery:debounce(function(){this.resetQuerys(this.button2)},1000),
       handleExceed() {
         this.msgError(`当前限制选择 1 个文件`);
       },
@@ -624,7 +627,7 @@
 
 <style scoped>
   .upload-demo{
-    width: 270px;
+    width: 360px;
   }
   .i{
       color: #1890FF;

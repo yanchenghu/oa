@@ -4,7 +4,17 @@
         <el-form-item label="需求名称" prop="projectName">
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
+        
+        <el-form-item label="公司名称" prop="corpCode">
+          <el-select filterable  v-model="queryParams.corpCode"  placeholder="请选择" size="small" clearable  @change="handleQuery">
+            <el-option
+                v-for="dict in corpnamelists"
+                :key="dict.corpCode"
+                :label="dict.corpName"
+                :value="dict.corpCode"
+              />
+            </el-select>
+        </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
           <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" size="small" @change="handleQuery">
             <el-option
@@ -22,7 +32,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="项目地点" prop="projectLocation">
-          <el-select v-model="queryParams.projectLocation" placeholder="请选择" clearable size="small" @change="handleQuery">
+          <el-select v-model="queryParams.projectLocation" placeholder="请选择" filterable clearable size = "small" @change="handleQuery">
             <el-option
                 v-for="dict in intentionareaOptions"
                 :key="dict.dictValue"
@@ -41,17 +51,18 @@
               />
             </el-select>
         </el-form-item>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <right-toolbar :showSearch.sync="showSearch" @queryTable="resetQuery"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" border :data="followList" size="small" >
+    <el-table v-loading="loading" border :data="followList" >
       <el-table-column label="需求名称" align="left" prop="projectName" />
-      <el-table-column label="地址/技术方向" align="left">
+      <el-table-column label="技术要求/技术方向" align="left">
         <template slot-scope="scope">
-          <span>{{intentionareaFormat(scope.row)}} / {{professionIdopFormat(scope.row)}}</span>
+          <span>{{scope.row.demandYears==1?"中级":scope.row.demandYears==0?"初级":"高级"}} / {{professionIdopFormat(scope.row)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="进度" align="left"  width="130">
@@ -70,11 +81,10 @@
           <p v-html='scope.row.specificrequiRement'></p>
       </template>
       </el-table-column>
-      <el-table-column label="备注" align="left" prop="attention" />
       <el-table-column label="发布时间" align="left" prop="addTime"/>
-      <el-table-column label="技术要求" align="left" prop="demandYears">
+      <el-table-column label="地址" align="left" prop="demandYears">
         <template slot-scope="scope">
-          <span>{{scope.row.demandYears==1?"中级":"高级"}}</span>
+          <span>{{intentionareaFormat(scope.row)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
@@ -82,10 +92,10 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <p>
-            <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">绑定</el-button>
+            <el-button  type="text" @click="handleUpdate(scope.row)"><svg-icon icon-class="bangding"/>绑定</el-button>
           </p>
           <p>
-            <el-button size="mini" type="text" @click="see(scope.row)" v-hasPermi="['demand:follow:query']">查看</el-button>
+            <el-button type="text" @click="see(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open"/>查看</el-button>
           </p>
         </template>
       </el-table-column>
@@ -108,6 +118,9 @@
     exportFollow,
     template,
   } from "@/api/demand/binding";
+  import {
+    corpNames
+  } from "@/api/demand/follow";
 import { treeselect } from "@/api/system/dept";
 import index from "../../components/particulars/index"
   export default {
@@ -119,7 +132,7 @@ import index from "../../components/particulars/index"
       return {
         // 搜索信息
         searchmsg:"",
-
+        corpnamelists:[],
         // 客户级别
         customerleve:[],
         // 技术方向字典
@@ -137,7 +150,6 @@ import index from "../../components/particulars/index"
         },
         // 遮罩层
         loading: true,
-
         // 显示搜索条件
         showSearch: true,
         // 总条数
@@ -164,6 +176,7 @@ import index from "../../components/particulars/index"
     },
     created() {
       this.getList();
+      this.getCorpName()
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
         this.customerSpecialitiesoptions = response.data;
@@ -182,6 +195,11 @@ import index from "../../components/particulars/index"
       });
     },
     methods: {
+      getCorpName(){
+        corpNames().then(res=>{
+          this.corpnamelists=res
+        });
+      },
       // 客户级别
       customerleveFormat(row, column) {
         return this.selectDictLabel(this.customerleve, row.importantLevel);

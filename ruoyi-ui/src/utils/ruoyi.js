@@ -5,6 +5,74 @@
 
 const baseURL = process.env.VUE_APP_BASE_API
 
+export function friendlyDate(timestamp) {
+    var formats = {
+        'day': '%n% 天前',
+        'hour': '%n% 小时前',
+        'minute': '%n% 分钟前',
+        'second': '%n% 秒前',
+        'days': '%n% 天后',
+        'hours': '%n% 小时后',
+        'minutes': '%n% 分钟后',
+        'seconds': '%n% 秒后',
+    };
+    var timestamp = new Date(timestamp)
+    var now = Date.now();
+    var seconds = Math.floor((now - timestamp) / 1000);
+    var minutes = Math.floor(seconds / 60);
+    var hours = Math.floor(minutes / 60);
+    var days = Math.floor(hours / 24);
+    var diffType = '';
+    var diffValue = 0;
+      if (days > 0) {
+          diffType = 'day';
+          diffValue = days;
+      } else {          
+          if (hours > 0) {
+              diffType = 'hour';
+              diffValue = hours;
+          } else {
+              if (minutes > 0) {
+                  diffType = 'minute';
+                  diffValue = minutes;
+              } else {
+                if(seconds > 0){
+                  diffType = 'second';
+                  diffValue = seconds === 0 ? (seconds = 1) : seconds;
+                }else{
+                  days = -days
+                  hours = -hours
+                  minutes = -minutes
+                  seconds = -seconds
+                  if (days > 0) {
+                      diffType = 'days';
+                      diffValue = days;
+                  }else{
+                    if (hours > 0) {
+                        diffType = 'hours';
+                        diffValue = hours;
+                    }else{
+                      if (minutes > 0) {
+                          diffType = 'minutes';
+                          diffValue = minutes;
+                      }else{
+                        if(seconds > 0){
+                          diffType = 'seconds';
+                          diffValue = seconds === 0 ? (seconds = 1) : seconds;
+                        }
+                      }
+                    }
+                  }
+                }
+                  
+              }
+          }
+      }
+    return formats[diffType].replace('%n%', diffValue);
+}
+
+
+
 // 日期格式化
 export function parseTime(time, pattern) {
 	if (arguments.length === 0 || !time) {

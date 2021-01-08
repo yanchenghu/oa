@@ -59,7 +59,6 @@
       <el-table-column label="姓名"  prop="customerName">
         <template slot-scope="scope">
           <el-button
-          size="mini"
           type="text"
           @click="handleUpdate(scope.row.marCustomerprojectpay.id)"
           >{{scope.row.customerName}}</el-button>
@@ -89,7 +88,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="工资">
+      <el-table-column label="人员成本">
         <template slot-scope="scope">
           <span>{{ scope.row.marCustomerprojectpay.salary }}</span>
         </template>
@@ -109,18 +108,16 @@
           <span>{{scope.row.socSecopt==1?"是":"否"}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100" class-name="small-padding fixed-width">
+      <el-table-column label="操作" width="120" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
           v-if="scope.row.marCustomerprojectpay.outofProjecttime"
-          size="mini"
           type="text"
           icon="el-icon-view"
           @click="handleUpdate(scope.row.marCustomerprojectpay.id)"
           >查看人员信息</el-button>
           <el-button
           v-else
-          size="mini"
           type="text"
           icon="el-icon-edit"
           @click="handleUpdate(scope.row.marCustomerprojectpay.id)"
@@ -189,7 +186,7 @@
                       <span>{{yxdemandone.syqEndtime}}</span>
 
                     </el-form-item>
-                    <el-form-item label="工资">
+                    <el-form-item label="人员成本">
                       <span>{{yxdemandone.salary}}</span>
                     </el-form-item>
                     <el-form-item label="服务费">
@@ -315,12 +312,12 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column label="工资" align="left" prop="salary" />
+                <el-table-column label="人员成本" align="left" prop="salary" />
                 <el-table-column label="服务费" align="left" prop="servicePay"/>
               </el-table>
             </el-tab-pane>
-            <el-tab-pane label="工资调整记录">
-              <el-button v-if="!yxdemandone.outofProjecttime"  type="primary" @click="handAdd(2)">新建工资调整</el-button>
+            <el-tab-pane label="人员成本调整记录">
+              <el-button v-if="!yxdemandone.outofProjecttime"  type="primary" @click="handAdd(2)">新建人员成本调整</el-button>
               <p></p>
 
               <el-table v-loading="loadings" :data="marAdsalaries">
@@ -331,8 +328,8 @@
                     <span>{{ parseTime(scope.row.syqstartTime, '{y}-{m}-{d}') }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="调前工资"  prop="beforeSalary" />
-                <el-table-column label="调后工资"  prop="afterSalary"/>
+                <el-table-column label="调前人员成本"  prop="beforeSalary" />
+                <el-table-column label="调后人员成本"  prop="afterSalary"/>
 
                 <el-table-column label="调整日期"  prop="adjustTime" width="180">
                   <template slot-scope="scope">
@@ -485,15 +482,15 @@
     </el-dialog>
     <!-- 新建工资调整记录 -->
     <el-dialog :title="title5" :visible.sync="open5" width="500px" >
-      <el-form ref="form5" :rules="rules" :model="form5" label-width="100px" class="form">
-        <el-form-item label="工资调整前" prop="beforeSalary" v-if="title5=='新建工资调整记录'">
-            <el-input v-model="form5.beforeSalary" placeholder="请输入工资调整前"  size="small" disabled/>
+      <el-form ref="form5" :rules="rules" :model="form5" label-width="110px" class="form">
+        <el-form-item label="人员成本调整前" prop="beforeSalary" v-if="title5=='新建人员成本调整记录'">
+            <el-input v-model="form5.beforeSalary" placeholder="请输入人员成本调整前"  size="small" disabled/>
         </el-form-item>
         <el-form-item label="服务费调整前" prop="beforeServicepay" v-else>
             <el-input v-model="form5.beforeServicepay" placeholder="请输入服务费调整前"  size="small" disabled/>
         </el-form-item>
-        <el-form-item label="工资调整后" prop="afterSalary" v-if="title5=='新建工资调整记录'">
-            <el-input v-model="form5.afterSalary" placeholder="请输入工资调整后"  size="small" />
+        <el-form-item label="人员成本调整后" prop="afterSalary" v-if="title5=='新建人员成本调整记录'">
+            <el-input v-model="form5.afterSalary" placeholder="请输入人员成本调整后"  size="small" />
         </el-form-item>
         <el-form-item label="服务费调整后" prop="afterServicepay" v-else>
             <el-input v-model="form5.afterServicepay" placeholder="请输入服务费调整后"  size="small" />
@@ -639,10 +636,12 @@ export default {
           trigger: ["blur", "change"]
         }, ],
         afterSalary: [{
+          required: true,
           validator: price,
           trigger: ["blur", "change"]
         },],
         afterServicepay: [{
+          required: true,
           validator: price,
           trigger: ["blur", "change"]
         },],
@@ -830,7 +829,7 @@ export default {
       if(i==2){
         this.form5.beforeSalary = this.yxdemandone.salary
         this.open5 = true
-        this.title5 = "新建工资调整记录"
+        this.title5 = "新建人员成本调整记录"
         if (this.$refs["form5"] !== undefined) {
               this.$refs["form5"].resetFields()
            }
@@ -868,7 +867,7 @@ export default {
       this.$refs["form5"].validate(valid=>{
         if(valid){
           this.form5.marcusId = this.yxdemandone.id
-          if(this.title5=="新建工资调整记录"){
+          if(this.title5=="新建人员成本调整记录"){
             addgongzi(this.form5).then(response => {
               this.msgSuccess("添加成功");
               this.open5 = false;

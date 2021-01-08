@@ -16,6 +16,13 @@ export function corpName() {
     method: 'get',
   })
 }
+// 查询公司名称
+export function corpNames() {
+  return request({
+    url: '/customer/company/alllistcom',
+    method: 'get',
+  })
+}
 // 查询部门下拉树结构
 export function treeselect() {
   return request({

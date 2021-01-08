@@ -15,4 +15,11 @@ export default  {
     background-color: #fff;
     margin: 10px 10px 0 10px;
   }
+  .el-icon-circle-check{
+    display: none;
+  }
+  .el-icon-close{
+    font-size: 18px;
+    display: inline !important;
+  }
 </style>

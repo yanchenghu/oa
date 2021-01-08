@@ -79,6 +79,13 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/qqq',
+  //   component: (resolve) => require(['@/views/components/icons/index.vue'], resolve),
+  //   // hidden: true,
+  //   // redirect: 'noredirect',
+
+  // },
   {
     path: '/dict',
     component: Layout,

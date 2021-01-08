@@ -121,7 +121,7 @@ export default {
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       };
     },
-    handleLogin:debounce(function(){this.handleLogi()},500),
+    handleLogin:debounce(function(){this.handleLogi()},800),
     handleLogi() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -167,10 +167,8 @@ export default {
 }
 .login-left{
   border-radius:6px 0  0 6px ;
-  width: 450px;
+  width: px;
   // height: 700px;
-  background-image: url("../assets/image/login-background.png");
-  background-size: 100% 100%;
   background-color: #fff;
 }
 

@@ -14,7 +14,6 @@
              </div>
           </el-radio-group>
           <el-pagination
-
             layout="prev, next"
             v-show="total2>0"
             :total="total2"
@@ -58,51 +57,42 @@
         </el-form>
         <!-- 数据表格 -->
         <el-table   :data="msgtaba" v-loading="loading" tooltip-effect="light">
-          <el-table-column type="selection"  width="55" align="center"/>
-          <el-table-column prop="customerName" label="姓名" width="100" align="center"/>
-          <el-table-column prop="customerTel" label="电话" width="100" align="center"/>
-          <el-table-column prop="customerBirth" label="出生日期" width="100" align="center">
+          <el-table-column type="selection"  width="55" />
+          <el-table-column prop="customerName" label="姓名" width="100" />
+          <el-table-column prop="customerTel" label="电话" width="100" />
+          <el-table-column prop="customerBirth" label="出生日期" width="100" >
           </el-table-column>
-          <el-table-column prop="professionId" label="技术方向" align="center" width="100" :formatter="professionIdopFormat">
+          <el-table-column prop="professionId" label="技术方向"  width="100" :formatter="professionIdopFormat">
           </el-table-column>
-          <el-table-column prop="workYear" label="工作年限" align="center" width="80">
+          <el-table-column prop="workYear" label="工作年限"  width="80">
             <template slot-scope="scope">
               {{scope.row.workYear}}年
             </template>
           </el-table-column>
-          <el-table-column prop="education" label="学历" align="center" width="100" :formatter="customerFormat"/>
+          <el-table-column prop="education" label="学历"  width="100" :formatter="customerFormat"/>
 
-          <el-table-column prop="customerUniversity" label="毕业院校" align="center"/>
+          <el-table-column prop="customerUniversity" label="毕业院校" />
 
-          <el-table-column prop="expectationSalary" label="期望薪资" align="center"/>
+          <el-table-column prop="expectationSalary" label="期望薪资" />
 
-          <el-table-column prop="intentionArea" align="center" label="期望城市" :formatter="intentionareaFormat"/>
-          <el-table-column prop="intentionArea" align="center" label="添加时间">
+          <el-table-column prop="intentionArea"  label="期望城市" :formatter="intentionareaFormat"/>
+          <el-table-column prop="intentionArea"  label="添加时间">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <el-table-column label="操作"  class-name="small-padding fixed-width" width="180">
             <template slot-scope="scope">
-               <el-tooltip class="item" effect="dark" content="预览" placement="top-start">
-                    <el-button size="mini" type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
-                      <svg-icon icon-class="preview" style="font-size: 16px;"/>
+                    <el-button type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
+                      <svg-icon icon-class="preview" style="font-size: 14px;"/>预览
                     </el-button>
-                </el-tooltip>
+                    <el-button  type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button" style="font-size: 14px;"/>抢占</el-button>
 
-              <el-tooltip class="item" effect="dark" content="抢占" placement="top">
-                    <el-button size="mini" type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button" style="font-size: 16px;"/></el-button>
-              </el-tooltip>
-
-              <el-tooltip class="item" effect="dark" content="查看" placement="top-end">
-                    <el-button size="mini" type="text"  @click="handlesee(scope.row)" ><svg-icon icon-class="eye-open" style="font-size: 16px;"/></el-button>
-              </el-tooltip>
-
+                    <el-button  type="text"  @click="handlesee(scope.row)" ><svg-icon icon-class="eye-open" style="font-size: 14px;"/>查看</el-button>
             </template>
           </el-table-column>
         </el-table>
         <pagination
-          style="background-color: #F2F6FC;"
           v-show="total>0"
           :total="total"
           :page.sync="fromdata.pageNum"
@@ -114,9 +104,7 @@
             :src="src"
             style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%;border: none;"></iframe>
         </el-dialog>
-
       </div>
-
       </div>
   </div>
 
@@ -158,6 +146,7 @@
           expectationSalary: null,
           professionId: null,
           education: null,
+          nood:null,
         },
         // 表格数据
         msgtaba: [],
@@ -227,9 +216,7 @@
       this.getDicts("per_customerinfo_intentionarea").then(response => {
         this.intentionareaOptions = response.data;
       });
-
       this.getxuqiulist()
-      this.getList()
     },
     methods: {
       // 技术方向
@@ -255,28 +242,38 @@
           this.tabledata = res.rows
           this.loading2 = false
           this.total2 = res.total
+          if(this.tabledata.length==0){
+            this.loading = false;
+          }else{
+            this.fromdata.nood = ''+ this.tabledata[0].demandId
+            this.changes(this.fromdata.nood)
+          }
         })
       },
-
       // 筛选更多
       getList(){
         this.loading = true;
-        listRecord(this.fromdata).then(response => {
-          this.msgtaba = response.rows;
-          this.total = response.total;
+        if(this.fromdata.workYear==''&&this.fromdata.professionId==""&&this.fromdata.education==""){
           this.loading = false;
-        });
+          this.msgtaba = []
+        }else{
+            listRecord(this.fromdata).then(response => {
+            this.msgtaba = response.rows;
+            this.total = response.total;
+            this.loading = false;
+          })
+        }
       },
-      change(){
-          this.fromdata.pageNum = 1;
-          this.getList()
+      change(value){
+        this.fromdata.pageNum = 1;
+        this.getList()
       },
       changes(value){
         getFollow(value).then(res=>{
           this.fromdata.professionId = res.data.marDeman.technologyDirection
           this.fromdata.workYear = res.data.marDeman.directWorklife
           this.fromdata.education = res.data.marDeman.education
-          this.fromdata.pageNum = 1;
+          this.fromdata.pageNum = 1
           this.getList()
         })
       },
@@ -291,8 +288,13 @@
        }
      },
      resetQuery() {
-       this.fromdata={}
-       this.change();
+       this.fromdata={
+         professionId:"",
+         workYear:"",
+         education:"",
+       }
+       // this.change();
+       this.msgtaba = []
      },
      // 预览
      handleUpdate(adinw){
@@ -315,21 +317,20 @@
      handlesee(row){
        this.$router.push({path:"/record/particulars",query:{customerCode:row.customerCode}});
      }
-
     }
   };
 </script>
 <style scoped>
   .left{
+     flex:0 0 170px;
      padding: 10px;
      margin-right: 10px;
-     width: 170px;
      text-align: center;
      height:100%;
      background: #fff;
   }
   .right{
-    width: 80%;
+
     padding: 10px;
     background: #fff;
   }

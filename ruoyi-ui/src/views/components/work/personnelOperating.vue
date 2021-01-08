@@ -6,10 +6,10 @@
 import echarts from 'echarts'
 import { getdata } from "@/api/index"
 require('echarts/theme/macarons') // echarts theme
-// import resize from './mixins/resize'
+import resize from '../../dashboard/mixins/resize.js'
 
 export default {
-  // mixins: [resize],
+  mixins: [resize],
   props: {
     className: {
       type: String,
@@ -70,9 +70,6 @@ export default {
       this.newVisitis.map(item=>{
 
       })
-
-
-
       function crtTimeF(val) {
               if (val != null) {
                 var date = new Date(val);
@@ -83,8 +80,6 @@ export default {
       function crtTimeFtt(val) {
       	if (val != null) {
       		var date = new Date(val);
-          console.log(date)
-          console.log(val)
       		return (date.getMonth() + 1) + '月' + date.getDate() + "日";
       	}
       }
@@ -95,7 +90,7 @@ export default {
         var currDate = new Date(new Date().toLocaleDateString()).getTime();
         var currdate = new Date(currDate);
         var ddate2 = currdate.getDay();
-       var day9 = new Date(new Date(new Date().toLocaleDateString()).getTime() + 9 * 60 * 60 * 1000);
+       var day9 = new Date(new Date(new Date().toLocaleDateString()).getTime() + 8 * 60 * 60 * 1000);
        var day22 = new Date(new Date(new Date().toLocaleDateString()).getTime() + 18 * 60 * 60 * 1000);
       if (ddate2 == 1) { //星期1
       	qiantian = crtTimeFtt(new Date(currDate - tian * 4)); //星期4
@@ -186,7 +181,7 @@ export default {
       }
       var series = [];
       series.push({name: '录入简历',
-          color: 'rgb(0,255,1)',
+          color: '#0081FF',
           data:type1,
           type:'scatter',
           symbolSize:7,
@@ -214,11 +209,11 @@ export default {
                   }
             }
           })
-      series.push({name: '枪取需求',
+      series.push({name: '抢占简历',
       type:'scatter',
       symbolSize:7,
       symbol:"diamond",
-          color: 'rgb(251,196,4)',data:type3,
+          color: '#FF9F43',data:type3,
           tooltip: {
               formatter: function (params, ticket, callback) {
                        var res =crtTimeF(params.value[0])  + "<br/>" + params.value[2]
@@ -229,7 +224,7 @@ export default {
       type:'scatter',
       symbolSize:7,
       symbol:"triangle",
-          color: 'rgb(9,0,255)',data:type4,tooltip: {
+          color: '#28C76F',data:type4,tooltip: {
               formatter: function (params, ticket, callback) {
                        var res =crtTimeF(params.value[0])  + "<br/>" + params.value[2]
                        return res;
@@ -240,7 +235,7 @@ export default {
       symbolSize:7,
       z:3,
       symbol:"diamond",
-          color: 'rgb(255,0,7)',data:type5,tooltip: {
+          color: '#EA5455',data:type5,tooltip: {
              formatter: function (params, ticket, callback) {
                       var res =crtTimeF(params.value[0])  + "<br/>" + params.value[2]
                       return res;
@@ -275,7 +270,6 @@ export default {
             }],
         grid: {
           left: 70,
-          right: 200,
           bottom: 20,
           top: 40,
           containLabel: true,
@@ -283,7 +277,7 @@ export default {
         },
         legend:{
           type:"plain",
-          data:["录入简历","跟踪","枪取需求","绑定简历","入项"],
+          data:["录入简历","跟踪","抢占简历","绑定简历","入项"],
           bottom: 0,
         },
         tooltip:{

@@ -24,10 +24,9 @@
         </el-form-item>
       </el-form>
       <el-table v-loading="loading" :data="tablelist" >
-        <el-table-column label="姓名"  prop="customerName">
+        <el-table-column label="姓名"  prop="customerName" width="110">
           <template slot-scope="scope">
           <el-button
-            size="mini"
             type="text"
             @click="handle(scope.row)"
           >{{scope.row.customerName}}</el-button>
@@ -50,20 +49,17 @@
             <span>{{ parseTime(scope.row.contactTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作"  class-name="small-padding fixed-width">
+        <el-table-column label="操作"  class-name="small-padding fixed-width" width="110">
           <template slot-scope="scope">
             <el-button
-              size="mini"
               type="text"
-              icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-            >跟踪</el-button>
+            ><svg-icon icon-class="genzong"/>跟踪</el-button>
             <el-button
-              size="mini"
               type="text"
-              icon="el-icon-edit"
               @click="shifangbut(scope.row)"
-            >放弃</el-button>
+              style="color: #EA5455;"
+            ><svg-icon icon-class="fangqi"/>放弃</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -89,7 +89,7 @@
               >重置简历状态</el-button>
           </el-form>
           <p></p>
-          <el-table v-loading="loading" border :data="templists" size="small" @selection-change="handleSelectionChange">
+          <el-table v-loading="loading" border :data="templists"  @selection-change="handleSelectionChange">
             <el-table-column type="selection" key="1"/>
             <el-table-column label="姓名" align="left" prop="customerName" key="2"/>
             <el-table-column label="电话" align="left" prop="customerTel" key="3"/>
@@ -254,13 +254,13 @@
               <el-form-item label="项目时间" required>
                   <el-col :span="11">
                     <el-form-item prop="startTime" >
-                    <el-date-picker type="date" placeholder="选择开始日期" v-model="comform.startTime" size="small" style="width: 100%;" :picker-options="pickerOptions1"></el-date-picker>
+                    <el-date-picker type="date" placeholder="选择开始日期" v-model="comform.startTime" size="small" style="width: 100%;" :picker-options="pickerOptions1" value-format="yyyy-MM-dd"></el-date-picker>
                     </el-form-item>
                   </el-col>
                   <el-col style="text-align: center;" :span="2">—</el-col>
                   <el-col :span="11">
                     <el-form-item prop="endTime">
-                    <el-date-picker placeholder="选择结束时间" v-model="comform.endTime" size="small" style="width: 100%;" :picker-options="pickerOptions3"></el-date-picker>
+                    <el-date-picker placeholder="选择结束时间" v-model="comform.endTime" size="small" style="width: 100%;" :picker-options="pickerOptions3" value-format="yyyy-MM-dd"></el-date-picker>
                     </el-form-item>
                   </el-col>
                 </el-form-item>
@@ -274,8 +274,8 @@
                      />
                  </el-select>
               </el-form-item>
-              <el-form-item label="工资" prop="salary">
-                  <el-input v-model="comform.salary" placeholder="请输入工资"  size="small" />
+              <el-form-item label="人员成本" prop="salary">
+                  <el-input v-model="comform.salary" placeholder="请输入人员成本"  size="small" />
               </el-form-item>
               <el-form-item label="服务费用" prop="servicePay">
                   <el-input v-model="comform.servicePay" placeholder="请输入服务费用"  size="small" />
@@ -417,13 +417,13 @@
         // 周期字典
         companyperiod:[],
         rules:{
-          startTime:[{ type: 'date', required: true, message: '请选择开始日期', trigger: 'change' }],
-          endTime:[{ type: 'date', required: true, message: '请选择结束日期', trigger: 'change' }],
-          syqstartTime:[{ type: 'date', required: true, message: '请选择入职时间', trigger: 'change' }],
+          startTime:[{  required: true, message: '请选择开始日期', trigger: 'change' }],
+          endTime:[{  required: true, message: '请选择结束日期', trigger: 'change' }],
+          syqstartTime:[{  required: true, message: '请选择入职时间', trigger: 'change' }],
           settledCycle:[{ required: true, message: '请选择结算周期', trigger: 'blur' },],
           salary:[{ required: true, validator: price,  trigger: 'blur' },],
           servicePay:[{ required: true, validator: price,  trigger: 'blur' },],
-          syqEndtime:[{ type: 'date', required: true, message: '请选择转正时间', trigger: 'change' }],
+          syqEndtime:[{  required: true, message: '请选择转正时间', trigger: 'change' }],
           socSecopt:[{ required: true, message: '请选择社保', trigger: 'blur' },],
         },
         wen:true,
@@ -686,11 +686,11 @@
               confirmButtonText: "确定",
               cancelButtonText: "取消",
               type: "warning"
-            }).then(function() {
-              if(that.ids.length>0){
-                return submitstarts(form)
+            }).then(function(){
+              if(typeof that.tempID =="string"){
+                return submitstart(form)              
               }else{
-                return submitstart(form)
+                return submitstarts(form)
               }
             }).then(() => {
               this.open=false
@@ -709,7 +709,7 @@
           if (valid) {
             if(this.comform.salary - this.comform.servicePay >0)
             {console.log(this.comform.salary+"---"+this.comform.servicePay)
-              this.msgError("工资不能大于服务费")}else{
+              this.msgError("人员成本不能大于服务费")}else{
               let that = this
               this.$confirm('确认信息完整并入项吗?', "警告", {
                 confirmButtonText: "确定",
