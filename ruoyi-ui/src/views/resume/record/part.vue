@@ -11,7 +11,7 @@
               <li class="li">
                 <span class="time">
                   <p>{{perro.addTime}}</p>
-                  <p></p>
+                  <p style="color: #1890ff;">{{friendlyDate(perro.addTime)}}</p>
                   <p></p>
                 </span>
                 <span class="span s">
@@ -23,7 +23,7 @@
               <li class="li">
                 <span class="time">
                   <p>{{perro.editTime}}</p>
-                  <p></p>
+                  <p style="color: #1890ff;">{{friendlyDate(perro.editTime)}}</p>
                   <p></p>
                 </span>
                 <span class="span">
@@ -34,7 +34,7 @@
               </li>
             </ul>
           </div>
-          <div  style="margin-top: 20px; padding-left: 20px;">
+          <div style="margin-top: 20px; padding-left: 20px;">
             <el-form  :model="perCustomerinfo"  label-width="70px" :inline="true" ref="form" label-position="right" >
               <el-form-item label="姓名" prop="customerName">
                 <el-input v-model="perCustomerinfo.customerName" size="small"  disabled suffix-icon="xxx"/>
@@ -89,9 +89,23 @@
             </el-form>
           </div>
           <div class="tit">
+                <b style="margin-right: 20px;">入项信息</b>
+          </div>
+          <div>
+            <ul style="list-style: none;" class="font">
+              <li v-if="mapList.length ==0">
+                <span>暂无入项信息</span>
+              </li>
+              <li  v-else v-for="map in mapList" >
+                {{perCustomerinfo.customerName}} 于 {{map.trackingtime}} 入项 {{map.corp_name}} 公司项目
+              </li>
+            </ul>
+          </div>
+          <br/>
+          <div class="tit">
             <b style="margin-right: 20px;">教育经历</b>
           </div>
-          <ul style="list-style: none;">
+          <ul style="list-style: none;" class="font">
             <li v-for="work,i in perEducList"
              :key="i"
              style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
@@ -111,7 +125,7 @@
             <b style="margin-right: 20px; margin-bottom: 20px;">工作经历</b>
           </div>
           <p></p>
-          <ul style="list-style: none;">
+          <ul style="list-style: none;" class="font">
             <li v-for="work in work_experienceListArr" style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
               <p><span>公司名称：</span>&nbsp<span>{{work.companyName?work.companyName:"未知"}}</span></p>
               <p><span>公司类型：</span>&nbsp<span>{{work.jobFunction?work.jobFunction:"未知"}}</span></p>
@@ -125,7 +139,7 @@
           <div class="tit">
             <b style="margin-right: 20px;">项目经厉</b>
           </div>
-          <ul style="list-style: none;">
+          <ul style="list-style: none;" class="font">
             <li v-for="project in project_experience" style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
               <p><span>项目名称：</span>&nbsp<span>{{project.projectName}}</span></p>
               <p><span>项目时间：</span>&nbsp<span v-if="project.quitprojectTime">{{project.joinprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime : "未知"+" 至 "+project.quitprojectTime}}</span>
@@ -135,19 +149,7 @@
             </li>
           </ul>
           <br>
-          <div class="tit">
-                <b style="margin-right: 20px;">入项信息</b>
-          </div>
-          <div>
-            <ul style="list-style: none;">
-              <li v-if="mapList.length ==0">
-                <span>暂无无入项信息</span>
-              </li>
-              <li  v-else v-for="map in mapList" >
-                {{perCustomerinfo.customerName}} 于 {{map.trackingtime}} 入项 {{map.corp_name}} 公司项目
-              </li>
-            </ul>
-          </div>
+
           <div class="tit">
             <b style="margin-right: 20px;">跟踪记录</b>
           </div>
@@ -168,7 +170,7 @@
 
       <!-- 右边操作栏 -->
       <div>
-        <el-button style="margin-left: 0; display: block;margin-top: 30px;" v-for="but,index in button" :type="but.type" :disabled="but.disabled" @click="buttoncli(index)">{{but.name}}</el-button>
+        <el-button style="margin-left: 0; display: block;margin-top: 30px;" v-for="but,index in button" :type="but.type" :disabled="but.disabled" :key="index" @click="buttoncli(index)">{{but.name}}</el-button>
       </div>
       <el-dialog title="预览" :visible.sync="open" width="70%">
        <iframe
@@ -205,7 +207,6 @@
   } from "@/api/resume/record/customerinfo";
   import{genzongbut}from'@/api/resume/mytrckresume.js'
   import store from "@/store";
-  import util from "@/utils"
   export default{
     name:"part",
     data(){
@@ -302,6 +303,7 @@
           this.mapList = res.data.mapList
           this.perEducList=res.data.perEducList
           if(this.perro !== null){
+            this.button[0].disabled = true
             if(this.perro.addPeople===this.name){
               this.button[3].disabled = false
               this.button[4].disabled = false
@@ -335,19 +337,21 @@
         }else if(val==1){
 
           // 预览简历
-          if(this.perCustomerinfo.resumePath==""){
+          if(this.perCustomerinfo.resumePath==""||this.perCustomerinfo.resumePath==null){
             this.msgError("该简历暂无原版")
           }else{
             let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
-            this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
+            this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
             this.open=true
           }
         }else if(val==2){
           // 下载原版
-         if(this.perCustomerinfo.resumePath==""){
+         if(this.perCustomerinfo.resumePath==""||this.perCustomerinfo.resumePath==null){
            this.msgError("该简历暂无原版")
          }else{
-           location.href=`http://localhost/dev-api${this.perCustomerinfo.resumePath}`
+           let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
+            
+           location.href=`${srcs}`
          }
         }else if(val==3){
           // 更新简历信息
@@ -387,7 +391,6 @@
             genzongbut(this.form).then(res=>{
               this.msgSuccess("操作成功");
               this.open2 = false;
-              
               this.getcustomerCode();
             })
           }
@@ -405,7 +408,7 @@
   .time{
     width: 80px;
   }
-  .li{display: flex; font-size: 13px;}
+  .li{display: flex; font-size: 14px;}
   .span{
     border-left: 1px solid grey;
     padding: 0  0  10px 10px;
@@ -430,5 +433,8 @@
       }
   >>>.el-form-item__label {
       text-align: justify
+  }
+  .font{
+    font-size: 14px;
   }
 </style>

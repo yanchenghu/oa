@@ -3,8 +3,8 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" style="width:80% ;">
        <el-form-item label="" prop="corpName">
          <el-input
-           v-model="queryParams.corpName"
-           placeholder="请输入客户名称"
+           v-model.trim="queryParams.corpName"
+           placeholder="请输入客户名称"s
            clearable
            size="small"
            @keyup.enter.native="handleQuery"
@@ -14,7 +14,7 @@
          <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
        </el-form-item>
        <el-form-item  prop="companySituation">
-         <el-select v-model="queryParams.companySituation"   placeholder="请选择公司性质" clearable size="small" @change="change">
+         <el-select v-model.trim="queryParams.companySituation"   placeholder="请选择公司性质" clearable size="small" @change="change">
            <el-option
              v-for="dict in companySituationOptions"
              :key="dict.dictValue"
@@ -24,7 +24,7 @@
          </el-select>
        </el-form-item>
       <el-form-item prop="customerLevel">
-        <el-select v-model="queryParams.customerLevel" placeholder="请选择客户级别" clearable size="small" @change="change">
+        <el-select v-model.trim="queryParams.customerLevel" placeholder="请选择客户级别" clearable size="small" @change="change">
           <el-option
               v-for="dict in customerleve"
               :key="dict.dictValue"
@@ -35,7 +35,7 @@
         </el-select>
       </el-form-item>
       <el-form-item  prop="paybackPeriod">
-        <el-select v-model="queryParams.paybackPeriod" placeholder="请选择回款周期" clearable size="small" @change="change">
+        <el-select v-model.trim="queryParams.paybackPeriod" placeholder="请选择回款周期" clearable size="small" @change="change">
           <el-option
               v-for="dict in companyperiod"
               :key="dict.dictValue"
@@ -56,33 +56,39 @@
     </el-row>
 
     <el-table v-loading="loading" :data="companyList" @selection-change="handleSelectionChange">
-      <!-- <el-table-column type="selection" width="55" align="center" /> -->
-      <!-- <el-table-column label="序列" align="center" prop="corpCode" /> -->
-      <el-table-column label="公司名称" align="left" prop="corpName" width="160"/>
-      <el-table-column label="公司性质" align="center" prop="companySituation" :formatter="companySituationFormat"/>
+      <el-table-column label="公司名称" align="left" prop="corpName" width="250">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="more(scope.row)"
+          >{{scope.row.corpName}}</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="公司性质"  prop="companySituation" :formatter="companySituationFormat"/>
       <el-table-column label="联系人/职位" align="left" width="130">
         <template slot-scope="scope">
           <span>{{scope.row.contactPeople}} / {{scope.row.contactPosition}}</span>
         </template>
       </el-table-column>
       <el-table-column label="联系方式" align="left" prop="contactPhone" width="110"/>
-      <el-table-column label="客户级别" align="center" prop="customerLevel" :formatter="customerleveFormat" width="100"/>
-      <el-table-column label="回款周期" align="center" prop="paybackPeriod" :formatter="companyperiodFormat"/>
-      <el-table-column label="合作时间" align="center" prop="cooperationTime" width="180">
+      <el-table-column label="客户级别"  prop="customerLevel" :formatter="customerleveFormat" width="100"/>
+      <el-table-column label="回款周期"  prop="paybackPeriod" :formatter="companyperiodFormat"/>
+      <el-table-column label="合作时间"  prop="cooperationTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.cooperationTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="录入人" align="center" prop="entryPeople" />
-      <el-table-column label="转化人" align="center" prop="transformingPeople" :formatter="usernameFormat"/>
-      <el-table-column label="更多" align="center" class-name="small-padding fixed-width" fixed="right">
+      <el-table-column label="录入人"  prop="entryPeople" />
+      <el-table-column label="转化人"  prop="transformingPeople" :formatter="usernameFormat"/>
+      <el-table-column label="更多"  class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-more"
             @click="more(scope.row)"
-          >更多</el-button>
+          >更多信息</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -111,24 +117,24 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="甲方" prop="firstParty">
-          <el-input v-model="forms.firstParty" placeholder="请输入甲方公司" />
+          <el-input v-model.trim="forms.firstParty" placeholder="请输入甲方公司" />
         </el-form-item>
         <el-form-item label="乙方" prop="party">
-          <el-input v-model="forms.party" placeholder="请输入乙方公司" />
+          <el-input v-model.trim="forms.party" placeholder="请输入乙方公司" />
         </el-form-item>
         <el-form-item label="合同开始日期" prop="startTime">
-          <el-date-picker v-model="forms.startTime" type="date" placeholder="请选择合同开始日期" :picker-options="pickerOptions1" value-format="yyyy-MM-dd" style="width:190px">
+          <el-date-picker v-model.trim="forms.startTime" type="date" placeholder="请选择合同开始日期" :picker-options="pickerOptions1" value-format="yyyy-MM-dd" style="width:190px">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="合同结束日期" prop="endTime">
-          <el-date-picker v-model="forms.endTime" type="date" placeholder="请选择合同结束日期"  :picker-options="pickerOptions4" value-format="yyyy-MM-dd" style="width:190px">
+          <el-date-picker v-model.trim="forms.endTime" type="date" placeholder="请选择合同结束日期"  :picker-options="pickerOptions4" value-format="yyyy-MM-dd" style="width:190px">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="客户签约人" prop="clientSigner">
-          <el-input v-model="forms.clientSigner" placeholder="请输入客户签约" />
+          <el-input v-model.trim="forms.clientSigner" placeholder="请输入客户签约" />
         </el-form-item>
         <el-form-item label="公司签约人" prop="companySigner">
-          <el-input v-model="forms.companySigner" placeholder="请输入公司签约人" />
+          <el-input v-model.trim="forms.companySigner" placeholder="请输入公司签约人" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -137,51 +143,42 @@
       </div>
     </el-dialog>
     <!-- 添加客戶 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="公司名称" prop="corpName">
-          <el-input v-model="form.corpName" placeholder="请输入公司名称" />
+          <el-input v-model.trim="form.corpName" placeholder="请输入公司名称" class="indd"/>
         </el-form-item>
         <el-form-item label="联系人" prop="contactPeople">
-          <el-input v-model="form.contactPeople" placeholder="请输入联系人" />
+          <el-input v-model.trim="form.contactPeople" placeholder="请输入联系人" class="indd"/>
         </el-form-item>
         <el-form-item label="职位" prop="contactPosition">
-          <el-input v-model="form.contactPosition" placeholder="请输入职位" />
+          <el-input v-model.trim="form.contactPosition" placeholder="请输入职位" class="indd"/>
         </el-form-item>
         <el-form-item label="电话" prop="contactPhone">
-          <el-input v-model="form.contactPhone" placeholder="请输入电话" />
+          <el-input v-model.trim="form.contactPhone" placeholder="请输入电话" class="indd"/>
         </el-form-item>
         <el-form-item label="邮箱" prop="mailbox">
-          <el-input v-model="form.mailbox" placeholder="请输入邮箱" />
+          <el-input v-model.trim="form.mailbox" placeholder="请输入邮箱" class="indd"/>
         </el-form-item>
         <el-form-item label="微信" prop="wechat">
-          <el-input v-model="form.wechat" placeholder="请输入微信" />
+          <el-input v-model.trim="form.wechat" placeholder="请输入微信" class="indd"/>
         </el-form-item>
         <el-form-item label="QQ" prop="qq">
-          <el-input v-model="form.qq" placeholder="请输入QQ" />
+          <el-input v-model.trim="form.qq" placeholder="请输入QQ" class="indd"/>
         </el-form-item>
-        <el-form-item  label="公司性质"  prop="companySituation">
-          <el-select v-model="form.companySituation"  size="small">
-            <el-option
-              v-for="dict in companySituationOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            />
-          </el-select>
+        <el-form-item label="公司性质"  prop="companySituation">
+           <el-radio-group v-model.trim="form.companySituation">
+              <el-radio v-for="dict in companySituationOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
+            </el-radio-group>
         </el-form-item>
-        <el-form-item label="客户级别" prop="customerLevel">
-          <el-select  v-model="form.customerLevel"  size="small">
-            <el-option
-                v-for="dict,index in customerleve"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="parseInt(dict.dictValue)"
-              />
-            </el-select>
+        <el-form-item label="客户级别"  prop="customerLevel">
+           <el-radio-group v-model.trim="form.customerLevel">
+              <el-radio v-for="dict in customerleve" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{dict.dictLabel}}</el-radio>
+            </el-radio-group>
         </el-form-item>
+
         <el-form-item label="回款周期" prop="paybackPeriod">
-          <el-select  v-model="form.paybackPeriod"  size="small">
+          <el-select  v-model.trim="form.paybackPeriod"  size="small">
             <el-option
                 v-for="dict,index in companyperiod"
                 :key="dict.dictValue"
@@ -192,14 +189,16 @@
         </el-form-item>
         <el-form-item label="合作日期" prop="cooperationTime">
          <el-date-picker
-            v-model="form.cooperationTime"
+           size="small"
+            class="indd"
+            v-model.trim="form.cooperationTime"
             type="date"
             placeholder="选择日期"
             value-format="yyyy-MM-dd">
          </el-date-picker>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input type="textarea" autosize placeholder="请输入内容"  v-model="form.remark"></el-input>
+          <el-input type="textarea" autosize placeholder="请输入内容"  v-model.trim="form.remark"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -225,7 +224,7 @@
         </div>
          <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
            <el-form-item label="公司性质">
-             <el-select  v-model="yxdemandone.companySituation"   size="small" @change="changes">
+             <el-select  v-model.trim="yxdemandone.companySituation"   size="small" @change="changes">
                <el-option
                  v-for="dict in companySituationOptions"
                  :key="dict.dictValue"
@@ -235,7 +234,7 @@
              </el-select>
            </el-form-item>
            <el-form-item prop="customerLevel" label="客户级别">
-             <el-select v-model="yxdemandone.customerLevel" placeholder="请选择客户级别" clearable size="small" @change="changes">
+             <el-select v-model.trim="yxdemandone.customerLevel" placeholder="请选择客户级别" clearable size="small" @change="changes">
                <el-option
                    v-for="dict in customerleve"
                    :key="dict.dictValue"
@@ -246,7 +245,7 @@
              </el-select>
            </el-form-item>
            <el-form-item  prop="paybackPeriod" label="回款周期">
-             <el-select v-model="yxdemandone.paybackPeriod" placeholder="请选择回款周期"  size="small" @change="changes">
+             <el-select v-model.trim="yxdemandone.paybackPeriod" placeholder="请选择回款周期"  size="small" @change="changes">
                <el-option
                    v-for="dict in companyperiod"
                    :key="dict.dictValue"
@@ -259,48 +258,48 @@
          </el-form>
       </div>
       <div>
-          <el-tabs v-model="activeName"  @tab-click="handleClick">
+          <el-tabs v-model.trim="activeName"  @tab-click="handleClick">
             <el-tab-pane label="联系人信息" name="popmsg">
                <div style="display: flex; justify-content: space-between;">
-                 <el-form ref="formmsg" label-position="right" label-width="80px" :model="yxdemandone" :rules="rules">
+                 <el-form ref="formmsg" label-position="right" label-width="80px" :model="yxdemandone" :rules="rules" :disabled="yxdemandone.isAccept==1">
                     <b>联系人信息</b>
                     <p></p>
                     <el-form-item label="姓名" prop="contactPeople">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.contactPeople" @input="sees"></el-input>
+                      <el-input v-model.trim="yxdemandone.contactPeople" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="职位" prop="contactPosition">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.contactPosition" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.contactPosition" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="电话" prop="contactPhone">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.contactPhone" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.contactPhone" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱" prop="mailbox">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.mailbox" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.mailbox" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="微信">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.wechat" @input="sees"></el-input>
+                      <el-input v-model.trim="yxdemandone.wechat" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="QQ">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.qq" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.qq" @input="sees"></el-input>
                     </el-form-item>
                  </el-form>
-                 <el-form label-position="left" label-width="100px" :model="yxdemandone">
+                 <el-form label-position="left" label-width="100px" :model="yxdemandone" :disabled="yxdemandone.isAccept==1">
                    <b>外包公司信息</b>
                    <p></p>
                     <el-form-item label="面试名义公司">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.interviewCompany" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.interviewCompany" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="面试官">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.interviewer" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.interviewer" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="面试职位">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.interviewerPosition" @input="sees"></el-input>
+                      <el-input v-model.trim="yxdemandone.interviewerPosition" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="面试地点">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.interviewAddress" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.interviewAddress" @input="sees"></el-input>
                     </el-form-item>
                     <el-form-item label="最终甲方">
-                      <el-input :disabled="yxdemandone.isAccept==1" v-model="yxdemandone.finalParty" @input="sees"></el-input>
+                      <el-input  v-model.trim="yxdemandone.finalParty" @input="sees"></el-input>
                     </el-form-item>
                  </el-form>
                </div>
@@ -360,7 +359,7 @@
                   <span class="sp">{{yxdemandone.entryPeople}}</span>
                 </el-form-item>
                 <el-form-item label="备注">
-                  <span class="sp">{{yxdemandone.remark}}</span>
+                  <el-input size="mini" v-model.trim="yxdemandone.remark" @input="sees" style="width:200px;"></el-input>
                 </el-form-item>
                 </el-form>
               </div>
@@ -593,7 +592,7 @@ export default {
     changes(){
       updateCompany(this.yxdemandone).then(res=>{
         this.msgSuccess("修改成功")
-        this.more(this.yxdemandone)
+        this.getone(this.yxdemandone)
       })
     },
     dra(){
@@ -651,14 +650,17 @@ export default {
       this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
       this.open3=true
     },
-    // 更多
-    more(value){
+    getone(value){
       getCompany(value.corpCode).then(res=>{
         this.drawer = true
         this.yxdemandone=res.data.data.marCompany
         this.putmsgs = res.data.data.mar
-        this.activeName="popmsg"
       })
+    },
+    // 更多
+    more(value){
+      this.activeName="popmsg"
+      this.getone(value)
     },
     handleClick(tab){
       if(tab.label=="合同"){
@@ -691,20 +693,21 @@ export default {
       this.reset();
       this.opens = true;
       this.title = "新建合同";
-
+      this.forms.firstParty = this.yxdemandone.corpName
     },
 
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          addcontract(this.form).then(response => {
-            this.msgSuccess("新增成功");
-            this.open = false;
-            this.getList();
-          });
-        }
-      });
+      console.log(this.form)
+      // this.$refs["form"].validate(valid => {
+      //   if (valid) {
+      //     addcontract(this.form).then(response => {
+      //       this.msgSuccess("新增成功");
+      //       this.open = false;
+      //       this.getList();
+      //     });
+      //   }
+      // });
     },
     submitForm2(){
       if(this.forms.contractPreview){
@@ -724,7 +727,7 @@ export default {
               this.opens = false;
               this.get();
               this.upoplodad()
-              this.more(this.yxdemandone)
+              this.getone(this.yxdemandone)
             });
           }
         });
@@ -738,6 +741,7 @@ export default {
 };
 </script>
 <style>
+  .indd{width: 240px;}
   .el-tabs__item:focus.is-active.is-focus:not(:active) {
         -webkit-box-shadow: none !important;
         box-shadow: none !important;

@@ -16,7 +16,13 @@ export function getEntry(id) {
     method: 'get'
   })
 }
-
+// 查询是否有未归还物品
+export function getwupin(id) {
+  return request({
+    url: '/perentry/entry/isReturnborrow/' + id,
+    method: 'get'
+  })
+}
 // 新增入项
 export function addEntry(data) {
   return request({

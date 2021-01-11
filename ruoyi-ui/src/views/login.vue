@@ -1,51 +1,57 @@
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">OA管理系统</h3>
-      <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
-          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input
-          v-model="loginForm.password"
-          type="password"
-          auto-complete="off"
-          placeholder="密码"
-          @keyup.enter.native="handleLogin"
-        >
-          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="code">
-        <el-input
-          v-model="loginForm.code"
-          auto-complete="off"
-          placeholder="验证码"
-          style="width: 63%"
-          @keyup.enter.native="handleLogin"
-        >
-          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
-        </el-input>
-        <div class="login-code">
-          <img :src="codeUrl" @click="getCode" class="login-code-img"/>
-        </div>
-      </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
-      <el-form-item style="width:100%;">
-        <el-button
-          :loading="loading"
-          size="medium"
-          type="primary"
-          style="width:100%;"
-          @click.native.prevent="handleLogin"
-        >
-          <span v-if="!loading">登 录</span>
-          <span v-else>登 录 中...</span>
-        </el-button>
-      </el-form-item>
-    </el-form>
+    <div style="display: flex;">
+      <div class="login-left">
+
+      </div>
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+        <h3 class="title">用户登录</h3>
+        <el-form-item prop="username">
+          <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
+            <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model="loginForm.password"
+            type="password"
+            auto-complete="off"
+            placeholder="密码"
+            @keyup.enter.native="handleLogin"
+          >
+            <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="code">
+          <el-input
+            v-model="loginForm.code"
+            auto-complete="off"
+            placeholder="验证码"
+            style="width: 63%"
+            @keyup.enter.native="handleLogin"
+          >
+            <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+          </el-input>
+          <div class="login-code">
+            <img :src="codeUrl" @click="getCode" class="login-code-img"/>
+          </div>
+        </el-form-item>
+        <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+        <el-form-item style="width:100%;">
+          <el-button
+            :loading="loading"
+            size="medium"
+            type="primary"
+            style="width:100%;"
+            @click.native.prevent="handleLogin"
+          >
+            <span v-if="!loading">登 录</span>
+            <span v-else>登 录 中...</span>
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
     <!--  底部  -->
     <div class="el-login-footer">
      <!-- <span>Copyright © 2018-2020 ruoyi.vip All Rights Reserved.</span> -->
@@ -67,8 +73,8 @@ export default {
       cookiePassword: "",
       loginForm: {
         // username: "liuhao",
-        username: "admin",
-        password: "admin123",
+        username: "",
+        password: "",
         rememberMe: false,
         code: "",
         uuid: ""
@@ -115,7 +121,7 @@ export default {
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       };
     },
-    handleLogin:debounce(function(){this.handleLogi()},500),
+    handleLogin:debounce(function(){this.handleLogi()},800),
     handleLogi() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -151,20 +157,26 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/image/login-background.jpg");
-  background-size: cover;
+  background-image: url("../assets/image/login-background.png");
+  background-size: cover ;
 }
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
   color: #707070;
 }
+.login-left{
+  border-radius:6px 0  0 6px ;
+  width: px;
+  // height: 700px;
+  background-color: #fff;
+}
 
 .login-form {
-  border-radius: 6px;
+  border-radius: 0 6px 6px 0;
   background: #ffffff;
   width: 400px;
-  padding: 25px 25px 5px 25px;
+  padding: 25px 40px 40px 40px;
   .el-input {
     height: 38px;
     input {

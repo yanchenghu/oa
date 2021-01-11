@@ -8,19 +8,36 @@
         <b> / </b>
       <b>手动上传简历</b>
     </div>
-    <el-upload
+    <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad" :file-list="filelist">
+      <div v-if="wen">
+        <i class="el-icon-circle-plus" style="color:#0081FF;
+        font-size: 67px;
+        margin: 40px 0 16px;
+        line-height: 50px;"></i>
+        <div><b>点击上传简历</b></div>
+        <div class="el-upload__text" style="width: 210px;margin: 0 auto;">简历支持.docx .doc .pdf格式，大小不超过500kb，拖拽文件可直接上传</div>
+      </div>
+      <div v-else>
+        <i class="el-icon-success" style="color:rgb(0,218,175);
+          font-size: 67px;
+            margin: 40px 0 16px;
+            line-height: 50px;"></i>
+        <div><b>上传成功 </b></div>
+      </div>
+    </el-upload>
+    <!-- <el-upload
       class="upload-demo"
       ref="file"
       action="upurl"
       :auto-upload="false"
-      accept=".docx"
+      accept=".docx,.doc,pdf"
       :on-exceed="handleExceed"
       :limit="1"
       >
       <el-button slot="trigger" size="small" type="success">选取上传或更新的文件</el-button>
 
-      <div slot="tip" class="el-upload__tip">简历支持.docx格式，大小不超过500kb</div>
-    </el-upload>
+      <div slot="tip" class="el-upload__tip">简历支持.docx .doc .pdf格式，大小不超过500kb</div>
+    </el-upload> -->
     <div style="margin-top:30px;margin-bottom: 40px;">
       <el-radio border v-model="perCustomerinfo.resumeDirection" :label="1">国内</el-radio>
       <el-radio border v-model="perCustomerinfo.resumeDirection" :label="2" >对日</el-radio>
@@ -34,18 +51,23 @@
       <div style="margin-top: 20px;">
         <el-form  :model="perCustomerinfo"  label-width="100px" :inline="true" ref="forms" label-position="right" :rules="rules">
           <el-form-item label="姓名" prop="customerName">
-            <el-input v-model="perCustomerinfo.customerName" size="small"   suffix-icon="xxx"/>
+            <el-input :disabled="button2==2" v-model="perCustomerinfo.customerName" size="small"   suffix-icon="xxx"/>
           </el-form-item>
           <el-form-item label="电话" prop="customerTel">
-            <el-input v-model="perCustomerinfo.customerTel" size="small"   suffix-icon="xxx"/>
+            <el-input :disabled="button2==2"  v-model="perCustomerinfo.customerTel" size="small"   suffix-icon="xxx"/>
           </el-form-item>
           <el-form-item label="性别" prop="customerSex">
             <el-select v-model="perCustomerinfo.customerSex" placeholder="" size="small">
               <el-option v-for="dict in customerSexOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="parseInt(dict.dictValue)" />
             </el-select>
           </el-form-item>
-          <el-form-item label="出生年月" prop="customerBirth">
-            <el-input v-model="perCustomerinfo.customerBirth" size="small" suffix-icon="xxx"/>
+          <el-form-item label="出生年月" prop="customerBirth"  style="width: 299px;">
+            <el-date-picker type="date"
+            v-model="perCustomerinfo.customerBirth"
+            size="small"
+            style="width: 199px;"
+            value-format="yyyy-MM-dd">
+            </el-date-picker>
           </el-form-item>
           <el-form-item label="工作经验" prop="workYear">
             <el-select v-model='perCustomerinfo.workYear' placeholder="" size="small">
@@ -62,8 +84,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="技术方向" prop="professionId">
-            <el-select v-model='perCustomerinfo.professionId' placeholder="" size="small">
+          <el-form-item label="技术方向" prop="professionId" >
+            <el-select v-model='perCustomerinfo.professionId' filterable placeholder="" size="small">
               <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
@@ -76,7 +98,7 @@
           </el-form-item>
 
           <el-form-item label="意向城市" prop="intentionArea">
-            <el-select v-model='perCustomerinfo.intentionArea' placeholder="" size="small">
+            <el-select v-model='perCustomerinfo.intentionArea' placeholder="" filterable size="small">
               <el-option v-for="dict in intentionareaOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"/>
             </el-select>
           </el-form-item>
@@ -210,9 +232,10 @@
           </li>
         </ul>
         <br>
-        <div style="text-align: center;">
+        <div style="position: fixed; bottom: 10px; right: 20%;">
           <el-button  v-if="button2==1" size="medium" @click="handleQuery" class="but">取消</el-button>
-          <el-button  size="medium" @click="resetQuery(button2)" type="success">保存</el-button>
+          <el-button v-if="button2==1" size="medium" @click="resetQuery" type="success">录入抢占</el-button>
+          <el-button v-else size="medium" @click="resetQuery" type="success">保存</el-button>
         </div>
 
 
@@ -223,17 +246,19 @@
 <script>
 
   import {workDel, getRecord, handupdata, handInsert, projdeDel, educaDel} from "@/api/resume/record/customerinfo";
-
+  import {debounce} from "@/utils/ruoyi.js"
   export default{
     name:"manually",
     data(){
       return{
+        wen:true,
         button2:1,
         button:1,
         input3:true,
         input2:true,
         input:true,
         vadio:1,
+        filelist:[],
         // 技术方向字典
         professionIdoptions: [],
         // 简历学历字典
@@ -309,7 +334,7 @@
           }
         },
         // 表单校验
-        rules: {          
+        rules: {
            customerTel: [
              { required: true, message: "手机号码不能为空", trigger: "blur" },
              {
@@ -371,6 +396,10 @@
       "$route":"getcustomerCode"
     },
     methods:{
+      upoplodad(file) {
+        this.$refs.file.clearFiles()
+        this.wen = true
+      },
       tiems(time,endtime){
         if(endtime){
           return time.getTime() > new Date(endtime).getTime();
@@ -391,6 +420,7 @@
           if(query==null){
             this.handleQuery()
             this.button2=1
+            this.wen=true
           }else{
             this.button2=2
             var formData = new FormData()
@@ -400,11 +430,19 @@
             this.project_experience =res.data.PerProjList
             this.work_experienceListArr = res.data.PerWorList
             this.perEducList=res.data.perEducList
+            if(this.perCustomerinfo.resumePath == null || this.perCustomerinfo.resumePath == ''){
+              this.filelist = []
+              this.wen=true
+            }else{
+              this.wen=false
+
+              this.filelist = [{name:`${this.perCustomerinfo.resumePath.slice(this.perCustomerinfo.resumePath.lastIndexOf('/')+1,-1)}`,file:this.perCustomerinfo.resumePath}]
+            }
             })
           }
       },
       //保存
-      resetQuery(but) {
+      resetQuerys(but){
           this.$refs["forms"].validate((valid) => {
             if (valid) {
               let zm = {
@@ -428,16 +466,17 @@
                   this.handleQuery()
                   this.msgSuccess("添加成功")
                 })
+
               }else if(but==2){
-              handupdata(formData).then(response => {
+                handupdata(formData).then(response => {
                  this.getcustomerCode()
                  this.msgSuccess("修改成功")
               })
               }
             }
           });
-
       },
+      resetQuery:debounce(function(){this.resetQuerys(this.button2)},1000),
       handleExceed() {
         this.msgError(`当前限制选择 1 个文件`);
       },
@@ -471,6 +510,9 @@
         this.perEducList.push(JSON.parse(JSON.stringify(this.perEduc)));}
       }
         this.reseat()
+      },
+      oplodad(file) {
+        this.wen = false
       },
       // 取消
       reseat(){
@@ -585,7 +627,7 @@
 
 <style scoped>
   .upload-demo{
-    width: 270px;
+    width: 360px;
   }
   .i{
       color: #1890FF;

@@ -4,9 +4,16 @@
         <el-form-item label="需求名称" prop="projectName">
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
-
-          <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
-
+        <el-form-item label="公司名称" prop="corpCode">
+          <el-select filterable  v-model="queryParams.corpCode"  placeholder="请选择" size="small" clearable  @change="handleQuery">
+            <el-option
+                v-for="dict in corpnamelists"
+                :key="dict.corpCode"
+                :label="dict.corpName"
+                :value="dict.corpCode"
+              />
+            </el-select>
+        </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
           <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" size="small" @change="handleQuery">
             <el-option
@@ -19,12 +26,13 @@
         </el-form-item>
         <el-form-item label="技术级别" prop="demandYears">
           <el-select v-model="queryParams.demandYears" clearable placeholder="请选择" size="small" @change="handleQuery">
-            <el-option label="中级" value="1"/>
-            <el-option label="高级" value="2"/>
+            <el-option label="初级"   value="0"/>
+            <el-option label="中级"   value="1"/>
+            <el-option label="高级"   value="2"/>
           </el-select>
         </el-form-item>
         <el-form-item label="项目地点" prop="projectLocation">
-          <el-select v-model="queryParams.projectLocation" placeholder="请选择" clearable size="small" @change="handleQuery">
+          <el-select v-model="queryParams.projectLocation" placeholder="请选择" clearable size="small" filterable @change="handleQuery">
             <el-option
                 v-for="dict in intentionareaOptions"
                 :key="dict.dictValue"
@@ -47,8 +55,9 @@
           <el-select  v-model="queryParams.state"  size="small" @change="handleQuery">
             <el-option label="启用中" :value="0" />
             <el-option label="禁用中" :value="1"/>
-            </el-select>
+          </el-select>
         </el-form-item>
+        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
         <el-button
             type="cyan"
             size="mini"
@@ -61,62 +70,62 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" border :data="followList" size="small" >
-      <el-table-column label="需求名称" align="left" prop="projectName" />
-      <el-table-column label="地址/技术方向" align="left">
+    <el-table v-loading="loading" border :data="followList" >
+      <el-table-column label="需求名称" align="left" prop="projectName" width="80" />
+      <el-table-column label="技术要求/技术方向" align="left">
         <template slot-scope="scope">
-          <span>{{intentionareaFormat(scope.row)}} / {{professionIdopFormat(scope.row)}}</span>
+          <span>{{scope.row.demandYears==1?"中级":scope.row.demandYears==0?"初级":"高级"}} / {{professionIdopFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="进度" align="left"  width="130">
+      <el-table-column label="进度" align="left"  width="115">
         <template slot-scope="scope">
           <div>需求人数:{{scope.row.demandNumber}}</div>
           <div>目标人数:{{scope.row.targetNumber}}</div>
-          <div>入项人数:{{scope.row.coopnature }}</div>
+          <div :class="scope.row.coopnature==scope.row.demandNumber?'ruxiang':''">入项人数:{{scope.row.coopnature}}</div>
           <div>面试通过人数:{{scope.row.chsiFlag}}</div>
           <div>已提交简历数:{{scope.row.ifLook}}</div>
         </template>
       </el-table-column>
       <el-table-column label="客户级别" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
-      <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat"/>
-      <el-table-column label="具体要求" align="left" width="500">
+      <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat" width="55"/>
+      <el-table-column label="具体要求"  width="480">
       <template slot-scope="scope">
           <p v-html='scope.row.specificrequiRement'></p>
       </template>
       </el-table-column>
-      <el-table-column label="备注" align="left" prop="attention" />
-      <el-table-column label="技术要求" align="left" prop="demandYears">
+       <el-table-column label="发布时间" align="left" prop="addTime" />
+      <el-table-column label="地址" align="left" prop="demandYears"  width="55">
         <template slot-scope="scope">
-          <span>{{scope.row.demandYears==1?"中级":"高级"}}</span>
+          <span>{{intentionareaFormat(scope.row)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
-      <el-table-column label="录入人姓名" align="left" prop="operUsername" />
+      <el-table-column label="录入人姓名"  width="60" align="left" prop="operUsername" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <p>
-            <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)" v-hasPermi="['demand:follow:edit']">修改</el-button>
+            <el-button  type="text" icon="el-icon-edit"  @click="handleUpdate(scope.row,1)" v-hasPermi="['demand:follow:edit']">修改</el-button>
           </p>
           <p>
-            <el-button size="mini" type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:query']">查看</el-button>
+            <el-button  type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open"/> 查看</el-button>
           </p>
           <p>
             <el-switch v-model="scope.row.state" :active-value="0" :inactive-value="1" inactive-color="#ff4949" @change="handleStatusChange(scope.row)"></el-switch>
           </p>
-
+          <!-- <p v-if='scope.row.state==1'>
+            <el-button type="text"  @click="handleUpdate(scope.row,2)">复制</el-button>
+          </p> -->
         </template>
       </el-table-column>
     </el-table>
-
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"  @pagination="getList"/>
 
     <!-- 添加或修改需求对话框 -->
     <!-- 新建需求 -->
-    <el-dialog :title="title" :visible.sync="open" width="65%" append-to-body>
+    <el-dialog  :title="title" :visible.sync="open" width="65%" append-to-body>
       <el-form ref="forms" :inline="true" :model="form"  :rules="rules" label-width="100px" >
         <el-form-item label="选择客户" prop="corpCode">
-          <el-select v-model="form.corpCode" placeholder="请选择" size="small">
+          <el-select filterable  v-model="form.corpCode" @change="pipei" placeholder="请选择" size="small">
             <el-option
                 v-for="dict in corpnamelist"
                 :key="dict.corpCode"
@@ -138,7 +147,7 @@
         <el-form-item label="需求名称" prop="projectName">
           <el-input v-model="form.projectName" placeholder="请输入需求名称" size="small"  @blur="findname(form.projectName)"/>
         </el-form-item>
-        <span v-if="msg==1" style="color: green;line-height: 40px;position: absolute;"><i class="el-icon-circle-check"></i></span>
+        <span v-show="msg==1" style="color: green;line-height: 40px;position: absolute;"><i class="el-icon-success"></i></span>
         <el-form-item label="需求人数" prop="demandNumber">
           <el-input v-model.number="form.demandNumber" placeholder="请输入需求人数" size="small"/>
         </el-form-item>
@@ -146,7 +155,7 @@
           <el-input v-model.number="form.targetNumber" placeholder="请输入目标人数" size="small"/>
         </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
-          <el-select v-model="form.technologyDirection" placeholder="请选择" size="small">
+          <el-select filterable  v-model="form.technologyDirection" placeholder="请选择" size="small">
             <el-option
                 v-for="dict in professionIdoptions"
                 :key="dict.dictValue"
@@ -158,6 +167,7 @@
 
         <el-form-item label="技术级别" prop="demandYears">
           <el-select v-model="form.demandYears" placeholder="请选择" size="small">
+            <el-option label="初级" value="0"/>
             <el-option label="中级" value="1"/>
             <el-option label="高级" value="2"/>
           </el-select>
@@ -204,8 +214,8 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="工作地点" prop="projectLocation">
-          <el-select v-model="form.projectLocation" placeholder="请选择" size="small">
+        <el-form-item  label="工作地点" prop="projectLocation">
+          <el-select filterable v-model="form.projectLocation" placeholder="请选择" size="small">
             <el-option
                 v-for="dict in intentionareaOptions"
                 :key="dict.dictValue"
@@ -222,7 +232,7 @@
             <el-option
                 v-for="dict in templist"
                 :key="dict.templateId"
-                :label="dict.templateName"
+                :label="dict.templateNominate"
                 :value="dict.templateId"
               />
           </el-select>
@@ -245,7 +255,7 @@
           collapse-tags
           size="small"
           ref="cascad"
-          clearable
+           @change="$set(form, form.list, $event)"
           >
           </el-cascader>
         </el-form-item>
@@ -320,6 +330,7 @@
 
 <script>
   import {
+    corpNames,
     listFollow,
     getFollow,
     delFollow,
@@ -335,6 +346,7 @@
 import { treeselect } from "@/api/system/dept";
 import Editor from '@/components/Editor';
 import {debounce} from "@/utils/ruoyi.js"
+import {getCompany} from "@/api/customer/company";
   export default {
     name: "Follow",
     components: {
@@ -353,6 +365,13 @@ import {debounce} from "@/utils/ruoyi.js"
             }
           }, 1000);
          };
+         var checklist = (rule, value, callback) => {
+          if (this.form.list.length==0) {
+            return callback(new Error('需求名称不能为空'));
+          }else {
+              callback();
+            }
+          };
       return {
         dialogImageUrl: '',
         dialogVisible: false,
@@ -363,6 +382,8 @@ import {debounce} from "@/utils/ruoyi.js"
         templist:[],
         // 文件
         filelist:[],
+        // 公司名称列表
+        corpnamelists:[],
         // 下包商列表
         deptOptions:[],
         // 客户级别
@@ -380,7 +401,7 @@ import {debounce} from "@/utils/ruoyi.js"
         // 选中数组
         ids: [],
         // 非单个禁用
-        single: "",
+        single: null,
         // 非多个禁用
         multiple: true,
         // 显示搜索条件
@@ -408,6 +429,7 @@ import {debounce} from "@/utils/ruoyi.js"
         },
         // 表单参数
         form: {
+          demandId:null,
         },
         msg:null,
         // 表单校验
@@ -418,6 +440,7 @@ import {debounce} from "@/utils/ruoyi.js"
             trigger: ["blur", "change"]
           }, ],
           projectName: [{
+            required: true,
             validator: checkAge,
             trigger: 'blur',
           }, ],
@@ -480,7 +503,8 @@ import {debounce} from "@/utils/ruoyi.js"
           }, ],
           list: [{
             required: true,
-            message: "下包商不能为空",
+            type:"array",
+            validator: checklist,
             trigger: ["blur", "change"]
           }, ],
           specificrequiRement: [{
@@ -493,11 +517,17 @@ import {debounce} from "@/utils/ruoyi.js"
             message: "客户级别不能为空",
             trigger: ["blur", "change"]
           }, ],
+          tempId:[{
+            required: true,
+            message: "客户级别不能为空",
+            trigger: ["blur", "change"]
+          }, ],
         }
       };
     },
     created() {
       this.getList();
+      this.getCorpName();
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
         this.customerSpecialitiesoptions = response.data;
@@ -516,6 +546,14 @@ import {debounce} from "@/utils/ruoyi.js"
       });
     },
     methods: {
+      pipei(balue){
+        getCompany(balue).then(res=>{
+          let data = res.data.data.marCompany
+          this.form.interviewer=data.interviewer
+          this.form.contactPhone = data.contactPhone
+          this.form.specificLocation = data.interviewAddress
+        })
+      },
       // 客户级别
       customerleveFormat(row, column) {
         return this.selectDictLabel(this.customerleve, row.importantLevel);
@@ -556,6 +594,8 @@ import {debounce} from "@/utils/ruoyi.js"
       // 表单重置
       reset() {
         this.form = {
+          demandId:null,
+          list:[],
           id: null,
           corpCode: null,
           projectName: null,
@@ -590,24 +630,14 @@ import {debounce} from "@/utils/ruoyi.js"
           operationuser: null,
           operUsername: null
         };
-        this.resetForm("form");
+        this.resetForm("forms");
         this.filelist=[]
+        this.single= null
       },
       /** 搜索按钮操作 */
       handleQuery() {
         this.queryParams.pageNum = 1;
         this.getList();
-      },
-      /** 重置按钮操作 */
-      resetQuery() {
-        this.resetForm("queryForm");
-        this.handleQuery();
-      },
-      // 多选框选中数据
-      handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.id)
-        this.single = selection.length !== 1
-        this.multiple = !selection.length
       },
       gettemplate(){
         template().then(res=>{
@@ -619,26 +649,33 @@ import {debounce} from "@/utils/ruoyi.js"
           this.corpnamelist=res
         });
       },
+      getCorpName(){
+        corpNames().then(res=>{
+          this.corpnamelists=res
+        });
+      },
       /** 新增按钮操作 */
       handleAdd() {
-        this.reset();
+       this.reset();
         this.getTreeselect()
         this.getcorpName()
         this.gettemplate()
-        this.form.list=[[100, 101,103],[100, 101,104],[100, 101,105],[100, 101,106],[100, 101,107]]
+        this.form.list=[[100, 101,103],[100, 101,104],[100, 101,105],[100, 101,106],[100, 101,107],[100, 101,110],[100, 101,111]]
         this.open = true;
         this.title = "添加需求";
       },
       findname(name){
-        if(name==""||null){
+        if(name==""||name==null){
           this.msg=null
         }else{
           let form = new FormData()
           form.append("projectName",name)
+          form.append("demandId",this.form.demandId)
           findnames(form).then(res=>{
             this.msg=res
           })
         }
+
       },
       handleRemov(value){
         this.single=value.raw;
@@ -679,7 +716,7 @@ import {debounce} from "@/utils/ruoyi.js"
               return childrenEach(treeData, depth);
             },
       /** 修改按钮操作 */
-      handleUpdate(row) {
+      handleUpdate(row,ind) {
         this.reset();
         this.getTreeselect()
         this.getcorpName()
@@ -694,9 +731,16 @@ import {debounce} from "@/utils/ruoyi.js"
           list.push(this.changeDetSelect(item.deptId,this.deptOptions))
           })
           this.form.list=list
+          console.log(this.form.list)
           this.open = true;
-          this.title = "修改需求";
+          if(ind==1){
+            this.title = "修改需求";
+          }else{
+            this.title = "复制需求";
+          }
+          console.log(this.form)
         });
+
       },
 
       // 用户状态修改
@@ -721,10 +765,9 @@ import {debounce} from "@/utils/ruoyi.js"
           row.state = row.state == 0 ? 1 : 0;
         });
       },
-
       /** 提交按钮 */
       submitForm(i){
-        console.log(this.form.list)
+
         let list =[]
         this.form.list.forEach(item=>{
            list.push(item[2])
@@ -740,11 +783,18 @@ import {debounce} from "@/utils/ruoyi.js"
         this.$refs["forms"].validate(valid => {
           if (valid) {
             if (this.form.demandId != null) {
+              if(this.title == "复制需求"){
+                addFollow(formData).then(response => {
+                  this.msgSuccess("复制成功");
+                  this.open = false;
+                  this.getList();
+                });
+              }else{
               updateFollow(formData).then(response => {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
-              });
+              });}
             }else{
               if(i==1){
                 addFollow(formData).then(response => {
@@ -771,18 +821,18 @@ import {debounce} from "@/utils/ruoyi.js"
         this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:1}})
       },
       /** 导出按钮操作 */
-      handleExport() {
-        const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有需求数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return exportFollow(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(()=>{})
-      }
+      // handleExport() {
+      //   const queryParams = this.queryParams;
+      //   this.$confirm('是否确认导出所有需求数据项?', "警告", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     type: "warning"
+      //   }).then(function() {
+      //     return exportFollow(queryParams);
+      //   }).then(response => {
+      //     this.download(response.msg);
+      //   }).catch(()=>{})
+      // }
     }
   };
 </script>
@@ -806,5 +856,8 @@ import {debounce} from "@/utils/ruoyi.js"
   }
    .div >>>.el-form-item__content{
     width: 80%;
+  }
+  .ruxiang{
+    color: #13CE66;
   }
 </style>

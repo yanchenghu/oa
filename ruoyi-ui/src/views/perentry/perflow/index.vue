@@ -6,7 +6,9 @@
             v-model="queryParams.startTime"
             type="date"
             value-format="yyyy-MM-dd"
-            :clearable="false">
+            :clearable="false"
+            :picker-options="pickerOptions1"
+            >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间">
@@ -14,7 +16,9 @@
             v-model="queryParams.endTime"
             type="date"
             value-format="yyyy-MM-dd"
-            :clearable="false">
+            :clearable="false"
+            :picker-options="pickerOptions4"
+            >
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -32,10 +36,10 @@
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
     </el-form>
     <div style="font-size: 14px;">
-      <span>人员入项列表: </span><span style="color: orangered;">共计 : {{ru.totalItem.entryNum}}人,总成本 : {{ru.totalItem.entrySalary}}元,总服务费 : {{ru.totalItem.entryServicePay}}元,总利润 : {{ru.totalItem.entryServicePay - ru.totalItem.entrySalary}}元,总利润率 : {{((ru.totalItem.entryServicePay - ru.totalItem.entrySalary)/ru.totalItem.entrySalary*100).toFixed(2)}}%;</span>
+      <span>人员入项列表: </span><span style="color: orangered;" v-if="ru.totalItem" >共计 : {{ru.totalItem.entryNum}}人,总成本 : {{ru.totalItem.entrySalary}}元,总服务费 : {{ru.totalItem.entryServicePay}}元,总利润 : {{ru.totalItem.entryServicePay - ru.totalItem.entrySalary}}元,总利润率 : {{((ru.totalItem.entryServicePay - ru.totalItem.entrySalary)/(ru.totalItem.entrySalary===0?1:ru.totalItem.entrySalary)*100).toFixed(2)}}%;</span>
     </div>
     <div  style="color: orangered;font-size: 14px; margin-bottom: 10px;">
-     <span>当前在项总人数: {{ru.nowItem.nowNum}}人,当月净成本 : {{ru.nowItem.sumSalary}}元,当月净服务费 : {{ru.nowItem.sumServicePay}}元,当月净利润 : {{ru.nowItem.sumServicePay-ru.nowItem.sumSalary}}元,净利润率 : {{((ru.nowItem.sumServicePay-ru.nowItem.sumSalary)/ru.nowItem.sumSalary*100).toFixed(2)}}%;</span>
+     <span v-if="ru.nowItem">当前在项总人数: {{ru.nowItem.nowNum}}人,当月净成本 : {{ru.nowItem.sumSalary}}元,当月净服务费 : {{ru.nowItem.sumServicePay}}元,当月净利润 : {{ru.nowItem.sumServicePay-ru.nowItem.sumSalary}}元,净利润率 : {{((ru.nowItem.sumServicePay-ru.nowItem.sumSalary)/(ru.nowItem.sumSalary==0?1:ru.nowItem.sumSalary)*100).toFixed(2)}}%;</span>
 
     </div>
     <el-table
@@ -47,31 +51,32 @@
       :row-class-name="tableRowClassName"
       >
       <el-table-column type="index"></el-table-column>
-      <el-table-column label="小组" prop="deptName">
+      <el-table-column label="小组" prop="deptName" width="40">
 
       </el-table-column>
-      <el-table-column label="小组利润" :key="1">
+      <el-table-column label="小组利润" :key="1"  width="60">
         <template slot-scope="scope">
            <span>{{scope.row.zongshu}} </span>
          </template>
       </el-table-column>
-      <el-table-column label="小组利润率" :key="2" prop="lvrun">
+      <el-table-column label="小组利润率" :key="2" prop="lvrun" width="80">
           <template slot-scope="scope">
              <span>{{scope.row.lvrun.toFixed(2)}}%</span>
            </template>
       </el-table-column>
-      <el-table-column label="招聘人员" prop="nickName" :key="3">
+      <el-table-column label="招聘人员" prop="nickName" :key="3" width="40">
 
       </el-table-column>
-      <el-table-column label="HR利润" :key="4" prop="hrzongshu">
+      <el-table-column label="HR利润" :key="4" prop="hrzongshu" width="60">
 
       </el-table-column>
-      <el-table-column label="备注"  prop="joinStatus" >
+      <el-table-column label="备注"  prop="joinStatus" width="55">
           <template slot-scope="scope">
-             <span>{{scope.row.joinStatus==2?'社招':'二次入项'}}</span>
+             <span v-if="scope.row.joinStatus==2">社招</span>
+             <span v-else-if="scope.row.joinStatus==4">二次入项</span>
           </template>
       </el-table-column>
-      <el-table-column label="姓名"  prop="customerName" :key="5">
+      <el-table-column label="姓名"  prop="customerName" :key="5" width="65" >
 
       </el-table-column>
       <el-table-column label="利润" prop="profit" :key="6">
@@ -82,18 +87,23 @@
            <span>{{scope.row.profitMargin}}%</span>
          </template>
       </el-table-column>
-      <el-table-column label="工资" prop="salary">
+      <el-table-column label="人员成本" prop="salary">
 
       </el-table-column>
       <el-table-column label="服务费" prop="servicePay" :key="7"/>
       <el-table-column label="入职公司" prop="corpName" :key="13"/>
+      <el-table-column label="协助人" prop="entryAssistant">
+        <template slot-scope="scope">
+           <span>{{scope.row.entryAssistant?scope.row.entryAssistant:'无'}}</span>
+         </template>
+      </el-table-column>
       <el-table-column label="入职时间" prop="syqstartTime":key="8">
 
       </el-table-column>
       <el-table-column label="转正时间" prop="syqEndtime" :key="9">
 
       </el-table-column>
-      <el-table-column label="社保"  :key="10">
+      <el-table-column label="社保"  :key="10" width="55">
           <template slot-scope="scope">
             <span>{{scope.row.socSecopt==1?'交':"未交"}}</span>
           </template>
@@ -111,18 +121,21 @@
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
+
     />
-    <div style="font-size: 14px;margin-top: 80px;">
-      <span>人员出项列表: </span><span style="color: orangered;">共计 : {{ru.digression.digrePeopleNum}}人, 总成本 : {{ru.digression.digreCost}}元, 总服务费 : {{ru.digression.digreService}}元, 总利润 : {{ru.digression.digreprofit}}元, 总利润率 : {{(ru.digression.digreprofit/ru.digression.digreCost*100).toFixed(2)}}%;</span>
+    <div style="font-size: 14px;margin-top: 80px; margin-bottom: 10px;">
+      <span>人员出项列表: </span><span style="color: orangered;" v-if="ru.digression">共计 : {{ru.digression.digrePeopleNum}}人, 总成本 : {{ru.digression.digreCost}}元, 总服务费 : {{ru.digression.digreService}}元, 总利润 : {{ru.digression.digreprofit}}元, 总利润率 : {{(ru.digression.digreprofit/(ru.digression.digreCost==0?1:ru.digression.digreCost)*100).toFixed(2)}}%;</span>
     </div>
-    <el-table :data="dataoutl"
+    <el-table
+      :row-class-name="OutRowClassName"
+      :data="dataoutl"
       style="width: 100%;"
       border
       v-loading="loading2">
       <el-table-column label="姓名" prop="customer_name"/>
       <el-table-column label="电话" prop="customer_tel"/>
       <el-table-column label="入职公司" prop="corp_name"/>
-      <el-table-column label="工资" prop="salary"/>
+      <el-table-column label="人员成本" prop="salary"/>
       <el-table-column label="服务费" prop="service_pay"/>
       <el-table-column label="利润" prop="profit"/>
       <el-table-column label="利润率" >
@@ -130,6 +143,7 @@
           <span>{{(scope.row.profit/scope.row.salary*100).toFixed(2)}}%</span>
         </template>
       </el-table-column>
+      <el-table-column label="入项日期" prop="syqstart_time"/>
       <el-table-column label="出项日期" prop="outof_projecttime"/>
       <el-table-column label="借用物品" prop="borrow_sth">
         <template slot-scope="scope">
@@ -157,6 +171,16 @@
     name: "Yxdemand",
     data() {
       return{
+        pickerOptions1:{
+          disabledDate:(time) => {
+                return time.getTime() > new Date(this.queryParams.endTime).getTime();
+          }
+        },
+        pickerOptions4:{
+          disabledDate:(time) => {
+                return time.getTime() < new Date(this.queryParams.startTime).getTime()- 86400000;
+          }
+        },
         total:0,
         total2:0,
         loading:true,
@@ -256,6 +280,7 @@
       handleQuery(){
         this.getList()
         this.getoutList()
+        this.getendList()
       },
       indexMethod(){
         return
@@ -276,6 +301,10 @@
             this.normSubKindIndex = 0
             zong+=data[i].profit
             zonggongzi+=data[i].salary
+            hrzong+=data[i].profit
+            data[this.NormKindIndex].zongshu = zong
+            data[this.NormKindIndex].lvrun = zong/zonggongzi*100
+            data[this.normSubKindIndex].hrzongshu = hrzong
           } else {
             if (data[i].deptName === data[i - 1].deptName) {
               this.NormKindArr[this.NormKindIndex] += 1
@@ -293,7 +322,8 @@
               zonggongzi+=data[i].salary
               this.NormKindArr.push(1)
               this.NormKindIndex = i
-
+              data[this.NormKindIndex].zongshu = zong
+              data[this.NormKindIndex].lvrun = zong/zonggongzi*100
             }
             if (data[i].nickName === data[i - 1].nickName) {
               this.normSubKindArr[this.normSubKindIndex] += 1
@@ -306,6 +336,7 @@
               hrzong+=data[i].profit
               this.normSubKindArr.push(1)
               this.normSubKindIndex = i
+              data[this.normSubKindIndex].hrzongshu = hrzong
             }
           }
         }
@@ -345,14 +376,21 @@
       },
 
        tableRowClassName({row, rowIndex}) {
-         
           if (row.joinStatus == 4) {
             return 'warning-row';
           }
           return '';
+      },
+      OutRowClassName({row, rowIndex}) {
+        let endtime = new Date(row.outof_projecttime)
+        let statetime = new Date(row.syqstart_time)
+        let date = 24*60*60*1000*30
+        if(endtime - statetime <= date){
+          return 'warning-row';
+        }
+        return '';
+
       }
-
-
     }
   }
 </script>

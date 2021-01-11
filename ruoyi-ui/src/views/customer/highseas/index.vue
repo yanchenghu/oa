@@ -4,7 +4,7 @@
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" style="width:80% ;" label-width="68px">
       <el-form-item label="" prop="companyName">
         <el-input
-          v-model="queryParams.companyName"
+          v-model.trim="queryParams.companyName"
           placeholder="请输入公司名称"
           clearable
           size="small"
@@ -39,20 +39,19 @@
         align="center"
         >
       </el-table-column>
-      <el-table-column label="公司名称" align="left" prop="companyName" width="160" style="color: blue;"/>
-      <el-table-column label="联系人/职位" align="left" width="130">
+      <el-table-column label="公司名称"  prop="companyName" width="250" style="color: blue;"/>
+      <el-table-column label="联系人/职位"  width="130">
         <template slot-scope="scope">
           <span>{{scope.row.contactPeople}} / {{scope.row.contactPosition}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="公司性质"
-        align="center"
         prop="companySituation"
         :formatter="companySituationFormat"
         width="90"
       />
-      <el-table-column label="联系方式" align="left" prop="contactPhone" width="110"/>
+      <el-table-column label="联系方式"  prop="contactPhone" width="110"/>
       <el-table-column label="录入人" align="center" prop="entryPeople" width="80"/>
       <el-table-column
         label="线索状态"
@@ -61,29 +60,26 @@
         :formatter="isFollowSubmitFormat"
          width="90"
       />
-      <el-table-column label="最近一次联系情况" align="left" prop="contactInformation"  :show-overflow-tooltip="true">
+      <el-table-column label="最近一次联系情况"  prop="contactInformation"  >
         <template slot-scope="scope">
           <span>{{scope.row.contactInformation}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" align="left" prop="updateDate" width="150">
+      <el-table-column label="更新时间"  prop="updateDate" width="150">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="120">
+      <el-table-column label="操作"  class-name="small-padding fixed-width" fixed="right" width="120">
         <template slot-scope="scope">
           <el-button
-            size="mini"
             type="text"
-            icon="el-icon-edit"
             @click="handleClick(scope.row)"
-          >抢占</el-button>
+          ><svg-icon icon-class="button"/>抢占</el-button>
          <el-button
-            size="mini"
             type="text"
             @click="followUp(scope.row.entryId)"
-          >查看</el-button>
+          ><svg-icon icon-class="eye-open"/>查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -112,7 +108,7 @@
          </div>
           <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
             <el-form-item label="公司性质">
-              <el-select disabled v-model="yxdemandone.companySituation"   size="small">
+              <el-select disabled v-model.trim="yxdemandone.companySituation"   size="small">
                 <el-option
                   v-for="dict in companySituationOptions"
                   :key="dict.dictValue"
@@ -122,7 +118,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="线索状态">
-              <el-select disabled v-model="yxdemandone.isFollowSubmit"  size="small">
+              <el-select disabled v-model.trim="yxdemandone.isFollowSubmit"  size="small">
                 <el-option
                   v-for="dict in isFollowSubmitOptions"
                   :key="dict.dictValue"
@@ -144,41 +140,41 @@
                  <b>联系人信息</b>
                  <p></p>
                  <el-form-item label="姓名" >
-                   <el-input disabled v-model="yxdemandone.contactPeople" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.contactPeople" ></el-input>
                  </el-form-item>
                  <el-form-item label="职位">
-                   <el-input disabled v-model="yxdemandone.contactPosition" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.contactPosition" ></el-input>
                  </el-form-item>
                  <el-form-item label="电话">
-                   <el-input disabled v-model="yxdemandone.contactPhone"></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.contactPhone"></el-input>
                  </el-form-item>
                  <el-form-item label="邮箱">
-                   <el-input disabled v-model="yxdemandone.mailbox" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.mailbox" ></el-input>
                  </el-form-item>
                  <el-form-item label="微信">
-                   <el-input disabled v-model="yxdemandone.wechat" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.wechat" ></el-input>
                  </el-form-item>
                  <el-form-item label="QQ">
-                   <el-input disabled v-model="yxdemandone.qq" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.qq" ></el-input>
                  </el-form-item>
               </el-form>
               <el-form label-position="left" label-width="100px" :model="yxdemandone">
                 <b>外包公司信息</b>
                 <p></p>
                  <el-form-item label="面试名义公司">
-                   <el-input disabled v-model="yxdemandone.interviewCompany" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.interviewCompany" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试官">
-                   <el-input disabled v-model="yxdemandone.interviewer" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.interviewer" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试职位">
-                   <el-input disabled v-model="yxdemandone.interviewerPosition" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.interviewerPosition" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试地点">
-                   <el-input disabled v-model="yxdemandone.interviewaddress" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.interviewaddress" ></el-input>
                  </el-form-item>
                  <el-form-item label="最终甲方">
-                   <el-input disabled v-model="yxdemandone.finalparty" ></el-input>
+                   <el-input disabled v-model.trim="yxdemandone.finalparty" ></el-input>
                  </el-form-item>
               </el-form>
             </div>

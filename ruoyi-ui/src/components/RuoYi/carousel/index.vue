@@ -1,8 +1,8 @@
 <template>
   <div>
-      <el-carousel :interval="5000" arrow="nerver">
+      <el-carousel :interval="8000" arrow="nerver">
             <el-carousel-item v-for="item,i in swiperList" :key="i">
-               <h3 class="medium">喜报：恭喜 {{item.nick_name}} 今日入项1人 ({{item.customer_name}} 入职 {{item.project_name}} 项目 )  </h3>
+               <h3 class="medium">喜报：恭喜 {{item.nick_name}} {{item.syqstart_time}}入项1人 ({{item.customer_name}} 入职 {{item.project_name}} 项目 )  </h3>
              </el-carousel-item>
       </el-carousel>
   </div>
@@ -33,17 +33,24 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+  .is-active{
+    transition-duration: 5s;
+  }
+  .is-animating{
+    transition-duration: 5s;
+  }
   .el-carousel{
-    width: 400px;
+    width: 600px;
     float: left;
     margin-left: 50%;
     position:absolute;
-    left:-200px;
+    left:-300px;
+    overflow: auto;
     .el-carousel__item{
       text-align: center;
     }
   }
+
 
   .el-carousel__item h3 {
       color: red;

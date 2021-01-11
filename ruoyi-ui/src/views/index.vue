@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" :data-list="datalist"/>
+    <panel-group  :data-list="datalist"/>
 
     <el-row>
       <line-chart :data-list="datalist" @handleSetLineChartData="handleSetLineChartData"/>
@@ -25,16 +25,13 @@
       </div>
     </el-dialog>
 
-
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="12" :lg="8" v-for="data in datalist.listMarEntry">
-        <div class="chart-wrapper" >
-          <raddar-chart  :data="data"/>
+      <el-col :xs="24" :sm="12" :lg="8" v-for="data,i in datalist.listMarEntry" :key="i">
+        <div class="chart-wrapper">
+          <raddar-chart :followstatus="followstatus"  :data="data" @getList="getList"/>
         </div>
       </el-col>
     </el-row>
-
-
   </div>
 </template>
 
@@ -46,7 +43,7 @@ import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 
 
-import { getList } from "@/api/index.js"
+import { getlist } from "@/api/index.js"
 import{genzongbut}from'@/api/resume/mytrckresume.js'
 export default {
   name: 'Index',
@@ -59,24 +56,34 @@ export default {
   },
   data() {
     return {
-      datalist:{},
+      followstatus:[],
+      datalist:{
+        entryrobnnum:0,
+        EnterInfosize:0,
+        bingdinnum:0,
+        resumeadopt:0,
+        interviewadopt:0,
+        entryPeople:0,
+      },
       open:false,
       title:"",
       form:{},
       rules:{
         memoDetail: [
-        { required: true, message: "跟踪情况不能为空", trigger: "blur" }
+         { required: true, message: "跟踪情况不能为空", trigger: "blur" }
       ],
       },
-
     }
   },
   created() {
-      this.getlist()
+    this.getDicts("mar_demandresumefollow_status").then(response => {
+         this.followstatus = response.data;
+    });
+    this.getList()
   },
   methods: {
-    getlist(){
-      getList().then(res=>{
+    getList(){
+      getlist().then(res=>{
           this.datalist = res.data
       })
     },
@@ -93,7 +100,7 @@ export default {
           genzongbut(this.form).then(res=>{
             this.msgSuccess("操作成功");
             this.open = false;
-            this.getlist();
+            this.getList();
           })
         }
       });
@@ -109,6 +116,7 @@ export default {
   position: relative;
 
   .chart-wrapper {
+    border-radius: 10px;
     background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
