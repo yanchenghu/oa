@@ -251,7 +251,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="demandYears != null  and demandYears != ''"> and b.demand_years = #{demandYears}</if>
         <if test="projectLocation != null  and projectLocation != ''"> and b.project_location = #{projectLocation}</if>
         <if test="importantLevel != null "> and b.important_level = #{importantLevel}</if>
-        <if test="corpCode != null "> and b.corp_code = #{corpCode}</if>
+        <if test="corpCode != null and corpCode != '' "> and b.corp_code = #{corpCode}</if>
          order by b.add_time desc
 
     </select>
@@ -270,7 +270,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.demand_id=#{demandId} and a.bind_people=#{bindPeople}
     </select>
 
+    <select id="selectmarDWorLitList" parameterType="Map" resultMap="MarDemandResult">
+  		SELECT * from mar_demand
+		where state=0 and operationuser=#{userName}
+		 order by add_time desc
 
+    </select>
 
 
 

@@ -254,8 +254,8 @@
         DATE_FORMAT(a.add_time,'%Y-%m-%d %H:%i:%s') as addTime,a.resume_path as resumePath,b.add_name as addName
         FROM
         per_customerinfo a LEFT JOIN
-        (SELECT customer_tel,add_name from  per_robcustomer where  Status=0)  b on a.customer_tel=b.customer_tel
-        where
+        per_robcustomer b on a.customer_tel=b.customer_tel and b.Status=0
+       where
          b.add_name is null
         <if test="professionId != null  and professionId != ''"> and a.profession_id = #{professionId}</if>
         <if test="workYear != null  and workYear != ''"> and a.work_year = #{workYear}</if>
@@ -271,6 +271,14 @@
             <if test="opertCode != null "> and opert_code = #{opertCode}</if>
             <if test="addTime != null "> and  DATE_FORMAT(add_time, '%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )</if>
         </where>
+    </select>
+
+    <select id="selectfirstEnter" resultType="int">
+        SELECT
+        COUNT(opert_code)as sad from per_customerinfo
+        WHERE
+        DATE_FORMAT(add_time, '%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        GROUP BY opert_code ORDER BY sad desc LIMIT 1
     </select>
 
 

@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
     <select id="selectConDingtokenByType" resultMap="ConDingtokenResult" parameterType="java.lang.Integer" >
       <include refid="selectConDingtokenVo"/>
-        where ding_type = #{ding_type} and
+        where ding_type = #{ding_type}
         and now() BETWEEN add_time AND expire_time
   </select>
 

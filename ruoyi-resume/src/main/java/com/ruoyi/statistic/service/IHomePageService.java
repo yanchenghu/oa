@@ -12,4 +12,12 @@ public interface IHomePageService {
      * 首页点击弹框数据详情展示
      */
     AjaxResult viewdetailsplay(LoginUser loginUser, Integer followStatus);
+    /**
+     * 首页商务数据展示
+     */
+    AjaxResult businessData(LoginUser loginUser);
+    /**
+     * 商务首页点击弹框数据详情展示
+     */
+    AjaxResult businessdetailsplay(LoginUser loginUser, Integer followStatus);
 }

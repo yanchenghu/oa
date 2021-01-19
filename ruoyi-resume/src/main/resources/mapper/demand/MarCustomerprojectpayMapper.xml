@@ -256,6 +256,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY c.peonum desc
         LIMIT 10
     </select>
+    <select id="getInterviewEntry"    resultType="map">
+       SELECT c.bind_people,d.avatar,d.nick_name,d.sex,c.peonum from
+            (SELECT b.bind_people,COUNT(b.bind_people) as peonum from mar_demandresumefollow a
+		LEFT JOIN mar_demandresume b on a.demandresume_id=b.id
+     where
+	 DATE_FORMAT( trackingtime, '%Y%m' )= DATE_FORMAT( CURDATE( ) , '%Y%m' )
+	 and follow_status in (5,6,7,8)
+   GROUP BY b.bind_people)c
+	LEFT JOIN sys_user d ON c.bind_people = d.user_name
+	ORDER BY c.peonum desc
+	LIMIT 10
+    </select>
 
 
 
@@ -283,7 +295,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         )as c
     </select>
     <select id="entryPeopleCount"    parameterType="map"  resultType="map">
-        SELECT COUNT(id) as entryNum,SUM(service_pay) as entryServicePay,SUM(salary) as  entrySalary from  mar_customerprojectpay a
+        SELECT COUNT(id) as entryNum, IFNULL(SUM(service_pay),0)  as entryServicePay, IFNULL(SUM(salary),0)as  entrySalary from  mar_customerprojectpay a
         where
            a.syqstart_time between #{startTime} and #{endTime}
         <if test="status != null">and a.outof_projecttime is null</if>

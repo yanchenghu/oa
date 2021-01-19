@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +52,14 @@ public class SysLoginController
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
         AjaxResult ajax = AjaxResult.success();
+        Date now=new Date();
+//    设置过期时间
+        Date dat=DateUtils.parseDate("2022-01-01 09:20:14");
+        if(now.after(dat)){
+          ajax.put("code",400);
+          ajax.put("msg","服务费到期，请及时续费");
+            return ajax;
+        }
         // 生成令牌
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());

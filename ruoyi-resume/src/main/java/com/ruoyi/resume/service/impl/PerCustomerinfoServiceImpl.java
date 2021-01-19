@@ -766,7 +766,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
      */
     @Override
     public List<Map> selectPeopostlist(PerCustomerinfo perCustomerinfo) {
-//   返回未抢占
+//   返回未抢占?
 
         List<Map>   infoList =perCustomerinfoMapper.selectPeopostlist(perCustomerinfo);
         return infoList;

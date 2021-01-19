@@ -210,6 +210,8 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         map.put("status",marCustomerprojectpay.getSettledCycle());
         // 总成本   服务    总利润   总利润率
         Map totalItem=marCustomerprojectpayMapper.entryPeopleCount(map);
+        double   entryServicePay= (double )totalItem.get("entryServicePay");
+        double   entrySalary= (double )totalItem.get("entrySalary");
         //出项
         List<Map>  digressilist =marCustomerprojectpayMapper.outItemlist(map);
         int a=digressilist.size();
@@ -218,17 +220,20 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         for (Map map1:digressilist){
              double   salary= (double ) map1.get("salary");
              double   service_pay= (double ) map1.get("service_pay");
-             Date outof_projecttime = (Date) map1.get("outof_projecttime");
-             Date syqstart_time = (Date) map1.get("syqstart_time");
-            int monthsOfAge = 0;
-            try {
-                monthsOfAge = DateUtils.getMonthsOfAge(syqstart_time, outof_projecttime);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            digreSalary+=monthsOfAge*salary;
-            digreServicepay+=monthsOfAge*service_pay;
+//             Date outof_projecttime = (Date) map1.get("outof_projecttime");
+//             Date syqstart_time = (Date) map1.get("syqstart_time");
+//            int monthsOfAge = 0;
+//            try {
+//                monthsOfAge = DateUtils.getMonthsOfAge(syqstart_time, outof_projecttime);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+            digreSalary+=salary;
+            digreServicepay+=service_pay;
         }
+
+        nowItem.put("sumServicePay",entryServicePay-digreServicepay);
+        nowItem.put("sumSalary",entrySalary-digreSalary);
         Map digression=new HashMap();
         digression.put("digreCost",digreSalary);
         digression.put("digreService",digreServicepay);

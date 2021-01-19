@@ -99,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             mar_demandresume a
             LEFT JOIN per_customerinfo b ON a.customer_code = b.customer_code
         where a.customer_code = #{customerCode} and a.demand_id=#{demandId}
+        limit 1
     </select>
     <select id="getInputInformation"  parameterType="Map"  resultType="map">
         SELECT
@@ -124,6 +125,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           a.bind_people =#{AddPeople}
          and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
           and b.follow_status=#{followStatus}
+    </select>
+
+    <select id="selBinMardandPeople"  parameterType="map"  resultType="map">
+    SELECT a.project_name as projectName,d.customer_name as customerName,
+    DATE_FORMAT(c.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime
+    from mar_demand a
+    LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id
+    LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id
+    LEFT JOIN per_customerinfo d on b.customer_code=d.customer_code
+    where a.state=0 and a.operationuser=#{userName}
+    and c.follow_status=#{followStatus}
+    and  DATE_FORMAT( c.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+
     </select>
 
 </mapper>

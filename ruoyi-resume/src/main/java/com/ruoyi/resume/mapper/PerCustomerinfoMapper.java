@@ -102,4 +102,5 @@ public interface PerCustomerinfoMapper
 
     List<PerCustomerinfo> selectPerCustomerinfoByMonth(PerCustomerinfo perCustomerinfo);
 
+    int selectfirstEnter();
 }

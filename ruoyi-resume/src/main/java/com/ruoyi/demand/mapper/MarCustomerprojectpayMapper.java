@@ -75,6 +75,8 @@ public interface MarCustomerprojectpayMapper
     Map selectMarCustomePerinfoById(String id);
     //本月入项排行榜
     List<Map> getRankingEntry();
+    //本月面试排行榜
+    List<Map> getInterviewEntry();
     /**
      * 人员流动信息列表
      */

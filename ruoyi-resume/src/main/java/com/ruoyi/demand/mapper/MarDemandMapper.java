@@ -81,4 +81,6 @@ public interface MarDemandMapper
     List<MarEntryInfo> selectMarDemanddsaList(Map mapss);
 
     List<BasicInfo> selectMarDem(Map mapss);
+
+    List<MarDemand> selectmarDWorLitList(Map map);
 }

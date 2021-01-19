@@ -123,4 +123,6 @@ public interface IYxdemandService
     int yxdemByName(String companyName);
 
     AjaxResult workresultlist(LoginUser loginUser);
+
+    AjaxResult newIntention(Yxdemand yxdemand, LoginUser loginUser);
 }
