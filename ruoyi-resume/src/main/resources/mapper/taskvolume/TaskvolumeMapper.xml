@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.taskvolume.mapper.TaskVolumeMapper">
+
+    <resultMap type="ConTaskvolume" id="PerTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="binding"    column="binding"    />
+        <result property="adopt"    column="adopt"    />
+        <result property="interview"    column="interview"    />
+        <result property="entry"    column="entry"    />
+    </resultMap>
+
+    <sql id="selectNumber">
+        select id, binding,adopt,interview,entry from con_taskvolume
+    </sql>
+
+    <select id="selectNumber" parameterType="ConTaskvolume" resultMap="PerTemplateResult">
+        <include refid="selectNumber"/>
+        <where>
+            <if test="binding != null  "> and binding =#{binding}</if>
+            <if test="adopt != null  "> and adopt = #{adopt}</if>
+            <if test="interview != null  "> and interview = #{interview}</if>
+            <if test="entry != null  "> and entry = #{entry}</if>
+        </where>
+    </select>
+
+
+
+
+    <update id="update" parameterType="com.ruoyi.taskvolume.domain.ConTaskvolume">
+        update con_taskvolume
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="binding != null">binding = #{binding},</if>
+            <if test="adopt != null">adopt = #{adopt},</if>
+            <if test="interview != null">interview = #{interview},</if>
+            <if test="entry != null">entry = #{entry},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+
+    
+</mapper>

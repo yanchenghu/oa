@@ -1,5 +1,7 @@
 package com.ruoyi.web.controller.personentry;
 
+import com.ruoyi.Entrycontract.domain.MarEntryContract;
+import com.ruoyi.Entrycontract.service.MarEntryContractService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -15,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -42,6 +47,9 @@ public class PerentryController extends BaseController {
     private IMarServicepayService marServicepayService;
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private MarEntryContractService marEntryContractService;
 
     /**
      * 人员入项信息列表
@@ -124,6 +132,18 @@ public class PerentryController extends BaseController {
      }
         return  marServicepayService.addCertifi(ad,marcusId,photo,file);
     }
+
+    /**
+     * 添加劳动合同
+     */
+    @PostMapping(value = "/addLaborcontract")
+    public AjaxResult addLaborcontract( String marcusId,@RequestParam("list") MultipartFile[] list)
+    {
+            return  marEntryContractService.addLaborcontract(marcusId,list);
+
+    }
+
+
 
     /**
      * 人员出项

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Entrycontract.mapper.MarEntryContractMapper">
+    
+    <resultMap type="MarEntryContract" id="MarAdsalaryResult">
+        <result property="id"    column="id"    />
+        <result property="marcusId"    column="marcus_id"    />
+        <result property="imgPath"    column="img_path"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarAdsalaryVo">
+        select id, marcus_id,img_path,add_time  from mar_entrycontract
+    </sql>
+
+
+
+
+        
+    <insert id="addLaborcontract" parameterType="MarEntryContract" useGeneratedKeys="true" keyProperty="id">
+        insert into mar_entrycontract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id,</if>
+            <if test="imgPath != null">img_path,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="marcusId != null">#{marcusId},</if>
+            <if test="imgPath != null">#{imgPath},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+
+
+
+
+
+    
+</mapper>
