@@ -12,6 +12,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.demand.domain.*;
 import com.ruoyi.demand.mapper.*;
+import com.ruoyi.entrycontract.domain.MarEntrycontract;
+import com.ruoyi.entrycontract.mapper.MarEntrycontractMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.service.IMarCustomerprojectpayService;
@@ -36,7 +38,8 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
     @Autowired
     private MarServicepayMapper marServicepayMapper;
 
-
+    @Autowired
+    private MarEntrycontractMapper marEntrycontractMapper;
 
 
 
@@ -173,7 +176,10 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         List<MarServicepay> marServicepays = marServicepayMapper.selectMarServicepayList(marServicepay);
         map.put("marServicepays",marServicepays);
 
-
+        MarEntrycontract marEntrycontract=new MarEntrycontract();
+        marEntrycontract.setMarcusId(id);
+        List<MarEntrycontract> Listcontrr=marEntrycontractMapper.selectMarEntrycontractList(marEntrycontract);
+        map.put("Listcontrr",Listcontrr);
         return AjaxResult.success(map);
     }
     /**

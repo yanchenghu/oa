@@ -1,10 +1,10 @@
-package com.ruoyi.Entrycontract.domain;
+package com.ruoyi.entrycontract.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-public class MarEntryContract {
+public class MarEntrycontract {
 
     //合作id
     private Integer id;

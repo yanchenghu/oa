@@ -271,11 +271,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectmarDWorLitList" parameterType="Map" resultMap="MarDemandResult">
-  		SELECT * from mar_demand
-		where state=0 and operationuser=#{userName}
+        <include refid="selectMarDemandVo"/>
+        where state=0 and operationuser=#{userName}
 		 order by add_time desc
 
     </select>
+    <select id="selectThreeLit" parameterType="Map" resultMap="MarDemandResult">
+     SELECT COUNT(b.id)as sd,a.* from mar_demand a
+		 LEFT JOIN mar_demandresume b on a.demand_id = b.demand_id
+			where
+			a.state=0 and operationuser=#{userName}
+		 GROUP BY demand_id ORDER BY sd desc,b.bind_time asc
+	</select>
 
 
 

@@ -83,7 +83,7 @@ public class PerCustomerinfoController extends BaseController
             return perCustomerinfoService.goAnalysisResume(file,resume_direction,loginUser);
         } catch (Exception e) {
             e.printStackTrace();
-            return AjaxResult.error("简历解析失败");
+            return AjaxResult.error("简历解析失败，请联系管理员");
         }
     }
     /**

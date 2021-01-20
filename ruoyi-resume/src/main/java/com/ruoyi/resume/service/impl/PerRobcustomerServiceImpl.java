@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.resume.DingUtil;
 import com.ruoyi.conn.domain.ConDingtoken;
 import com.ruoyi.conn.mapper.ConDingtokenMapper;
+import com.ruoyi.demand.domain.UserInfo;
 import com.ruoyi.tool.WorkDay;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,8 +135,8 @@ public class PerRobcustomerServiceImpl implements IPerRobcustomerService
         }
 
         //获取所有抢占的人事
-        List<SysUser> liUs=perRobcustomerMapper.selectAllrobPeo();
-        for(SysUser sysUser:liUs){
+        List<UserInfo> liUs=perRobcustomerMapper.selectAllrobPeo();
+        for(UserInfo sysUser:liUs){
             String addPeople=sysUser.getUserName();
             String dinguserid=sysUser.getDinguserid();
             List<String> liStri=perRobcustomerMapper.getAllresumenull(addPeople);

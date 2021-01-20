@@ -268,8 +268,8 @@
     <select id="selectPerCustomerinfoByMonth" parameterType="PerCustomerinfo" resultMap="PerCustomerinfoResult">
         <include refid="selectPerCustomerinfoVo"/>
         <where>
+            DATE_FORMAT(add_time, '%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )
             <if test="opertCode != null "> and opert_code = #{opertCode}</if>
-            <if test="addTime != null "> and  DATE_FORMAT(add_time, '%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )</if>
         </where>
     </select>
 
