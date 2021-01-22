@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.finance.mapper.FinStatementsMapper">
+    
+    <resultMap type="FinStatements" id="FinStatementsResult">
+        <result property="id"    column="id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="party"    column="party"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerTel"    column="customer_tel"    />
+        <result property="time"    column="time"    />
+        <result property="price"    column="price"    />
+        <result property="standard"    column="standard"    />
+        <result property="attenDance"    column="atten_dance"    />
+        <result property="overTime"    column="over_time"    />
+        <result property="overPay"    column="over_pay"    />
+        <result property="comBined"    column="com_bined"    />
+        <result property="status"    column="status"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="addPeople"    column="add_people"    />
+        <result property="reason"    column="reason"    />
+        <result property="picture"    column="picture"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFinStatementsVo">
+        select id, corp_code, party, start_time, end_time, customer_name, customer_tel, time, price, standard, atten_dance, over_time, over_pay, com_bined, status, add_time, add_people, reason, picture, remark from fin_statements
+    </sql>
+
+    <select id="selectFinStatementsList" parameterType="FinStatements" resultMap="FinStatementsResult">
+        <include refid="selectFinStatementsVo"/>
+        <where>  
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="party != null "> and party = #{party}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="customerTel != null  and customerTel != ''"> and customer_tel = #{customerTel}</if>
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="standard != null "> and standard = #{standard}</if>
+            <if test="attenDance != null "> and atten_dance = #{attenDance}</if>
+            <if test="overTime != null "> and over_time = #{overTime}</if>
+            <if test="overPay != null "> and over_pay = #{overPay}</if>
+            <if test="comBined != null "> and com_bined = #{comBined}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="addPeople != null  and addPeople != ''"> and add_people = #{addPeople}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinStatementsById" parameterType="Integer" resultMap="FinStatementsResult">
+        <include refid="selectFinStatementsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinStatements" parameterType="FinStatements" useGeneratedKeys="true" keyProperty="id">
+        insert into fin_statements
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">corp_code,</if>
+            <if test="party != null">party,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="customerName != null">customer_name,</if>
+            <if test="customerTel != null">customer_tel,</if>
+            <if test="time != null">time,</if>
+            <if test="price != null">price,</if>
+            <if test="standard != null">standard,</if>
+            <if test="attenDance != null">atten_dance,</if>
+            <if test="overTime != null">over_time,</if>
+            <if test="overPay != null">over_pay,</if>
+            <if test="comBined != null">com_bined,</if>
+            <if test="status != null">status,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="addPeople != null">add_people,</if>
+            <if test="reason != null">reason,</if>
+            <if test="picture != null">picture,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="party != null">#{party},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="customerName != null">#{customerName},</if>
+            <if test="customerTel != null">#{customerTel},</if>
+            <if test="time != null">#{time},</if>
+            <if test="price != null">#{price},</if>
+            <if test="standard != null">#{standard},</if>
+            <if test="attenDance != null">#{attenDance},</if>
+            <if test="overTime != null">#{overTime},</if>
+            <if test="overPay != null">#{overPay},</if>
+            <if test="comBined != null">#{comBined},</if>
+            <if test="status != null">#{status},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="addPeople != null">#{addPeople},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="picture != null">#{picture},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinStatements" parameterType="FinStatements">
+        update fin_statements
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
+            <if test="party != null">party = #{party},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="customerName != null">customer_name = #{customerName},</if>
+            <if test="customerTel != null">customer_tel = #{customerTel},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="standard != null">standard = #{standard},</if>
+            <if test="attenDance != null">atten_dance = #{attenDance},</if>
+            <if test="overTime != null">over_time = #{overTime},</if>
+            <if test="overPay != null">over_pay = #{overPay},</if>
+            <if test="comBined != null">com_bined = #{comBined},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="addPeople != null">add_people = #{addPeople},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="picture != null">picture = #{picture},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinStatementsById" parameterType="Integer">
+        delete from fin_statements where id = #{id}
+    </delete>
+
+    <delete id="deleteFinStatementsByIds" parameterType="String">
+        delete from fin_statements where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

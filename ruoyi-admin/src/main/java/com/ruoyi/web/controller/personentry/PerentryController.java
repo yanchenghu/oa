@@ -1,5 +1,7 @@
 package com.ruoyi.web.controller.personentry;
 
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.entrycontract.service.MarEntrycontractService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -39,8 +41,7 @@ public class PerentryController extends BaseController {
 
     @Autowired
     private IMarServicepayService marServicepayService;
-    @Autowired
-    private TokenService tokenService;
+
 
     @Autowired
     private MarEntrycontractService marEntryContractService;
@@ -158,10 +159,19 @@ public class PerentryController extends BaseController {
     public AjaxResult addLaborcontract( String marcusId,
                                         @RequestParam("list") MultipartFile[] list )
     {
-
         return  marEntryContractService.addLaborcontract(marcusId,list);
-
     }
+    /**
+     * 删除入项合同
+     */
+
+    @Log(title = "入项合同", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Integer id)
+    {
+        return toAjax(marEntryContractService.deleteMarEntrycontractById(id));
+    }
+
 
 
 

@@ -6,4 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface MarEntrycontractService {
 
     AjaxResult addLaborcontract(String marcusId, MultipartFile[] list);
+
+    int deleteMarEntrycontractById(Integer id);
 }

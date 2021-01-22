@@ -44,4 +44,9 @@ public class MarEntrycontractServicelmpl implements MarEntrycontractService {
         marEntryContractMapper.addLaborcontract(listMarEn);
         return AjaxResult.success("上传成功");
     }
+
+    @Override
+    public int deleteMarEntrycontractById(Integer id) {
+        return marEntryContractMapper.deleteMarEntrycontractById(id);
+    }
 }
