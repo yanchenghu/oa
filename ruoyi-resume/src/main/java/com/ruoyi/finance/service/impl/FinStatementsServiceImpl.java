@@ -9,8 +9,11 @@ import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.BusinessStatus;
+import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.resume.DateUtils;
+import com.ruoyi.finance.domain.Business;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.tool.ExcelRead;
 import net.sf.jsqlparser.statement.Statements;
@@ -261,5 +264,24 @@ public class FinStatementsServiceImpl implements IFinStatementsService
             finStatementsMapper.updateFinStatements(finStat);
         }
         return AjaxResult.success("更改成功");
+    }
+
+    /**
+     * 导出服务费
+     */
+    @Override
+    public List<Business> selectFinStatementsLists(FinStatements finStatements) {
+
+        List<Business> list = finStatementsMapper.selectFinStatementsLists(finStatements);
+
+        for (Business s: list){
+            String status = s.getStatus();
+            String status1 = DictUtils.getDictLabel("serv_payment_status", status);
+            s.setStatus(status1);
+            Double price = s.getPrice();
+            Double overPay = s.getOverPay();
+            s.setSystemcomBined(price+overPay);
+        }
+        return list;
     }
 }
