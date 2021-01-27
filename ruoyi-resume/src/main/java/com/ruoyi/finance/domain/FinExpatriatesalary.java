@@ -32,6 +32,10 @@ public class FinExpatriatesalary extends BaseEntity
     @Excel(name = "客户code")
     private String customerCode;
 
+    /** 综合工资 */
+    @Excel(name = "综合工资")
+    private String basicSalary;
+
     /** 满勤/天 */
     @Excel(name = "满勤/天")
     private String overAttence;
@@ -40,12 +44,8 @@ public class FinExpatriatesalary extends BaseEntity
     @Excel(name = "实际出勤/天")
     private String realAttence;
 
-    /** 基本工资 */
-    @Excel(name = "基本工资")
-    private String basicSalary;
-
-    /** 项目工资 */
-    @Excel(name = "项目工资")
+    /** 应发工资 */
+    @Excel(name = "应发工资")
     private String projectSalary;
 
     /** 补助 */
@@ -70,145 +70,146 @@ public class FinExpatriatesalary extends BaseEntity
     private String excelPath;
 
     /** 添加日期 */
-    @Excel(name = "添加日期")
-    private String addDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "添加日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date addDate;
 
     /** 添加人 */
     @Excel(name = "添加人")
     private String addPeople;
 
-    public void setId(Integer id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Integer getId() 
+    public Integer getId()
     {
         return id;
     }
-    public void setCustomerName(String customerName) 
+    public void setCustomerName(String customerName)
     {
         this.customerName = customerName;
     }
 
-    public String getCustomerName() 
+    public String getCustomerName()
     {
         return customerName;
     }
-    public void setCustomerTel(String customerTel) 
+    public void setCustomerTel(String customerTel)
     {
         this.customerTel = customerTel;
     }
 
-    public String getCustomerTel() 
+    public String getCustomerTel()
     {
         return customerTel;
     }
-    public void setCustomerCode(String customerCode) 
+    public void setCustomerCode(String customerCode)
     {
         this.customerCode = customerCode;
     }
 
-    public String getCustomerCode() 
+    public String getCustomerCode()
     {
         return customerCode;
     }
-    public void setOverAttence(String overAttence) 
-    {
-        this.overAttence = overAttence;
-    }
-
-    public String getOverAttence() 
-    {
-        return overAttence;
-    }
-    public void setRealAttence(String realAttence) 
-    {
-        this.realAttence = realAttence;
-    }
-
-    public String getRealAttence() 
-    {
-        return realAttence;
-    }
-    public void setBasicSalary(String basicSalary) 
+    public void setBasicSalary(String basicSalary)
     {
         this.basicSalary = basicSalary;
     }
 
-    public String getBasicSalary() 
+    public String getBasicSalary()
     {
         return basicSalary;
     }
-    public void setProjectSalary(String projectSalary) 
+    public void setOverAttence(String overAttence)
+    {
+        this.overAttence = overAttence;
+    }
+
+    public String getOverAttence()
+    {
+        return overAttence;
+    }
+    public void setRealAttence(String realAttence)
+    {
+        this.realAttence = realAttence;
+    }
+
+    public String getRealAttence()
+    {
+        return realAttence;
+    }
+    public void setProjectSalary(String projectSalary)
     {
         this.projectSalary = projectSalary;
     }
 
-    public String getProjectSalary() 
+    public String getProjectSalary()
     {
         return projectSalary;
     }
-    public void setBuzhuSalary(String buzhuSalary) 
+    public void setBuzhuSalary(String buzhuSalary)
     {
         this.buzhuSalary = buzhuSalary;
     }
 
-    public String getBuzhuSalary() 
+    public String getBuzhuSalary()
     {
         return buzhuSalary;
     }
-    public void setBaoxianSalary(String baoxianSalary) 
+    public void setBaoxianSalary(String baoxianSalary)
     {
         this.baoxianSalary = baoxianSalary;
     }
 
-    public String getBaoxianSalary() 
+    public String getBaoxianSalary()
     {
         return baoxianSalary;
     }
-    public void setRealSalary(String realSalary) 
+    public void setRealSalary(String realSalary)
     {
         this.realSalary = realSalary;
     }
 
-    public String getRealSalary() 
+    public String getRealSalary()
     {
         return realSalary;
     }
-    public void setMonths(Date months) 
+    public void setMonths(Date months)
     {
         this.months = months;
     }
 
-    public Date getMonths() 
+    public Date getMonths()
     {
         return months;
     }
-    public void setExcelPath(String excelPath) 
+    public void setExcelPath(String excelPath)
     {
         this.excelPath = excelPath;
     }
 
-    public String getExcelPath() 
+    public String getExcelPath()
     {
         return excelPath;
     }
-    public void setAddDate(String addDate) 
+    public void setAddDate(Date addDate)
     {
         this.addDate = addDate;
     }
 
-    public String getAddDate() 
+    public Date getAddDate()
     {
         return addDate;
     }
-    public void setAddPeople(String addPeople) 
+    public void setAddPeople(String addPeople)
     {
         this.addPeople = addPeople;
     }
 
-    public String getAddPeople() 
+    public String getAddPeople()
     {
         return addPeople;
     }
@@ -216,21 +217,22 @@ public class FinExpatriatesalary extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("customerName", getCustomerName())
-            .append("customerTel", getCustomerTel())
-            .append("customerCode", getCustomerCode())
-            .append("overAttence", getOverAttence())
-            .append("realAttence", getRealAttence())
-            .append("basicSalary", getBasicSalary())
-            .append("projectSalary", getProjectSalary())
-            .append("buzhuSalary", getBuzhuSalary())
-            .append("baoxianSalary", getBaoxianSalary())
-            .append("realSalary", getRealSalary())
-            .append("months", getMonths())
-            .append("excelPath", getExcelPath())
-            .append("addDate", getAddDate())
-            .append("addPeople", getAddPeople())
-            .toString();
+                .append("id", getId())
+                .append("customerName", getCustomerName())
+                .append("customerTel", getCustomerTel())
+                .append("customerCode", getCustomerCode())
+                .append("basicSalary", getBasicSalary())
+                .append("overAttence", getOverAttence())
+                .append("realAttence", getRealAttence())
+                .append("projectSalary", getProjectSalary())
+                .append("buzhuSalary", getBuzhuSalary())
+                .append("baoxianSalary", getBaoxianSalary())
+                .append("realSalary", getRealSalary())
+                .append("months", getMonths())
+                .append("excelPath", getExcelPath())
+                .append("addDate", getAddDate())
+                .append("addPeople", getAddPeople())
+                .toString();
     }
+
 }

@@ -42,6 +42,9 @@ public class FinStatements
     @Excel(name = "姓名")
     private String customerName;
 
+    /** 档案号 */
+    @Excel(name = "档案号")
+    private String customerCode;
     /** 电话 */
     @Excel(name = "电话")
     private String customerTel;
@@ -173,7 +176,15 @@ public class FinStatements
         this.customerTel = customerTel;
     }
 
-    public String getCustomerTel() 
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public void setCustomerCode(String customerCode) {
+        this.customerCode = customerCode;
+    }
+
+    public String getCustomerTel()
     {
         return customerTel;
     }

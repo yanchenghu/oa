@@ -196,6 +196,7 @@ public class FinStatementsServiceImpl implements IFinStatementsService
                 if(selectFinSt==null){
                     return AjaxResult.error( "上传失败，"+arr.get(0)+"当前人不在项！");
                 }
+                excel.setCustomerCode(selectFinSt.getCustomerCode());
                 excel.setCustomerTel(selectFinSt.getCustomerTel());
                 listExcel.add(excel);
             }

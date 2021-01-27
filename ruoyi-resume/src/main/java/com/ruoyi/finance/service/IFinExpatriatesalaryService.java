@@ -1,7 +1,13 @@
 package com.ruoyi.finance.service;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.finance.domain.FinExpatriatesalary;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 外派人员工资Service接口
@@ -27,13 +33,7 @@ public interface IFinExpatriatesalaryService
      */
     public List<FinExpatriatesalary> selectFinExpatriatesalaryList(FinExpatriatesalary finExpatriatesalary);
 
-    /**
-     * 新增外派人员工资
-     * 
-     * @param finExpatriatesalary 外派人员工资
-     * @return 结果
-     */
-    public int insertFinExpatriatesalary(FinExpatriatesalary finExpatriatesalary);
+
 
     /**
      * 修改外派人员工资
@@ -58,4 +58,8 @@ public interface IFinExpatriatesalaryService
      * @return 结果
      */
     public int deleteFinExpatriatesalaryById(Integer id);
+    /**
+     * 新增外派人员工资
+     */
+    AjaxResult addfinExpatriatesalary(MultipartFile file, Date months, LoginUser loginUser) throws IOException;
 }

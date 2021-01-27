@@ -4,6 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.finance.mapper.FinStatementsMapper">
 
+
     <resultMap type="FinStatements" id="FinStatementsResult">
         <result property="id"    column="id"    />
         <result property="corpCode"    column="corp_code"    />
@@ -12,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="endTime"    column="end_time"    />
         <result property="customerName"    column="customer_name"    />
         <result property="customerTel"    column="customer_tel"    />
+        <result property="customerCode"    column="customer_code"    />
         <result property="time"    column="time"    />
         <result property="price"    column="price"    />
         <result property="standard"    column="standard"    />
@@ -30,9 +32,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="paymentTime"    column="payment_time"    />
     </resultMap>
 
+
     <sql id="selectFinStatementsVo">
-        select id, corp_code, party, start_time, end_time, customer_name, customer_tel, time, price, standard, atten_dance, over_time, over_pay, com_bined, status, add_time, add_people, reason, picture, excel_picture, remark, update_date, payment_time from fin_statements
+        select id, corp_code, party, start_time, end_time, customer_name, customer_tel, customer_code, time, price, standard, atten_dance, over_time, over_pay, com_bined, status, add_time, add_people, reason, picture, excel_picture, remark, update_date, payment_time from fin_statements
     </sql>
+
 
     <select id="selectFinStatementsList" parameterType="FinStatements" resultMap="FinStatementsResult">
         SELECT a.id,a.customer_name,a.time,a.price,a.standard,a.atten_dance,a.com_bined,a.status,a.excel_picture,
@@ -63,6 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">end_time,</if>
             <if test="customerName != null">customer_name,</if>
             <if test="customerTel != null">customer_tel,</if>
+            <if test="customerCode != null">customer_code,</if>
             <if test="time != null">time,</if>
             <if test="price != null">price,</if>
             <if test="standard != null">standard,</if>
@@ -87,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">#{endTime},</if>
             <if test="customerName != null">#{customerName},</if>
             <if test="customerTel != null">#{customerTel},</if>
+            <if test="customerCode != null">#{customerCode},</if>
             <if test="time != null">#{time},</if>
             <if test="price != null">#{price},</if>
             <if test="standard != null">#{standard},</if>
@@ -115,6 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="customerName != null">customer_name = #{customerName},</if>
             <if test="customerTel != null">customer_tel = #{customerTel},</if>
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
             <if test="time != null">time = #{time},</if>
             <if test="price != null">price = #{price},</if>
             <if test="standard != null">standard = #{standard},</if>
@@ -154,6 +161,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             start_time,
             end_time,
            customer_name,
+             customer_code,
            customer_tel,
            time,
            price,
@@ -172,6 +180,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{proinfo.startTime},
             #{proinfo.endTime},
             #{proinfo.customerName},
+            #{proinfo.customerCode},
             #{proinfo.customerTel},
             #{proinfo.time},
             #{proinfo.price},
@@ -188,7 +197,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selectFinStatementsByNameCorp" parameterType="FinStatements" resultMap="FinStatementsResult">
-        SELECT b.customer_tel from mar_customerprojectpay a
+        SELECT b.customer_code,b.customer_tel from mar_customerprojectpay a
         LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
         <where>
             <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>

@@ -162,7 +162,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		GROUP BY a.add_people
     </select>
     <select id="selectfirstRob"  resultType="int">
-       SELECT IFNULL(COUNT(*),0) as ads from
+       SELECT IFNULL(a.nums,0) as ads from
 		( SELECT  COUNT(1) as nums from per_robcustomer
         where  Status=0
         and DATE_FORMAT( add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )

@@ -58,4 +58,8 @@ public interface FinExpatriatesalaryMapper
      * @return 结果
      */
     public int deleteFinExpatriatesalaryByIds(Integer[] ids);
+
+    FinExpatriatesalary selectFinExpatriatesalaryBytel(FinExpatriatesalary finExpatriate);
+
+    int insertFinExpatriatesalarylist(List<FinExpatriatesalary> listFinExpat);
 }
