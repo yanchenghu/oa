@@ -94,4 +94,9 @@ public interface MarCustomerprojectpayMapper
      */
     MarCustomerprojectpay isInitem(String customerCode);
 
+    List<ExportItemList> outItemlists(Map map);
+
+
+    List<Entry> selectentrylistLists(MarCustomerprojectpay marCustomerprojectpay);
+
 }

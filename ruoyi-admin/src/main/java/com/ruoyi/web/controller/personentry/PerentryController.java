@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.personentry;
 
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.entrycontract.service.MarEntrycontractService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -17,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -170,6 +173,45 @@ public class PerentryController extends BaseController {
     public AjaxResult remove(@PathVariable Integer id)
     {
         return toAjax(marEntryContractService.deleteMarEntrycontractById(id));
+    }
+
+    /**
+     * 导出人员出入项
+     */
+    @PreAuthorize("@ss.hasPermi('perentry:entry:export')")
+    @Log(title = "入项", businessType = BusinessType.EXPORT)
+    @GetMapping("/export")
+    public AjaxResult export(MarCustomerprojectpay marCustomerprojectpay)
+    {
+        List<Entrys> list1 = new ArrayList<>();
+        List<Entry> list = marCustomerprojectpayService.selectentrylistLists(marCustomerprojectpay);
+
+        for(Entry e : list){
+            Entrys entrys = new Entrys();
+            entrys.setCustomerName(e.getCustomerName());
+            entrys.setCustomerTel(e.getCustomerTel());
+            entrys.setCorpName(e.getCorpName());
+            entrys.setSyqstartTime(e.getSyqstartTime());
+            Integer technologyDirection = e.getTechnologyDirection();
+            String technologyDirections = DictUtils.getDictLabel("per_customerinfo_professionid", String.valueOf(technologyDirection));
+            entrys.setTechnologyDirection(technologyDirections);
+            entrys.setOutofProjecttime(e.getOutofProjecttime());
+            entrys.setSalary(e.getSalary());
+            entrys.setServicePay(e.getServicePay());
+            if(e.getSocSecopt()==1){
+                entrys.setSocSecopt("是");
+            }else {
+                entrys.setSocSecopt("否");
+            }
+            if(e.getTechnologyDirection()==1){
+                entrys.setSign("是");
+            }else {
+                entrys.setSign("否");
+            }
+            list1.add(entrys);
+        }
+        ExcelUtil<Entrys> util = new ExcelUtil<Entrys>(Entrys.class);
+        return util.exportExcel(list1, "entry");
     }
 
 

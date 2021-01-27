@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.demand.mapper.MarCustomerprojectpayMapper">
-    
+
     <resultMap type="MarCustomerprojectpay" id="MarCustomerprojectpayResult">
         <result property="id"    column="id"    />
         <result property="customerCode"    column="customer_code"    />
@@ -64,6 +64,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="entryAssistant" column="entry_assistant" />
     </resultMap>
 
+    <resultMap  type="ExportItemList" id="ExportItemListinfo">
+        <result property="customerName" column="customer_name" />
+        <result property="nickName" column="nick_name" />
+        <result  property="corpName" column="corp_name"/>
+        <result  property="quitProreason" column="quit_proreason"/>
+        <result  property="quitRemark" column="quit_remark"/>
+        <result  property="salary"   column="salary"/>
+        <result  property="servicePay" column="service_pay"/>
+        <result  property="syqstartTime"     column="syqstart_time"/>
+        <result  property="outofProjecttime" column="outof_projecttime"/>
+        <result  property="borrowSth" column="borrow_sth"/>
+        <result property="customerTel" column="customer_tel" />
+        <result property="profitMargin" column="profit_margin" />
+    </resultMap>
+
+    <resultMap  type="Entry" id="Entrys">
+        <result property="customerName" column="customer_name" />
+        <result property="customerTel" column="customer_tel" />
+        <result  property="corpName" column="corp_name"/>
+        <result  property="syqstartTime"     column="syqstart_time"/>
+        <result  property="technologyDirection"     column="technology_direction"/>
+        <result  property="outofProjecttime" column="outof_projecttime"/>
+        <result  property="salary"   column="salary"/>
+        <result  property="servicePay" column="service_pay"/>
+        <result  property="socSecopt" column="soc_secopt"/>
+
+
+
+    </resultMap>
+
 
     <sql id="selectMarCustomerprojectpayVo">
         select id, customer_code, corp_code, corp_name, demand_id, project_name, start_time, end_time, settled_cycle, salary, service_pay, outof_projecttime, quit_proreason, quit_remark, opercode, oper_time, syqstart_time, syq_endtime, soc_secopt, remark, entry_assistant from mar_customerprojectpay
@@ -72,7 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectMarCustomerprojectpayList" parameterType="MarCustomerprojectpay" resultMap="MarCustomerprojectpayResult">
         <include refid="selectMarCustomerprojectpayVo"/>
-        <where>  
+        <where>
             <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
             <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
@@ -93,7 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="socSecopt != null "> and soc_secopt = #{socSecopt}</if>
         </where>
     </select>
-    
+
     <select id="selectMarCustomerprojectpayById" parameterType="String" resultMap="MarCustomerprojectpayResult">
         <include refid="selectMarCustomerprojectpayVo"/>
         where id = #{id}
@@ -189,7 +219,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteMarCustomerprojectpayByIds" parameterType="String">
-        delete from mar_customerprojectpay where id in 
+        delete from mar_customerprojectpay where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -207,10 +237,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectentrylistList"  parameterType="MarCustomerprojectpay"  resultMap="MarCusPerInfo">
-       SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
+        SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
         a.syq_endtime,a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt,c.technology_direction
-       from mar_customerprojectpay a
-       LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
+        from mar_customerprojectpay a
+        LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
         LEFT JOIN       mar_demand    c on a.demand_id=c.demand_id
         <where>
             <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
@@ -278,7 +308,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN mar_company b on a.corp_code=b.corp_code
         LEFT JOIN mar_demand c on a.demand_id=c.demand_id
         LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
-				LEFT JOIN  sys_user f on a.opercode=f.user_name
+        LEFT JOIN  sys_user f on a.opercode=f.user_name
         LEFT JOIN sys_dept g on f.dept_id=g.dept_id
         WHERE 1=1
         and a.syqstart_time between #{startTime} and #{endTime}
@@ -297,7 +327,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="entryPeopleCount"    parameterType="map"  resultType="map">
         SELECT COUNT(id) as entryNum, IFNULL(SUM(service_pay),0)  as entryServicePay, IFNULL(SUM(salary),0)as  entrySalary from  mar_customerprojectpay a
         where
-           a.syqstart_time between #{startTime} and #{endTime}
+        a.syqstart_time between #{startTime} and #{endTime}
         <if test="status != null">and a.outof_projecttime is null</if>
     </select>
 
@@ -320,6 +350,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where customer_code = #{customerCode}
         and outof_projecttime is  null
     </select>
+
+
+    <select id="outItemlists"    parameterType="map" resultMap="ExportItemListinfo">
+       SELECT d.customer_name,f.nick_name,b.corp_name,a.quit_proreason,a.quit_remark,
+       a.salary,a.service_pay, (a.service_pay-a.salary) as profit,
+       a.syqstart_time,a.outof_projecttime,g.borrow_sth,d.customer_tel   from  mar_customerprojectpay a
+         LEFT JOIN mar_company b on a.corp_code=b.corp_code
+         LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
+         LEFT JOIN  sys_user f on a.opercode=f.user_name
+         LEFT JOIN (SELECT * from mar_borrow where is_return=2 GROUP BY marcus_id) g on a.id=g.marcus_id
+        where 1=1
+        and   a.outof_projecttime is not null
+        and a.outof_projecttime between #{startTime} and #{endTime}
+    </select>
+
+
+
+    <select id="selectentrylistLists"  parameterType="Entry"  resultMap="Entrys">
+        SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
+        a.syq_endtime,a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt,c.technology_direction
+        from mar_customerprojectpay a
+        LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
+        LEFT JOIN       mar_demand    c on a.demand_id=c.demand_id
+        <where>
+            <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <choose>
+                <when test="settledCycle == 1">
+                    <if test="startTime != null and endTime != null">
+                        and syqstart_time between #{startTime} and #{endTime}
+                    </if>
+                    <if test="startTime == null and endTime == null">
+                        and outof_projecttime is  null
+                    </if>
+                </when>
+                <when test="settledCycle == 2">
+                    <if test="startTime != null and endTime != null">
+                        and outof_projecttime between #{startTime} and #{endTime}
+                    </if>
+                    <if test="startTime == null and endTime == null">
+                        and outof_projecttime is not null
+                    </if>
+                </when>
+            </choose>
+        </where>
+    </select>
+
 
 
 

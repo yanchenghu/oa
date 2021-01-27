@@ -3,21 +3,11 @@ package com.ruoyi.demand.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 
-
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * 人事入项详情
- *
- * @author ych
- * @date 2020-12-15
- */
+public class PersonnelEssentialinforExcel {
 
-public class PersonnelEssentialinfor {
-
-
-    /** 客户姓名 */
     @Excel(name = "客户姓名")
     private String deptName;
 
@@ -38,7 +28,7 @@ public class PersonnelEssentialinfor {
     private BigDecimal profit;
     /*  利润率*/
     @Excel(name = "利润率")
-    private BigDecimal profitMargin;
+    private String  profitMargin;
     /** 服务费用 */
     @Excel(name = "服务费用")
     private BigDecimal servicePay;
@@ -54,8 +44,8 @@ public class PersonnelEssentialinfor {
     private Date syqEndtime;
 
     /** 社保选项(1、交2、否) */
-    @Excel(name = "社保选项(1、交2、否)")
-    private Integer socSecopt;
+    @Excel(name = "社保选项(交 否)")
+    private String socSecoptStr;
     /** 客户电话 */
     @Excel(name = "客户电话")
     private String customerTel;
@@ -125,11 +115,11 @@ public class PersonnelEssentialinfor {
         this.profit = profit;
     }
 
-    public BigDecimal getProfitMargin() {
+    public String getProfitMargin() {
         return profitMargin;
     }
 
-    public void setProfitMargin(BigDecimal profitMargin) {
+    public void setProfitMargin(String profitMargin) {
         this.profitMargin = profitMargin;
     }
 
@@ -157,12 +147,12 @@ public class PersonnelEssentialinfor {
         this.syqEndtime = syqEndtime;
     }
 
-    public Integer getSocSecopt() {
-        return socSecopt;
+    public String getSocSecoptStr() {
+        return socSecoptStr;
     }
 
-    public void setSocSecopt(Integer socSecopt) {
-        this.socSecopt = socSecopt;
+    public void setSocSecoptStr(String socSecoptStr) {
+        this.socSecoptStr = socSecoptStr;
     }
 
     public String getCustomerTel() {
@@ -197,4 +187,5 @@ public class PersonnelEssentialinfor {
     public void setEntryAssistant(String entryAssistant) {
         this.entryAssistant = entryAssistant;
     }
+
 }

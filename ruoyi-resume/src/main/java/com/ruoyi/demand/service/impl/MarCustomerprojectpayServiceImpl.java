@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.demand.domain.*;
 import com.ruoyi.demand.mapper.*;
@@ -272,5 +274,46 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
        }
        return 2;
 
+    }
+
+    /**
+     * 导出人员出项列表
+     */
+    @Override
+    public List outItemlists(MarCustomerprojectpay marCustomerprojectpay) {
+        Map map=new HashMap();
+        map.put("startTime",marCustomerprojectpay.getStartTime());
+        map.put("endTime",marCustomerprojectpay.getEndTime());
+        List<ExportItemList> list = marCustomerprojectpayMapper.outItemlists(map);
+        BigDecimal b1 = new BigDecimal("100");
+        if(list!=null && list.size()>0) {
+            for (ExportItemList map1 : list) {
+                String QuitProreason = map1.getQuitProreason();
+                String outof_project_cause = DictUtils.getDictLabel("outof_project_cause", QuitProreason);
+                map1.setQuitProreason(outof_project_cause);
+                BigDecimal salary = map1.getSalary();
+                BigDecimal servicePay = map1.getServicePay();
+                BigDecimal profit = map1.getProfit();
+                BigDecimal divide = (servicePay.subtract(salary)).divide(salary, 2, RoundingMode.HALF_UP);
+                map1.setProfitMargin(divide.multiply(b1)+"%");
+                if (StringUtils.isEmpty(map1.getBorrowSth())) {
+                    map1.setBorrowSth("已还");
+                } else {
+                    map1.setBorrowSth("未还");
+                }
+            }
+        }
+        return list;
+
+    }
+
+    /**
+     * 导出人员出入项列表
+     */
+    @Override
+    public List<Entry> selectentrylistLists(MarCustomerprojectpay marCustomerprojectpay) {
+
+        List<Entry> list = marCustomerprojectpayMapper.selectentrylistLists(marCustomerprojectpay);
+        return list;
     }
 }
