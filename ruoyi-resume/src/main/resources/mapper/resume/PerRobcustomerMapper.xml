@@ -162,10 +162,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		GROUP BY a.add_people
     </select>
     <select id="selectfirstRob"  resultType="int">
-       SELECT COUNT(add_people) as sd from per_robcustomer
+       SELECT IFNULL(COUNT(*),0) as ads from
+		( SELECT  COUNT(1) as nums from per_robcustomer
         where  Status=0
         and DATE_FORMAT( add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
-        GROUP BY add_people ORDER BY sd desc LIMIT 1
+        GROUP BY add_people ORDER BY nums desc LIMIT 1) a
     </select>
 
 

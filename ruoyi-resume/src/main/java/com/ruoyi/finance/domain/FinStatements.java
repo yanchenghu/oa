@@ -1,6 +1,5 @@
 package com.ruoyi.finance.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 服务费核算请求书对象 fin_statements
  * 
  * @author ych
- * @date 2021-01-21
+ * @date 2021-01-25
  */
 public class FinStatements
 {
@@ -27,7 +26,7 @@ public class FinStatements
 
     /** 乙方公司id */
     @Excel(name = "乙方公司id")
-    private Integer party;
+    private String party;
 
     /** 结算单开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -73,7 +72,7 @@ public class FinStatements
 
     /** 合计 */
     @Excel(name = "合计")
-    private BigDecimal comBined;
+    private Double comBined;
 
     /** 状态：1-未开票，2-已开票，3-已付款 */
     @Excel(name = "状态：1-未开票，2-已开票，3-已付款")
@@ -96,7 +95,24 @@ public class FinStatements
     @Excel(name = "结算单截图")
     private String picture;
 
-    private  String remark;
+    /** excel的留底 */
+    @Excel(name = "excel的留底")
+    private String excelPicture;
+
+    /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date updateDate;
+
+    /** remark */
+    @Excel(name = "remark")
+    private String remark;
+
+
+    /** 付款时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "付款时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date paymentTime;
 
     public void setId(Integer id) 
     {
@@ -116,16 +132,16 @@ public class FinStatements
     {
         return corpCode;
     }
-    public void setParty(Integer party) 
-    {
+
+    public String getParty() {
+        return party;
+    }
+
+    public void setParty(String party) {
         this.party = party;
     }
 
-    public Integer getParty() 
-    {
-        return party;
-    }
-    public void setStartTime(Date startTime) 
+    public void setStartTime(Date startTime)
     {
         this.startTime = startTime;
     }
@@ -215,12 +231,12 @@ public class FinStatements
     {
         return overPay;
     }
-    public void setComBined(BigDecimal comBined) 
+    public void setComBined(Double comBined) 
     {
         this.comBined = comBined;
     }
 
-    public BigDecimal getComBined() 
+    public Double getComBined() 
     {
         return comBined;
     }
@@ -269,7 +285,24 @@ public class FinStatements
     {
         return picture;
     }
+    public void setExcelPicture(String excelPicture) 
+    {
+        this.excelPicture = excelPicture;
+    }
 
+    public String getExcelPicture() 
+    {
+        return excelPicture;
+    }
+    public void setUpdateDate(Date updateDate) 
+    {
+        this.updateDate = updateDate;
+    }
+
+    public Date getUpdateDate() 
+    {
+        return updateDate;
+    }
 
     public String getRemark() {
         return remark;
@@ -277,6 +310,15 @@ public class FinStatements
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+
+    public Date getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentTime(Date paymentTime) {
+        this.paymentTime = paymentTime;
     }
 
     @Override
@@ -301,7 +343,9 @@ public class FinStatements
             .append("addPeople", getAddPeople())
             .append("reason", getReason())
             .append("picture", getPicture())
+            .append("excelPicture", getExcelPicture())
             .append("remark", getRemark())
+            .append("updateDate", getUpdateDate())
             .toString();
     }
 }

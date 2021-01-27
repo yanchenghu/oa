@@ -184,6 +184,11 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         File f =new File(profile+fsafsa);
         PerCustomerinfo perCustomerinfo=new PerCustomerinfo();
         JSONObject  analyticalResults =  ResumeParserUtil.resumeParser(ResumeParserUtil.URL,f);
+        String contac  = analyticalResults.getString("errormessage");
+        if(contac.equals("文字内容提取失败")){
+            f.delete();
+            return AjaxResult.error("当前简历系统无法识别，文字内容提取失败，请重新整理后再次上传");
+        }
         JSONObject contact_info   = analyticalResults.getJSONObject("parsing_result").getJSONObject("contact_info");
              String phone_number = contact_info.getString("phone_number");
              if(phone_number.equals("")){
@@ -265,7 +270,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             }
             //期望薪资
             if(!basic_info.getString("desired_salary").equals("") && !basic_info.getString("desired_salary").equals("面议")){
-               perCustomerinfo.setExpectationSalary((basic_info.getString("desired_salary")));
+               perCustomerinfo.setExpectationSalary((basic_info.getString("desired_salary")).substring(0,5));
             }
             if(!contact_info.getString("email").equals("")){
                 perCustomerinfo.setEmail(contact_info.getString("email"));
@@ -321,7 +326,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                             dsfsa=StringUtils.substringAfter(dsada, "\n");
                         }
                     }
-                    cp.setProjectName(zhi);
+                    cp.setProjectName(zhi.substring(0,20));
                     cp.setDuty(dsfsa);
                 }
                 cp.setCustomerCode(perCustomerinfo.getCustomerCode());

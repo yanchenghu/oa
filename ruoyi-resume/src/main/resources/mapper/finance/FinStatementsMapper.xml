@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.finance.mapper.FinStatementsMapper">
-    
+
     <resultMap type="FinStatements" id="FinStatementsResult">
         <result property="id"    column="id"    />
         <result property="corpCode"    column="corp_code"    />
@@ -24,42 +24,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addPeople"    column="add_people"    />
         <result property="reason"    column="reason"    />
         <result property="picture"    column="picture"    />
+        <result property="excelPicture"    column="excel_picture"    />
         <result property="remark"    column="remark"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="paymentTime"    column="payment_time"    />
     </resultMap>
 
     <sql id="selectFinStatementsVo">
-        select id, corp_code, party, start_time, end_time, customer_name, customer_tel, time, price, standard, atten_dance, over_time, over_pay, com_bined, status, add_time, add_people, reason, picture, remark from fin_statements
+        select id, corp_code, party, start_time, end_time, customer_name, customer_tel, time, price, standard, atten_dance, over_time, over_pay, com_bined, status, add_time, add_people, reason, picture, excel_picture, remark, update_date, payment_time from fin_statements
     </sql>
 
     <select id="selectFinStatementsList" parameterType="FinStatements" resultMap="FinStatementsResult">
-        <include refid="selectFinStatementsVo"/>
-        <where>  
-            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
-            <if test="party != null "> and party = #{party}</if>
-            <if test="startTime != null "> and start_time = #{startTime}</if>
-            <if test="endTime != null "> and end_time = #{endTime}</if>
-            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
-            <if test="customerTel != null  and customerTel != ''"> and customer_tel = #{customerTel}</if>
-            <if test="time != null  and time != ''"> and time = #{time}</if>
-            <if test="price != null "> and price = #{price}</if>
-            <if test="standard != null "> and standard = #{standard}</if>
-            <if test="attenDance != null "> and atten_dance = #{attenDance}</if>
-            <if test="overTime != null "> and over_time = #{overTime}</if>
-            <if test="overPay != null "> and over_pay = #{overPay}</if>
-            <if test="comBined != null "> and com_bined = #{comBined}</if>
+        SELECT a.id,a.customer_name,a.time,a.price,a.standard,a.atten_dance,a.com_bined,a.status,a.excel_picture,
+        a.over_pay,a.reason,c.service_pay as over_time
+        from fin_statements a LEFT JOIN
+        per_customerinfo b on a.customer_tel=b.customer_tel
+        LEFT JOIN  mar_customerprojectpay c on b.customer_code=c.customer_code
+        <where>
+            <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>
+            <if test="party != null  and party != ''"> and a.party = #{party}</if>
+            <if test="startTime != null "> and (a.start_time BETWEEN #{startTime} and #{endTime})</if>
+            <if test="customerName != null  and customerName != ''"> and a.customer_name like concat('%', #{customerName}, '%')</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="addTime != null "> and add_time = #{addTime}</if>
-            <if test="addPeople != null  and addPeople != ''"> and add_people = #{addPeople}</if>
-            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
-            <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
         </where>
     </select>
-    
+
     <select id="selectFinStatementsById" parameterType="Integer" resultMap="FinStatementsResult">
         <include refid="selectFinStatementsVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertFinStatements" parameterType="FinStatements" useGeneratedKeys="true" keyProperty="id">
         insert into fin_statements
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -81,8 +75,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addPeople != null">add_people,</if>
             <if test="reason != null">reason,</if>
             <if test="picture != null">picture,</if>
+            <if test="excelPicture != null">excel_picture,</if>
             <if test="remark != null">remark,</if>
-         </trim>
+            <if test="updateDate != null">update_date,</if>
+            <if test="paymentTime != null">payment_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="corpCode != null">#{corpCode},</if>
             <if test="party != null">#{party},</if>
@@ -102,8 +99,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addPeople != null">#{addPeople},</if>
             <if test="reason != null">#{reason},</if>
             <if test="picture != null">#{picture},</if>
+            <if test="excelPicture != null">#{excelPicture},</if>
             <if test="remark != null">#{remark},</if>
-         </trim>
+            <if test="updateDate != null">#{updateDate},</if>
+            <if test="paymentTime != null">#{paymentTime},</if>
+        </trim>
     </insert>
 
     <update id="updateFinStatements" parameterType="FinStatements">
@@ -127,7 +127,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addPeople != null">add_people = #{addPeople},</if>
             <if test="reason != null">reason = #{reason},</if>
             <if test="picture != null">picture = #{picture},</if>
+            <if test="excelPicture != null">excel_picture = #{excelPicture},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
         </trim>
         where id = #{id}
     </update>
@@ -137,10 +140,65 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteFinStatementsByIds" parameterType="String">
-        delete from fin_statements where id in 
+        delete from fin_statements where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+
+    <insert id="insetlistExcel" parameterType="java.util.List" >
+         insert into fin_statements
+           (corp_code,
+            party,
+            start_time,
+            end_time,
+           customer_name,
+           customer_tel,
+           time,
+           price,
+           standard,
+           atten_dance,
+           over_time,
+           over_pay,
+            com_bined,
+            add_time,
+            add_people,
+            excel_picture)
+         values
+        <foreach collection="list" item="proinfo"  index="index" separator=",">
+            (#{proinfo.corpCode},
+            #{proinfo.party},
+            #{proinfo.startTime},
+            #{proinfo.endTime},
+            #{proinfo.customerName},
+            #{proinfo.customerTel},
+            #{proinfo.time},
+            #{proinfo.price},
+            #{proinfo.standard},
+            #{proinfo.attenDance},
+            #{proinfo.overTime},
+            #{proinfo.overPay},
+            #{proinfo.comBined},
+            #{proinfo.addTime},
+            #{proinfo.addPeople},
+           #{proinfo.excelPicture})
+        </foreach>
+    </insert>
+
+
+    <select id="selectFinStatementsByNameCorp" parameterType="FinStatements" resultMap="FinStatementsResult">
+        SELECT b.customer_tel from mar_customerprojectpay a
+        LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
+        <where>
+            <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>
+            <if test="customerName != null  and customerName != ''"> and b.customer_name = #{customerName}</if>
+        </where>
+        limit 1
+    </select>
+
+
+
+
     
 </mapper>

@@ -58,4 +58,8 @@ public interface FinStatementsMapper
      * @return 结果
      */
     public int deleteFinStatementsByIds(Integer[] ids);
+
+    int insetlistExcel(List<FinStatements> listExcel);
+
+    FinStatements selectFinStatementsByNameCorp(FinStatements excel);
 }
