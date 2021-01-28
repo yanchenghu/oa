@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.finance.domain.Expatriates;
 import com.ruoyi.finance.domain.FinExpatriatesalary;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,4 +63,6 @@ public interface IFinExpatriatesalaryService
      * 新增外派人员工资
      */
     AjaxResult addfinExpatriatesalary(MultipartFile file, Date months, LoginUser loginUser) throws IOException;
+
+    List<Expatriates> selectFinExpatriatesalaryLists(FinExpatriatesalary finExpatriatesalary);
 }

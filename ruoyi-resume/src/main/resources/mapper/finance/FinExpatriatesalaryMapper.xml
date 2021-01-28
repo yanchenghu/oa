@@ -23,6 +23,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addPeople"    column="add_people"    />
     </resultMap>
 
+    <resultMap type="Expatriates" id="FinExpatriatesalaryResults">
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerTel"    column="customer_tel"    />
+        <result property="months"    column="months"    />
+        <result property="basicSalary"    column="basic_salary"    />
+        <result property="overAttence"    column="over_attence"    />
+        <result property="realAttence"    column="real_attence"    />
+        <result property="projectSalary"    column="project_salary"    />
+        <result property="buzhuSalary"    column="buzhu_salary"    />
+        <result property="baoxianSalary"    column="baoxian_salary"    />
+        <result property="realSalary"    column="real_salary"    />
+    </resultMap>
+
     <sql id="selectFinExpatriatesalaryVo">
         select id, customer_name, customer_tel, customer_code, basic_salary, over_attence, real_attence, project_salary, buzhu_salary, baoxian_salary, real_salary, months, excel_path, add_date, add_people from fin_expatriatesalary
     </sql>
@@ -164,5 +177,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{proinfo.addPeople})
         </foreach>
     </insert>
+
+    <select id="selectFinExpatriatesalaryLists" parameterType="Expatriates" resultMap="FinExpatriatesalaryResults">
+        <include refid="selectFinExpatriatesalaryVo"/>
+        <where>
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="customerTel != null  and customerTel != ''"> and customer_tel = #{customerTel}</if>
+            <if test="months != null "> and months = #{months}</if>
+            <if test="basicSalary != null  and basicSalary != ''"> and basic_salary = #{basicSalary}</if>
+            <if test="overAttence != null  and overAttence != ''"> and over_attence = #{overAttence}</if>
+            <if test="realAttence != null  and realAttence != ''"> and real_attence = #{realAttence}</if>
+            <if test="projectSalary != null  and projectSalary != ''"> and project_salary = #{projectSalary}</if>
+            <if test="buzhuSalary != null  and buzhuSalary != ''"> and buzhu_salary = #{buzhuSalary}</if>
+            <if test="baoxianSalary != null  and baoxianSalary != ''"> and baoxian_salary = #{baoxianSalary}</if>
+            <if test="realSalary != null  and realSalary != ''"> and real_salary = #{realSalary}</if>
+        </where>
+    </select>
     
 </mapper>

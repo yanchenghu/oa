@@ -1,6 +1,8 @@
 package com.ruoyi.finance.mapper;
 
 import java.util.List;
+
+import com.ruoyi.finance.domain.Expatriates;
 import com.ruoyi.finance.domain.FinExpatriatesalary;
 
 /**
@@ -62,4 +64,6 @@ public interface FinExpatriatesalaryMapper
     FinExpatriatesalary selectFinExpatriatesalaryBytel(FinExpatriatesalary finExpatriate);
 
     int insertFinExpatriatesalarylist(List<FinExpatriatesalary> listFinExpat);
+
+    List<Expatriates> selectFinExpatriatesalaryLists(FinExpatriatesalary finExpatriatesalary);
 }

@@ -9,6 +9,7 @@ import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.finance.domain.Expatriates;
 import com.ruoyi.tool.ExcelRead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -171,5 +172,14 @@ public class FinExpatriatesalaryServiceImpl implements IFinExpatriatesalaryServi
         }
         return AjaxResult.error("上传失败");
 
+    }
+
+    /**
+     * 导出外派人员工资列表
+     */
+    @Override
+    public List<Expatriates> selectFinExpatriatesalaryLists(FinExpatriatesalary finExpatriatesalary) {
+        List<Expatriates> list = finExpatriatesalaryMapper.selectFinExpatriatesalaryLists(finExpatriatesalary);
+        return list;
     }
 }

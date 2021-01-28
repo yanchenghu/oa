@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.finance.domain.Expatriates;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +63,8 @@ public class ExpatriateSalaryController  extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(FinExpatriatesalary finExpatriatesalary)
     {
-        List<FinExpatriatesalary> list = finExpatriatesalaryService.selectFinExpatriatesalaryList(finExpatriatesalary);
-        ExcelUtil<FinExpatriatesalary> util = new ExcelUtil<FinExpatriatesalary>(FinExpatriatesalary.class);
+        List<Expatriates> list = finExpatriatesalaryService.selectFinExpatriatesalaryLists(finExpatriatesalary);
+        ExcelUtil<Expatriates> util = new ExcelUtil<Expatriates>(Expatriates.class);
         return util.exportExcel(list, "expatriatesalary");
     }
 
