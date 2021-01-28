@@ -43,12 +43,5 @@ public class TaskVolumeController {
     }
 
 
-    /**
-     * 修改数据
-     */
-    @PostMapping
-    public AjaxResult edt(@RequestBody ConTaskvolume taskvolume)
-    {
-        return taskVolumeService.update(taskvolume);
-    }
+
 }

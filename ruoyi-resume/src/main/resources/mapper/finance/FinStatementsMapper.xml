@@ -32,6 +32,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="paymentTime"    column="payment_time"    />
     </resultMap>
 
+    <resultMap type="Business" id="FinStatementsResults">
+        <result property="customerName"    column="customer_name"    />
+        <result property="time"    column="time"    />
+        <result property="price"    column="price"    />
+        <result property="overTime"    column="over_time"    />
+        <result property="standard"    column="standard"    />
+        <result property="attenDance"    column="atten_dance"    />
+        <result property="overPay"    column="over_pay"    />
+        <result property="comBined"    column="com_bined"    />
+        <result property="systemcomBined"    column="systemcomBined"    />
+        <result property="status"    column="status"    />
+        <result property="reason"    column="reason"    />
+    </resultMap>
+
 
     <sql id="selectFinStatementsVo">
         select id, corp_code, party, start_time, end_time, customer_name, customer_tel, customer_code, time, price, standard, atten_dance, over_time, over_pay, com_bined, status, add_time, add_people, reason, picture, excel_picture, remark, update_date, payment_time from fin_statements
@@ -204,6 +218,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerName != null  and customerName != ''"> and b.customer_name = #{customerName}</if>
         </where>
         limit 1
+    </select>
+
+    <select id="selectFinStatementsLists" parameterType="Business" resultMap="FinStatementsResults">
+        SELECT a.id,a.customer_name,a.time,a.price,a.standard,a.atten_dance,a.com_bined,a.status,a.excel_picture,
+        a.over_pay,a.reason,c.service_pay as over_time
+        from fin_statements a LEFT JOIN
+        per_customerinfo b on a.customer_tel=b.customer_tel
+        LEFT JOIN  mar_customerprojectpay c on b.customer_code=c.customer_code
+        <where>
+            <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>
+            <if test="party != null  and party != ''"> and a.party = #{party}</if>
+            <if test="startTime != null "> and (a.start_time BETWEEN #{startTime} and #{endTime})</if>
+            <if test="customerName != null  and customerName != ''"> and a.customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
     </select>
 
 

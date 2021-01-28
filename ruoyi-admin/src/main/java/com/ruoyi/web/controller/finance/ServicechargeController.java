@@ -9,6 +9,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.finance.domain.Business;
 import com.ruoyi.finance.domain.FinStatements;
 import com.ruoyi.finance.service.IFinStatementsService;
 import com.ruoyi.framework.web.service.TokenService;
@@ -55,8 +56,8 @@ public class ServicechargeController extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(FinStatements finStatements)
     {
-        List<FinStatements> list = finStatementsService.selectFinStatementsList(finStatements);
-        ExcelUtil<FinStatements> util = new ExcelUtil<FinStatements>(FinStatements.class);
+        List<Business> list = finStatementsService.selectFinStatementsLists(finStatements);
+        ExcelUtil<Business> util = new ExcelUtil<Business>(Business.class);
         return util.exportExcel(list, "servicecharge");
     }
 
