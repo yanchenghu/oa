@@ -167,7 +167,9 @@ export default {
 }
 .login-left{
   border-radius:6px 0  0 6px ;
-  width: px;
+  width: 450px;
+  background-image: url("../assets/image/login-background.png");
+  background-size: 100% 100%;
   // height: 700px;
   background-color: #fff;
 }

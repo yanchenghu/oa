@@ -22,3 +22,26 @@ export function getmsg(data) {
     data:data
   })
 }
+export function getbusmsg(data) {
+  return request({
+    url: '/statistc/homepage/businessdetailsplay',
+    method: 'post',
+    data:data
+  })
+}
+
+export function getlists(data) {
+  return request({
+    url: '/statistc/homepage/reservedisplay',
+    method: 'get',
+  })
+}
+
+export function getbusinessData(data) {
+  return request({
+    url: 'statistc/homepage/businessData',
+    method: 'get',
+  })
+}
+
+

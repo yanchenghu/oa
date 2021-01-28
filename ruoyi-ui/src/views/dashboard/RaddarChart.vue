@@ -2,7 +2,7 @@
   <div  style="height: 300px; ">
     <div class="div-a">
       <router-link v-hasPermi="['demand:follow:list']" style="color: #0081FF;" :to="{path:'/follow/particulars',query:{row:data.demandId,ident:1}}">{{data.projectName}}</router-link>
-      <router-link v-hasPermi="['demand:binding:list']" style="color: #0081FF;" :to="{path:'/follow/particulars',query:{row:data.demandId,ident:2}}">{{data.projectName}}</router-link>
+      <router-link v-hasPermi="['demand:binding:list']" style="color: #0081FF;font-size: 14px;" :to="{path:'/follow/particulars',query:{row:data.demandId,ident:2}}">{{data.projectName}}</router-link>
       <el-button type="primary" size="mini" style="position: absolute;right: 10px;top: 10px;" @click="handleUpdate(data)">添加</el-button></div>
     <div style="overflow: auto; height: 250px;">
       <div v-for="basic in data.basicInfo" class="ul">

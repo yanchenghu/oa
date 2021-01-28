@@ -12,6 +12,7 @@ export default  {
 <style>
  .app-container{
     /* min-height: 850px; */
+    border-radius: 2px;
     background-color: #fff;
     margin: 10px 10px 0 10px;
   }
@@ -22,4 +23,10 @@ export default  {
     font-size: 18px;
     display: inline !important;
   }
+  .el-table th.gutter{
+      display: table-cell!important;
+    }
+  .icons{
+    font-size: 14px !important;
+  }  
 </style>

@@ -1,125 +1,261 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData(0)">
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            录入
+  <div>
+    <el-row :gutter="35" class="panel-group" v-if="dataList.numb==2">
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData(0)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              录入
+            </div>
+            <count-to  :start-val="0" :end-val="dataList.EnterInfosize" :duration="2600" class="card-panel-num4" />
+            <count-to  :start-val="0" :end-val="dataList.firstEnter" :duration="2600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
           </div>
-          <count-to  :start-val="0" :end-val="dataList.EnterInfosize" :duration="2600" class="card-panel-num4" />
-          <div>
-            <el-button type="text">查看详情</el-button>
+          <div class="card-panel-icon-wrapper icon-luru">
+            <svg-icon icon-class="luru" class-name="card-panel-icon" />
           </div>
         </div>
-        <div class="card-panel-icon-wrapper icon-luru">
-          <svg-icon icon-class="luru" class-name="card-panel-icon" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData(1)">
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            抢占跟踪
-          </div>
-          <count-to :start-val="0" :end-val="dataList.entryrobnnum" :duration="2600" class="card-panel-num5" />
-          <div>
-            <el-button type="text">查看详情</el-button>
-          </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData(1)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              抢占跟踪
+            </div>
+            <count-to :start-val="0" :end-val="dataList.entryrobnnum" :duration="2600" class="card-panel-num5" />
+            <count-to :start-val="0" :end-val="dataList.firstRob" :duration="2600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
 
-        </div>
-        <div class="card-panel-icon-wrapper icon-qaingzhan">
-          <svg-icon icon-class="genzong" class-name="card-panel-icon" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData(2)">
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            绑定
           </div>
-          <count-to :start-val="0" :end-val="dataList.bingdinnum" :duration="3000" class="card-panel-num6" />
-          <div>
-            <el-button type="text">查看详情</el-button>
+          <div class="card-panel-icon-wrapper icon-qaingzhan">
+            <svg-icon icon-class="genzong" class-name="card-panel-icon" />
           </div>
         </div>
-        <div class="card-panel-icon-wrapper icon-bangd">
-          <svg-icon icon-class="bangding" class-name="card-panel-icon" />
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData(2)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              绑定
+            </div>
+            <count-to :start-val="0" :end-val="dataList.bingdinnum" :duration="3000" class="card-panel-num6" />
+            <count-to :start-val="0" :end-val="dataList.firstMarbing" :duration="3000" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-bangd">
+            <svg-icon icon-class="bangding" class-name="card-panel-icon" />
+          </div>
         </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData(3)">
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData(3)">
 
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            简历通过
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              简历通过
+            </div>
+            <count-to :start-val="0" :end-val="dataList.resumeadopt" :duration="3200" class="card-panel-num1 " />
+            <count-to :start-val="0" :end-val="dataList.firstresumeadopt" :duration="3200" class="card-panel-num " />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
           </div>
-          <count-to :start-val="0" :end-val="dataList.resumeadopt" :duration="3200" class="card-panel-num1 " />
-          <div>
-            <el-button type="text">查看详情</el-button>
-          </div>
-        </div>
-        <div class="card-panel-icon-wrapper icon-jianli">
-          <svg-icon icon-class="jianli" class-name="card-panel-icon" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData(4)">
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            面试通过
-          </div>
-          <count-to :start-val="0" :end-val="dataList.interviewadopt" :duration="3600" class="card-panel-num2" />
-          <div>
-            <el-button type="text">查看详情</el-button>
+          <div class="card-panel-icon-wrapper icon-jianli">
+            <svg-icon icon-class="jianli" class-name="card-panel-icon" />
           </div>
         </div>
-        <div class="card-panel-icon-wrapper icon-mianshi">
-          <svg-icon icon-class="mianshi" class-name="card-panel-icon" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData(5)">
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            入项
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData(4)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              面试通过
+            </div>
+            <count-to :start-val="0" :end-val="dataList.interviewadopt" :duration="3600" class="card-panel-num2" />
+            <count-to :start-val="0" :end-val="dataList.firstinterviewadopt" :duration="3600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
           </div>
-          <count-to :start-val="0" :end-val="dataList.entryPeople" :duration="3600" class="card-panel-num3" />
-          <div>
-            <el-button type="text">查看详情</el-button>
+          <div class="card-panel-icon-wrapper icon-mianshi">
+            <svg-icon icon-class="mianshi" class-name="card-panel-icon" />
           </div>
         </div>
-        <div class="card-panel-icon-wrapper icon-ruxiang">
-          <svg-icon icon-class="ruxiang" class-name="card-panel-icon" />
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartData(5)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              入项
+            </div>
+            <count-to :start-val="0" :end-val="dataList.entryPeople" :duration="3600" class="card-panel-num3" />
+            <count-to :start-val="0" :end-val="dataList.firstentryPeople" :duration="3600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-ruxiang">
+            <svg-icon icon-class="ruxiang" class-name="card-panel-icon" />
+          </div>
         </div>
-      </div>
-    </el-col>
-    <el-dialog :title="title" :visible.sync="dialogTableVisible" v-loading="loading" width="500px">
-      <el-table :data="gridData">
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="35" class="panel-group" v-if="dataList.numb==1">
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartDatas(0)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              录入需求
+            </div>
+            <count-to  :start-val="0" :end-val="dataList.litmarD" :duration="2600" class="card-panel-num4" />
+
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-luru">
+            <svg-icon icon-class="luru" class-name="card-panel-icon" />
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartDatas(1)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              简历绑定
+            </div>
+            <count-to :start-val="0" :end-val="dataList.litmap" :duration="3000" class="card-panel-num6" />
+            <count-to  :start-val="0" :end-val="dataList.lastmap " :duration="2600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-bangd">
+            <svg-icon icon-class="bangding" class-name="card-panel-icon" />
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartDatas(3)">
+
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              简历通过
+            </div>
+            <count-to :start-val="0" :end-val="dataList.litinfo" :duration="3200" class="card-panel-num1 " />
+            <count-to  :start-val="0" :end-val="dataList.lastinfo" :duration="2600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-jianli">
+            <svg-icon icon-class="jianli" class-name="card-panel-icon" />
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartDatas(5)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              面试通过
+            </div>
+            <count-to :start-val="0" :end-val="dataList.litview" :duration="3600" class="card-panel-num2" />
+            <count-to  :start-val="0" :end-val="dataList.lastinfo" :duration="2600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-mianshi">
+            <svg-icon icon-class="mianshi" class-name="card-panel-icon" />
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartDatas(7)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              人员入项
+            </div>
+            <count-to :start-val="0" :end-val="dataList.litentry" :duration="3600" class="card-panel-num3" />
+            <count-to  :start-val="0" :end-val="dataList.lastlitentry" :duration="2600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-ruxiang">
+            <svg-icon icon-class="ruxiang" class-name="card-panel-icon" />
+          </div>
+        </div>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel" @click="handleSetLineChartDatas(8)">
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              人员出项
+            </div>
+            <count-to :start-val="0" :end-val="dataList.litout " :duration="3600" class="card-panel-num3" />
+            <count-to  :start-val="0" :end-val="dataList.lastlitout" :duration="2600" class="card-panel-num" />
+            <div>
+              <el-button type="text">查看详情</el-button>
+            </div>
+          </div>
+          <div class="card-panel-icon-wrapper icon-ruxiang">
+            <svg-icon icon-class="ruxiang" class-name="card-panel-icon" />
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-dialog v-if="title=='人员出项'" :title="title" :visible.sync="dialogTableVisible"  width="500px">
+      <el-table :data="gridData" v-loading="loading">
+        <el-table-column property="customer_name" label="姓名" ></el-table-column>
+        <el-table-column property="outof_projecttime" label="离项时间" ></el-table-column>
+        <el-table-column property="quit_proreason" label="离项原因" :formatter="professionIdopFormat"></el-table-column>
+      </el-table>
+    </el-dialog>
+    <el-dialog v-else :title="title" :visible.sync="dialogTableVisible"  width="500px">
+      <el-table :data="gridData" v-if="dataList.numb==2" v-loading="loading">
         <el-table-column property="customerName" label="姓名" ></el-table-column>
-        <el-table-column property="customerTel" label="电话" ></el-table-column>
+        <el-table-column property="customerTel" label="电话"  ></el-table-column>
         <el-table-column v-if="title=='录入'||title=='抢占跟踪'" property="addTime" label="录入时间"></el-table-column>
         <el-table-column v-else  property="trackingtime" label="操作时间"></el-table-column>
       </el-table>
+      <el-table :data="gridData" v-if="dataList.numb==1" v-loading="loading">
+        <el-table-column v-if="title!=='录入需求'" property="customerName" label="姓名" width="80"></el-table-column>
+        <el-table-column  property="projectName" label="公司名称" ></el-table-column>
+        <el-table-column v-if="title=='录入需求'" property="addTime" label="添加时间" ></el-table-column>
+        <el-table-column v-else property="trackingtime" label="操作时间" ></el-table-column>
+      </el-table>
     </el-dialog>
-  </el-row>
+
+  </div>
+
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
-import { getmsg } from "@/api/index.js"
+import { getmsg, getbusmsg} from "@/api/index.js"
+
 export default {
   data(){
     return{
       loading:false,
       gridData:{},
       dialogTableVisible:false,
-      title:""
+      title:"",
+      customerleve:[],
     }
+  },
+  created() {
+    this.getDicts("outof_project_cause").then(response => {
+      this.customerleve = response.data;
+    });
   },
   props:{
     dataList:{
@@ -131,6 +267,9 @@ export default {
     CountTo
   },
   methods: {
+    professionIdopFormat(row, column) {
+      return this.selectDictLabel(this.customerleve, row.quit_proreason);},
+      
     handleSetLineChartData(type) {
       // this.$emit('handleSetLineChartData', type)
       let form = new FormData()
@@ -139,6 +278,7 @@ export default {
       getmsg(form).then(res=>{
         this.gridData = res.data
         this.dialogTableVisible = true
+        this.loading = false
       })
       if(type==0){
         this.title = "录入"
@@ -153,8 +293,31 @@ export default {
       }else if(type == 5){
         this.title = "入项"
       }
+    },
+    handleSetLineChartDatas(type) {
+      let form = new FormData()
+      form.append("followStatus",type)
+      this.loading=true
+      getbusmsg(form).then(res=>{
+        this.gridData = res.data
+        this.dialogTableVisible = true
+        this.loading=false
+      })
+      if(type==0){
+        this.title = "录入需求"
+      }else if(type == 1){
+        this.title = "简历绑定"
+      }else if(type == 3){
+        this.title = "简历通过"
+      }else if(type == 5){
+        this.title = "面试通过"
+      }else if(type == 7){
+        this.title = "人员入项"
+      }else if(type == 8){
+        this.title = "人员出项"
+      }
+    },
 
-    }
   }
 }
 </script>
@@ -164,10 +327,11 @@ export default {
 .panel-group {
   margin-top: 18px;
   .card-panel-col {
-    margin-bottom: 32px;
+    margin-bottom: 32px ;
+    padding: 0 16px !important;
   }
   .card-panel {
-    border-radius: 16px;
+    border-radius: 2px;
     height: 110px;
     cursor: pointer;
     font-size: 12px;
@@ -232,10 +396,10 @@ export default {
 
     .card-panel-icon-wrapper {
       float: right;
-      margin: 35px 10px 0 0;
+      margin: 35px 16px 0 0;
       padding:6px 6px;
       transition: all 0.38s ease-out;
-      border-radius: 16px;
+      border-radius: 10px;
     }
 
     .card-panel-icon {
@@ -246,13 +410,19 @@ export default {
     .card-panel-description {
       float: left;
       font-weight: bold;
-      margin:20px 15px 26px 15px;
+      margin:20px 0 26px 16px;
 
       .card-panel-text {
         line-height: 18px;
         color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
+        font-size: 14px;
         margin-bottom: 12px;
+      }
+      .card-panel-num{
+        margin-left: 20px;
+        font-size: 20px;
+        font-weight: 800;
+        color: #c0c4cc;
       }
 
       .card-panel-num1 {
@@ -304,7 +474,7 @@ export default {
     width: 100%;
     height: 100%;
     margin: 0 !important;
-
+    border-radius: 2px !important;
     .svg-icon {
       display: block;
       margin: 14px auto !important;

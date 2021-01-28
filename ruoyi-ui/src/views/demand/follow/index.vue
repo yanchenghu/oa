@@ -15,7 +15,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
-          <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" size="small" @change="handleQuery">
+          <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" filterable size="small" @change="handleQuery">
             <el-option
                 v-for="dict in professionIdoptions"
                 :key="dict.dictValue"
@@ -57,9 +57,9 @@
             <el-option label="禁用中" :value="1"/>
           </el-select>
         </el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
         <el-button
-            type="cyan"
+            type="primary"
             size="mini"
             @click="handleAdd"
             style="position: absolute;right: 0;margin-right: 25px"
@@ -77,7 +77,7 @@
           <span>{{scope.row.demandYears==1?"中级":scope.row.demandYears==0?"初级":"高级"}} / {{professionIdopFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="进度" align="left"  width="115">
+      <el-table-column label="进度" align="left"  width="130">
         <template slot-scope="scope">
           <div>需求人数:{{scope.row.demandNumber}}</div>
           <div>目标人数:{{scope.row.targetNumber}}</div>
@@ -88,6 +88,7 @@
       </el-table-column>
       <el-table-column label="客户级别" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
       <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat" width="55"/>
+      <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
       <el-table-column label="具体要求"  width="480">
       <template slot-scope="scope">
           <p v-html='scope.row.specificrequiRement'></p>
@@ -99,7 +100,7 @@
           <span>{{intentionareaFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
+
       <el-table-column label="录入人姓名"  width="60" align="left" prop="operUsername" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -110,7 +111,7 @@
             <el-button  type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open"/> 查看</el-button>
           </p>
           <p>
-            <el-switch v-model="scope.row.state" :active-value="0" :inactive-value="1" inactive-color="#ff4949" @change="handleStatusChange(scope.row)"></el-switch>
+            <el-switch v-model="scope.row.state" :active-value="0" :inactive-value="1"  @change="handleStatusChange(scope.row)"></el-switch>
           </p>
           <!-- <p v-if='scope.row.state==1'>
             <el-button type="text"  @click="handleUpdate(scope.row,2)">复制</el-button>
@@ -155,7 +156,7 @@
           <el-input v-model.number="form.targetNumber" placeholder="请输入目标人数" size="small"/>
         </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
-          <el-select filterable  v-model="form.technologyDirection" placeholder="请选择" size="small">
+          <el-select   v-model="form.technologyDirection" placeholder="请选择" size="small">
             <el-option
                 v-for="dict in professionIdoptions"
                 :key="dict.dictValue"
@@ -528,6 +529,7 @@ import {getCompany} from "@/api/customer/company";
     created() {
       this.getList();
       this.getCorpName();
+      this.getTreeselect()
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
         this.customerSpecialitiesoptions = response.data;
@@ -554,6 +556,7 @@ import {getCompany} from "@/api/customer/company";
           this.form.specificLocation = data.interviewAddress
         })
       },
+
       // 客户级别
       customerleveFormat(row, column) {
         return this.selectDictLabel(this.customerleve, row.importantLevel);
@@ -593,6 +596,7 @@ import {getCompany} from "@/api/customer/company";
       },
       // 表单重置
       reset() {
+        this.msg=null,
         this.form = {
           demandId:null,
           list:[],
@@ -654,15 +658,30 @@ import {getCompany} from "@/api/customer/company";
           this.corpnamelists=res
         });
       },
+
+      DetSelect(datalist){
+        let arrs = [] //总列表
+        let i = datalist[0].id
+        let j = datalist[0].children[0].id
+        datalist[0].children[0].children.forEach(item=>{
+
+          let arr = []
+          arr.push(i)
+          arr.push(j)
+          arr.push(item.id)
+          arrs.push(arr)
+        })
+        return arrs
+      },
       /** 新增按钮操作 */
       handleAdd() {
        this.reset();
-        this.getTreeselect()
         this.getcorpName()
         this.gettemplate()
-        this.form.list=[[100, 101,103],[100, 101,104],[100, 101,105],[100, 101,106],[100, 101,107],[100, 101,110],[100, 101,111]]
+        this.form.list= this.DetSelect(this.deptOptions)
         this.open = true;
         this.title = "添加需求";
+
       },
       findname(name){
         if(name==""||name==null){
@@ -718,27 +737,27 @@ import {getCompany} from "@/api/customer/company";
       /** 修改按钮操作 */
       handleUpdate(row,ind) {
         this.reset();
-        this.getTreeselect()
         this.getcorpName()
         this.gettemplate()
         getFollow(row.demandId).then(response => {
           this.form = response.data.marDeman;
+          console.log(this.form.demandPic)
           if(this.form.demandPic){
             this.filelist=[{name:"",url:`${process.env.VUE_APP_BASE_API}${this.form.demandPic}`}]
+            
           }
           let list =[]
           response.data.Signlis.forEach(item=>{
           list.push(this.changeDetSelect(item.deptId,this.deptOptions))
           })
           this.form.list=list
-          console.log(this.form.list)
           this.open = true;
+          console.log(this.$refs.file)
           if(ind==1){
             this.title = "修改需求";
           }else{
             this.title = "复制需求";
           }
-          console.log(this.form)
         });
 
       },
@@ -767,7 +786,6 @@ import {getCompany} from "@/api/customer/company";
       },
       /** 提交按钮 */
       submitForm(i){
-
         let list =[]
         this.form.list.forEach(item=>{
            list.push(item[2])
@@ -790,6 +808,7 @@ import {getCompany} from "@/api/customer/company";
                   this.getList();
                 });
               }else{
+
               updateFollow(formData).then(response => {
                 this.msgSuccess("修改成功");
                 this.open = false;
@@ -806,9 +825,9 @@ import {getCompany} from "@/api/customer/company";
                 addFollow(formData).then(response => {
                   this.msgSuccess("新增成功");
                   this.handleAdd();
+                  this.getList();
                 });
               }
-
             }
           }else{
             this.msg=null

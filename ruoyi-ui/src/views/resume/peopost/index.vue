@@ -1,111 +1,114 @@
 <template>
   <div class="app-containe">
-    <div style="display: flex;">
+    <el-row style="display: flex;">
       <!-- 需求表格 -->
-      <div class="left">
-          <el-input prefix-icon="el-icon-search" v-model="queryParams.projectName" size="medium" placeholder="搜索需求" @input="input">
-          </el-input>
-          <el-radio-group v-model="fromdata.nood" size="medium" style="margin-top: 10px;" @change="changes" v-loading="loading2">
-             <div  v-for="nood in tabledata" style="width: 100% ;height: 40px;">
-                <el-tooltip class="item" effect="dark" :content="nood.projectName" v-if="nood.projectName.length>=7" placement="top">
-                      <el-radio-button style="display: inline-block; width: 100%;"  :label="nood.demandId" >{{`${nood.projectName.slice(0,7)}...`}}</el-radio-button>
-                </el-tooltip>
-                <el-radio-button style="display: inline-block; width: 100%;" v-else :label="nood.demandId" >{{nood.projectName}}</el-radio-button>
-             </div>
-          </el-radio-group>
-          <el-pagination
-            layout="prev, next"
-            v-show="total2>0"
-            :total="total2"
-            :current-page.sync="queryParams.pageNum"
-            :page-size.sync="queryParams.pageSize"
-            @current-change="getxuqiulist"
-            >
-          </el-pagination>
-      </div>
+      <el-col style="width: 190px; text-align: center; background: #fff;padding: 10px;margin-right: 10px;">
+        <el-input prefix-icon="el-icon-search" v-model="queryParams.projectName" size="medium" placeholder="搜索需求" @input="input">
+        </el-input>
+        <el-radio-group v-model="fromdata.nood" size="medium" style="margin-top: 10px;" @change="changes" v-loading="loading2">
+           <div  v-for="nood in tabledata" style="width: 100% ;height: 40px;">
+              <el-tooltip class="item" effect="dark" :content="nood.projectName" v-if="nood.projectName.length>=7" placement="top">
+                    <el-radio-button style="display: inline-block; width: 100%;"  :label="nood.demandId" >{{`${nood.projectName.slice(0,7)}...`}}</el-radio-button>
+              </el-tooltip>
+              <el-radio-button style="display: inline-block; width: 100%;" v-else :label="nood.demandId" >{{nood.projectName}}</el-radio-button>
+           </div>
+        </el-radio-group>
+        <el-pagination
+          layout="prev, next"
+          v-show="total2>0"
+          :total="total2"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
+          @current-change="getxuqiulist"
+          >
+        </el-pagination>
+    </el-col>
+    <el-col style="background-color: #fff;padding: 10px;width:calc( 100% - 200px);">
+       <el-form style="padding-bottom: 25px;" ref="queryForm" :model="form" label-width="80px" :inline="true">
+         <el-form-item label="技术方向" prop="professionId">
+           <el-select v-model="fromdata.professionId" size="small" @change="change" clearable>
+             <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+           </el-select>
+         </el-form-item>
+         <el-form-item label="工作年限" prop="workYear">
+           <el-select v-model='fromdata.workYear' size="small" @change="change" clearable>
+             <el-option v-for="dict in 10" :key="dict" :label="dict+'年'" :value="dict"/>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="最低学历" prop="education">
+           <el-select v-model='fromdata.education' size="small" @change="change" clearable>
+
+             <el-option v-for="dict in customerSpecialitiesoptions" :key="dict.dictValue" :label="dict.dictLabel"
+               :value="dict.dictValue" />
+           </el-select>
+         </el-form-item>
+         <el-form-item label="期望城市" prop="intentionArea">
+           <el-select v-model='fromdata.intentionArea' size="small" @change="change" clearable>
+
+             <el-option v-for="dict in intentionareaOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+           </el-select>
+         </el-form-item>
+
+         <el-button  type="primary" size="small" @click="resetQuery">重置</el-button>
+         <el-button  type="primary" size="small" @click="next">换一批</el-button>
+       </el-form>
+       <!-- 数据表格 -->
+       <el-table   :data="msgtaba" v-loading="loading">
+         <el-table-column type="selection"  width="55" />
+         <el-table-column prop="customerName" label="姓名" width="100">
+           <template slot-scope="scope">
+             <el-button  type="text"  @click="handlesee(scope.row)" ><svg-icon  />{{scope.row.customerName}}</el-button>
+           </template>
+         </el-table-column>
+         <el-table-column prop="customerTel" label="电话" width="110" />
+         <el-table-column prop="customerBirth" label="出生日期" width="100" >
+         </el-table-column>
+         <el-table-column prop="professionId" label="技术方向"  width="100" :formatter="professionIdopFormat">
+         </el-table-column>
+         <el-table-column prop="workYear" label="工作年限"  width="80">
+           <template slot-scope="scope">
+             {{scope.row.workYear}}年
+           </template>
+         </el-table-column>
+         <el-table-column prop="education" label="学历"  width="100" :formatter="customerFormat"/>
+
+         <el-table-column prop="customerUniversity" label="毕业院校" />
+
+         <el-table-column prop="expectationSalary" label="期望薪资" />
+
+         <el-table-column prop="intentionArea"  label="期望城市" :formatter="intentionareaFormat"/>
+         <el-table-column prop="intentionArea"  label="添加时间">
+           <template slot-scope="scope">
+             <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+           </template>
+         </el-table-column>
+         <el-table-column label="操作"  class-name="small-padding fixed-width" width="180">
+           <template slot-scope="scope">
+                   <el-button type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
+                     <svg-icon icon-class="preview" style="font-size: 14px;"/>预览
+                   </el-button>
+                   <el-button  type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button" style="font-size: 14px;"/>抢占</el-button>
+
+                   <el-button  type="text"  @click="handlesee(scope.row)" ><svg-icon icon-class="eye-open" style="font-size: 14px;"/>查看</el-button>
+           </template>
+         </el-table-column>
+       </el-table>
+       <pagination
+         v-show="total>0"
+         :total="total"
+         :page.sync="fromdata.pageNum"
+         :limit.sync="fromdata.pageSize"
+         @pagination="getList"
+       />
+    </el-col>
 
  <!-- 筛选列表 -->
-
-      <div  class="right">
-        <el-form style="padding-bottom: 25px;" ref="queryForm" :model="form" label-width="80px" :inline="true">
-          <el-form-item label="技术方向" prop="professionId">
-            <el-select v-model="fromdata.professionId" size="small" @change="change" clearable>
-              <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="工作年限" prop="workYear">
-            <el-select v-model='fromdata.workYear' size="small" @change="change" clearable>
-              <el-option v-for="dict in 10" :key="dict" :label="dict+'年'" :value="dict"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="最低学历" prop="education">
-            <el-select v-model='fromdata.education' size="small" @change="change" clearable>
-
-              <el-option v-for="dict in customerSpecialitiesoptions" :key="dict.dictValue" :label="dict.dictLabel"
-                :value="dict.dictValue" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="期望城市" prop="intentionArea">
-            <el-select v-model='fromdata.intentionArea' size="small" @change="change" clearable>
-
-              <el-option v-for="dict in intentionareaOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
-            </el-select>
-          </el-form-item>
-
-          <el-button  type="primary" @click="resetQuery">重置</el-button>
-          <el-button  type="primary" @click="next">换一批</el-button>
-        </el-form>
-        <!-- 数据表格 -->
-        <el-table   :data="msgtaba" v-loading="loading" tooltip-effect="light">
-          <el-table-column type="selection"  width="55" />
-          <el-table-column prop="customerName" label="姓名" width="100" />
-          <el-table-column prop="customerTel" label="电话" width="100" />
-          <el-table-column prop="customerBirth" label="出生日期" width="100" >
-          </el-table-column>
-          <el-table-column prop="professionId" label="技术方向"  width="100" :formatter="professionIdopFormat">
-          </el-table-column>
-          <el-table-column prop="workYear" label="工作年限"  width="80">
-            <template slot-scope="scope">
-              {{scope.row.workYear}}年
-            </template>
-          </el-table-column>
-          <el-table-column prop="education" label="学历"  width="100" :formatter="customerFormat"/>
-
-          <el-table-column prop="customerUniversity" label="毕业院校" />
-
-          <el-table-column prop="expectationSalary" label="期望薪资" />
-
-          <el-table-column prop="intentionArea"  label="期望城市" :formatter="intentionareaFormat"/>
-          <el-table-column prop="intentionArea"  label="添加时间">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作"  class-name="small-padding fixed-width" width="180">
-            <template slot-scope="scope">
-                    <el-button type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
-                      <svg-icon icon-class="preview" style="font-size: 14px;"/>预览
-                    </el-button>
-                    <el-button  type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button" style="font-size: 14px;"/>抢占</el-button>
-
-                    <el-button  type="text"  @click="handlesee(scope.row)" ><svg-icon icon-class="eye-open" style="font-size: 14px;"/>查看</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="fromdata.pageNum"
-          :limit.sync="fromdata.pageSize"
-          @pagination="getList"
-        />
-         <el-dialog title="预览" :visible.sync="open" width="70%"  >
-         <iframe
-            :src="src"
-            style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%;border: none;"></iframe>
-        </el-dialog>
-      </div>
-      </div>
+    </el-row>
+       <el-dialog title="预览" :visible.sync="open" width="70%"  >
+       <iframe
+          :src="src"
+          style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%;border: none;"></iframe>
+      </el-dialog>
   </div>
 
 </template>
@@ -322,15 +325,13 @@
 </script>
 <style scoped>
   .left{
-     flex:0 0 170px;
+     width:200px;
      padding: 10px;
      margin-right: 10px;
-     text-align: center;
-     height:100%;
-     background: #fff;
+
   }
   .right{
-
+    width: 100%;
     padding: 10px;
     background: #fff;
   }
