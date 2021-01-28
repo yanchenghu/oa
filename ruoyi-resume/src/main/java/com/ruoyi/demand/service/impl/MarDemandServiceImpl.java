@@ -11,14 +11,18 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.resume.DingDingJiQi;
+import com.ruoyi.common.utils.resume.DingUtil;
 import com.ruoyi.common.utils.resume.SerialNumber;
+import com.ruoyi.conn.domain.ConDingtoken;
 import com.ruoyi.conn.domain.ConOperationrecords;
+import com.ruoyi.conn.mapper.ConDingtokenMapper;
 import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
 import com.ruoyi.demand.domain.*;
 import com.ruoyi.demand.mapper.*;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
 import com.taobao.api.ApiException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.service.IMarDemandService;
@@ -49,6 +53,8 @@ public class MarDemandServiceImpl implements IMarDemandService
 
     @Autowired
     private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
+    @Autowired
+    private ConDingtokenMapper conDingtokenMapper;
 
 
     /**
@@ -229,12 +235,28 @@ public class MarDemandServiceImpl implements IMarDemandService
      * 需求查重
      */
     @Override
-    public int selDemandDuplicate(String projectName) {
-       MarDemand sd=marDemandMapper.selectMarDemandByName(projectName);
-        if(sd!=null){
-            return 2;
+    public int selDemandDuplicate(String projectName,String demandId) {
+        MarDemand sd = marDemandMapper.selectMarDemandByName(projectName);
+        if(StringUtils.isEmpty(demandId)){
+            if (sd != null) {
+                return 2;
+            }else{
+                return 1;
+            }
+        }else{
+            if (sd != null) {
+                if (!sd.getDemandId().equals(demandId)) {
+                    return 2;
+                }else{
+                     return 1;
+                }
+            }else{
+                return 1;
+            }
+
         }
-        return 1;
+
+
     }
     /**
      * 需求关闭
@@ -311,6 +333,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         map.put("demandYears",marDemand.getDemandYears());
         map.put("projectLocation",marDemand.getProjectLocation());
         map.put("importantLevel",marDemand.getImportantLevel());
+        map.put("corpCode",marDemand.getCorpCode());
         List<MarDemand> list= marDemandMapper.selectMarDemandbindingList(map);
         MarDemandresume marDema=new MarDemandresume();
         for (MarDemand marDe:list){
@@ -335,22 +358,18 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Override
     @Transactional
     public AjaxResult resumeBingDemand(LoginUser loginUser,String zm,MultipartFile file) {
-//        List<String> liStr = JSON.parseArray(JSON.parseObject(zm).getString("list"), String.class);
         String customerCode = JSON.parseObject(zm).getString("customerCode");
         String demandId = JSON.parseObject(zm).getString("demandId");
 
         Map map=new HashMap();
         map.put("demandId",demandId);
-//        if(liStr.size()>0){
-//            for (String customerCode:liStr){
+
         if(StringUtils.isEmpty(customerCode)||StringUtils.isEmpty(demandId)){
             return AjaxResult.error("绑定简历ID为空，或者需求ID为空，请联系管理员");
         }
         //查询是否有简历附件
         PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
-        if(StringUtils.isEmpty(perCustomerinfo.getResumePath())){
-            return AjaxResult.error( perCustomerinfo.getCustomerName()+"没有简历原件，绑定失败，请上传后在绑定");
-        }
+
         //查重
         map.put("customerCode",customerCode);
         Map me=marDemandresumeMapper.selectMarDemandresumeByCodeID(map);
@@ -368,6 +387,11 @@ public class MarDemandServiceImpl implements IMarDemandService
             }else {
                 return AjaxResult.error( perCustomerinfo.getCustomerName()+"没有简历附件，绑定失败，请上传后在绑定");
 
+            }
+        //查询是否有简历附件,如果没有附件覆盖简历原件
+            if(StringUtils.isEmpty(perCustomerinfo.getResumePath())){
+                perCustomerinfo.setResumePath(fsafsa);
+                perCustomerinfoMapper.updatePerCustomerinfo(perCustomerinfo);
             }
             Date date=new Date();
             String demandresumeId=UUID.randomUUID().toString();
@@ -396,13 +420,8 @@ public class MarDemandServiceImpl implements IMarDemandService
             conOperationrec.setUserName(loginUser.getUsername());
             conOperationrec.setRemark("简历绑定");
         conOperationrecordsMapper.insertConOperationrecords(conOperationrec);
-//            }
-//        }else{
-//            return AjaxResult.error("绑定简历为空");
-//        }
+
         return AjaxResult.success("绑定成功");
-
-
 
     }
     /**
@@ -500,15 +519,13 @@ public class MarDemandServiceImpl implements IMarDemandService
             perCustomeri.setJoinStatus(2);
         }
         perCustomerinfoMapper.updatePerCustomerinfo(perCustomeri);
+        ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(2);
         //钉钉提醒
         try {
-            DingDingJiQi.DingDingd("我是机器人，测试消息勿回，，，喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员");
+            DingDingJiQi.DingDingd("喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员",cotoken.getToken());
         } catch (ApiException e) {
             return AjaxResult.error("入项失败，钉钉发送失败,请联系管理员");
         }
-        //钉钉个人提醒？？？
-
-
 
         return AjaxResult.success("入项成功");
     }

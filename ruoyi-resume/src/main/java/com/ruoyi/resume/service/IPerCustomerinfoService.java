@@ -96,13 +96,7 @@ public interface IPerCustomerinfoService
      */
     AjaxResult robCustomeInfo(String customerCode,LoginUser loginUser);
 
-    /**
-     *  简历跟踪
-     *
-     * @param customerCode
-     * @return 结果
-     */
-    AjaxResult followCustomeInfo(String customerCode, LoginUser loginUser);
+
 
     /**
      *  简历释放

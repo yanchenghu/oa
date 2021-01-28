@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.entrycontract.mapper.MarEntrycontractMapper">
+
+    <resultMap type="MarEntrycontract" id="MarEntrycontractResult">
+        <result property="id"    column="id"    />
+        <result property="marcusId"    column="marcus_id"    />
+        <result property="imgPath"    column="img_path"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarEntrycontractVo">
+        select id, marcus_id, img_path, add_time from mar_entrycontract
+    </sql>
+
+    <select id="selectMarEntrycontractList" parameterType="MarEntrycontract" resultMap="MarEntrycontractResult">
+        <include refid="selectMarEntrycontractVo"/>
+        <where>
+            <if test="marcusId != null  and marcusId != ''"> and marcus_id = #{marcusId}</if>
+            <if test="imgPath != null  and imgPath != ''"> and img_path = #{imgPath}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+
+    <select id="selectMarEntrycontractById" parameterType="Integer" resultMap="MarEntrycontractResult">
+        <include refid="selectMarEntrycontractVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMarEntrycontract" parameterType="MarEntrycontract">
+        insert into mar_entrycontract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="marcusId != null">marcus_id,</if>
+            <if test="imgPath != null">img_path,</if>
+            <if test="addTime != null">add_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="marcusId != null">#{marcusId},</if>
+            <if test="imgPath != null">#{imgPath},</if>
+            <if test="addTime != null">#{addTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMarEntrycontract" parameterType="MarEntrycontract">
+        update mar_entrycontract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="marcusId != null">marcus_id = #{marcusId},</if>
+            <if test="imgPath != null">img_path = #{imgPath},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarEntrycontractById" parameterType="Integer">
+        delete from mar_entrycontract where id = #{id}
+    </delete>
+
+    <delete id="deleteMarEntrycontractByIds" parameterType="String">
+        delete from mar_entrycontract where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+
+
+    <insert id="addLaborcontract" parameterType="java.util.List" >
+        insert into mar_entrycontract
+        ( marcus_id,
+        img_path,
+        add_time)
+        values
+        <foreach collection="list" item="proinfo"  index="index" separator=",">
+          (
+            #{proinfo.marcusId},
+            #{proinfo.imgPath},
+            #{proinfo.addTime}
+           )
+        </foreach>
+    </insert>
+
+
+
+
+
+
+
+    
+</mapper>

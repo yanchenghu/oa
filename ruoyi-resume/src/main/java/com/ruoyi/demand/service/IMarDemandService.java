@@ -71,7 +71,7 @@ public interface IMarDemandService
     /**
      * 需求查重
      */
-    int selDemandDuplicate(String projectName);
+    int selDemandDuplicate(String projectName,String demandId);
 
     /**
      * 需求关闭

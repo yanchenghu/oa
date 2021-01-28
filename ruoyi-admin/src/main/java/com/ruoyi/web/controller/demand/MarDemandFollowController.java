@@ -118,9 +118,9 @@ public class MarDemandFollowController extends BaseController
      * 需求查重
      */
     @PostMapping(value = "/demandDuplicate")
-    public int demandDuplicate(String projectName)
+    public int demandDuplicate(String projectName,String demandId)
     {
-        return marDemandService.selDemandDuplicate(projectName);
+        return marDemandService.selDemandDuplicate(projectName,demandId);
     }
 
     /**

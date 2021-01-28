@@ -120,4 +120,14 @@ public class YxdemandController extends BaseController
         return yxdemandService.yxdemByName(companyName);
     }
 
+
+    /**
+     * 商务新建意向客户
+     */
+    @PostMapping(value = "/newintention")
+    public AjaxResult  newintention(@RequestBody Yxdemand yxdemand)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return yxdemandService.newIntention(yxdemand,loginUser);
+    }
 }

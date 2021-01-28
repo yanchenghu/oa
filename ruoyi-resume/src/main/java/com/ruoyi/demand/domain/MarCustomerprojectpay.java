@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 入项对象 mar_customerprojectpay
- * 
+ *
  * @author ych
  * @date 2020-12-07
  */

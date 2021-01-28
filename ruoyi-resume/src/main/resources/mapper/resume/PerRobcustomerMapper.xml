@@ -17,6 +17,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addPeople"    column="add_people"    />
         <result property="addName"    column="add_name"    />
     </resultMap>
+    <resultMap  type="UserInfo" id="User">
+        <result property="userName" column="user_name" />
+        <result property="dinguserid" column="dinguserid" />
+    </resultMap>
+
 
     <sql id="selectPerRobcustomerVo">
         select seize_id, customer_name, customer_tel, resume_id, edit_time, wechat, add_time, Status, remark, add_people, add_name from per_robcustomer
@@ -150,5 +155,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and Status=0
         and DATE_FORMAT( add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
     </select>
+    <select id="selectAllrobPeo"  resultMap="User">
+		SELECT b.* from  per_robcustomer a
+        LEFT JOIN sys_user b on a.add_people=b.user_name
+        where a.Status=0 and a.del_flag=0
+		GROUP BY a.add_people
+    </select>
+    <select id="selectfirstRob"  resultType="int">
+       SELECT IFNULL(a.nums,0) as ads from
+		( SELECT  COUNT(1) as nums from per_robcustomer
+        where  Status=0
+        and DATE_FORMAT( add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        GROUP BY add_people ORDER BY nums desc LIMIT 1) a
+    </select>
+
+
+
+
+
+
 
 </mapper>

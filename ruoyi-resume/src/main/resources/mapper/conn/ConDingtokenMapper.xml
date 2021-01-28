@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.conn.mapper.ConDingtokenMapper">
+    
+    <resultMap type="ConDingtoken" id="ConDingtokenResult">
+        <result property="id"    column="id"    />
+        <result property="token"    column="token"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="expireTime"    column="expire_time"    />
+        <result property="dingType"    column="ding_type"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectConDingtokenVo">
+        select id, token, add_time, expire_time, ding_type, remark from con_dingtoken
+    </sql>
+
+    <select id="selectConDingtokenList" parameterType="ConDingtoken" resultMap="ConDingtokenResult">
+        <include refid="selectConDingtokenVo"/>
+        <where>  
+            <if test="token != null  and token != ''"> and token = #{token}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="expireTime != null "> and expire_time = #{expireTime}</if>
+            <if test="dingType != null "> and ding_type = #{dingType}</if>
+        </where>
+    </select>
+    
+    <select id="selectConDingtokenById" parameterType="Integer" resultMap="ConDingtokenResult">
+        <include refid="selectConDingtokenVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertConDingtoken" parameterType="ConDingtoken" useGeneratedKeys="true" keyProperty="id">
+        insert into con_dingtoken
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="token != null">token,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="expireTime != null">expire_time,</if>
+            <if test="dingType != null">ding_type,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="token != null">#{token},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="expireTime != null">#{expireTime},</if>
+            <if test="dingType != null">#{dingType},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateConDingtoken" parameterType="ConDingtoken">
+        update con_dingtoken
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="token != null">token = #{token},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+            <if test="dingType != null">ding_type = #{dingType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteConDingtokenById" parameterType="Integer">
+        delete from con_dingtoken where id = #{id}
+    </delete>
+
+    <delete id="deleteConDingtokenByIds" parameterType="String">
+        delete from con_dingtoken where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectConDingtokenByType" resultMap="ConDingtokenResult" parameterType="java.lang.Integer" >
+      <include refid="selectConDingtokenVo"/>
+        where ding_type = #{ding_type}
+        and now() BETWEEN add_time AND expire_time
+  </select>
+
+    <update id="updateConDingByType" parameterType="ConDingtoken">
+        update con_dingtoken
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="token != null">token = #{token},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where ding_type = #{dingType}
+    </update>
+    
+</mapper>

@@ -94,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="operationuser != null  and operationuser != ''"> and operationuser = #{operationuser}</if>
             <if test="operUsername != null  and operUsername != ''"> and oper_username like concat('%', #{operUsername}, '%')</if>
         </where>
+        order  by add_time desc
     </select>
 
     <select id="selectMarDemandById" parameterType="String" resultMap="MarDemandResult">
@@ -250,8 +251,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="demandYears != null  and demandYears != ''"> and b.demand_years = #{demandYears}</if>
         <if test="projectLocation != null  and projectLocation != ''"> and b.project_location = #{projectLocation}</if>
         <if test="importantLevel != null "> and b.important_level = #{importantLevel}</if>
-
-
+        <if test="corpCode != null and corpCode != '' "> and b.corp_code = #{corpCode}</if>
+         order by b.add_time desc
 
     </select>
 
@@ -269,7 +270,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.demand_id=#{demandId} and a.bind_people=#{bindPeople}
     </select>
 
+    <select id="selectmarDWorLitList" parameterType="Map" resultMap="MarDemandResult">
+        <include refid="selectMarDemandVo"/>
+        where state=0 and operationuser=#{userName}
+		 order by add_time desc
 
+    </select>
+    <select id="selectThreeLit" parameterType="Map" resultMap="MarDemandResult">
+     SELECT COUNT(b.id)as sd,a.* from mar_demand a
+		 LEFT JOIN mar_demandresume b on a.demand_id = b.demand_id
+			where
+			a.state=0 and operationuser=#{userName}
+		 GROUP BY demand_id ORDER BY sd desc,b.bind_time asc
+	</select>
 
 
 

@@ -75,4 +75,16 @@ public interface MarDemandresumeMapper
     Map getInputInformation(String id);
     //获取简历绑定人数
     List<Map> selectMarDemandresumedataDisplay(Map map);
+
+    List<Map> selBinMardandPeople(Map map);
+
+    int selectfirstMarbingBystatus(Map map);
+
+    int selectlastmapBylastMonth(Map map);
+
+    List<Map> selectlitoutPeople(Map map);
+
+    int selectlitoutNum(Map map);
+
+    List<Map> sellistOutbyuserName(Map map);
 }

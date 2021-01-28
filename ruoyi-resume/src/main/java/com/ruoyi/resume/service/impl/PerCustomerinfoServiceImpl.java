@@ -184,6 +184,11 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         File f =new File(profile+fsafsa);
         PerCustomerinfo perCustomerinfo=new PerCustomerinfo();
         JSONObject  analyticalResults =  ResumeParserUtil.resumeParser(ResumeParserUtil.URL,f);
+        String contac  = analyticalResults.getString("errormessage");
+        if(contac.equals("文字内容提取失败")){
+            f.delete();
+            return AjaxResult.error("当前简历系统无法识别，文字内容提取失败，请重新整理后再次上传");
+        }
         JSONObject contact_info   = analyticalResults.getJSONObject("parsing_result").getJSONObject("contact_info");
              String phone_number = contact_info.getString("phone_number");
              if(phone_number.equals("")){
@@ -265,7 +270,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             }
             //期望薪资
             if(!basic_info.getString("desired_salary").equals("") && !basic_info.getString("desired_salary").equals("面议")){
-               perCustomerinfo.setExpectationSalary((basic_info.getString("desired_salary")));
+               perCustomerinfo.setExpectationSalary((basic_info.getString("desired_salary")).substring(0,5));
             }
             if(!contact_info.getString("email").equals("")){
                 perCustomerinfo.setEmail(contact_info.getString("email"));
@@ -321,7 +326,11 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                             dsfsa=StringUtils.substringAfter(dsada, "\n");
                         }
                     }
-                    cp.setProjectName(zhi);
+                    if(zhi.length()>21){
+                        cp.setProjectName(zhi.substring(0,20));
+                    }else{
+                        cp.setProjectName(zhi);
+                    }
                     cp.setDuty(dsfsa);
                 }
                 cp.setCustomerCode(perCustomerinfo.getCustomerCode());
@@ -458,6 +467,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
     @Override
     public List<PerCustomerinfo> selectlistbyNametel(PerCustomerinfo perCustomerinfo) {
+
         return perCustomerinfoMapper.selectlistbyNametel(perCustomerinfo);
 
     }
@@ -514,19 +524,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         return AjaxResult.success("抢占简历成功");
 
     }
-    /**
-     *  简历跟踪
-     *
-     * @param customerCode
-     * @return 结果
-     */
-    @Override
-    public AjaxResult followCustomeInfo(String customerCode, LoginUser loginUser) {
 
-
-
-        return null;
-    }
     /**
      *  简历释放
      *
@@ -657,7 +655,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
         perrobcustomer.setResumeId(perCustomerinfo.getCustomerCode());
         perrobcustomer.setAddTime(new Date());
-        perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
+        perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),1));
         perrobcustomer.setAddPeople(loginUser.getUsername());
         perrobcustomer.setAddName(loginUser.getUser().getNickName());
         perrobcustomer.setStatus(0);
@@ -777,7 +775,7 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
      */
     @Override
     public List<Map> selectPeopostlist(PerCustomerinfo perCustomerinfo) {
-//   返回未抢占
+//   返回未抢占?
 
         List<Map>   infoList =perCustomerinfoMapper.selectPeopostlist(perCustomerinfo);
         return infoList;

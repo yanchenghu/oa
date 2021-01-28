@@ -83,7 +83,7 @@ public class PerCustomerinfoController extends BaseController
             return perCustomerinfoService.goAnalysisResume(file,resume_direction,loginUser);
         } catch (Exception e) {
             e.printStackTrace();
-            return AjaxResult.error("简历解析失败");
+            return AjaxResult.error("简历解析失败，请联系管理员");
         }
     }
     /**
@@ -99,7 +99,7 @@ public class PerCustomerinfoController extends BaseController
     @GetMapping("/listbynatel")
     public TableDataInfo selectlistbyNametel(PerCustomerinfo perCustomerinfo)
     {
-        startPage();
+
         List<PerCustomerinfo> list = perCustomerinfoService.selectlistbyNametel(perCustomerinfo);
         return getDataTable(list);
     }
@@ -127,15 +127,7 @@ public class PerCustomerinfoController extends BaseController
         }
         return  perCustomerinfoService.robCustomeInfo(customerCode,loginUser);
     }
-    /**
-     * 简历跟进
-     */
-    @PostMapping(value = "/follow")
-    public AjaxResult followCustomeInfo(@RequestParam("customerCode")String customerCode)
-    {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return  perCustomerinfoService.followCustomeInfo(customerCode,loginUser);
-    }
+
 
     /**
      * 简历释放

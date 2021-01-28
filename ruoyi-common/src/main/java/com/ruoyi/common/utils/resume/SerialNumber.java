@@ -46,10 +46,6 @@ public class SerialNumber {
     }
 
     public static void main(String[] args) {
-        File file =new File("D:\\linshi\\东软-王艳秋-中级-java.docx");
-        String test = file.getName().substring(0,file.getName().lastIndexOf("."));
-
-System.out.println(test);
 
 
     }

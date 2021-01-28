@@ -272,10 +272,12 @@ public class YxdemandServiceImpl implements IYxdemandService
         String contact_detail=yxcontact.getContactDetail();
         //查询最新的一次更新情况
         Yxcontact yxco=yxcontactMapper.selNewdetailByentryId(entryId);
-        if(contact_detail.equals(yxco.getContactDetail())){
-            return AjaxResult.error("与上次发布内容相同,发布失败");
+        if(yxco!=null){
+            String cong=yxco.getContactDetail();
+            if(contact_detail.equals(cong)){
+                return AjaxResult.error("与上次发布内容相同,发布失败");
+            }
         }
-
         Date date=new Date();
         Yxdemand yxdemand=new Yxdemand();
         yxdemand.setEntryId(yxcontact.getEntryId());
@@ -381,12 +383,15 @@ public class YxdemandServiceImpl implements IYxdemandService
            }else{//商务的
                Date libdate=yxdem.getUpdateDate();
                Integer sa=yxdem.getIsBusiness();
-               if(libdate.before(date)&&(sa!=2||sa!=4)){
-                   Yxdemand yxd=new Yxdemand();
-                   yxd.setEntryId(yxdem.getEntryId());
-                   yxd.setBusinessId("");
-                   yxd.setBusinessPeople("");
-                   yxdemandMapper.updateYxdemand(yxd);
+               if(libdate.before(date)){
+                   if(null ==sa||sa!=2||sa!=4){
+                       Yxdemand yxd=new Yxdemand();
+                       yxd.setEntryId(yxdem.getEntryId());
+                       yxd.setBusinessId("");
+                       yxd.setBusinessPeople("");
+                       yxdemandMapper.updateYxdemand(yxd);
+                   }
+
                }
            }
         }
@@ -453,8 +458,38 @@ public class YxdemandServiceImpl implements IYxdemandService
 
         List<ConOperationrecords>  ListCon=conOperationrecordsMapper.selectConOperatBymap(map);
 
-
         return AjaxResult.success(ListCon);
+    }
+
+    @Override
+    public AjaxResult newIntention(Yxdemand yxdemand, LoginUser loginUser) {
+
+
+
+
+        yxdemand.setIsAccept(1);
+        yxdemand.setSubmitTime(new Date());
+        yxdemand.setIsBusiness(1);
+        yxdemand.setInsertTime(new Date());
+        yxdemand.setRobPeople(loginUser.getUser().getNickName());
+        yxdemand.setRobPeopleId(loginUser.getUsername());
+        yxdemand.setRobTime(new Date());
+        yxdemand.setEntryPeopleId(loginUser.getUsername());
+        yxdemand.setEntryPeople(loginUser.getUser().getNickName());
+        yxdemand.setBusinessId(loginUser.getUsername());
+        yxdemand.setBusinessPeople(loginUser.getUser().getNickName());
+        yxdemand.setUpdateDate(new Date());
+        yxdemandMapper.insertYxdemand(yxdemand);
+        if(StringUtils.isNotEmpty(yxdemand.getContactInformation())){
+            Yxcontact  yxcontact=new Yxcontact();
+            yxcontact.setNickName(loginUser.getUser().getNickName());
+            yxcontact.setContactTime(new Date());
+            yxcontact.setEntryId(yxdemand.getEntryId());
+            yxcontact.setContactDetail(yxdemand.getContactInformation());
+            yxcontact.setStatus(1);
+            yxcontactMapper.insertYxcontact(yxcontact);
+        }
+        return AjaxResult.success("新建意向客户成功");
     }
 
 

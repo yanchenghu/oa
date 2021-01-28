@@ -73,4 +73,10 @@ public interface IMarCompanyService
      * 查询合同信息
      */
     List<MarCompany> selectMarContractList(MarContract marContract);
+
+    /**
+     * 获取所有的合作公司
+     * @return
+     */
+    List<MarCompany> selectMarCompanyAlllistcom();
 }

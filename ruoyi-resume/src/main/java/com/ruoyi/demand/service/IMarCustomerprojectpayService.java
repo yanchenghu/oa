@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.demand.domain.MarCustomePerinfo;
-import com.ruoyi.demand.domain.MarCustomerprojectpay;
-import com.ruoyi.demand.domain.PersonnelEssentialinfor;
+import com.ruoyi.demand.domain.*;
 
 
 /**
@@ -91,4 +89,8 @@ public interface IMarCustomerprojectpayService
      * 检查人员借用物品是否有归还
      */
     int isReturnborrow(String id);
+
+    List<ExportItemList> outItemlists(MarCustomerprojectpay marCustomerprojectpay);
+
+    List<Entry> selectentrylistLists(MarCustomerprojectpay marCustomerprojectpay);
 }

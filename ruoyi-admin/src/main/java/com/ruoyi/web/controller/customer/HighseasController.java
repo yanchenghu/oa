@@ -53,8 +53,6 @@ public class HighseasController extends BaseController {
             List<Yxdemand> list = yxdemandService.selectByDepartMark(yxdemand,loginUser);
             return getDataTable(list);
         }
-
-
     }
 
 }

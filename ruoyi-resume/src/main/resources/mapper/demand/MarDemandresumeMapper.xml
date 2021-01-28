@@ -99,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             mar_demandresume a
             LEFT JOIN per_customerinfo b ON a.customer_code = b.customer_code
         where a.customer_code = #{customerCode} and a.demand_id=#{demandId}
+        limit 1
     </select>
     <select id="getInputInformation"  parameterType="Map"  resultType="map">
         SELECT
@@ -125,5 +126,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
           and b.follow_status=#{followStatus}
     </select>
+    <select id="selectfirstMarbingBystatus"   resultType="int">
+        SELECT COUNT(a.bind_people) as sd
+        from  mar_demandresume a LEFT JOIN
+        mar_demandresumefollow b on a.id=b.demandresume_id
+        where
+        DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        and b.follow_status=#{followStatus}
+        GROUP BY a.bind_people ORDER BY sd desc LIMIT 1
+    </select>
+
+    <select id="selBinMardandPeople"  parameterType="map"  resultType="map">
+    SELECT a.project_name as projectName,d.customer_name as customerName,
+    DATE_FORMAT(c.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime
+    from mar_demand a
+    LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id
+    LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id
+    LEFT JOIN per_customerinfo d on b.customer_code=d.customer_code
+    where a.state=0 and a.operationuser=#{userName}
+    and c.follow_status=#{followStatus}
+    and  DATE_FORMAT( c.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+
+    </select>
+
+    <select id="selectlastmapBylastMonth"  parameterType="map"  resultType="int">
+        SELECT COUNT(b.bind_people) as sd
+        from mar_demand a
+        LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id
+        LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id
+        where a.state=0
+        and c.follow_status=#{followStatus}
+        and  DATE_FORMAT( c.trackingtime, '%Y%m' ) = DATE_FORMAT(#{lastMonth}, '%Y%m' )
+        GROUP BY b.bind_people ORDER BY sd desc LIMIT 1
+     </select>
+
+    <select id="selectlitoutPeople"  parameterType="map"  resultType="map">
+        SELECT c.customer_name,a.outof_projecttime,a.quit_proreason from mar_customerprojectpay a
+        LEFT JOIN mar_demand b on a.demand_id=b.demand_id
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        where  b.operationuser=#{userName}
+        and  DATE_FORMAT( a.outof_projecttime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    </select>
+
+    <select id="selectlitoutNum"  parameterType="map"  resultType="int">
+		SELECT count(c.customer_code) as sd
+        from mar_customerprojectpay a
+        LEFT JOIN mar_demand b on a.demand_id=b.demand_id
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        where  b.operationuser=#{userName}
+         and  DATE_FORMAT( a.outof_projecttime, '%Y%m' ) = DATE_FORMAT(#{lastMonth} , '%Y%m' )
+        GROUP BY c.customer_code ORDER BY sd desc LIMIT 1
+
+    </select>
+    <select id="sellistOutbyuserName"  parameterType="map"  resultType="map">
+        SELECT c.customer_name,a.outof_projecttime,a.quit_proreason from mar_customerprojectpay a
+        LEFT JOIN mar_demand b on a.demand_id=b.demand_id
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        where  b.operationuser=#{userName}
+        and  DATE_FORMAT( a.outof_projecttime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    </select>
+
+
+
+
 
 </mapper>

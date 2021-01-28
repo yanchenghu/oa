@@ -9,6 +9,7 @@ import com.ruoyi.demand.service.IMarDemandService;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.statistic.service.IHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -39,8 +40,9 @@ public class HomePageController extends BaseController {
         return marCustomerprojectpayService.rotation();
     }
     /**
-     * 首页数据展示
+     * 人事首页数据展示
      */
+    @PreAuthorize("@ss.hasPermi('statistc:homepage:datadisplay')")
     @GetMapping(value = "/datadisplay")
     public AjaxResult datadisplay()
     {
@@ -48,8 +50,9 @@ public class HomePageController extends BaseController {
         return homePageService.datadisplay(loginUser);
     }
     /**
-     * 首页点击弹框数据详情展示
+     * 人事首页点击弹框数据详情展示
      */
+
     @PostMapping(value = "/viewdetailsplay")
     public AjaxResult viewdetailsplay(@RequestParam("followStatus")Integer followStatus)
     {
@@ -58,6 +61,38 @@ public class HomePageController extends BaseController {
     }
 
 
+
+
+    /**
+     * 首页商务数据展示
+     */
+    @PreAuthorize("@ss.hasPermi('statistc:homepage:businessData')")
+    @GetMapping(value = "/businessData")
+    public AjaxResult businessData()
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return homePageService.businessData(loginUser);
+    }
+    /**
+     * 商务首页点击弹框数据详情展示
+     */
+
+    @PostMapping(value = "/businessdetailsplay")
+    public AjaxResult businessdetailsplay(@RequestParam("followStatus")Integer followStatus)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return homePageService.businessdetailsplay(loginUser,followStatus);
+    }
+
+    /**
+     * 预留接口 行政、老板、
+     */
+    @GetMapping(value = "/reservedisplay")
+    public AjaxResult reservedisplay()
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return homePageService.datadisplay(loginUser);
+    }
 
 
 
