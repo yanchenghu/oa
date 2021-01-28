@@ -1,6 +1,8 @@
 package com.ruoyi.finance.mapper;
 
 import java.util.List;
+
+import com.ruoyi.finance.domain.Business;
 import com.ruoyi.finance.domain.FinStatements;
 
 /**
@@ -62,4 +64,6 @@ public interface FinStatementsMapper
     int insetlistExcel(List<FinStatements> listExcel);
 
     FinStatements selectFinStatementsByNameCorp(FinStatements excel);
+
+    List<Business> selectFinStatementsLists(FinStatements finStatements);
 }

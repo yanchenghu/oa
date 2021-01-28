@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.finance.domain.Business;
 import com.ruoyi.finance.domain.FinStatements;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,4 +72,6 @@ public interface IFinStatementsService
      * 批量付款
      */
     AjaxResult batchPayment(String zm);
+
+    List<Business> selectFinStatementsLists(FinStatements finStatements);
 }
