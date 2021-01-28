@@ -141,12 +141,12 @@ public class FinExpatriatesalaryServiceImpl implements IFinExpatriatesalaryServi
                 return AjaxResult.error("上传失败"+arr.get(0)+"的补助为空！");
             }
             if (arr.get(7) != null && !arr.get(7).equals("")) {
-                finExpatriate.setBaoxianSalary(arr.get(7));
+                finExpatriate.setRealSalary(arr.get(7));
             } else {
                 return AjaxResult.error("上传失败"+arr.get(0)+"的实发金额为空！");
             }
             if (arr.get(8) != null && !arr.get(8).equals("")) {
-                finExpatriate.setBaoxianSalary(arr.get(8));
+                finExpatriate.setCustomerTel(arr.get(8));
                 FinExpatriatesalary dsf=finExpatriatesalaryMapper.selectFinExpatriatesalaryBytel(finExpatriate);
                 if(dsf==null){
                     return AjaxResult.error("上传失败"+arr.get(0)+"未入项，请核对消息！");

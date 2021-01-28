@@ -326,7 +326,11 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                             dsfsa=StringUtils.substringAfter(dsada, "\n");
                         }
                     }
-                    cp.setProjectName(zhi.substring(0,20));
+                    if(zhi.length()>21){
+                        cp.setProjectName(zhi.substring(0,20));
+                    }else{
+                        cp.setProjectName(zhi);
+                    }
                     cp.setDuty(dsfsa);
                 }
                 cp.setCustomerCode(perCustomerinfo.getCustomerCode());

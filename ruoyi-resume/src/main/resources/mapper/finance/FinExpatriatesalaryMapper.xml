@@ -139,7 +139,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT b.customer_code from mar_customerprojectpay a
         LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
         <where>
-            <if test="customerTel != null  and customerTel != ''"> and b.corp_tel = #{customerTel}</if>
+            <if test="customerTel != null  and customerTel != ''"> and b.customer_tel = #{customerTel}</if>
             <if test="customerName != null  and customerName != ''"> and b.customer_name = #{customerName}</if>
         </where>
         limit 1
@@ -159,6 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             real_salary,
             months,
             excel_path,
+            add_date,
             add_people)
         values
         <foreach collection="list" item="proinfo"  index="index" separator=",">
@@ -173,6 +174,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{proinfo.baoxianSalary},
             #{proinfo.realSalary},
             #{proinfo.months},
+            #{proinfo.excelPath},
             #{proinfo.addDate},
             #{proinfo.addPeople})
         </foreach>
