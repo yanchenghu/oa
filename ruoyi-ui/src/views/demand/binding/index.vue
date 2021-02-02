@@ -4,7 +4,7 @@
         <el-form-item label="需求名称" prop="projectName">
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
-        
+
         <el-form-item label="公司名称" prop="corpCode">
           <el-select filterable  v-model="queryParams.corpCode"  placeholder="请选择" size="small" clearable  @change="handleQuery">
             <el-option
@@ -16,7 +16,7 @@
             </el-select>
         </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
-          <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" size="small" @change="handleQuery">
+          <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" filterable size="small" @change="handleQuery">
             <el-option
                 v-for="dict in professionIdoptions"
                 :key="dict.dictValue"
@@ -51,7 +51,7 @@
               />
             </el-select>
         </el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -75,7 +75,8 @@
         </template>
       </el-table-column>
       <el-table-column label="客户级别" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
-      <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat"/>
+      <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat" width="55"/>
+      <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
       <el-table-column label="具体要求" align="left" width="500">
       <template slot-scope="scope">
           <p v-html='scope.row.specificrequiRement'></p>
@@ -87,7 +88,7 @@
           <span>{{intentionareaFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
+
       <el-table-column label="录入人姓名" align="left" prop="operUsername" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">

@@ -1,29 +1,14 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group  :data-list="datalist"/>
+    <panel-group  :data-list="datalist" />
 
     <el-row>
-      <line-chart :data-list="datalist" @handleSetLineChartData="handleSetLineChartData"/>
+      <line-chart :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"/>
     </el-row>
 
-    <el-dialog :title="title" :visible.sync="open" width="40%" append-to-body>
-      <el-form :model="form" :rules="rules" ref="form" label-position="right" label-width="80px">
-        <el-form-item label="简历状态">
-          <el-select v-model="form.updateStatic" placeholder="请选择简历状态">
-            <el-option label="跟进中" :value="2"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="跟进情况" prop="memoDetail">
-            <el-input v-model="form.memoDetail" type="textarea" placeholder="请输入内容" style="width: 80%;"></el-input>
-        </el-form-item>
 
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="open = false">取 消</el-button>
-      </div>
-    </el-dialog>
+    <mytrack :open="open" :title="title" :form="form" @getlist="getList"></mytrack>
 
     <el-row :gutter="32">
       <el-col :xs="24" :sm="12" :lg="8" v-for="data,i in datalist.listMarEntry" :key="i">
@@ -43,8 +28,10 @@ import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 
 
-import { getlist } from "@/api/index.js"
+import { getlist,getbusinessData,getlists } from "@/api/index.js"
 import{genzongbut}from'@/api/resume/mytrckresume.js'
+import mytrack from "./components/resume/mytrack.vue"
+import store from "@/store";
 export default {
   name: 'Index',
   components: {
@@ -52,7 +39,8 @@ export default {
     LineChart,
     RaddarChart,
     PieChart,
-    BarChart
+    BarChart,
+    mytrack
   },
   data() {
     return {
@@ -64,8 +52,24 @@ export default {
         resumeadopt:0,
         interviewadopt:0,
         entryPeople:0,
+        litentry: 0,
+        litinfo: 0,
+        litmap: 0,
+        litmarD: 0,
+        litview: 0,
+        listMarEntry:[],
+        followStatus:1,
+        firstEnter:0,
+        firstRob:0,
+        firstMarbing:0,
+        firstresumeadopt:0,
+        firstinterviewadopt:0,
+        firstentryPeople:0,
       },
-      open:false,
+      por:store.getters.permissions,
+      open:{
+        opens:false
+      },
       title:"",
       form:{},
       rules:{
@@ -83,28 +87,50 @@ export default {
   },
   methods: {
     getList(){
-      getlist().then(res=>{
-          this.datalist = res.data
+      let permissionFlag = "statistc:homepage:businessData"
+      let permissionFlag1 = "statistc:homepage:datadisplay"
+      let hasPermissions  = null
+      this.por.forEach(permission => {
+        if(permission == permissionFlag){
+          hasPermissions = 1
+        }else if(permission==permissionFlag1){
+          hasPermissions = 2
+        }
       })
+
+      if(hasPermissions == 1){
+        this.datalist.numb = 1
+        getbusinessData().then(res=>{
+            this.datalist = res.data
+            this.datalist.numb = hasPermissions
+        })
+      }else if(hasPermissions == 2){
+        this.datalist.numb = 2
+        getlist().then(res=>{
+            this.datalist = res.data
+            this.datalist.numb = hasPermissions
+        });
+      }else{
+        this.datalist.numb = 2
+        getlists().then(res=>{
+          this.datalist = res.data
+          this.datalist.firstEnter = 0
+          this.datalist.firstRob = 0
+          this.datalist.firstMarbing = 0
+          this.datalist.firstresumeadopt = 0
+          this.datalist.firstinterviewadopt = 0
+          this.datalist.firstentryPeople = 0
+          this.datalist.numb = 2
+        });
+      }
     },
     handleSetLineChartData(type) {
       this.form = {}
-      this.open = true
+      this.open.opens = true
       this.form.contactCustomercode = type.resumeId
       this.form.updateStatic = 2
       this.title = "跟踪简历"
     },
-    submitForm(){
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          genzongbut(this.form).then(res=>{
-            this.msgSuccess("操作成功");
-            this.open = false;
-            this.getList();
-          })
-        }
-      });
-    }
   }
 }
 </script>
@@ -116,9 +142,9 @@ export default {
   position: relative;
 
   .chart-wrapper {
-    border-radius: 10px;
+    border-radius: 2px;
     background: #fff;
-    padding: 16px 16px 0;
+    padding: 16px 20px 0;
     margin-bottom: 32px;
   }
 }

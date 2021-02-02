@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" style="width:80% ;">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" style="width:80% ;" @submit.native.prevent>
        <el-form-item label="" prop="corpName">
          <el-input
            v-model.trim="queryParams.corpName"
@@ -11,7 +11,7 @@
          />
        </el-form-item>
        <el-form-item>
-         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
        </el-form-item>
        <el-form-item  prop="companySituation">
          <el-select v-model.trim="queryParams.companySituation"   placeholder="请选择公司性质" clearable size="small" @change="change">
@@ -45,7 +45,7 @@
         </el-select>
       </el-form-item>
       <el-button
-          type="cyan"
+          type="primary"
           size="mini"
           @click="handleAdd"
           style="position: absolute;right: 0;margin-right: 50px"
@@ -59,7 +59,6 @@
       <el-table-column label="公司名称" align="left" prop="corpName" width="250">
         <template slot-scope="scope">
           <el-button
-            size="mini"
             type="text"
             @click="more(scope.row)"
           >{{scope.row.corpName}}</el-button>
@@ -81,10 +80,9 @@
       </el-table-column>
       <el-table-column label="录入人"  prop="entryPeople" />
       <el-table-column label="转化人"  prop="transformingPeople" :formatter="usernameFormat"/>
-      <el-table-column label="更多"  class-name="small-padding fixed-width" fixed="right">
+      <el-table-column label="更多"  class-name="small-padding fixed-width" >
         <template slot-scope="scope">
           <el-button
-            size="mini"
             type="text"
             icon="el-icon-more"
             @click="more(scope.row)"
@@ -216,12 +214,13 @@
       @close="dra"
       >
       <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
-      <div style=" padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
+      <div style=" padding:20px 3% 30px 3%; border-bottom: 1px solid #E6E6E6;">
         <div>
           <b>
             {{yxdemandone.corpName}}
           </b>
         </div>
+        <br/>
          <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
            <el-form-item label="公司性质">
              <el-select  v-model.trim="yxdemandone.companySituation"   size="small" @change="changes">
@@ -628,6 +627,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        party:null,
         corpCode: null,
         corpName: null,
         customerLevel: null,
@@ -635,6 +635,10 @@ export default {
         cooperationTime: null,
         enteredBy: null,
         transformingPeople: null,
+        startTime:null,
+        endTime:null,
+        clientSigner:null,
+        companySigner:null,
       };
       this.resetForm("form");
       this.resetForm("forms");
@@ -647,7 +651,7 @@ export default {
     // 预览文件
     preview(adinw){
       let srcs = process.env.VUE_APP_BASE_API+adinw.contractPreview
-      this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
+      this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
       this.open3=true
     },
     getone(value){
@@ -698,16 +702,15 @@ export default {
 
     /** 提交按钮 */
     submitForm() {
-      console.log(this.form)
-      // this.$refs["form"].validate(valid => {
-      //   if (valid) {
-      //     addcontract(this.form).then(response => {
-      //       this.msgSuccess("新增成功");
-      //       this.open = false;
-      //       this.getList();
-      //     });
-      //   }
-      // });
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          addcontract(this.form).then(response => {
+            this.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          });
+        }
+      });
     },
     submitForm2(){
       if(this.forms.contractPreview){
@@ -748,7 +751,7 @@ export default {
   }
     .el-tabs__header{
       background: #F5F5F9;
-      padding-left:5%;
+      padding-left:3%;
     }
     .el-tabs__content{
       padding:20px 3% 0 3%;

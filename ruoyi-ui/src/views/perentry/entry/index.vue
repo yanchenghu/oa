@@ -11,19 +11,19 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
       </el-form-item>
       <el-form-item  prop="startTime">
         <el-date-picker
-            v-model="value1"
-            type="daterange"
-            size="small"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            @change="handleQuery">
+          v-model="value1"
+          type="daterange"
+          size="small"
+          format="yyyy 年 MM 月 dd 日"
+          value-format="yyyy-MM-dd"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          @change="handleQuery">
         </el-date-picker>
       </el-form-item>
       <el-form-item  prop="corpName">
@@ -44,10 +44,11 @@
       </el-form-item>
       <el-form-item style="float: right;">
         <el-button
-          type="warning"
+          type="primary"
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
+          plain
           v-hasPermi="['perentry:entry:export']"
         >导出</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -141,13 +142,14 @@
       @close="dra"
       >
       <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
-      <div style=" padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
+      <div style=" padding:20px 3% 30px 3%; border-bottom: 1px solid #E6E6E6;">
         <div>
           <b>
             {{yxdemandone.customerName}}
           </b>
         </div>
-         <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
+        <br/>
+        <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
            <el-form-item label="当前状态">
              <el-input  :placeholder="!yxdemandone.outofProjecttime?'在项':'出项'"  disabled size="small"></el-input>
            </el-form-item>
@@ -169,7 +171,7 @@
       <div>
           <el-tabs v-model="activeName">
             <el-tab-pane label="联系人信息" name="popmsg">
-               <div style="display: flex; justify-content: space-around;">
+               <div style="display: flex; justify-content: space-between;">
                  <el-form label-position="left" label-width="100px" :model="yxdemandone" :rules="rules">
                     <b>基本信息</b>
                     <p></p>
@@ -240,10 +242,10 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="劳动合同">
-                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(5)" v-if="!marCertificates1.serviceContract">
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfilehetong" v-if="!marCertificates1.serviceContract">
                           点击上传
                       </el-button>
-                      <el-button type="text" @click="seefile(5)" v-else>
+                      <el-button :disabled="Listcontrr.length==0" type="text" @click="seefilehetong" >
                           点击预览
                       </el-button>
                     </el-form-item>
@@ -385,6 +387,12 @@
             >
             <span class="el-upload-list__item-actions">
               <span
+                class="el-upload-list__item-preview"
+                @click="handlePictureCardPreview(file)"
+              >
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span
                 v-if="!disabled"
                 class="el-upload-list__item-delete"
                 @click="handleRemove(file)"
@@ -400,8 +408,81 @@
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="dialogVisible" width="500px" :title="title2">
+    <el-dialog title="添加劳务合同" :visible.sync="hetong" width="500px">
+      <el-upload
+        action="#"
+        list-type="picture-card"
+        :auto-upload="false"
+        ref="file"
+        :file-list="filelist"
+        :on-change="handleRemov"
+        accept=".png,.jpg,"
+        >
+        <div slot="tip" class="el-upload__tip">仅支持上传jpg/png文件</div>
+          <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}">
+            <img
+              class="el-upload-list__item-thumbnail"
+              :src="file.url" alt=""
+            >
+            <span class="el-upload-list__item-actions">
+              <span
+                class="el-upload-list__item-preview"
+                @click="handlePictureCardPreview(file)"
+              >
+                <i class="el-icon-zoom-in"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="handleRemove(file)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submithetong">确 定</el-button>
+        <el-button @click="hetong=false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+
+    <el-dialog :visible.sync="dialogVisible" width="700px" :title="title2">
       <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
+
+    <el-dialog :visible.sync="dialogVisible1" width="600px" title="预览劳动合同">
+      <ul style="display: flex;flex-wrap: wrap; list-style: none;">
+        <li v-for="file,i in Listcontrr" :key="i" class="li-li" >
+            <img  width="100%"  :src="srcs+file.imgPath">
+              <span class="imgs">
+                <span
+                 class="el-upload-list__item-preview"
+                  @click="filesee(file)"
+                >
+                  <i class="el-icon-zoom-in"></i>
+                </span>
+                <span
+                  @click="filedow(file)"
+                >
+                  <i class="el-icon-download"></i>
+                </span>
+                <span
+                v-if="yxdemandone.outofProjecttime==undefined"
+                  @click="fileRemove(file)"
+                >
+                  <i class="el-icon-delete"></i>
+                </span>
+              </span>
+        </li>
+      </ul>
+
+      <div v-for="file,i in Listcontrr" :key="i" style="position: relative;width:148px;height: 148px;float: left;">
+
+
+      </div>
     </el-dialog>
     <!-- 添加或修改入项对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -482,7 +563,7 @@
     </el-dialog>
     <!-- 新建工资调整记录 -->
     <el-dialog :title="title5" :visible.sync="open5" width="500px" >
-      <el-form ref="form5" :rules="rules" :model="form5" label-width="110px" class="form">
+      <el-form ref="form5" :rules="rules" :model="form5" label-width="120px" class="form">
         <el-form-item label="人员成本调整前" prop="beforeSalary" v-if="title5=='新建人员成本调整记录'">
             <el-input v-model="form5.beforeSalary" placeholder="请输入人员成本调整前"  size="small" disabled/>
         </el-form-item>
@@ -518,7 +599,7 @@
 </template>
 
 <script>
-import {getwupin, listEntry, getEntry, delEntry, addEntry, updateEntry, exportEntry, addgongzi,addfuwufei,putwupin} from "@/api/perentry/entry";
+import {getwupin,addPhoto, listEntry, getEntry, delEntry, addEntry, updateEntry,deletehetong, exportEntry, addgongzi,addfuwufei,putwupin} from "@/api/perentry/entry";
 import { getToken } from "@/utils/auth";
 import {debounce} from "@/utils/ruoyi.js"
 export default {
@@ -552,12 +633,13 @@ export default {
       title4:"",
       form4:{},
       open4:false,
-
+      hetong:false,
       customerleve:[],
       disabled: false,
       name:"",
       loadings:false,
       activeName:"popmsg",
+      dialogVisible1:false,
       // 服务费记录
       marServicepays:[],
       // 工资记录
@@ -584,17 +666,20 @@ export default {
       ids: [],
       // 非单个禁用
       single:null,
+      singles:null,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
       total: 0,
+      Listcontrr:[],
       // 入项表格数据
       entryList: [],
       professionIdoptions:[],
       // 弹出层标题
       title: "",
+      srcs:process.env.VUE_APP_BASE_API,
       // 上传简历
       open2:false,
       title2:"",
@@ -696,9 +781,10 @@ export default {
     });
   },
   methods: {
+
+
     professionIdopFormat(row, column) {
       return this.selectDictLabel(this.professionIdoptions, row.technologyDirection);
-
     },
     /** 查询入项列表 */
     getList() {
@@ -721,32 +807,6 @@ export default {
     cancel() {
       this.open = false;
     },
-    // 表单重置
-    // reset() {
-    //   this.form = {
-    //     id: null,
-    //     customerCode: null,
-    //     corpCode: null,
-    //     corpName: null,
-    //     demandId: null,
-    //     projectName: null,
-    //     startTime: null,
-    //     endTime: null,
-    //     settledCycle: null,
-    //     salary: null,
-    //     servicePay: null,
-    //     outofProjecttime: null,
-    //     quitProreason: null,
-    //     quitRemark: null,
-    //     opercode: null,
-    //     operTime: null,
-    //     syqstartTime: null,
-    //     syqEndtime: null,
-    //     socSecopt: null,
-    //     remark: null
-    //   };
-    //   this.resetForm("form");
-    // },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -755,11 +815,39 @@ export default {
     dra(){
       this.getList()
     },
+    handlePictureCardPreview(file){
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
       this.value1 = ""
       this.handleQuery();
+    },
+    upfilehetong(){
+      this.filelist=[]
+      this.singles = null
+      this.hetong = true
+    },
+    seefilehetong(){
+      this.dialogVisible1 = true
+    },
+    submithetong(){
+      if(this.singles.length==0){
+        this.msgError("最少上传一份")
+      }else{
+        let form = new FormData()
+        form.append("marcusId",this.yxdemandone.id)
+        this.singles.forEach(item=>{
+          form.append("list",item.raw)
+        })
+        addPhoto(form).then(res=>{
+          this.msgSuccess("上传成功")
+          this.hetong = false
+          this.handleUpdate(this.yxdemandone.id)
+        })
+      }
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -771,7 +859,8 @@ export default {
     handleExceed(){
       this.msgError(`当前限制选择 1 个文件`);
     },
-    handleRemov(value){
+    handleRemov(value,filelist){
+      this.singles = filelist
       this.single=value.raw;
     },
     handleRemove(file) {
@@ -799,8 +888,6 @@ export default {
           form.append("photo",4)
         }else if(this.title2=="上传保密协议"){
           form.append("photo",5)
-        }else if(this.title2=="上传劳动合同"){
-          form.append("photo",6)
         }
         addEntry(form).then(res=>{
           this.open2 = false
@@ -887,6 +974,7 @@ export default {
     // 上传文件
     upfile(ind){
       this.filelist=[]
+      this.single = null
       if(ind==0){
         // 上传身份证
         this.title2 = "上传身份证正面"
@@ -902,9 +990,6 @@ export default {
       }else if(ind==4){
         // 上传保密协议
         this.title2 = "上传保密协议"
-      }else if(ind==5){
-        // 上传劳动合同
-        this.title2 = "上传劳动合同"
       }
       this.open2 = true
     },
@@ -923,7 +1008,7 @@ export default {
          this.dialogImageUrl = srcs+this.marCertificates1.idcardReverse
        }else if(ind==2){
          // 预览毕业证
-         this.title2 = "预览毕业证"
+          this.title2 = "预览毕业证"
           this.dialogImageUrl = srcs+this.marCertificates1.diploma
        }else if(ind==3){
          // 预览学位证
@@ -933,12 +1018,31 @@ export default {
          // 预览保密协议
          this.title2 = "预览保密协议"
           this.dialogImageUrl = srcs+this.marCertificates1.confidentialityAgreement
-       }else if(ind==5){
-         // 预览劳动合同
-         this.title2 = "预览劳动合同"
-          this.dialogImageUrl = srcs+this.marCertificates1.serviceContract
        }
        this.dialogVisible=true
+    },
+    filesee(file){
+      this.title2 = "预览图片详情"
+       this.dialogImageUrl = this.srcs+file.imgPath
+      this.dialogVisible=true
+    },
+    fileRemove(file){
+      this.$confirm('是否删除该合同照片?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        deletehetong(file.id).then()
+      }).then(() => {
+        this.handleUpdate(this.yxdemandone.id);
+      }).catch();
+    },
+    filedow(row){
+        var url = this.srcs+row.imgPath;
+        const a = document.createElement('a')
+        a.href = url;
+        a.download = ""+row.imgPath.slice(row.imgPath.lastIndexOf('/')+1)
+        a.click()
     },
 
     /** 添加人员信息按钮操作 */
@@ -950,6 +1054,7 @@ export default {
         this.marCertificates1 = response.data.marCertificates1
         this.marServicepays = response.data.marServicepays
         this.Listmarcustomerp = response.data.Listmarcustomerp
+        this.Listcontrr = response.data.Listcontrr
         this.drawer=true
       });
     },
@@ -1087,16 +1192,51 @@ export default {
 };
 </script>
 <style scoped>
+  .li-li{
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #c0ccda;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: 148px;
+    height: 148px;
+    margin: 0 8px 8px 0;
+    display: inline-block;
+    position: relative;
+  }
+  .imgs{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      cursor: default;
+      color: #fff;
+      opacity: 0;
+      font-size: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: opacity .3s;
+      display: flex;
+      justify-content: space-around;
+  }
+  .imgs:hover{
+    opacity: 1;
+  }
+  .imgs span{
+    align-self: center;
+    position: static;
+    cursor: pointer;
+  }
   >>>.el-tabs__item:focus.is-active.is-focus:not(:active) {
         -webkit-box-shadow: none !important;
         box-shadow: none !important;
   }
     >>>.el-tabs__header{
       background: #F5F5F9;
-      padding-left:5%;
+      padding-left:3%;
     }
     >>>.el-tabs__content{
-      padding:20px 3% 0 3%;
+      padding:20px 10% 0 3%;
     }
      >>>.el-drawer.rtl{
           overflow: auto;

@@ -22,3 +22,18 @@ export function getendlist(query) {
     params: query
   })
 }
+export function exportRecord(query) {
+  return request({
+    url: '/perentry/perflow/export',
+    method: 'get',
+    params: query
+  })
+}
+
+export function exportRecords(query) {
+  return request({
+    url: '/perentry/perflow/out',
+    method: 'get',
+    params: query
+  })
+}

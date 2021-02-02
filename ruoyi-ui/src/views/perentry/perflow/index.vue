@@ -33,13 +33,15 @@
               />
             </el-select>
         </el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery" style="margin:1px 10px 0 10px">查询</el-button>
     </el-form>
-    <div style="font-size: 14px;">
-      <span>人员入项列表: </span><span style="color: orangered;" v-if="ru.totalItem" >共计 : {{ru.totalItem.entryNum}}人,总成本 : {{ru.totalItem.entrySalary}}元,总服务费 : {{ru.totalItem.entryServicePay}}元,总利润 : {{ru.totalItem.entryServicePay - ru.totalItem.entrySalary}}元,总利润率 : {{((ru.totalItem.entryServicePay - ru.totalItem.entrySalary)/(ru.totalItem.entrySalary===0?1:ru.totalItem.entrySalary)*100).toFixed(2)}}%;</span>
+    <div style="font-size: 14px;margin-bottom: 10px;">
+      <span>人员入项列表: </span><span style="color: orangered;" v-if="ru.totalItem" > 总成本 : {{ru.totalItem.entrySalary}}元 ,总服务费 : {{ru.totalItem.entryServicePay}}元, 总利润 : {{ru.totalItem.entryServicePay - ru.totalItem.entrySalary}}元, 总利润率 : {{((ru.totalItem.entryServicePay - ru.totalItem.entrySalary)/(ru.totalItem.entrySalary===0?1:ru.totalItem.entrySalary)*100).toFixed(2)}}%;</span>
     </div>
+
     <div  style="color: orangered;font-size: 14px; margin-bottom: 10px;">
-     <span v-if="ru.nowItem">当前在项总人数: {{ru.nowItem.nowNum}}人,当月净成本 : {{ru.nowItem.sumSalary}}元,当月净服务费 : {{ru.nowItem.sumServicePay}}元,当月净利润 : {{ru.nowItem.sumServicePay-ru.nowItem.sumSalary}}元,净利润率 : {{((ru.nowItem.sumServicePay-ru.nowItem.sumSalary)/(ru.nowItem.sumSalary==0?1:ru.nowItem.sumSalary)*100).toFixed(2)}}%;</span>
+     <span v-if="ru.nowItem">当前在项总人数 : {{ru.nowItem.nowNum}}人 当月净成本 : {{ru.nowItem.sumSalary}}元, 当月净服务费 : {{ru.nowItem.sumServicePay}}元, 当月净利润 : {{ru.nowItem.sumServicePay-ru.nowItem.sumSalary}}元, 净利润率 : {{((ru.nowItem.sumServicePay-ru.nowItem.sumSalary)/(ru.nowItem.sumSalary==0?1:ru.nowItem.sumSalary)*100).toFixed(2)}}%;</span>
+     <el-button type="primary" plain  v-hasPermi="['perentry:perflow:export']"  size="small" @click="handleExport" style=" float: right;margin-bottom: 10px;">导出</el-button>
 
     </div>
     <el-table
@@ -95,7 +97,7 @@
       <el-table-column label="协助人" prop="entryAssistant">
         <template slot-scope="scope">
            <span>{{scope.row.entryAssistant?scope.row.entryAssistant:'无'}}</span>
-         </template>
+        </template>
       </el-table-column>
       <el-table-column label="入职时间" prop="syqstartTime":key="8">
 
@@ -125,6 +127,7 @@
     />
     <div style="font-size: 14px;margin-top: 80px; margin-bottom: 10px;">
       <span>人员出项列表: </span><span style="color: orangered;" v-if="ru.digression">共计 : {{ru.digression.digrePeopleNum}}人, 总成本 : {{ru.digression.digreCost}}元, 总服务费 : {{ru.digression.digreService}}元, 总利润 : {{ru.digression.digreprofit}}元, 总利润率 : {{(ru.digression.digreprofit/(ru.digression.digreCost==0?1:ru.digression.digreCost)*100).toFixed(2)}}%;</span>
+      <el-button type="primary" plain v-hasPermi="['perentry:perflow:export']"  size="small" @click="handleExport2" style=" float: right;margin-bottom: 10px;">导出</el-button>
     </div>
     <el-table
       :row-class-name="OutRowClassName"
@@ -165,7 +168,7 @@
 </template>
 
 <script>
-  import { getlist ,getendlist,getoutlist} from "@/api/perentry/perflow.js";
+  import { getlist ,getendlist,getoutlist,exportRecord,exportRecords} from "@/api/perentry/perflow.js";
 
   export default {
     name: "Yxdemand",
@@ -282,8 +285,29 @@
         this.getoutList()
         this.getendList()
       },
-      indexMethod(){
-        return
+      handleExport(){
+        const queryParams = this.queryParams;
+        this.$confirm('是否确认导出所有数据项?', "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(function() {
+            return exportRecord(queryParams);
+          }).then(response => {
+            this.download(response.msg);
+          })
+      },
+      handleExport2(){
+        const queryParams = this.queryParam;
+        this.$confirm('是否确认导出出项数据吗?', "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(function() {
+            return exportRecords(queryParams);
+          }).then(response => {
+            this.download(response.msg);
+          })
       },
       getNormKind (data) {
         this.NormKindArr = []

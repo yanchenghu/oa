@@ -2,47 +2,27 @@
   <div class="app-container">
 
     <div style="width: 35%;margin-bottom: 30px;">
-      <el-button type="primary" >
-        <b><router-link to="/resume/record">录入解析简历</router-link></b>
-      </el-button>
-        <b> / </b>
-      <b>手动上传简历</b>
+      <el-button style="border-radius: 0;"><b><router-link to="/resume/record">录入解析简历</router-link></b></el-button>
+      <el-button style="margin-left: 0;border-radius: 0;" type="primary"><b>手动上传简历</b></el-button>
     </div>
-    <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad" :file-list="filelist">
+    <div style="margin-top:30px;margin-bottom: 20px;">
+      <el-radio v-model="perCustomerinfo.resumeDirection" :label="1" >国内开发</el-radio>
+      <el-radio v-model="perCustomerinfo.resumeDirection" :label="2" style="margin-left: -10px;">对日开发</el-radio>
+    </div>
+    <el-upload style="padding-bottom: 30px;" action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad" :file-list="filelist">
       <div v-if="wen">
-        <i class="el-icon-circle-plus" style="color:#0081FF;
-        font-size: 67px;
-        margin: 40px 0 16px;
-        line-height: 50px;"></i>
-        <div><b>点击上传简历</b></div>
-        <div class="el-upload__text" style="width: 210px;margin: 0 auto;">简历支持.docx .doc .pdf格式，大小不超过500kb，拖拽文件可直接上传</div>
+        <i class="el-icon-upload"></i>
+        <div><b>点击或拖拽上传简历</b></div>
+        <div class="el-upload__text" style="width: 230px;margin: 0 auto;">简历支持.docx .doc .pdf格式，大小不超过500kb，拖拽文件可直接上传</div>
       </div>
       <div v-else>
         <i class="el-icon-success" style="color:rgb(0,218,175);
           font-size: 67px;
-            margin: 40px 0 16px;
-            line-height: 50px;"></i>
+          margin: 40px 0 16px;
+          line-height: 50px;"></i>
         <div><b>上传成功 </b></div>
       </div>
     </el-upload>
-    <!-- <el-upload
-      class="upload-demo"
-      ref="file"
-      action="upurl"
-      :auto-upload="false"
-      accept=".docx,.doc,pdf"
-      :on-exceed="handleExceed"
-      :limit="1"
-      >
-      <el-button slot="trigger" size="small" type="success">选取上传或更新的文件</el-button>
-
-      <div slot="tip" class="el-upload__tip">简历支持.docx .doc .pdf格式，大小不超过500kb</div>
-    </el-upload> -->
-    <div style="margin-top:30px;margin-bottom: 40px;">
-      <el-radio border v-model="perCustomerinfo.resumeDirection" :label="1">国内</el-radio>
-      <el-radio border v-model="perCustomerinfo.resumeDirection" :label="2" >对日</el-radio>
-    </div>
-
     <div>
       <div class="tit">
         <b style="margin-right: 20px;">基本信息</b>
@@ -51,7 +31,7 @@
       <div style="margin-top: 20px;">
         <el-form  :model="perCustomerinfo"  label-width="100px" :inline="true" ref="forms" label-position="right" :rules="rules">
           <el-form-item label="姓名" prop="customerName">
-            <el-input :disabled="button2==2" v-model="perCustomerinfo.customerName" size="small"   suffix-icon="xxx"/>
+            <el-input  v-model="perCustomerinfo.customerName" size="small"   suffix-icon="xxx"/>
           </el-form-item>
           <el-form-item label="电话" prop="customerTel">
             <el-input :disabled="button2==2"  v-model="perCustomerinfo.customerTel" size="small"   suffix-icon="xxx"/>
@@ -110,7 +90,7 @@
           <i v-show="input3" class="el-icon-edit-outline i"  @click="adds(3)"></i>
         </div>
         <p></p>
-        <el-form v-show="!input3" ref="form" :model="perEduc" label-width="80px" style="width: 400px;">
+        <el-form v-show="!input3" ref="form" :model="perEduc" label-width="80px" style="width: 400px; margin-left: 10px;">
           <el-form-item label="学校名称" prop="schoolName">
             <el-input v-model="perEduc.schoolName"></el-input>
           </el-form-item>
@@ -129,22 +109,22 @@
           <el-form-item>
             <el-button v-if="button==1" type="primary" @click="add(3)">添加</el-button>
             <el-button v-if="button==2" type="primary" @click="reseat">确定</el-button>
-            <el-button @click="reseat">取消</el-button>
+            <el-button @click="reseat(3)">取消</el-button>
           </el-form-item>
         </el-form>
-        <ul style="list-style: none;">
+        <ul style="list-style: none; padding-left: 1px;">
           <li v-for="work,i in perEducList"
            :key="i"
-           style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
+           style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
            <div style="position: absolute; right: 60px;"><el-button type="text" @click="delete3(work)"><i class="el-icon-delete" ></i>删除</el-button>
              <el-button type="text" @click="updata3(work)"><i class="el-icon-edit"></i>修改</el-button></div>
-            <p><span>学校名称：</span>&nbsp<span>{{work.schoolName}}</span></p>
-            <p><span>学<span style="display: inline-block; width: 32px;"></span>历：</span>&nbsp<span>{{work.degree}}</span></p>
-            <p><span>专<span style="display: inline-block; width: 32px;"></span>业：</span>&nbsp<span>{{work.major}}</span></p>
-            <p><span> 时 间 段 :</span>&nbsp
-            <span v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
-            <span v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
-            <span v-else>{{"未知"+" 至 "+"未知"}}</span>
+            <p style="font-weight: 700;"><span>学校名称：</span>&nbsp<span class="miaoshu">{{work.schoolName}}</span></p>
+            <p ><span class="xiaotu">学<span style="display: inline-block; width: 32px;"></span>历：</span>&nbsp<span class="miaoshu">{{work.degree}}</span></p>
+            <p><span class="xiaotu">专<span style="display: inline-block; width: 32px;"></span>业：</span>&nbsp<span class="miaoshu">{{work.major}}</span></p>
+            <p><span class="xiaotu"> 时 间 段 :</span>&nbsp
+            <span class="miaoshu" v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
+            <span class="miaoshu" v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
+            <span class="miaoshu" v-else>{{"未知"+" 至 "+"未知"}}</span>
             </p>
 
           </li>
@@ -155,7 +135,7 @@
           <i v-show="input" class="el-icon-edit-outline i"  @click="adds(1)"></i>
         </div>
         <p></p>
-        <el-form v-show="!input" ref="form" :model="work_experienceList" label-width="80px" style="width: 400px;">
+        <el-form v-show="!input" ref="form" :model="work_experienceList" label-width="80px" style="width: 400px; margin-left: 10px;">
           <el-form-item label="公司名称" prop="companyName">
             <el-input v-model="work_experienceList.companyName"></el-input>
           </el-form-item>
@@ -174,22 +154,22 @@
           <el-form-item>
             <el-button v-if="button==1" type="primary" @click="add(1)">添加</el-button>
             <el-button v-if="button==2" type="primary" @click="reseat">确定</el-button>
-            <el-button @click="reseat">取消</el-button>
+            <el-button @click="reseat(1)">取消</el-button>
           </el-form-item>
         </el-form>
-        <ul style="list-style: none;">
+        <ul style="list-style: none;padding-left: 1px;">
           <li v-for="work,i in work_experienceListArr"
            :key="i"
-           style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
+           style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
            <div style="position: absolute; right: 60px;"><el-button type="text" @click="delete1(work)"><i class="el-icon-delete" ></i>删除</el-button>
              <el-button type="text" @click="updata1(work)"><i class="el-icon-edit"></i>修改</el-button></div>
-            <p><span>公司名称：</span>&nbsp<span>{{work.companyName}}</span></p>
-            <p><span>公司类型：</span>&nbsp<span>{{work.jobFunction}}</span></p>
-            <p><span>工作岗位：</span>&nbsp<span>{{work.jobTitle}}</span></p>
-            <p><span>工作时间：</span>&nbsp
-            <span v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
-            <span v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
-            <span v-else>{{"未知"+" 至 "+"未知"}}</span>
+            <p style="font-weight: 700;"><span>公司名称：</span>&nbsp<span>{{work.companyName}}</span></p>
+            <p><span class="xiaotu">公司类型：</span>&nbsp<span class="miaoshu">{{work.jobFunction}}</span></p>
+            <p><span class="xiaotu">工作岗位：</span>&nbsp<span class="miaoshu">{{work.jobTitle}}</span></p>
+            <p><span class="xiaotu" >工作时间：</span>&nbsp
+            <span class="miaoshu" v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
+            <span class="miaoshu" v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
+            <span class="miaoshu" v-else>{{"未知"+" 至 "+"未知"}}</span>
             </p>
 
           </li>
@@ -198,7 +178,8 @@
           <b style="margin-right: 20px;">项目经厉</b>
            <i v-show="input2" class="el-icon-edit-outline i"  @click="adds(2)"></i>
         </div>
-        <el-form v-show="!input2" ref="form" :model="project_exper" label-width="80px" style="width: 400px;">
+        <br/>
+        <el-form v-show="!input2" ref="form" :model="project_exper" label-width="80px" style="width: 400px;margin-left: 10px;">
 
           <el-form-item label="项目名称" prop="jobFunction">
             <el-input v-model="project_exper.projectName"></el-input>
@@ -215,30 +196,31 @@
           <el-form-item>
             <el-button v-if="button==1" type="primary" @click="add(2)">添加</el-button>
             <el-button v-if="button==2" type="primary" @click="reseat">确定</el-button>
-            <el-button @click="reseat">取消</el-button>
+            <el-button @click="reseat(2)">取消</el-button>
           </el-form-item>
         </el-form>
-        <ul style="list-style: none;">
-          <li v-for="project in project_experience" style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
+
+        <ul style="list-style: none;padding-left: 1px;">
+          <li v-for="project in project_experience" style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0;">
             <div style="position: absolute; right: 60px;"><el-button type="text" @click="delete2(project)"><i class="el-icon-delete"></i>删除</el-button>
               <el-button type="text" @click="updata2(project)"><a href="#tit2"><i class="el-icon-edit"></i>修改</a></el-button></div>
-            <p><span>项目名称：</span>&nbsp<span>{{project.projectName}}</span></p>
-            <p><span>项目时间：</span>&nbsp
-            <span v-if="project.quitprojectTime">{{project.joinprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime : "未知"+" 至 "+project.quitprojectTime}}</span>
-            <span v-else-if="project.joinprojectTime">{{project.quitprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime:project.joinprojectTime+" 至 "+"未知"}}</span>
-            <span v-else>{{"未知"+" 至 "+"未知"}}</span>
+            <p style="font-weight: 700;"><span>项目名称：</span>&nbsp<span>{{project.projectName}}</span></p>
+            <p><span class="xiaotu">项目时间：</span>&nbsp
+            <span class="miaoshu" v-if="project.quitprojectTime">{{project.joinprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime : "未知"+" 至 "+project.quitprojectTime}}</span>
+            <span class="miaoshu" v-else-if="project.joinprojectTime">{{project.quitprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime:project.joinprojectTime+" 至 "+"未知"}}</span>
+            <span class="miaoshu" v-else>{{"未知"+" 至 "+"未知"}}</span>
             </p>
-            <p><span>{{project.duty}}</span></p>
+            <p><span class="miaoshu" style="line-height: 1.5;">{{project.duty}}</span></p>
           </li>
         </ul>
         <br>
-        <div style="position: fixed; bottom: 10px; right: 20%;">
-          <el-button  v-if="button2==1" size="medium" @click="handleQuery" class="but">取消</el-button>
-          <el-button v-if="button2==1" size="medium" @click="resetQuery" type="success">录入抢占</el-button>
-          <el-button v-else size="medium" @click="resetQuery" type="success">保存</el-button>
-        </div>
-
-
+         <div style="width:calc(100% - 220px) ; height: 50px; line-height: 50px; background-color: #fff; bottom: 0;position: fixed;right: 10px;">
+           <div style="position:absolute;right: 25%;">
+             <el-button  v-if="button2==1" size="medium" @click="handleQuery" class="but">取消</el-button>
+             <el-button v-if="button2==1" size="medium" @click="resetQuery" type="primary">录入抢占</el-button>
+             <el-button v-else size="medium" @click="resetQuery" type="primary">保存</el-button>
+           </div>
+         </div>
 
   </div>
 </template>
@@ -280,6 +262,7 @@
         // 项目经验
         project_exper:{},
         project_experience: [],
+        timers:null,
 
         // 时间选择禁止
         pickerOptions1:{
@@ -435,12 +418,12 @@
               this.wen=true
             }else{
               this.wen=false
-
               this.filelist = [{name:`${this.perCustomerinfo.resumePath.slice(this.perCustomerinfo.resumePath.lastIndexOf('/')+1,-1)}`,file:this.perCustomerinfo.resumePath}]
             }
             })
           }
       },
+
       //保存
       resetQuerys(but){
           this.$refs["forms"].validate((valid) => {
@@ -452,11 +435,11 @@
                 perEducList:this.perEducList,
               }
               zm = JSON.stringify(zm)
-              let file
+              let file = null
               if (this.$refs.file.uploadFiles[0] == null) {
                 file={}
               }else{
-                file= this.$refs.file.uploadFiles[0].raw
+                file = this.$refs.file.uploadFiles[0].raw
               }
               var formData = new FormData()
               formData.append("zm",zm)
@@ -466,7 +449,6 @@
                   this.handleQuery()
                   this.msgSuccess("添加成功")
                 })
-
               }else if(but==2){
                 handupdata(formData).then(response => {
                  this.getcustomerCode()
@@ -480,7 +462,6 @@
       handleExceed() {
         this.msgError(`当前限制选择 1 个文件`);
       },
-
       adds(i){
         this.button=1
         if(i==1){
@@ -509,16 +490,22 @@
         }else{
         this.perEducList.push(JSON.parse(JSON.stringify(this.perEduc)));}
       }
-        this.reseat()
+        this.reseat(inp)
       },
       oplodad(file) {
+        // console.log(file)
+
         this.wen = false
       },
       // 取消
-      reseat(){
-        this.input=true
-        this.input2=true
-        this.input3=true
+      reseat(ind){
+        if(ind ==1){
+          this.input=true
+        }else if(ind ==2){
+          this.input2=true
+        }else if(ind ==3){
+          this.input3=true
+        }
         this.project_exper={}
         this.work_experienceList={}
         this.perEduc={}
@@ -629,6 +616,12 @@
   .upload-demo{
     width: 360px;
   }
+  .xiaotu{
+    color: #909399;
+  }
+  .miaoshu{
+   color: #606266;
+  }
   .i{
       color: #1890FF;
   }
@@ -639,6 +632,6 @@
     height: 42px;
     background: #F5F5F9;
     line-height: 42px;
-    padding-left: 10px;
+    padding-left: 20px;
   }
 </style>
