@@ -31,8 +31,6 @@
           <div class="div">
             <div style=" width: 125px; color:#909399;">技术要求</div>
               <div v-html='form.specificrequiRement'></div>
-
-
           </div>
           <div class="div">
             <div style="width: 70px; color:#909399;">特别备注</div><span>{{form.attention}}</span>
@@ -43,8 +41,8 @@
           <el-form  ref="queryForm" :inline="true" @submit.native.prevent>
             <el-input v-model="customerName" placeholder="请输入简历姓名" clearable size="small" @keyup.enter.native="handleQuery" style="width: 190px;" />
             <el-button
-                type="cyan"
-                size="mini"
+                type="primary"
+                size="small"
                 @click="handleQuery"
               >搜索</el-button>
             <el-button
@@ -54,31 +52,23 @@
                 @click="miaoshi"
                 :disabled="multiple"
                 style="float: right;"
-            >批量面试操作</el-button>
-            <el-button
-                v-if="ident==1"
-                type="orgin"
-                size="mini"
-                @click="genzong"
-                :disabled="multiple"
-                style="float: right;"
-            >批量简历操作</el-button>
-            <el-button
+            >批量操作</el-button>
+            <!-- <el-button
                 v-if="ident==1"
                 type="primary"
                 size="mini"
-                @click="downloadlist(1)"
+                @click="downloadlist"
                 :disabled="multiple"
                 style="float: right;"
-              >批量下载原版</el-button>
-              <el-button
+              >批量下载简历</el-button> -->
+              <!-- <el-button
                   v-if="ident==1"
                   type="primary"
                   size="mini"
                   @click="downloadlist(2)"
                   :disabled="multiple"
                   style="float: right;"
-                >批量下载附件</el-button>
+                >批量下载附件</el-button> -->
             <el-button
                 v-if="ident==1"
                 type="danger"
@@ -232,6 +222,27 @@
               <el-button type="primary" @click="submit">确 定</el-button>
             </span>
           </el-dialog>
+         <el-dialog style="text-align: center;" title="批量跟踪" :visible.sync="caozuo" width="500px">
+              <el-radio-group v-model="caozuos">
+                  <el-radio :label="1">批量简历跟踪</el-radio>
+                  <el-radio :label="2">批量面试跟踪</el-radio>
+              </el-radio-group>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="caozuo=false">取 消</el-button>
+                <el-button type="primary" @click="submitqq">确 定</el-button>
+              </span>
+          </el-dialog>
+
+          <el-dialog style="text-align: center;" title="批量下载" :visible.sync="caozuo2" width="500px">
+               <el-radio-group v-model="caozuos">
+                   <el-radio :label="1">批量下载原件</el-radio>
+                   <el-radio :label="2">批量下载附件</el-radio>
+               </el-radio-group>
+               <span slot="footer" class="dialog-footer">
+                 <el-button @click="caozuo2=false">取 消</el-button>
+                 <el-button type="primary" @click="submitq">确 定</el-button>
+               </span>
+           </el-dialog>
           <!-- 简历预览 -->
           <el-dialog :title="title" :visible.sync="open3" width="70%">
            <iframe
@@ -354,6 +365,9 @@
         dialogVisible2:false,
         dialogImageUrl:"",
         // 入项信息
+        caozuo:false,
+        caozuos:null,
+        caozuo2:false,
         comform:{},
         // 未通过原因
         qqq:{
@@ -575,43 +589,36 @@
         })
         return actions;
       },
-      miaoshi(){
+      submitqq(){
         let arr = 0
         let array = []
+        let a = 0 ;
+        if(this.caozuos!==1){
+          a = 3
+          this.followstart=5
+          this.title="批量面试跟踪"
+        }else{
+          a = 1
+          this.followstart=3
+          this.title="批量简历跟踪"
+          }
         this.ids.forEach(item=>{
-          if(item.followStatus !==3){
+          if(item.followStatus !== a){
             arr+=1
           }else{
-              array.push(item.id)
+            array.push(item.id)
           }
         })
         if(arr!==0){
           this.msgError("有状态不同的简历")
         }else{
-           this.followstart=5
-           this.open=true
-           this.title="批量面试跟踪"
-           this.tempID=array
+          this.tempID=array
+          this.open=true
           }
       },
-      genzong(){
-          let arr = 0
-          let array = []
-          this.ids.forEach(item=>{
-            if(item.followStatus !==1){
-              arr+=1
-            }else{
-              array.push(item.id)
-            }
-          })
-          if(arr!==0){
-            this.msgError("有状态不同的简历")
-          }else{
-            this.followstart=3
-            this.open=true
-            this.title="批量简历跟踪"
-            this.tempID=array
-        }
+      miaoshi(){
+        this.caozuos = 1
+        this.caozuo = true
       },
       // 搜索
       handleQuery(){
@@ -676,6 +683,7 @@
                     })
                   }).then(() => {
                     this.msgSuccess("操作成功");
+                    this.templists=[]
                     this.gettelist()
                     this.open=false
                   }).catch(()=>{})
@@ -688,11 +696,12 @@
               type: "warning"
             }).then(function(){
               if(typeof that.tempID =="string"){
-                return submitstart(form)              
+                return submitstart(form)
               }else{
                 return submitstarts(form)
               }
             }).then(() => {
+              this.caozuo = false
               this.open=false
               this.msgSuccess("操作成功");
               this.templists=[]
@@ -779,29 +788,34 @@
         if(ind == 1){
           if(adinw.resumePath){
             let srcs = process.env.VUE_APP_BASE_API+adinw.resumePath
-            location.href=`${srcs}`
+            window.open(srcs, '_blank');
           }else{
             this.msgError(adinw.customerName+"暂无简历原件请上传")
           }
         }else{
           if(adinw.resumeEnclosurepath){
             let srcs = process.env.VUE_APP_BASE_API+adinw.resumeEnclosurepath
-            location.href=`${srcs}`
+            window.open(srcs, '_blank');
           }else{
            this.msgError(adinw.customerName+"暂无简历附件请上传")
           }
         }
       },
-
-      downloadlist(){
+      submitq(){
         let that = this
         let i = 1
         this.ids.forEach(item=>{
           setTimeout(function(){
-            that.dow(item)
-          },1000*i)
+            that.dow(item,that.caozuos)
+          },1500*i)
           i+=1
+
         })
+        this.caozuo2 = false
+      },
+      downloadlist(){
+        this.caozuo2 = true
+        this.caozuos = 1
       },
       see(ind,file){
         this.dialogImageUrl = ""

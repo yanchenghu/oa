@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" style="width:80% ;" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" style="width:80% ;" label-width="68px" @submit.native.prevent>
       <el-form-item label="" prop="companyName">
         <el-input
           v-model.trim="queryParams.companyName"
@@ -12,20 +12,20 @@
         />
       </el-form-item>
       <el-form-item >
-        <el-button type="cyan" icon="el-icon-search" size="mini"@click="handleQuery">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini"@click="handleQuery">查询</el-button>
       </el-form-item>
       <el-button
-          type="cyan"
+          type="primary"
           size="mini"
           @click="next"
           style="position: absolute;right: 120px;"
         >换一批</el-button>
-        <el-button
+       <!-- <el-button
             type="warning"
             size="mini"
             @click="handleAdd"
             style="position: absolute;right: 30px;"
-          >批量抢占</el-button>
+          >批量抢占</el-button> -->
     </el-form>
    <el-row :gutter="10" class="mb8">
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -39,7 +39,14 @@
         align="center"
         >
       </el-table-column>
-      <el-table-column label="公司名称"  prop="companyName" width="250" style="color: blue;"/>
+      <el-table-column label="公司名称"  prop="companyName" width="250">
+      <template slot-scope="scope">
+        <el-button
+            type="text"
+            @click="followUp(scope.row.entryId)"
+          >{{scope.row.companyName}}</el-button>
+      </template>
+      </el-table-column>
       <el-table-column label="联系人/职位"  width="130">
         <template slot-scope="scope">
           <span>{{scope.row.contactPeople}} / {{scope.row.contactPosition}}</span>
@@ -52,10 +59,10 @@
         width="90"
       />
       <el-table-column label="联系方式"  prop="contactPhone" width="110"/>
-      <el-table-column label="录入人" align="center" prop="entryPeople" width="80"/>
+      <el-table-column label="录入人"  prop="entryPeople" width="80"/>
       <el-table-column
         label="线索状态"
-        align="center"
+
         prop="isFollowSubmit"
         :formatter="isFollowSubmitFormat"
          width="90"
@@ -70,16 +77,41 @@
           <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作"  class-name="small-padding fixed-width" fixed="right" width="120">
+      <el-table-column label="抢占人"  prop="robPeople" width="80">
         <template slot-scope="scope">
-          <el-button
-            type="text"
-            @click="handleClick(scope.row)"
-          ><svg-icon icon-class="button"/>抢占</el-button>
-         <el-button
-            type="text"
-            @click="followUp(scope.row.entryId)"
-          ><svg-icon icon-class="eye-open"/>查看</el-button>
+          <span v-if="scope.row.isAccept==0">
+            {{scope.row.robPeople}}
+          </span>
+          <span v-else>
+            {{scope.row.businessPeople}}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作"  class-name="small-padding fixed-width"  width="120">
+        <template slot-scope="scope">
+          <span  v-if="scope.row.isAccept==0">
+            <el-button
+                v-if="scope.row.robPeopleId==null || scope.row.robPeopleId==''"
+                type="text"
+                @click="handleClick(scope.row)"
+              ><svg-icon icon-class="button"/>抢占</el-button>
+             <el-button
+                type="text"
+                @click="followUp(scope.row.entryId)"
+              ><svg-icon icon-class="eye-open"/>查看</el-button>
+          </span>
+
+          <span v-else>
+            <el-button
+               v-if="scope.row.businessId==null || scope.row.businessId==''"
+               type="text"
+               @click="handleClick(scope.row)"
+             ><svg-icon icon-class="button"/>抢占</el-button>
+            <el-button
+               type="text"
+               @click="followUp(scope.row.entryId)"
+             ><svg-icon icon-class="eye-open"/>查看</el-button>
+          </span>
         </template>
       </el-table-column>
     </el-table>
@@ -100,12 +132,13 @@
        @close="dra"
        >
        <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
-       <div style=" padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
+       <div style=" padding:20px 3% 30px 3%; border-bottom: 1px solid #E6E6E6;">
          <div>
            <b>
              {{yxdemandone.companyName}}
            </b>
          </div>
+         <br/>
           <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
             <el-form-item label="公司性质">
               <el-select disabled v-model.trim="yxdemandone.companySituation"   size="small">
@@ -127,8 +160,11 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item >
-                  <el-button  type="warning" @click="handleClick(yxdemandone)">抢占</el-button>
+            <el-form-item v-if="yxdemandone.isAccept==0">
+                  <el-button v-show="yxdemandone.robPeopleId==null || yxdemandone.robPeopleId=='' "   type="warning" @click="handleClick(yxdemandone)">抢占</el-button>
+            </el-form-item>
+            <el-form-item v-else>
+                  <el-button v-show="yxdemandone.businessId==null || yxdemandone.businessId=='' "   type="warning" @click="handleClick(yxdemandone)">抢占</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -398,7 +434,7 @@ export default {
 }
   .el-tabs__header{
     background: #F5F5F9;
-    padding-left:5%;
+    padding-left:3%;
   }
   .el-tabs__content{
     padding:20px 3% 0 3%;

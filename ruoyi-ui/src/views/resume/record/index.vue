@@ -1,34 +1,34 @@
 <template>
-  <div class="app-container">
-    <div style="margin-bottom: 30px;display: flex;">
-      <div style="width: 35%;">
-        <b>录入解析简历</b>
-          <b> / </b>
-        <el-button type="primary">
-          <b><router-link to="/record/manually">手动上传简历</router-link></b>
-        </el-button>
-      </div>
+  <div class="app-container" >
       <div>
         <el-form :inline="true">
           <el-form-item label="姓名">
-            <el-input  v-model="finddata.customerName"  @keyup.enter.native="find" size="mini"></el-input>
+            <el-input  v-model="finddata.customerName"  @keyup.enter.native="find" size="medium"></el-input>
+          </el-form-item>
+          <el-form-item>
+               <span style="color: rgb(234, 84, 85);">或</span>
           </el-form-item>
           <el-form-item label="电话">
-            <el-input  v-model="finddata.customerTel" size="mini" @keyup.enter.native="find"></el-input>
+            <el-input  v-model="finddata.customerTel" size="medium" @keyup.enter.native="find"></el-input>
           </el-form-item>
-          <el-button type="primary" @click="find" size="medium">查询</el-button>
+          <el-button type="primary" @click="find" icon="el-icon-search" size="medium">查询</el-button>
         </el-form>
       </div>
+    <p></p>
+    <div>
+      <el-button style="border-radius: 0;" type="primary"><b>智能解析简历</b></el-button>
+      <el-button  style="margin-left: 0;border-radius: 0;"><b><router-link to="/record/manually">手动上传简历</router-link></b></el-button>
     </div>
-    <div style="position: relative; display: flex;flex-wrap: wrap; margin-bottom: 20px;height: 220px;">
+    <div style="margin-bottom: 20px;margin-top: 30px;">
+      <el-radio  v-model="vadio" :label="1">国内开发</el-radio>
+      <el-radio  v-model="vadio" :label="2" style="margin-left: -10px;">对日开发</el-radio>
+    </div>
+    <div style="position: relative; display: flex;flex-wrap: wrap; height: 220px;">
       <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
         <div v-if="wen">
-          <i class="el-icon-circle-plus" style="color:#0081FF;
-          font-size: 67px;
-            margin: 40px 0 16px;
-            line-height: 50px;"></i>
-          <div><b>点击上传解析简历 </b></div>
-          <div class="el-upload__text" style="width: 210px;margin: 0 auto;">简历支持.docx .doc .pdf格式，大小不超过500kb，拖拽文件可直接上传</div>
+            <i class="el-icon-upload"></i>
+          <div><b>点击或拖拽上传简历</b></div>
+          <div class="el-upload__text" style="width: 230px;margin: 0 auto;">简历支持.docx .doc .pdf格式，大小不超过500kb，拖拽文件可直接上传</div>
         </div>
         <div v-else>
           <i class="el-icon-success" style="color:rgb(0,218,175);
@@ -38,15 +38,12 @@
           <div><b>上传成功 </b></div>
         </div>
       </el-upload>
-      <div style="position: absolute;bottom:42px ; left: 365px ;">
-        <el-radio border v-model="vadio" :label="1">国内</el-radio>
-        <el-radio border v-model="vadio" :label="2" style="margin:3px 10px 3px 0;">对日</el-radio>
-        <el-button :loading="loadings" type="primary" @click="jiexii" size="medium">
-          <span v-if="!loadings">解 析</span>
+      <div style="margin-top: 145px;margin-left: 10px;">
+        <el-button  :loading="loadings" type="primary" @click="jiexii" size="medium">
+          <span v-if="!loadings">开始解析</span>
           <span v-else>解 析 中...</span>
-          </el-button>
+        </el-button>
       </div>
-
     </div>
     <!-- 基础信息 -->
     <div>
@@ -113,17 +110,17 @@
         <div class="tit">
           <b style="margin-right: 20px; margin-bottom: 20px;">教育经历</b>
         </div>
-        <ul style="list-style: none;">
+        <ul style="list-style: none;padding-left: 1px;">
           <li v-for="work,i in perEducList"
            :key="i"
-           style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
-            <p><span>学校名称：</span>&nbsp<span>{{work.schoolName}}</span></p>
-            <p><span>学<span style="display: inline-block; width: 32px;"></span>历：</span>&nbsp<span>{{work.degree}}</span></p>
-            <p><span>专<span style="display: inline-block; width: 32px;"></span>业：</span>&nbsp<span>{{work.major}}</span></p>
-            <p><span> 时 间 段 :</span>&nbsp
-            <span v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
-            <span v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
-            <span v-else>{{"未知"+" 至 "+"未知"}}</span>
+           style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
+            <p style="font-weight: 700;"><span>学校名称：</span>&nbsp<span class="miaoshu">{{work.schoolName}}</span></p>
+            <p><span class="xiaotu">学<span style="display: inline-block; width: 32px;"></span>历：</span>&nbsp<span class="miaoshu">{{work.degree}}</span></p>
+            <p><span class="xiaotu">专<span style="display: inline-block; width: 32px;"></span>业：</span>&nbsp<span class="miaoshu">{{work.major}}</span></p>
+            <p><span class="xiaotu"> 时 间 段 :</span>&nbsp
+            <span v-if="work.endTime" class="miaoshu">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
+            <span v-else-if="work.startTime" class="miaoshu">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
+            <span v-else class="miaoshu">{{"未知"+" 至 "+"未知"}}</span>
             </p>
 
           </li>
@@ -134,30 +131,31 @@
           <b style="margin-right: 20px; margin-bottom: 20px;">工作经历</b>
         </div>
         <p></p>
-        <ul style="list-style: none;">
-          <li v-for="work in work_experienceListArr" style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
-            <p><span>公司名称：</span>&nbsp<span>{{work.companyName}}</span></p>
-            <p><span>公司类型：</span>&nbsp<span>{{work.jobFunction}}</span></p>
-            <p><span>工作岗位：</span>&nbsp<span>{{work.jobTitle}}</span></p>
-            <p><span>工作时间：</span>&nbsp<span>{{work.startTime+" 至 "+work.endTime}}</span></p>
+        <ul style="list-style: none;padding-left: 1px;">
+          <li v-for="work in work_experienceListArr" style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
+            <p style="font-weight: 700;"><span>公司名称：</span>&nbsp<span>{{work.companyName}}</span></p>
+            <p><span class="xiaotu">公司类型：</span>&nbsp<span class="miaoshu">{{work.jobFunction}}</span></p>
+            <p><span class="xiaotu">工作岗位：</span>&nbsp<span class="miaoshu">{{work.jobTitle}}</span></p>
+            <p><span class="xiaotu">工作时间：</span>&nbsp<span class="miaoshu">{{work.startTime+" 至 "+work.endTime}}</span></p>
           </li>
         </ul>
         <div class="tit">
           <b style="margin-right: 20px;">项目经厉</b>
         </div>
 
-        <ul style="list-style: none;">
-          <li v-for="project in project_experience" style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
-            <p><span>项目名称：</span>&nbsp<span>{{project.projectName}}</span></p>
-            <p><span>项目时间：</span>&nbsp<span>{{project.joinprojectTime+" 至 "+project.quitprojectTime}}</span></p>
-            <p><span>{{project.duty}}</span></p>
+        <ul style="list-style: none;padding-left: 1px;">
+          <li v-for="project in project_experience" style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
+            <p style="font-weight: 700;"><span>项目名称：</span>&nbsp<span>{{project.projectName}}</span></p>
+            <p><span class="xiaotu" >项目时间：</span>&nbsp<span class="miaoshu">{{project.joinprojectTime+" 至 "+project.quitprojectTime}}</span></p>
+            <p><span style="line-height: 1.5;color: #606266;">{{project.duty}}</span></p>
           </li>
         </ul>
-        <div style="position: fixed; bottom: 10px; right: 20%;">
-          <el-button size="medium " type="" @click="handleQuery" >取消</el-button>
-          <el-button size="medium " @click="resetQuery" type="success" v-hasPermi="['resume:record:edit']">保存</el-button>
+      <div class="qwe" style="height: 50px; line-height: 50px; background-color: #fff; bottom: 0;position: fixed;right: 10px;">
+        <div style="position:absolute;right: 25%;">
+          <el-button size="medium "  @click="handleQuery" >取消</el-button>
+          <el-button size="medium " @click="resetQuery" type="primary" v-hasPermi="['resume:record:edit']">保存</el-button>
         </div>
-
+      </div>
     <el-dialog :visible.sync="open"  title="简历查询" append-to-body>
       <div v-if="sous" style="height: 200px;">
         <div style="margin-top:200px" align="center">未查询到人员信息</div>
@@ -202,7 +200,6 @@
               />
     </el-dialog>
   </div>
-
 
 </template>
 
@@ -359,8 +356,7 @@
             this.msgSuccess("抢占成功"),
             this.select()
           }
-        }
-        )
+        })
       },
 
       // 取消
@@ -370,14 +366,18 @@
       //保存
       resetQuery:debounce(function(){this.resetQuerys()}),
       resetQuerys() {
-        this.$refs["form"].validate((valid) => {
-          if (valid) {
-            updateRecord(this.perCustomerinfo).then(response => {
-              this.msgSuccess("保存成功");
-              this.reset()
-            })
-          }
-        });
+        if (this.$refs.file.uploadFiles[0] == null) {
+          this.msgError("请选择简历")
+        } else {
+          this.$refs["form"].validate((valid) => {
+            if (valid) {
+              updateRecord(this.perCustomerinfo).then(response => {
+                this.msgSuccess("保存成功");
+                this.reset()
+              })
+            }
+          });
+        }
       },
       select(){
           this.loading=true
@@ -417,16 +417,26 @@
   };
 </script>
 
-<style scoped>
+<style  scoped>
+  .qwe{
+    width: calc(100% - 220px);
+  }
   .app-container{
     background-color: #fff;
     margin: 10px;
   }
-  .tit {
+  .xiaotu{
+    color: #909399;
+  }
+  .miaoshu{
+   color: #606266;
+  }
+  .tit{
     height: 42px;
     background: #F5F5F9;
     line-height: 42px;
     padding-left: 10px;
+    margin-top: 20px;
   }
 
   .input {

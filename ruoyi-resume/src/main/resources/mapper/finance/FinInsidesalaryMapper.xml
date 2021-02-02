@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.finance.mapper.FinInsidesalaryMapper">
+    
+    <resultMap type="FinInsidesalary" id="FinInsidesalaryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="leaveDate"    column="leave_date"    />
+        <result property="realAttence"    column="real_attence"    />
+        <result property="actualAttendance"    column="actual_attendance"    />
+        <result property="statutoryAttendance"    column="statutory_attendance"    />
+        <result property="actualIncome"    column="actual_income"    />
+        <result property="taxes"    column="taxes"    />
+        <result property="totalManagement"    column="total_management"    />
+        <result property="realSalary"    column="real_salary"    />
+        <result property="insurance"    column="insurance"    />
+        <result property="commission"    column="commission"    />
+        <result property="sideMonths"    column="side_months"    />
+        <result property="excelPath"    column="excel_path"    />
+        <result property="addDate"    column="add_date"    />
+        <result property="addPeople"    column="add_people"    />
+    </resultMap>
+
+    <sql id="selectFinInsidesalaryVo">
+        select id, name, leave_date, real_attence, actual_attendance, statutory_attendance, actual_income, taxes, total_management, real_salary, insurance, commission, side_months, excel_path, add_date, add_people from fin_insidesalary
+    </sql>
+
+    <select id="selectFinInsidesalaryList" parameterType="FinInsidesalary" resultMap="FinInsidesalaryResult">
+        <include refid="selectFinInsidesalaryVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="leaveDate != null  and leaveDate != ''"> and leave_date = #{leaveDate}</if>
+            <if test="realAttence != null  and realAttence != ''"> and real_attence = #{realAttence}</if>
+            <if test="actualAttendance != null  and actualAttendance != ''"> and actual_attendance = #{actualAttendance}</if>
+            <if test="statutoryAttendance != null  and statutoryAttendance != ''"> and statutory_attendance = #{statutoryAttendance}</if>
+            <if test="actualIncome != null  and actualIncome != ''"> and actual_income = #{actualIncome}</if>
+            <if test="taxes != null  and taxes != ''"> and taxes = #{taxes}</if>
+            <if test="totalManagement != null  and totalManagement != ''"> and total_management = #{totalManagement}</if>
+            <if test="realSalary != null  and realSalary != ''"> and real_salary = #{realSalary}</if>
+            <if test="insurance != null  and insurance != ''"> and insurance = #{insurance}</if>
+            <if test="commission != null  and commission != ''"> and commission = #{commission}</if>
+            <if test="sideMonths != null "> and side_months = #{sideMonths}</if>
+            <if test="excelPath != null  and excelPath != ''"> and excel_path = #{excelPath}</if>
+            <if test="addDate != null "> and add_date = #{addDate}</if>
+            <if test="addPeople != null  and addPeople != ''"> and add_people = #{addPeople}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinInsidesalaryById" parameterType="Long" resultMap="FinInsidesalaryResult">
+        <include refid="selectFinInsidesalaryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinInsidesalary" parameterType="FinInsidesalary" useGeneratedKeys="true" keyProperty="id">
+        insert into fin_insidesalary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="leaveDate != null">leave_date,</if>
+            <if test="realAttence != null">real_attence,</if>
+            <if test="actualAttendance != null">actual_attendance,</if>
+            <if test="statutoryAttendance != null">statutory_attendance,</if>
+            <if test="actualIncome != null">actual_income,</if>
+            <if test="taxes != null">taxes,</if>
+            <if test="totalManagement != null">total_management,</if>
+            <if test="realSalary != null">real_salary,</if>
+            <if test="insurance != null">insurance,</if>
+            <if test="commission != null">commission,</if>
+            <if test="sideMonths != null">side_months,</if>
+            <if test="excelPath != null">excel_path,</if>
+            <if test="addDate != null">add_date,</if>
+            <if test="addPeople != null">add_people,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="leaveDate != null">#{leaveDate},</if>
+            <if test="realAttence != null">#{realAttence},</if>
+            <if test="actualAttendance != null">#{actualAttendance},</if>
+            <if test="statutoryAttendance != null">#{statutoryAttendance},</if>
+            <if test="actualIncome != null">#{actualIncome},</if>
+            <if test="taxes != null">#{taxes},</if>
+            <if test="totalManagement != null">#{totalManagement},</if>
+            <if test="realSalary != null">#{realSalary},</if>
+            <if test="insurance != null">#{insurance},</if>
+            <if test="commission != null">#{commission},</if>
+            <if test="sideMonths != null">#{sideMonths},</if>
+            <if test="excelPath != null">#{excelPath},</if>
+            <if test="addDate != null">#{addDate},</if>
+            <if test="addPeople != null">#{addPeople},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinInsidesalary" parameterType="FinInsidesalary">
+        update fin_insidesalary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="leaveDate != null">leave_date = #{leaveDate},</if>
+            <if test="realAttence != null">real_attence = #{realAttence},</if>
+            <if test="actualAttendance != null">actual_attendance = #{actualAttendance},</if>
+            <if test="statutoryAttendance != null">statutory_attendance = #{statutoryAttendance},</if>
+            <if test="actualIncome != null">actual_income = #{actualIncome},</if>
+            <if test="taxes != null">taxes = #{taxes},</if>
+            <if test="totalManagement != null">total_management = #{totalManagement},</if>
+            <if test="realSalary != null">real_salary = #{realSalary},</if>
+            <if test="insurance != null">insurance = #{insurance},</if>
+            <if test="commission != null">commission = #{commission},</if>
+            <if test="sideMonths != null">side_months = #{sideMonths},</if>
+            <if test="excelPath != null">excel_path = #{excelPath},</if>
+            <if test="addDate != null">add_date = #{addDate},</if>
+            <if test="addPeople != null">add_people = #{addPeople},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinInsidesalaryById" parameterType="Long">
+        delete from fin_insidesalary where id = #{id}
+    </delete>
+
+    <delete id="deleteFinInsidesalaryByIds" parameterType="String">
+        delete from fin_insidesalary where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <insert id="insertFinInsidesalarylist" parameterType="java.util.List" >
+        insert into fin_insidesalary
+        (name,
+        leave_date,
+        real_attence,
+        actual_attendance,
+        statutory_attendance,
+        actual_income,
+        taxes,
+        total_management,
+        insurance,
+        commission,
+        real_salary,
+        side_months,
+        excel_path,
+        add_date,
+        add_people)
+        values
+        <foreach collection="list" item="proinfo"  index="index" separator=",">
+            (#{proinfo.name},
+            #{proinfo.leaveDate},
+            #{proinfo.realAttence},
+            #{proinfo.actualAttendance},
+            #{proinfo.statutoryAttendance},
+            #{proinfo.actualIncome},
+            #{proinfo.taxes},
+            #{proinfo.totalManagement},
+            #{proinfo.insurance},
+            #{proinfo.commission},
+            #{proinfo.realSalary},
+            #{proinfo.sideMonths},
+            #{proinfo.excelPath},
+            #{proinfo.addDate},
+            #{proinfo.addPeople}
+            )
+        </foreach>
+    </insert>
+
+    
+</mapper>

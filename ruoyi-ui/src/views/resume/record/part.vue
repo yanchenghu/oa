@@ -96,8 +96,9 @@
               <li v-if="mapList.length ==0">
                 <span>暂无入项信息</span>
               </li>
-              <li  v-else v-for="map in mapList" >
+              <li  v-else v-for="map in mapList" style="padding-left: 20px; margin-top: 20px;">
                 {{perCustomerinfo.customerName}} 于 {{map.trackingtime}} 入项 {{map.corp_name}} 公司项目
+
               </li>
             </ul>
           </div>
@@ -108,16 +109,15 @@
           <ul style="list-style: none;" class="font">
             <li v-for="work,i in perEducList"
              :key="i"
-             style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
-              <p><span>学校名称：</span>&nbsp<span>{{work.schoolName}}</span></p>
-              <p><span>学<span style="display: inline-block; width: 32px;"></span>历：</span>&nbsp<span>{{work.degree}}</span></p>
-              <p><span>专<span style="display: inline-block; width: 32px;"></span>业：</span>&nbsp<span>{{work.major}}</span></p>
-              <p><span> 时 间 段 :</span>&nbsp
-              <span v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
-              <span v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
-              <span v-else>{{"未知"+" 至 "+"未知"}}</span>
+             style=";padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
+              <p class="biaoti"><span >学校名称：</span>&nbsp<span >{{work.schoolName}}</span></p>
+              <p><span class="xiaotu">学<span style="display: inline-block; width: 30px;"></span>历：</span>&nbsp<span class="miaoshu" >{{work.degree}}</span></p>
+              <p><span class="xiaotu">专<span style="display: inline-block; width: 30px;"></span>业：</span>&nbsp<span class="miaoshu" >{{work.major}}</span></p>
+              <p><span class="xiaotu"> 时 间 段 :</span>&nbsp
+              <span class="miaoshu"  v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
+              <span class="miaoshu"  v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
+              <span  class="miaoshu" v-else>{{"未知"+" 至 "+"未知"}}</span>
               </p>
-
             </li>
           </ul>
 
@@ -126,26 +126,26 @@
           </div>
           <p></p>
           <ul style="list-style: none;" class="font">
-            <li v-for="work in work_experienceListArr" style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
-              <p><span>公司名称：</span>&nbsp<span>{{work.companyName?work.companyName:"未知"}}</span></p>
-              <p><span>公司类型：</span>&nbsp<span>{{work.jobFunction?work.jobFunction:"未知"}}</span></p>
-              <p><span>工作岗位：</span>&nbsp<span>{{work.jobTitle?work.jobTitle:"未知"}}</span></p>
-              <p><span>工作时间：</span>&nbsp
-              <span v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
-              <span v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
-              <span v-else>{{"未知"+" 至 "+"未知"}}</span></p>
+            <li v-for="work in work_experienceListArr" style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0;">
+              <p class="biaoti"><span >公司名称：</span>&nbsp<span >{{work.companyName?work.companyName:"未知"}}</span></p>
+              <p><span class="xiaotu">公司类型：</span>&nbsp<span class="miaoshu" >{{work.jobFunction?work.jobFunction:"未知"}}</span></p>
+              <p><span class="xiaotu">工作岗位：</span>&nbsp<span class="miaoshu" >{{work.jobTitle?work.jobTitle:"未知"}}</span></p>
+              <p><span class="xiaotu">工作时间：</span>&nbsp
+              <span class="miaoshu"  v-if="work.endTime">{{work.startTime?work.startTime+" 至 "+work.endTime :"未知"+" 至 "+work.endTime}}</span>
+              <span class="miaoshu"  v-else-if="work.startTime">{{work.endTime?work.startTime+" 至 "+work.endTime:work.startTime+" 至 "+"未知"}}</span>
+              <span class="miaoshu"  v-else>{{"未知"+" 至 "+"未知"}}</span></p>
             </li>
           </ul>
           <div class="tit">
             <b style="margin-right: 20px;">项目经厉</b>
           </div>
           <ul style="list-style: none;" class="font">
-            <li v-for="project in project_experience" style="background: #F5F5F9;padding: 5px 0 5px 20px;margin: 10px 0 10px 0; border-left: 2px solid #13CE66;">
-              <p><span>项目名称：</span>&nbsp<span>{{project.projectName}}</span></p>
-              <p><span>项目时间：</span>&nbsp<span v-if="project.quitprojectTime">{{project.joinprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime : "未知"+" 至 "+project.quitprojectTime}}</span>
-            <span v-else-if="project.joinprojectTime">{{project.quitprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime:project.joinprojectTime+" 至 "+"未知"}}</span>
-            <span v-else>{{"未知"+" 至 "+"未知"}}</span></p>
-              <p><span>{{project.duty}}</span></p>
+            <li v-for="project in project_experience" style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
+              <p class="biaoti"><span >项目名称：</span>&nbsp<span >{{project.projectName}}</span></p>
+              <p><span class="xiaotu">项目时间：</span>&nbsp<span class="miaoshu"  v-if="project.quitprojectTime">{{project.joinprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime : "未知"+" 至 "+project.quitprojectTime}}</span>
+            <span class="miaoshu"  v-else-if="project.joinprojectTime">{{project.quitprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime:project.joinprojectTime+" 至 "+"未知"}}</span>
+            <span class="miaoshu"  v-else>{{"未知"+" 至 "+"未知"}}</span></p>
+              <p><span class="miaoshu"  style="line-height: 1.5;">{{project.duty}}</span></p>
             </li>
           </ul>
           <br>
@@ -153,48 +153,33 @@
           <div class="tit">
             <b style="margin-right: 20px;">跟踪记录</b>
           </div>
-          <el-table :data="tableData" border style="width: 100%">
+          <el-table :data="tableData"  style="width: 100%;margin-top: 20px;padding-left: 10px;">
             </el-table-column>
-            <el-table-column prop="contact_time" label="跟踪时间"width="150" align="center">
+            <el-table-column prop="contact_time" label="跟踪时间"width="200" >
               </el-table-column>
-              <el-table-column prop="nick_name" label="跟踪人" align="center">
+              <el-table-column prop="nick_name" label="跟踪人" width="100">
             </el-table-column>
-            <el-table-column prop="update_static" label="跟踪状态" align="center" :formatter="updatestaticFormat">
+            <el-table-column prop="update_static" label="跟踪状态"  :formatter="updatestaticFormat" width="100">
             </el-table-column>
-            <el-table-column prop="memo_detail" label="跟踪情况" width="150" align="center" >
+            <el-table-column prop="follow_status" label="简历状态"   :formatter="followstatusFormat" width="100">
             </el-table-column>
-            <el-table-column prop="follow_status" label="简历状态"  align="center" :formatter="followstatusFormat">
+            <el-table-column prop="memo_detail" label="跟踪情况"  >
             </el-table-column>
+
           </el-table>
       </div>
 
       <!-- 右边操作栏 -->
-      <div>
-        <el-button style="margin-left: 0; display: block;margin-top: 30px;" v-for="but,index in button" :type="but.type" :disabled="but.disabled" :key="index" @click="buttoncli(index)">{{but.name}}</el-button>
+      <div style="position: fixed;right: 25px;top: 85px;">
+        <el-button plain style="margin-left: 0; display: block;margin-top: 30px;" v-for="but,index in button" :type="but.type" :disabled="but.disabled" :key="index" @click="buttoncli(index)">{{but.name}}</el-button>
       </div>
-      <el-dialog title="预览" :visible.sync="open" width="70%">
+      <el-dialog title="预览" :visible.sync="open2" width="70%">
        <iframe
           :src="src"
           style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
         ></iframe>
       </el-dialog>
-      <el-dialog :title="title" :visible.sync="open2" width="40%" append-to-body>
-        <el-form :model="form" :rules="rules" ref="form" label-position="right" label-width="80px">
-          <el-form-item label="简历状态">
-            <el-select v-model="form.updateStatic" placeholder="请选择简历状态">
-              <el-option label="跟进中" :value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="跟进情况" prop="memoDetail">
-              <el-input v-model="form.memoDetail" type="textarea" placeholder="请输入内容" style="width: 80%;"></el-input>
-          </el-form-item>
-
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
-        </div>
-      </el-dialog>
+      <mytrack :open="open" :title="title" :form="form" @getlist="getcustomerCode"></mytrack>
     </div>
   </div>
 </template>
@@ -207,24 +192,31 @@
   } from "@/api/resume/record/customerinfo";
   import{genzongbut}from'@/api/resume/mytrckresume.js'
   import store from "@/store";
+  import {debounce} from "@/utils/ruoyi.js"
+  import mytrack from "../../components/resume/mytrack.vue"
   export default{
     name:"part",
+    components:{
+      mytrack
+    },
     data(){
       return {
         title:"",
-        open2:false,
+        open:{
+          opens:false,
+        },
         name:store.getters.name,
         // 简历预览
-        open:false,
+        open2:false,
         // 入项信息
         mapList:[],
         // 按钮数据
         button:[
-          {name:"抢占简历",type:"primary",disabled:true},
-          {name:"预览简历",type:"primary"},
-          {name:"下载原版",type:"success"},
-          {name:"更改简历",type:"danger",disabled:true},
+          {name:"抢占简历",type:"warning",disabled:true},
           {name:"跟踪简历",type:"warning",disabled:true},
+          {name:"预览简历",type:"primary"},
+          {name:"下载原版",type:"xiazai"},
+          {name:"更改简历",type:"success",disabled:true},
           {name:"释放简历",type:"danger",disabled:true}
         ],
         // 抢占信息
@@ -255,6 +247,7 @@
          intentionareaOptions:[],
          // 跟踪状态字典
          updatestatic:[],
+         timer:null,
          // 简历状态字典
          followstatus:[],
          form:{},
@@ -305,8 +298,8 @@
           if(this.perro !== null){
             this.button[0].disabled = true
             if(this.perro.addPeople===this.name){
-              this.button[3].disabled = false
               this.button[4].disabled = false
+              this.button[1].disabled = false
               this.button[5].disabled = false
             }
           }else{
@@ -334,7 +327,7 @@
           this.msgSuccess("抢占成功"),
           this.getcustomerCode()
           )
-        }else if(val==1){
+        }else if(val==2){
 
           // 预览简历
           if(this.perCustomerinfo.resumePath==""||this.perCustomerinfo.resumePath==null){
@@ -342,34 +335,30 @@
           }else{
             let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
             this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
-            this.open=true
+            this.open2=true
           }
-        }else if(val==2){
+        }else if(val==3){
           // 下载原版
          if(this.perCustomerinfo.resumePath==""||this.perCustomerinfo.resumePath==null){
            this.msgError("该简历暂无原版")
          }else{
            let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
-            
-           location.href=`${srcs}`
+           window.open(srcs, '_blank');
          }
-        }else if(val==3){
+        }else if(val==4){
           // 更新简历信息
            this.$router.push({path:"/record/manually",query:{customerCode:this.perCustomerinfo.customerCode}});
-        }else if(val==4){
+        }else if(val==1){
           this.form = {}
           // 跟踪简历
-          this.open2=true
+          this.open.opens=true
           this.title = "简历跟踪"
           this.form.contactCustomercode = this.perCustomerinfo.customerCode
           this.form.updateStatic = 2
-            // let time = "2020-11-16"
-            // util.friendlyDate(new Date(time))
         }else if(val==5){
           // 释放简历
           var formData = new FormData()
           formData.append("customerCode",this.perCustomerinfo.customerCode)
-
           this.$confirm('是否确认释放简历编号为"' + this.$route.query.customerCode + '"的数据项?', "警告", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
@@ -377,34 +366,23 @@
             }).then(function() {
               return delRecord(formData);
             }).then(() => {
-              this.button[3].disabled = true
               this.button[4].disabled = true
+              this.button[1].disabled = true
               this.button[5].disabled = true
               this.getcustomerCode()
               this.msgSuccess("释放成功");
             })
         }
       },
-      submitForm(){
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            genzongbut(this.form).then(res=>{
-              this.msgSuccess("操作成功");
-              this.open2 = false;
-              this.getcustomerCode();
-            })
-          }
-        });
-      },
-      cancel(){
-         this.open2 = false;
-         this.form = {}
-      },
+
     },
   }
 </script>
 
 <style scoped>
+  .biaoti{
+    font-weight: 700;
+  }
   .time{
     width: 80px;
   }
@@ -424,7 +402,7 @@
     height: 42px;
     background: #F5F5F9;
     line-height: 42px;
-    padding-left: 10px;
+    padding-left: 20px;
   }
   >>>.el-form-item label:after {
         content: " ";
@@ -436,5 +414,16 @@
   }
   .font{
     font-size: 14px;
+    padding-left: 1px !important;
   }
+  >>>.el-input.is-disabled .el-input__inner{
+      color: #000000a6 !important;
+  }
+  .xiaotu{
+    color: #909399;
+  }
+  .miaoshu{
+   color: #606266;
+  }
+
 </style>

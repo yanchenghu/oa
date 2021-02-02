@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-      <el-form :model="queryParams" ref="queryForm" :inline="true"  style="width:80% ;" label-width="68px" @submit.native.prevent>
+      <el-form :model="queryParams" ref="queryForm" :inline="true"  style="width:80% ;"  @submit.native.prevent>
         <el-form-item label="名字" prop="customerName">
           <el-input
             v-model="queryParams.customerName"
@@ -20,7 +20,7 @@
           />
         </el-form-item>
         <el-form-item >
-          <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
         </el-form-item>
       </el-form>
       <el-table v-loading="loading" :data="tablelist" >
@@ -49,7 +49,7 @@
             <span>{{ parseTime(scope.row.contactTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作"  class-name="small-padding fixed-width" width="110">
+        <el-table-column label="操作"  class-name="small-padding fixed-width" width="120">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -70,30 +70,18 @@
         :limit.sync="queryParams.pageSize"
         @pagination="getlist"
       />
-      <el-dialog :title="title" :visible.sync="open" width="40%" append-to-body>
-        <el-form :model="form" :rules="rules" ref="form" label-position="right" label-width="80px">
-          <el-form-item label="简历状态">
-            <el-select v-model="form.updateStatic" placeholder="请选择简历状态">
-              <el-option label="跟进中" :value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="跟进情况" prop="memoDetail">
-              <el-input v-model="form.memoDetail" type="textarea" placeholder="请输入内容" style="width: 80%;"></el-input>
-          </el-form-item>
-
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
-        </div>
-      </el-dialog>
+      <mytrack :open="open" :title="title" :form="form" @getlist="getlist"></mytrack>
    </div>
 </template>
 
 <script>
   import{gettemplist,genzongbut,delRecord}from'@/api/resume/mytrckresume.js'
+  import mytrack from "../../components/resume/mytrack.vue"
   export default {
     name: "Yxdemand",
+    components:{
+      mytrack
+    },
     data() {
       return {
         // 总条数
@@ -112,14 +100,11 @@
         // 跟踪参数
         form:{},
         // 跟踪
-        open:false,
+        open:{
+          opens:false,
+        },
         // 标题
         title:"",
-        rules:{
-          memoDetail: [
-          { required: true, message: "跟踪情况不能为空", trigger: "blur" }
-        ],
-        },
       }
     },
     created() {
@@ -140,7 +125,7 @@
       },
       handleUpdate(row){
         this.form={}
-        this.open=true
+        this.open.opens=true
         this.title = "简历跟踪"
         this.form.contactCustomercode = row.customerCode
         this.form.updateStatic = 2
@@ -148,21 +133,6 @@
       handle(row){
         let customerCode = row.customerCode
         this.$router.push({path:"/record/particulars",query:{customerCode:customerCode}});
-        this.open = false;
-      },
-      submitForm(){
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            genzongbut(this.form).then(res=>{
-              this.msgSuccess("操作成功");
-              this.open = false;
-              this.getlist();
-            })
-          }
-        });
-      },
-      cancel(){
-         this.open = false;
       },
 
       shifangbut(row){

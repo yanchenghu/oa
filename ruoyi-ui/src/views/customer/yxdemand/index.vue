@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" style="width:80% ;" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" style="width:80% ;" label-width="68px" @submit.native.prevent>
       <el-form-item label="" prop="companyName">
         <el-input
           v-model.trim="queryParams.companyName"
@@ -12,7 +12,7 @@
         />
       </el-form-item>
       <el-form-item >
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
       </el-form-item>
       <el-form-item  prop="companySituation">
         <el-select v-model.trim="queryParams.companySituation"   placeholder="请选择公司性质" clearable size="small" @change="change">
@@ -35,7 +35,7 @@
         </el-select>
       </el-form-item>
       <el-button
-          type="cyan"
+          type="primary"
           size="mini"
           @click="handleAdd"
           style="position: absolute;right: 0;margin-right: 50px"
@@ -94,7 +94,7 @@
         <span v-if="scope.row.qq==1||scope.row.qq==2||scope.row.qq==3">{{scope.row.qq}}</span>
       </template>
       </el-table-column>
-      <el-table-column label="操作"  class-name="small-padding fixed-width" fixed="right" width="60">
+      <el-table-column label="操作"  class-name="small-padding fixed-width"  width="60">
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.isAccept==0"
@@ -162,12 +162,13 @@
        @close="dra"
        >
        <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
-       <div style=" padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
+       <div style=" padding:20px 3% 30px 3%; border-bottom: 1px solid #E6E6E6;">
          <div>
            <b>
              {{yxdemandone.companyName}}
            </b>
          </div>
+         <br/>
           <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
             <el-form-item label="公司性质">
               <el-select :disabled="yxdemandone.isAccept==1" v-model.trim="yxdemandone.companySituation"  @change="changes(yxdemandone.entryId)" size="small">
@@ -200,8 +201,8 @@
         <div>
           <el-tabs>
             <el-tab-pane label="联系人信息">
-              <div style="display: flex; justify-content: space-between;">
-              <el-form :disabled="yxdemandone.isAccept==1" ref="formmsg" label-position="right" label-width="80px" :model="yxdemandone" :rules="rules">
+              <div style="display: flex;justify-content: space-between;">
+              <el-form :disabled="yxdemandone.isAccept==1" ref="formmsg" label-position="right" label-width="80px" :model="yxdemandone" :rules="rules" >
                  <b>联系人信息</b>
                  <p></p>
                  <el-form-item label="姓名" prop="contactPeople">
@@ -223,7 +224,7 @@
                    <el-input v-model.trim="yxdemandone.qq" @input="sees"></el-input>
                  </el-form-item>
               </el-form>
-              <el-form label-position="left" label-width="100px" :model="yxdemandone" :disabled="yxdemandone.isAccept==1">
+              <el-form label-position="left" label-width="100px" :model="yxdemandone"  :disabled="yxdemandone.isAccept==1">
                 <b>外包公司信息</b>
                 <p></p>
                  <el-form-item label="面试名义公司">
@@ -505,7 +506,6 @@ export default {
     reset() {
       this.msg=null,
       this.form = {
-        putmsg:null,
         entryId: null,
         companyName: null,
         recruitmentJob: null,
@@ -540,7 +540,8 @@ export default {
         isReturnMoney: null,
         updateDate: null,
         entryDays: null,
-        contact: null
+        contact: null,
+        contactInformation:null,
       };
       this.resetForm("form");
     },
@@ -568,6 +569,22 @@ export default {
       this.title = "新建客户线索";
     },
     /** 提交按钮 */
+    jixu1:debounce(function(){this.jixu()},500),
+    jixu(){
+      addYxdemand(this.form).then(response => {
+      this.msgSuccess("新增成功");
+      this.getList();
+      this.reset()
+      });
+    },
+    baocun1:debounce(function(){this.baocun()},500),
+    baocun(){
+      addYxdemand(this.form).then(response => {
+      this.msgSuccess("新增成功");
+      this.open = false;
+      this.getList();
+      });
+    },
     submitForm(inx) {
       this.$refs["form"].validate(valid => {
         if (valid) {
@@ -575,17 +592,9 @@ export default {
             this.msgSuccess("新增失败");
           } else {
             if(inx==1){
-              addYxdemand(this.form).then(response => {
-                this.msgSuccess("新增成功");
-                this.getList();
-                this.reset()
-              });
+              this.jixu1()
             }else{
-              addYxdemand(this.form).then(response => {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              });
+              this.baocun1()
             }
           }
         }else{
@@ -643,7 +652,7 @@ export default {
 }
   .el-tabs__header{
     background: #F5F5F9;
-    padding-left:5%;
+    padding-left:3%;
   }
   .el-tabs__content{
     padding:20px 3% 0 3%;

@@ -17,14 +17,14 @@
       </el-dialog>
 
       <el-dialog :visible.sync="opens" width="400px" :title="titles" append-to-body>
-          <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
+          <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
             <div v-if="wen">
               <i class="el-icon-circle-plus" style="color:#0081FF;
               font-size: 67px;
               margin: 40px 0 16px;
               line-height: 50px;"></i>
               <div><b>点击上传简历</b></div>
-              <div class="el-upload__text" style="width: 210px;margin: 0 auto;">简历支持.docx .doc格式，大小不超过500kb，拖拽文件可直接上传</div>
+              <div class="el-upload__text" style="width: 210px;margin: 0 auto;">简历支持.docx .doc .pdf格式，大小不超过500kb，拖拽文件可直接上传</div>
             </div>
             <div v-else>
               <i class="el-icon-success" style="color:rgb(0,218,175);
@@ -46,6 +46,7 @@
   import {
     delFollow,
   } from "@/api/demand/binding";
+  import { debounce } from "@/utils/ruoyi"
   export default {
     props:{
       bangding:{
@@ -96,7 +97,8 @@
             this.opens = true
           }
         },
-        submitForms(){
+        submitForms:debounce(function(){this.submitFor()}),
+        submitFor(){
           let zm={
             customerCode:this.corpnamelist,
             demandId:this.bangding.id

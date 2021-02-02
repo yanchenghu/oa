@@ -31,6 +31,7 @@ import variables from "@/assets/styles/variables.scss";
 
 export default {
     components: { SidebarItem, Logo },
+
     computed: {
         ...mapState(["settings"]),
         ...mapGetters(["permission_routes", "sidebar"]),
@@ -52,6 +53,12 @@ export default {
         isCollapse() {
             return !this.sidebar.opened;
         }
-    }
+    },
+
 };
 </script>
+<style scoped>
+  >>>.sidebar-container .svg-icon{
+    margin-right: 10px !important;
+  }
+</style>

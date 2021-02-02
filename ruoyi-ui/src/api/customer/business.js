@@ -20,7 +20,7 @@ export function getYxdemand(entryId) {
 // 新增营销录入公司
 export function addYxdemand(data) {
   return request({
-    url: '/customer/yxdemand',
+    url: 'customer/yxdemand/newintention',
     method: 'post',
     data: data
   })

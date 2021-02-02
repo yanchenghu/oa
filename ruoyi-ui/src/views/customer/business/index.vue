@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" style="width:80% ;" label-width="68px" @submit.native.prevent>
       <el-form-item label="" prop="companyName">
         <el-input
@@ -12,8 +11,14 @@
         />
       </el-form-item>
       <el-form-item >
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
       </el-form-item>
+      <!-- <el-button
+          type="primary"
+          size="small"
+          @click="handleAdd"
+          style="position: absolute;right: 0;margin-right: 30px"
+        >新建意向客户</el-button> -->
     </el-form>
    <el-row :gutter="10" class="mb8">
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -68,7 +73,7 @@
         <span v-if="scope.row.qq==1||scope.row.qq==2||scope.row.qq==3">{{scope.row.qq}}</span>
       </template>
       </el-table-column>
-      <el-table-column label="操作"  class-name="small-padding fixed-width" fixed="right" width="60">
+      <el-table-column label="操作"  class-name="small-padding fixed-width"  width="60">
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.isBusiness!==4"
@@ -99,12 +104,13 @@
        @close="dra"
        >
        <div style="margin:0 3% 0 3%;border-left:1px solid #E6E6E6;">
-       <div style=" padding:20px 3% 30px 2%; border-bottom: 1px solid #E6E6E6;">
+       <div style=" padding:20px 3% 30px 3%; border-bottom: 1px solid #E6E6E6;">
          <div>
            <b>
              {{yxdemandone.companyName}}
            </b>
          </div>
+         <br/>
           <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
             <el-form-item label="公司性质">
               <el-select  v-model.trim="yxdemandone.companySituation"  @change="changes(yxdemandone.entryId)" size="small" :disabled="yxdemandone.isBusiness==4">
@@ -289,15 +295,76 @@
           <el-button  type="primary" @click="onSu">确定</el-button>
         </div>
      </el-dialog>
+     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+       <el-form ref="form" :model="form" :rules="rules" label-width="125px" style="width: 620px;">
+         <el-form-item label="公司名称" prop="companyName" >
+           <el-input  v-model="form.companyName"  placeholder="请输入公司名称"  @blur="findname(form.companyName)" style="width: 251px;"/>
+           &nbsp;<span v-if="msg==1" style="color: green;line-height: 40px;position: absolute;"> <i class="el-icon-success"></i></span>
+         </el-form-item>
+         <el-form-item label="联系人姓名" prop="contactPeople">
+           <el-input v-model.trim="form.contactPeople"  placeholder="请输入联系人" style="width: 251px;"/>
+         </el-form-item>
+         <el-form-item label="联系人职位" prop="contactPosition">
+           <el-input v-model.trim="form.contactPosition"  placeholder="请输入联系人职位"style="width: 251px;" />
+         </el-form-item>
+         <el-form-item label="联系人电话" prop="contactPhone">
+           <el-input v-model.trim="form.contactPhone"  placeholder="请输入联系方式" style="width: 251px;"/>
+         </el-form-item>
+         <el-form-item label="公司性质"  prop="companySituation">
+            <el-radio-group v-model.trim="form.companySituation">
+               <el-radio v-for="dict in companySituationOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
+             </el-radio-group>
+         </el-form-item>
+         <el-form-item label="线索状态" prop="isFollowSubmit">
+           <el-radio-group v-model.trim="form.isFollowSubmit">
+              <el-radio v-for="dict in isFollowSubmitOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
+            </el-radio-group>
+         </el-form-item>
+         <el-form-item label="联系情况" prop="contactInformation">
+           <el-input type="textarea" autosize placeholder="请输入最近一次联系情况" v-model.trim="form.contactInformation"></el-input>
+         </el-form-item>
+       </el-form>
+       <div slot="footer" class="dialog-footer">
+         <el-button type="primary" @click="submitForm(1)">保存并继续</el-button>
+         <el-button  @click="submitForm(2)">保 存</el-button>
+         <el-button @click="cancel">取 消</el-button>
+       </div>
+     </el-dialog>
   </div>
 </template>
 
 <script>
   import { getYxdemand,listbusiness,addYxdemand,see,exportYxdemand,release}from "@/api/customer/business";
+  import { findnames} from "@/api/customer/yxdemand";
   import {debounce} from "@/utils/ruoyi.js"
 export default {
   name: "Yxdemand",
   data() {
+    var checkAge = (rule, value, callback) => {
+       if (!value) {
+         return callback(new Error('公司名称不能为空'));
+       }
+       setTimeout(() => {
+         if (this.msg==2) {
+           callback(new Error('该公司已存在'));
+         }else{
+           callback()
+         }
+       }, 1000);
+      };
+    var phone = (rule, value, callback) => {
+        if (!value) {
+         return callback(new Error('不能为空'))
+        } else {
+          const reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/
+          const isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/
+          if (reg.test(value)||isPhone.test(value)) {
+            callback()
+          } else {
+            return callback(new Error('请输入正确的手机号'))
+          }
+        }
+      }
     return {
       user:"rxg2016",
       opens:false,
@@ -349,12 +416,13 @@ export default {
       },
       // 表单参数
       form: {},
+      msg:null,
       // 表单校验
       rules: {
         companyName: [{
           required: true,
-          message: "公司名称不能为空",
-          trigger: ["blur", "change"]
+          validator: checkAge,
+          trigger: ["blur"]
         }, ],
         contactPeople: [{
           required: true,
@@ -367,12 +435,7 @@ export default {
           trigger: ["blur", "change"]
         }, ],
         contactPhone: [
-          { required: true, message: "手机号码不能为空", trigger: "blur" },
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: ["blur", "change"]
-          }
+          { required: true,validator: phone, trigger: ["blur", "change"] },
         ],
         mailbox:[{
           type: 'email',
@@ -500,16 +563,27 @@ export default {
       this.open = false;
       this.reset();
     },
-
+    findname(name){
+      if(name==""||name==null){
+        this.msg=null
+      }else{
+        let formData = new FormData()
+        formData.append("companyName",name)
+        findnames(formData).then(res=>{
+          this.msg=res
+        })
+      }
+    },
     // 表单重置
     reset() {
+      this.msg=null,
       this.form = {
-        putmsg:null,
         entryId: null,
         companyName: null,
         recruitmentJob: null,
         contactPeople: null,
         contactPosition: null,
+        contactInformation:null,
         contactPhone: null,
         infoSourse: null,
         companySituation: null,
@@ -567,6 +641,22 @@ export default {
       this.title = "新建客户线索";
     },
     /** 提交按钮 */
+    jixu1:debounce(function(){this.jixu()},500),
+    jixu(){
+      addYxdemand(this.form).then(response => {
+      this.msgSuccess("新增成功");
+      this.getList();
+      this.reset()
+      });
+    },
+    baocun1:debounce(function(){this.baocun()},500),
+    baocun(){
+      addYxdemand(this.form).then(response => {
+      this.msgSuccess("新增成功");
+      this.open = false;
+      this.getList();
+      });
+    },
     submitForm(inx) {
       this.$refs["form"].validate(valid => {
         if (valid) {
@@ -574,19 +664,13 @@ export default {
             this.msgSuccess("新增失败");
           } else {
             if(inx==1){
-              addYxdemand(this.form).then(response => {
-                this.msgSuccess("新增成功");
-                this.getList();
-                this.reset()
-              });
+              this.jixu1()
             }else{
-              addYxdemand(this.form).then(response => {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              });
+              this.baocun1()
             }
           }
+        }else{
+          this.msg=null
         }
       });
     },
@@ -636,7 +720,7 @@ export default {
 }
   .el-tabs__header{
     background: #F5F5F9;
-    padding-left:5%;
+    padding-left:3%;
   }
   .el-tabs__content{
     padding:20px 3% 0 3%;

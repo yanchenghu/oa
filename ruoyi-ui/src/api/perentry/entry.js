@@ -9,6 +9,14 @@ export function listEntry(query) {
   })
 }
 
+
+export function deletehetong(id) {
+  return request({
+    url: '/perentry/entry/' + id,
+    method: 'delete'
+  })
+}
+
 // 查询入项详细
 export function getEntry(id) {
   return request({
@@ -27,6 +35,13 @@ export function getwupin(id) {
 export function addEntry(data) {
   return request({
     url: '/perentry/entry/addCertifi',
+    method: 'post',
+    data: data
+  })
+}
+export function addPhoto(data) {
+  return request({
+    url: '/perentry/entry/addLaborcontract',
     method: 'post',
     data: data
   })

@@ -6,13 +6,12 @@
           v-model="queryParams.templateName"
           placeholder="搜索"
           clearable
-          size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
 
       <el-form-item>
-        <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+        <el-button type="primary" icon="el-icon-search"  @click="handleQuery">查询</el-button>
       </el-form-item>
     </el-form>
 
@@ -21,7 +20,7 @@
         <el-button
           type="primary"
           icon="el-icon-plus"
-          size="mini"
+
           @click="handleAdd"
         >新增</el-button>
       </el-col>
@@ -56,7 +55,6 @@
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
-
     <!-- 添加或修改简历模板对话框 -->
     <el-dialog :title="title" :visible.sync="openn" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules"  label-width="80px" >
@@ -164,8 +162,7 @@ export default {
     download(val){
       if(val.templateFile!==null){
         let srcs = process.env.VUE_APP_BASE_API+val.templateFile
-        window.open(
-        `${srcs}`)
+        window.open(srcs, '_blank');
       }else{
         this.msgError("该简历暂无原版")
       }

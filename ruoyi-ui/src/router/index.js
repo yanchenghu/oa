@@ -61,7 +61,7 @@ export const constantRoutes = [
         path: 'index',
         component: (resolve) => require(['@/views/index'], resolve),
         name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+        meta: { title: '首页', icon: 'home', noCache: true, affix: true }
       }
     ]
   },
@@ -79,13 +79,13 @@ export const constantRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/qqq',
-  //   component: (resolve) => require(['@/views/components/icons/index.vue'], resolve),
-  //   // hidden: true,
-  //   // redirect: 'noredirect',
+  {
+    path: '/qqq',
+    component: (resolve) => require(['@/views/components/icons/index.vue'], resolve),
+    // hidden: true,
+    // redirect: 'noredirect',
 
-  // },
+  },
   {
     path: '/dict',
     component: Layout,
