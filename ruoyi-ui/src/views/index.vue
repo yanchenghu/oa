@@ -114,12 +114,12 @@ export default {
         this.datalist.numb = 2
         getlists().then(res=>{
           this.datalist = res.data
-          this.datalist.firstEnter = 0
-          this.datalist.firstRob = 0
-          this.datalist.firstMarbing = 0
-          this.datalist.firstresumeadopt = 0
-          this.datalist.firstinterviewadopt = 0
-          this.datalist.firstentryPeople = 0
+          // this.datalist.firstEnter = 0
+          // this.datalist.firstRob = 0
+          // this.datalist.firstMarbing = 0
+          // this.datalist.firstresumeadopt = 0
+          // this.datalist.firstinterviewadopt = 0
+          // this.datalist.firstentryPeople = 0
           this.datalist.numb = 2
         });
       }

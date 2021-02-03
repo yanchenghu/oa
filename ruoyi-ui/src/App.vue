@@ -28,5 +28,11 @@ export default  {
     }
   .icons{
     font-size: 14px !important;
-  }  
+  }
+  @media (min-width: 1750px) {
+    .asd{
+      float: right;
+      margin-right: 0 !important;
+    }
+  }
 </style>

@@ -716,8 +716,7 @@
         this.comform.id=this.tempID
         this.$refs["comform"].validate((valid) => {
           if (valid) {
-            if(this.comform.salary - this.comform.servicePay >0)
-            {console.log(this.comform.salary+"---"+this.comform.servicePay)
+            if(this.comform.salary - this.comform.servicePay >0){
               this.msgError("人员成本不能大于服务费")}else{
               let that = this
               this.$confirm('确认信息完整并入项吗?', "警告", {

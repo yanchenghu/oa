@@ -741,10 +741,8 @@ import {getCompany} from "@/api/customer/company";
         this.gettemplate()
         getFollow(row.demandId).then(response => {
           this.form = response.data.marDeman;
-          console.log(this.form.demandPic)
           if(this.form.demandPic){
             this.filelist=[{name:"",url:`${process.env.VUE_APP_BASE_API}${this.form.demandPic}`}]
-            
           }
           let list =[]
           response.data.Signlis.forEach(item=>{
@@ -752,7 +750,6 @@ import {getCompany} from "@/api/customer/company";
           })
           this.form.list=list
           this.open = true;
-          console.log(this.$refs.file)
           if(ind==1){
             this.title = "修改需求";
           }else{

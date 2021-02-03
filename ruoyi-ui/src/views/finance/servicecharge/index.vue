@@ -58,18 +58,25 @@
           />
         </el-select>
       </el-form-item>
-     <el-form-item>
+     <el-form-item class="asd">
        <el-button type="primary" v-hasPermi="['finance:servicecharge:batchBilling']" :disabled="multiple" plain  size="small" @click="batchkaipiao">批量开票</el-button>
        <el-button type="primary" v-hasPermi="['finance:servicecharge:batchPayment']" :disabled="multiple" plain  size="small" @click="batchfukuan">批量付款</el-button>
        <el-button type="primary" v-hasPermi="['finance:servicecharge:add']"  size="small" @click="handleAdd">新增核算单</el-button>
-       <el-button type="primary"  size="small" @click="seemuban">查看文件模板</el-button>
+       <el-button type="primary" plain  size="small" @click="seemuban">查看文件模板</el-button>
        <el-button type="success" :disabled="singles" size="small" @click="handlesele">修改</el-button>
      </el-form-item>
     </el-form>
     <el-button type="primary" plain   size="small" @click="handleExport" style=" float: right;margin-bottom: 10px;">导出</el-button>
     <el-table :row-class-name="OutRowClassName"  :data="servicechargeList" @selection-change="handleSelectionChange" v-loading="loading">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="姓名"  prop="customerName" />
+      <el-table-column label="姓名"  prop="customerName">
+        <template slot-scope="scope">
+          <el-button
+            type="text"
+            @click="handsee(scope.row)"
+          >{{scope.row.customerName}}</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="结算单开始时间"  prop="time" width="180">
       </el-table-column>
       <el-table-column label="服务费"  prop="price" />
@@ -94,21 +101,18 @@
         <template slot-scope="scope">
           <el-button
             v-if="scope.row.status==1"
-            size="small"
             type="text"
             @click="batchkaipiao(scope.row)"
             v-hasPermi="['finance:servicecharge:batchBilling']"
           ><svg-icon icon-class="kp" class="icons"/>开票</el-button>
           <el-button
             v-if="scope.row.status==2"
-            size="small"
             type="text"
             @click="batchfukuan(scope.row)"
             v-hasPermi="['finance:servicecharge:batchPayment']"
           ><svg-icon icon-class="fk" class="icons"/>付款</el-button>
           <el-button
             v-if="scope.row.status==3"
-            size="small"
             type="text"
             @click="handlesele(scope.row,1)"
           ><svg-icon icon-class="eye-open" class="icons"/>查看</el-button>
@@ -162,43 +166,41 @@
         <el-button @click="open2=false">取 消</el-button>
       </div>
     </el-dialog>
+
     <el-dialog :visible.sync="dialogVisible" width="500px" title="预览图片">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
 
     <el-dialog title="查看" :visible.sync="open4" width="500px" append-to-body>
+      <el-form  style="width: 200px;"  label-width="80px">
 
-      <el-form ref="form"  style="width: 200px;"  label-width="80px">
-        <el-form-item label="姓名" prop="customerName">
-          <span class="span">{{form.customerName}}</span>
-        </el-form-item>
         <el-form-item label="付款时间" prop="paymentTime">
           <span class="span">{{form.paymentTime}}</span>
         </el-form-item>
-        <el-form-item label="服务费" prop="price">
-          <span class="span">{{form.price}}</span>
-        </el-form-item>
-        <el-form-item label="标准工时" prop="standard">
-           <span class="span">{{form.standard}}</span>
-        </el-form-item>
-        <el-form-item label="出勤工时" prop="attenDance">
-          <span class="span">{{form.attenDance}}</span>
-        </el-form-item>
-        <el-form-item label="加班费" prop="overPay">
-          <span class="span">{{form.overPay}}</span>
-        </el-form-item>
-        <el-form-item label="合计" prop="comBined">
-          <span class="span">{{form.comBined}}</span>
-        </el-form-item>
-        <el-form-item label="修改原因" prop="reasons">
-          <span class="span">{{form.reasons}}</span>
+        <el-form-item label="付款图片">
+          <li class="li-li" v-if="form.paymentTime">
+              <img  width="100%"  :src="srcs+form.paymentTime">
+                <span class="imgs">
+                  <span
+                   class="el-upload-list__item-preview"
+                    @click="filesee(form.paymentTime)"
+                  >
+                    <i class="el-icon-zoom-in"></i>
+                  </span>
+                  <span
+                    @click="filedow(form.paymentTime)"
+                  >
+                    <i class="el-icon-download"></i>
+                  </span>
+                </span>
+          </li>
         </el-form-item>
       </el-form>
     </el-dialog>
     <!-- 修改 -->
     <el-dialog title="修改核算单" :visible.sync="open3" width="500px" append-to-body>
       <el-alert
-        v-if="form.reason==null"
+        v-if="form.reasons"
         title="仅限修改一次,请考虑"
         type="error">
       </el-alert>
@@ -208,36 +210,36 @@
         type="error">
       </el-alert>
       <br>
-      <el-form ref="form" :disabled="form.reason!==null" style="width: 200px;" :model="form" :rules="rules"  label-width="80px">
+      <el-form ref="form" :disabled="!form.reasons" style="width: 230px;" :model="form" :rules="rules"  label-width="80px">
         <el-form-item label="姓名" prop="customerName">
           <span>{{form.customerName}}</span>
         </el-form-item>
         <el-form-item label="服务费" prop="price">
-          <el-input v-model.number="form.price"/>
+          <el-input v-model="form.price"/>
         </el-form-item>
         <el-form-item label="标准工时" prop="standard">
-          <el-input v-model.number="form.standard"/>
+          <el-input v-model="form.standard"/>
         </el-form-item>
         <el-form-item label="出勤工时" prop="attenDance">
-          <el-input v-model.number="form.attenDance"/>
+          <el-input v-model="form.attenDance"/>
         </el-form-item>
         <el-form-item label="加班费" prop="overPay">
-          <el-input v-model.number="form.overPay"/>
+          <el-input v-model="form.overPay"/>
         </el-form-item>
         <el-form-item label="合计" prop="comBined">
-          <el-input v-model.number="form.comBined"/>
+          <el-input v-model="form.comBined"/>
         </el-form-item>
-        <el-form-item label="修改原因" prop="reasons">
-          <el-input v-model.number="form.reasons"/>
+        <el-form-item label="修改原因" prop="reason">
+          <el-input v-model="form.reason"/>
         </el-form-item>
       </el-form>
-      <div v-if="form.reason==null"  slot="footer" class="dialog-footer">
+      <div v-if="form.reasons"  slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submithetong">确 定</el-button>
         <el-button @click="open3=false">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="文件模板预览" :visible.sync="wenjian" width="70%">
-      <el-button type="primary" @click="downl">下载模板</el-button>
+    <el-dialog :title="title" :visible.sync="wenjian" width="70%">
+      <el-button v-if="title=='文件模板预览'" type="primary" @click="downl">下载模板</el-button>
      <iframe
         :src="src"
         style="overflow: auto; position: absolute; top: 140px; right: 0; bottom: 0; left: 0; width: 100%; height:500px; border: none;"
@@ -258,7 +260,7 @@
 
     <!-- 添加或修改服务费核算请求书对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form2" :model="form" :rules="rules" label-width="80px">
         <el-upload action="wqewq" ref="file" class="upload-demo" drag accept=".xlsx,.xls" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
           <div v-if="wen">
               <i class="el-icon-upload"></i>
@@ -311,6 +313,19 @@ import {
 export default {
   name: "Servicecharge",
   data() {
+    var price = (rule, value, callback) => {
+          // const reg = /^\d+.?\d{0,2}$/
+          const reg = /^[+-]?(0|([1-9]\d*))(\.\d{0,2})?$/g
+          if (value===""){
+            callback(new Error("不能为空"))
+          } else {
+            if (reg.test(value)){
+              callback()
+            } else {
+              callback(new Error('请输入数字且保留两位小数'))
+            }
+          }
+        }
     return {
       pickerOptions3:{
         disabledDate:(time) => {
@@ -320,6 +335,7 @@ export default {
       wenjian:false,
       value1:"",
       src:"",
+      srcs:process.env.VUE_APP_BASE_API,
       open4:false,
       // 遮罩层
       loading: true,
@@ -384,30 +400,30 @@ export default {
         }, ],
         price:[{
             required: true,
-            message: "服务费不能为空",
-            trigger: ["blur","change"]
+            validator: price,
+            trigger: "blur",
           },],
         standard:[{
             required: true,
-            message: "标准工时不能为空",
+            validator: price,
             trigger: ["blur","change"]
           },],
         attenDance:[{
             required: true,
-            message: "出勤工时不能为空",
+            validator: price,
             trigger: ["blur","change"]
           },],
         overPay:[{
             required: true,
-            message: "加班费不能为空",
-            trigger: ["blur","change"]
+            validator: price,
+            trigger: "blur"
           },],
         comBined:[{
             required: true,
-            message: "合计不能为空",
+            validator: price,
             trigger: ["blur","change"]
           },],
-        reasons:[{
+        reason:[{
             required: true,
             message: "修改原因不能为空",
             trigger: ["blur","change"]
@@ -430,7 +446,18 @@ export default {
   methods: {
     seemuban(){
       this.wenjian = true
+      this.title = "文件模板预览"
       this.src = "https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://115.159.35.233:8090/profile/avatar/system/%E8%AF%B7%E6%B1%82%E4%B9%A6%E5%BD%95%E5%85%A5%E7%B3%BB%E7%BB%9F%E6%A8%A1%E6%9D%BF.xls"
+    },
+    handsee(row){
+      if(row.excelPath==null){
+        this.msgError("暂无原文件")
+      }else{
+        let srcs = process.env.VUE_APP_BASE_API+row.excelPath
+        this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
+        this.wenjian = true
+        this.title = "预览人员信息"
+      }
     },
     getCorpName(){
       corpNames().then(res=>{
@@ -447,17 +474,19 @@ export default {
       this.dialogVisible = true;
     },
     handlesele(row,ind){
+      this.reset()
       if(ind){
         this.open4= true
       }else{
         this.open3= true
         this.title = "修改服务费核算请求书";
       }
-      let ids =  row.id || this.ids
-      this.reset()
+      let ids = row.id || this.ids
       getServicecharge(ids).then(response => {
         this.form = response.data;
-        this.form.reasons = this.form.reason
+        if(this.form.reason==null){
+          this.form.reasons = true
+        }
       });
     },
     // 付款状态
@@ -508,15 +537,13 @@ export default {
         overPay:null,
         comBined:null,
         reason:null,
-        reasons:null,
       };
       this.resetForm("form");
+      this.resetForm("form2");
       if(this.$refs.file!==undefined){
         this.$refs.file.clearFiles()
       }
     },
-
-
     submitfukuan(){
       this.$refs["form1"].validate(valid => {
         if (valid) {
@@ -535,7 +562,7 @@ export default {
             }).then(() => {
               this.getList();
               this.fukuan = false
-              this.msgSuccess("开票成功");
+              this.msgSuccess("付款成功");
             }).catch(()=>{})
         }
       })
@@ -594,9 +621,9 @@ export default {
       }
     },
     submithetong(){
+      console.log(this.form)
       this.$refs["form"].validate(valid => {
         let form = this.form
-        form.reason = form.reasons
         if (valid) {
           this.$confirm('是否确认修改"' + form.customerName + '"的服务费核算请求吗?', "警告", {
               confirmButtonText: "确定",
@@ -615,7 +642,8 @@ export default {
     OutRowClassName({row, rowIndex}) {
       let endtime = row.comBined
       let statetime = row.price/row.standard*row.attenDance+row.overPay
-      if(endtime !==statetime){
+      let zong = statetime - endtime
+      if(Math.abs(zong)>1000){
         row.yuanyin = true
         return 'warning-row';
       }
@@ -685,6 +713,8 @@ export default {
           this.msgSuccess("开票成功");
         }).catch(()=>{})
     },
+    filesee(){},
+    filedow(){},
     /** 提交按钮 */
     submitForm() {
       if (this.$refs.file.uploadFiles[0] == null) {
@@ -694,7 +724,7 @@ export default {
       formData.append('file', this.$refs.file.uploadFiles[0].raw);
       formData.append('corpCode', this.form.corpCode);
       formData.append('party', this.form.party);
-      this.$refs["form"].validate(valid => {
+      this.$refs["form2"].validate(valid => {
        if (valid) {
           addServicecharge(formData).then(response => {
             this.msgSuccess("新增成功");
@@ -739,13 +769,48 @@ export default {
   }
 };
 </script>
-<style>
-  .el-table .warning-row {
+<style scoped>
+  >>>.el-table .warning-row {
       color: red;
   }
   .span{
     font-size: 14px;
     font-weight: 400;
     color: #909399;
+  }
+  .li-li{
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #c0ccda;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: 148px;
+    height: 148px;
+    margin: 0 8px 8px 0;
+    display: inline-block;
+    position: relative;
+  }
+  .imgs{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      cursor: default;
+      color: #fff;
+      opacity: 0;
+      font-size: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: opacity .3s;
+      display: flex;
+      justify-content: space-around;
+  }
+  .imgs:hover{
+    opacity: 1;
+  }
+  .imgs span{
+    align-self: center;
+    position: static;
+    cursor: pointer;
   }
 </style>

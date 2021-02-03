@@ -22,7 +22,7 @@
         <div class="card-panel" @click="handleSetLineChartData(1)">
           <div class="card-panel-description">
             <div class="card-panel-text">
-              抢占跟踪
+              抢占
             </div>
             <count-to :start-val="0" :end-val="dataList.entryrobnnum" :duration="2600" class="card-panel-num5" />
             <count-to :start-val="0" :end-val="dataList.firstRob" :duration="2600" class="card-panel-num" />
@@ -223,7 +223,7 @@
       <el-table :data="gridData" v-if="dataList.numb==2" v-loading="loading">
         <el-table-column property="customerName" label="姓名" ></el-table-column>
         <el-table-column property="customerTel" label="电话"  ></el-table-column>
-        <el-table-column v-if="title=='录入'||title=='抢占跟踪'" property="addTime" label="录入时间"></el-table-column>
+        <el-table-column v-if="title=='录入'||title=='抢占'" property="addTime" label="录入时间"></el-table-column>
         <el-table-column v-else  property="trackingtime" label="操作时间"></el-table-column>
       </el-table>
       <el-table :data="gridData" v-if="dataList.numb==1" v-loading="loading">
@@ -283,7 +283,7 @@ export default {
       if(type==0){
         this.title = "录入"
       }else if(type == 1){
-        this.title = "抢占跟踪"
+        this.title = "抢占"
       }else if(type == 2){
         this.title = "绑定"
       }else if(type == 3){

@@ -214,8 +214,8 @@
         button:[
           {name:"抢占简历",type:"warning",disabled:true},
           {name:"跟踪简历",type:"warning",disabled:true},
-          {name:"预览简历",type:"primary"},
-          {name:"下载原版",type:"xiazai"},
+          {name:"预览简历",type:"primary",disabled:true},
+          {name:"下载原版",type:"xiazai",disabled:true},
           {name:"更改简历",type:"success",disabled:true},
           {name:"释放简历",type:"danger",disabled:true}
         ],
@@ -295,18 +295,25 @@
           this.perro = res.data.perrobcustomer
           this.mapList = res.data.mapList
           this.perEducList=res.data.perEducList
+          let reg = /^(\d{3})\d{4}(\d{4})$/;
           if(this.perro !== null){
             this.button[0].disabled = true
             if(this.perro.addPeople===this.name){
               this.button[4].disabled = false
               this.button[1].disabled = false
               this.button[5].disabled = false
+              this.button[2].disabled = false
+              this.button[3].disabled = false
+            }else{
+              this.perCustomerinfo.customerTel = this.perCustomerinfo.customerTel.replace(reg, "$1****$2");
             }
           }else{
             this.perro={}
             this.button[0].disabled = false
+            this.perCustomerinfo.customerTel = this.perCustomerinfo.customerTel.replace(reg, "$1****$2");
           }
         })
+
       },
 
       // 跟踪字典翻译
@@ -324,11 +331,10 @@
           var formData = new FormData()
           formData.append("customerCode",this.perCustomerinfo.customerCode)
           addRecord(formData).then(
+          this.getcustomerCode(),
           this.msgSuccess("抢占成功"),
-          this.getcustomerCode()
           )
         }else if(val==2){
-
           // 预览简历
           if(this.perCustomerinfo.resumePath==""||this.perCustomerinfo.resumePath==null){
             this.msgError("该简历暂无原版")
@@ -369,6 +375,8 @@
               this.button[4].disabled = true
               this.button[1].disabled = true
               this.button[5].disabled = true
+              this.button[2].disabled = true
+              this.button[3].disabled = true
               this.getcustomerCode()
               this.msgSuccess("释放成功");
             })

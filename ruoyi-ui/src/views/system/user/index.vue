@@ -101,7 +101,7 @@
               v-hasPermi="['system:user:edit']"
             >修改</el-button>
           </el-col>
-          <el-col :span="1.5">
+          <!-- <el-col :span="1.5">
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -110,7 +110,7 @@
               @click="handleDelete"
               v-hasPermi="['system:user:remove']"
             >删除</el-button>
-          </el-col>
+          </el-col> -->
           <el-col :span="1.5">
             <el-button
               type="info"
@@ -169,14 +169,14 @@
                 @click="handleUpdate(scope.row)"
                 v-hasPermi="['system:user:edit']"
               >修改</el-button>
-              <el-button
+             <!-- <el-button
                 v-if="scope.row.userId !== 1"
                 size="mini"
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['system:user:remove']"
-              >删除</el-button>
+              >删除</el-button> -->
               <el-button
                 size="mini"
                 type="text"
@@ -416,7 +416,7 @@ export default {
         pageSize: 10,
         userName: undefined,
         phonenumber: undefined,
-        status: "0",
+        status: 0,
         deptId: undefined
       },
       // 表单校验

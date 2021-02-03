@@ -6,7 +6,7 @@
           <span>
             排行榜
           </span>
-          <el-tabs v-model="biaoqian" >
+          <el-tabs v-model="biaoqian">
               <el-tab-pane label="入项" name="first">
                </el-tab-pane>
               <el-tab-pane label="面试通过" name="second"></el-tab-pane>
@@ -109,13 +109,12 @@
       <div style="height: 100%;background: #fff; width: 100%;border-radius: 2px;">
         <div class="div-a aa" >
           <span>录入的需求</span>
-          <el-tabs v-model="biaoqian1" >
+          <el-tabs v-model="biaoqian1" style="width:400px;">
               <el-tab-pane label="发布时间" name="time">
                </el-tab-pane>
               <el-tab-pane label="绑定最多" name="moer"></el-tab-pane>
           </el-tabs>
         </div>
-
         <ul class="cont-ul" >
           <div style="height: 600px; overflow: auto; width: 100%; margin-left: -35px;" >
             <el-col :xs="24" :sm="24" :lg="12" v-for="list,index in biaoqian1=='time'?dataList.marDWorLit:dataList.marThreeLit" :key="index" >
