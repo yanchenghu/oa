@@ -158,7 +158,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectAllrobPeo"  resultMap="User">
 		SELECT b.* from  per_robcustomer a
         LEFT JOIN sys_user b on a.add_people=b.user_name
-        where a.Status=0 and a.del_flag=0
+        where a.Status=0 and b.del_flag=0
 		GROUP BY a.add_people
     </select>
     <select id="selectfirstRob"  resultType="int">

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.finance.mapper.FinAncecompanyMapper">
+    
+    <resultMap type="FinAncecompany" id="FinAncecompanyResult">
+        <result property="id"    column="id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="corpName"    column="corp_name"    />
+        <result property="statu"    column="statu"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <resultMap type="FinAncecontact" id="FinAncecontactResult">
+        <result property="contactId"    column="contact_id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="corpName"    column="corp_name"    />
+        <result property="contactSituation"    column="contact_situation"    />
+        <result property="paymentTime"    column="payment_time"    />
+        <result property="actualMonth"    column="actual_month"    />
+        <result property="actualMoney"    column="actual_money"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="receivedPayment"    column="received_payment"    />
+        <result property="manMonth"    column="man_month"    />
+        <result property="collectionStatus"    column="collection_status"    />
+        <result property="collectionTime"    column="collection_time"    />
+        <result property="lastmonthWages"    column="lastmonth_wages"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="addPeople"    column="add_people"    />
+    </resultMap>
+
+    <sql id="selectFinAncecompanyVo">
+        select id, corp_code, corp_name, statu, add_time from fin_ancecompany
+    </sql>
+
+    <select id="selectFinAncecompanyList" parameterType="FinAncecompany" resultMap="FinAncecompanyResult">
+        <include refid="selectFinAncecompanyVo"/>
+        <where>  
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="statu != null "> and statu = #{statu}</if>
+            <if test="addTime != null ">  and DATE_FORMAT(add_time,"%Y%m")=DATE_FORMAT( #{addTime},"%Y%m")</if>
+        </where>
+    </select>
+    
+    <select id="selectFinAncecompanyById" parameterType="Integer" resultMap="FinAncecompanyResult">
+        <include refid="selectFinAncecompanyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinAncecompany" parameterType="FinAncecompany" useGeneratedKeys="true" keyProperty="id">
+        insert into fin_ancecompany
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">corp_code,</if>
+            <if test="corpName != null">corp_name,</if>
+            <if test="statu != null">statu,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="corpName != null">#{corpName},</if>
+            <if test="statu != null">#{statu},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinAncecompany" parameterType="FinAncecompany">
+        update fin_ancecompany
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
+            <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="statu != null">statu = #{statu},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinAncecompanyById" parameterType="Integer">
+        delete from fin_ancecompany where id = #{id}
+    </delete>
+
+    <delete id="deleteFinAncecompanyByIds" parameterType="String">
+        delete from fin_ancecompany where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectFinAncecontactList" parameterType="FinAncecompany" resultMap="FinAncecontactResult">
+      SELECT  a.id as contact_id,a.corp_name,a.corp_code, b.contact_situation, b.payment_time, b.actual_month, b.actual_money, b.add_time,
+       b.received_payment, b.man_month, b.collection_status, b.collection_time, b.lastmonth_wages,b.remarks
+        from fin_ancecompany a LEFT JOIN
+        fin_ancecontact b  on a.corp_code=b.corp_code and a.add_time=b.add_time
+        where a.statu=1
+        <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+        <if test="addTime != null "> and DATE_FORMAT(a.add_time,"%Y%m")=DATE_FORMAT( #{addTime},"%Y%m")</if>
+    </select>
+    <select id="selectFinAncecontactById" parameterType="Integer" resultMap="FinAncecontactResult">
+        SELECT  a.corp_name,a.corp_code,b.contact_id, b.contact_situation, b.payment_time, b.actual_month, b.actual_money, b.add_time,
+        b.received_payment, b.man_month, b.collection_status, b.collection_time, b.lastmonth_wages,b.remarks
+        from fin_ancecompany a LEFT JOIN
+        fin_ancecontact b  on a.corp_code=b.corp_code and a.add_time=b.add_time
+        where a.statu=1
+        and  a.id=#{id}
+
+    </select>
+
+    <delete id="deleteFinAncecontactById" parameterType="String">
+        delete from fin_ancecontact where corp_code = #{corpCode} and   DATE_FORMAT(add_time,"%Y%m")=DATE_FORMAT( now(),"%Y%m")
+    </delete>
+    
+</mapper>

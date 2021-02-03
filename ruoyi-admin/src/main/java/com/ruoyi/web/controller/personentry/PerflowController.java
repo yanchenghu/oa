@@ -108,7 +108,7 @@ public class PerflowController extends BaseController {
     /**
      * 导出出项列表
      */
-    @PreAuthorize("@ss.hasPermi('perentry:entry:out')")
+    @PreAuthorize("@ss.hasPermi('perentry:entry:export')")
     @Log(title = "入项", businessType = BusinessType.EXPORT)
     @GetMapping("/out")
     public AjaxResult out(MarCustomerprojectpay marCustomerprojectpay)

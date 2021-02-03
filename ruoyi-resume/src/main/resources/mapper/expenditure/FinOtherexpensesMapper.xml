@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.expenditure.mapper.FinOtherexpensesMapper">
+    
+    <resultMap type="FinOtherexpenses" id="FinOtherexpensesResult">
+        <result property="id"    column="id"    />
+        <result property="rent"    column="rent"    />
+        <result property="hydropower"    column="hydropower"    />
+        <result property="property"    column="property"    />
+        <result property="materiaCost"    column="materia_cost"    />
+        <result property="taxation"    column="taxation"    />
+        <result property="otherCost"    column="other_cost"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="insertTime"    column="insert_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDelflag"    column="is_delflag"    />
+    </resultMap>
+
+    <resultMap type="Expenditure" id="FinOtherexpensesResults">
+        <result property="id"    column="id"    />
+        <result property="rent"    column="rent"    />
+        <result property="hydropower"    column="hydropower"    />
+        <result property="property"    column="property"    />
+        <result property="materiaCost"    column="materia_cost"    />
+        <result property="taxation"    column="taxation"    />
+        <result property="otherCost"    column="other_cost"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectFinOtherexpensesVo">
+        select id, rent, hydropower, property, materia_cost, taxation, other_cost, remarks, insert_time, update_time, is_delflag from fin_otherexpenses
+    </sql>
+
+    <select id="selectFinOtherexpensesList" parameterType="FinOtherexpenses" resultMap="FinOtherexpensesResult">
+        <include refid="selectFinOtherexpensesVo"/>
+        <where>  
+            <if test="rent != null  and rent != ''"> and rent = #{rent}</if>
+            <if test="hydropower != null  and hydropower != ''"> and hydropower = #{hydropower}</if>
+            <if test="property != null  and property != ''"> and property = #{property}</if>
+            <if test="materiaCost != null  and materiaCost != ''"> and materia_cost = #{materiaCost}</if>
+            <if test="taxation != null  and taxation != ''"> and taxation = #{taxation}</if>
+            <if test="otherCost != null  and otherCost != ''"> and other_cost = #{otherCost}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="insertTime != null "> and  DATE_FORMAT(insert_time,"%Y%m")=DATE_FORMAT( #{insertTime},"%Y%m")</if>
+            <if test="isDelflag != null "> and is_delflag = #{isDelflag}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinOtherexpensesById" parameterType="Long" resultMap="FinOtherexpensesResult">
+        <include refid="selectFinOtherexpensesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinOtherexpenses" parameterType="FinOtherexpenses" useGeneratedKeys="true" keyProperty="id">
+        insert into fin_otherexpenses
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rent != null">rent,</if>
+            <if test="hydropower != null">hydropower,</if>
+            <if test="property != null">property,</if>
+            <if test="materiaCost != null">materia_cost,</if>
+            <if test="taxation != null">taxation,</if>
+            <if test="otherCost != null">other_cost,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="insertTime != null">insert_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelflag != null">is_delflag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rent != null">#{rent},</if>
+            <if test="hydropower != null">#{hydropower},</if>
+            <if test="property != null">#{property},</if>
+            <if test="materiaCost != null">#{materiaCost},</if>
+            <if test="taxation != null">#{taxation},</if>
+            <if test="otherCost != null">#{otherCost},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="insertTime != null">#{insertTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="isDelflag != null">#{isDelflag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinOtherexpenses" parameterType="FinOtherexpenses">
+        update fin_otherexpenses
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rent != null">rent = #{rent},</if>
+            <if test="hydropower != null">hydropower = #{hydropower},</if>
+            <if test="property != null">property = #{property},</if>
+            <if test="materiaCost != null">materia_cost = #{materiaCost},</if>
+            <if test="taxation != null">taxation = #{taxation},</if>
+            <if test="otherCost != null">other_cost = #{otherCost},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="insertTime != null">insert_time = #{insertTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="isDelflag != null">is_delflag = #{isDelflag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinOtherexpensesById" parameterType="Long">
+        delete from fin_otherexpenses where id = #{id}
+    </delete>
+
+    <delete id="deleteFinOtherexpensesByIds" parameterType="String">
+        delete from fin_otherexpenses where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectFinOtherexpensesLists" resultType="int" >
+        SELECT count(1) from fin_otherexpenses where
+        DATE_FORMAT(curdate(),"%Y%m")=DATE_FORMAT(insert_time,"%Y%m")
+    </select>
+
+
+    <select id="selectFinOtherexpensesListt" parameterType="Expenditure" resultMap="FinOtherexpensesResults">
+        <include refid="selectFinOtherexpensesVo"/>
+        <where>
+            <if test="rent != null  and rent != ''"> and rent = #{rent}</if>
+            <if test="hydropower != null  and hydropower != ''"> and hydropower = #{hydropower}</if>
+            <if test="property != null  and property != ''"> and property = #{property}</if>
+            <if test="materiaCost != null  and materiaCost != ''"> and materia_cost = #{materiaCost}</if>
+            <if test="taxation != null  and taxation != ''"> and taxation = #{taxation}</if>
+            <if test="otherCost != null  and otherCost != ''"> and other_cost = #{otherCost}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="insertTime != null "> and insert_time = #{insertTime}</if>
+            <if test="isDelflag != null "> and is_delflag = #{isDelflag}</if>
+        </where>
+    </select>
+    
+</mapper>
