@@ -52,58 +52,58 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取本月录入
         List<PerCustomerinfo> EnterInfo = perCustomerinfoMapper.selectPerCustomerinfoByMonth(perCustomerinfo);
         int firstEnter=0;
-        try {
-            firstEnter = perCustomerinfoMapper.selectfirstEnter();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            firstEnter = perCustomerinfoMapper.selectfirstEnter();
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         //获取抢占跟踪
         List<PerRobcustomer> ListperRob = perRobcustomerMapper.selectPerRobdatadisplayList(map);
         int firstRob= 0;
-        try {
-            firstRob= perRobcustomerMapper.selectfirstRob();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            firstRob= perRobcustomerMapper.selectfirstRob();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         //获取简历绑定人数
         map.put("followStatus",1);
         List<Map> ListMarbing=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
         int firstMarbing=0;
-        try {
-            firstMarbing=marDemandresumeMapper.selectfirstMarbingBystatus(map);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            firstMarbing=marDemandresumeMapper.selectfirstMarbingBystatus(map);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         //获取简历通过
         map.put("followStatus",3);
         List<Map> resumeadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
         int firstresumeadopt=0;
-        try {
-            firstresumeadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            firstresumeadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
         //获取简历面试通过
         map.put("followStatus",5);
         List<Map> interviewadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
         int firstinterviewadopt=0;
-        try {
-            firstinterviewadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            firstinterviewadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
         //获取简历入项
         map.put("followStatus",7);
         List<Map> entryPeople=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
         int firstentryPeople=0;
-        try {
-            firstentryPeople=marDemandresumeMapper.selectfirstMarbingBystatus(map);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            firstentryPeople=marDemandresumeMapper.selectfirstMarbingBystatus(map);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
         //本月入项排行榜
         List<Map> RankingEntry=marCustomerprojectpayMapper.getRankingEntry();

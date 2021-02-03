@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.finance.mapper.FinAncecontactMapper">
+
+    <resultMap type="FinAncecontact" id="FinAncecontactResult">
+        <result property="contactId"    column="contact_id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="contactSituation"    column="contact_situation"    />
+        <result property="paymentTime"    column="payment_time"    />
+        <result property="actualMonth"    column="actual_month"    />
+        <result property="actualMoney"    column="actual_money"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="receivedPayment"    column="received_payment"    />
+        <result property="manMonth"    column="man_month"    />
+        <result property="collectionStatus"    column="collection_status"    />
+        <result property="collectionTime"    column="collection_time"    />
+        <result property="lastmonthWages"    column="lastmonth_wages"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="addPeople"    column="add_people"    />
+    </resultMap>
+
+    <sql id="selectFinAncecontactVo">
+        select contact_id, corp_code, contact_situation, payment_time, actual_month, actual_money, add_time, received_payment, man_month, collection_status, collection_time, lastmonth_wages, remarks, add_people from fin_ancecontact
+    </sql>
+
+    <select id="selectFinAncecontactList" parameterType="FinAncecontact" resultMap="FinAncecontactResult">
+        <include refid="selectFinAncecontactVo"/>
+        <where>
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="contactSituation != null  and contactSituation != ''"> and contact_situation = #{contactSituation}</if>
+            <if test="paymentTime != null  and paymentTime != ''"> and payment_time = #{paymentTime}</if>
+            <if test="actualMonth != null  and actualMonth != ''"> and actual_month = #{actualMonth}</if>
+            <if test="actualMoney != null  and actualMoney != ''"> and actual_money = #{actualMoney}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="receivedPayment != null  and receivedPayment != ''"> and received_payment = #{receivedPayment}</if>
+            <if test="manMonth != null "> and man_month = #{manMonth}</if>
+            <if test="collectionStatus != null "> and collection_status = #{collectionStatus}</if>
+            <if test="collectionTime != null "> and collection_time = #{collectionTime}</if>
+            <if test="lastmonthWages != null  and lastmonthWages != ''"> and lastmonth_wages = #{lastmonthWages}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+            <if test="addPeople != null  and addPeople != ''"> and add_people = #{addPeople}</if>
+        </where>
+    </select>
+
+    <select id="selectFinAncecontactById" parameterType="Integer" resultMap="FinAncecontactResult">
+        <include refid="selectFinAncecontactVo"/>
+        where contact_id = #{contactId}
+    </select>
+
+    <insert id="insertFinAncecontact" parameterType="FinAncecontact" useGeneratedKeys="true" keyProperty="contactId">
+        insert into fin_ancecontact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">corp_code,</if>
+            <if test="contactSituation != null">contact_situation,</if>
+            <if test="paymentTime != null">payment_time,</if>
+            <if test="actualMonth != null">actual_month,</if>
+            <if test="actualMoney != null">actual_money,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="receivedPayment != null">received_payment,</if>
+            <if test="manMonth != null">man_month,</if>
+            <if test="collectionStatus != null">collection_status,</if>
+            <if test="collectionTime != null">collection_time,</if>
+            <if test="lastmonthWages != null">lastmonth_wages,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="addPeople != null">add_people,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="contactSituation != null">#{contactSituation},</if>
+            <if test="paymentTime != null">#{paymentTime},</if>
+            <if test="actualMonth != null">#{actualMonth},</if>
+            <if test="actualMoney != null">#{actualMoney},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="receivedPayment != null">#{receivedPayment},</if>
+            <if test="manMonth != null">#{manMonth},</if>
+            <if test="collectionStatus != null">#{collectionStatus},</if>
+            <if test="collectionTime != null">#{collectionTime},</if>
+            <if test="lastmonthWages != null">#{lastmonthWages},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="addPeople != null">#{addPeople},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFinAncecontact" parameterType="FinAncecontact">
+        update fin_ancecontact
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
+            <if test="contactSituation != null">contact_situation = #{contactSituation},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+            <if test="actualMonth != null">actual_month = #{actualMonth},</if>
+            <if test="actualMoney != null">actual_money = #{actualMoney},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="receivedPayment != null">received_payment = #{receivedPayment},</if>
+            <if test="manMonth != null">man_month = #{manMonth},</if>
+            <if test="collectionStatus != null">collection_status = #{collectionStatus},</if>
+            <if test="collectionTime != null">collection_time = #{collectionTime},</if>
+            <if test="lastmonthWages != null">lastmonth_wages = #{lastmonthWages},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="addPeople != null">add_people = #{addPeople},</if>
+        </trim>
+        where contact_id = #{contactId}
+    </update>
+
+    <delete id="deleteFinAncecontactById" parameterType="Integer">
+        delete from fin_ancecontact where contact_id = #{contactId}
+    </delete>
+
+    <delete id="deleteFinAncecontactByIds" parameterType="String">
+        delete from fin_ancecontact where contact_id in
+        <foreach item="contactId" collection="array" open="(" separator="," close=")">
+            #{contactId}
+        </foreach>
+    </delete>
+
+
+    <select id="selAncecontact" parameterType="FinAncecontact" resultMap="FinAncecontactResult">
+        <include refid="selectFinAncecontactVo"/>
+        <where>
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="addTime != null "> and DATE_FORMAT(add_time,"%Y%m")=DATE_FORMAT( #{addTime},"%Y%m")</if>
+        </where>
+    </select>
+
+</mapper>
