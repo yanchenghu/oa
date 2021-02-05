@@ -66,7 +66,7 @@
        <el-button type="success" :disabled="singles" size="small" @click="handlesele">修改</el-button>
      </el-form-item>
     </el-form>
-    <el-button type="primary" plain   size="small" @click="handleExport" style=" float: right;margin-bottom: 10px;">导出</el-button>
+    <el-button type="primary" plain v-hasPermi="['finance:servicecharge:export']" size="small" @click="handleExport" style=" float: right;margin-bottom: 10px;">导出</el-button>
     <el-table :row-class-name="OutRowClassName"  :data="servicechargeList" @selection-change="handleSelectionChange" v-loading="loading">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名"  prop="customerName">

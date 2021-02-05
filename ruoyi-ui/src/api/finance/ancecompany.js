@@ -8,6 +8,13 @@ export function listAncecompany(query) {
     params: query
   })
 }
+export function listMonitoring(query) {
+  return request({
+    url: '/finance/ancecompany/listMonitoring',
+    method: 'get',
+    params: query
+  })
+}
 export function gethistory(data) {
   return request({
     url: '/finance/ancecompany/selAncecontact',
@@ -22,11 +29,25 @@ export function getAncecompany(id) {
     method: 'get'
   })
 }
+export function getMonitoring(id) {
+  return request({
+    url: '/finance/ancecompany/gettMon/' + id,
+    method: 'get'
+  })
+}
 
 // 新增每月公司其他住处费用
 export function addAncecompany(data) {
   return request({
     url: '/finance/ancecompany',
+    method: 'post',
+    data: data
+  })
+}
+// 新增每月公司其他住处费用
+export function addMonitoring(data) {
+  return request({
+    url: '/finance/ancecompany/addMonitoring',
     method: 'post',
     data: data
   })
@@ -39,11 +60,25 @@ export function updateAncecompany(data) {
     data: data
   })
 }
+export function updateMonitoring(data) {
+  return request({
+    url: 'finance/ancecompany/editMonitoring',
+    method: 'put',
+    data: data
+  })
+}
 
 // 删除每月公司其他住处费用
 export function delAncecompany(id) {
   return request({
     url: '/finance/ancecompany/' + id,
+    method: 'delete'
+  })
+}
+
+export function delMonitorid(id) {
+  return request({
+    url: '/finance/ancecompany/reMonitorid/' + id,
     method: 'delete'
   })
 }

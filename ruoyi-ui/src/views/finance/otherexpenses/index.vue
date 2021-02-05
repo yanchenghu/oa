@@ -20,8 +20,8 @@
       </el-form-item>
     </el-form>
     <div style=" float: right;margin-bottom: 10px;">
-      <el-button  type="primary" size="small" @click="handleAdd">新增支出</el-button>
-      <el-button type="primary" plain v-hasPermi="['expenditure:otherexpenses:export']"  size="small" @click="handleExport" >导出</el-button>
+      <el-button  type="primary" v-hasPermi="['finance:otherexpenses:add']" size="small" @click="handleAdd">新增支出</el-button>
+      <el-button type="primary" plain v-hasPermi="['finance:otherexpenses:export']"  size="small" @click="handleExport" >导出</el-button>
     </div>
     <el-table v-loading="loading" :data="otherexpensesList" @selection-change="handleSelectionChange">
       <el-table-column label="序号"  type="index" width="55"/>
@@ -32,18 +32,22 @@
       <el-table-column label="税费"  prop="taxation" />
       <el-table-column label="其他"  prop="otherCost" />
       <el-table-column label="备注"  prop="remarks" />
+      <el-table-column label="添加时间">
+        <template slot-scope="scope">
+          <span>{{parseTime(scope.row.insertTime,"{y}-{m}-{d}")}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作"  class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['expenditure:otherexpenses:edit']"
+            v-hasPermi="['finance:otherexpenses:edit']"
           >修改</el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
       v-show="total>0"
       :total="total"
@@ -51,7 +55,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
     <!-- 添加或修改每月公司其他住处费用对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" style="width: 300px;">

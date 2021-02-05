@@ -22,14 +22,14 @@
     <div style="display: flex;justify-content: space-between;margin-bottom: 10px;">
       <div style="font-weight: 400;font-size: 25px;">{{ parseTime(this.queryParams.addTime, '{y}年{m}月')}}份预计回款明细</div>
       <div>
-        <el-button  type="primary" size="small" @click="handleAdd">新增回款公司</el-button>
-        <el-button type="primary" plain v-hasPermi="['expenditure:Ancecompany:export']"  size="small" @click="handleExport" >导出</el-button>
+        <el-button  type="primary" v-hasPermi="['expenditure:Ancecompany:add']" size="small" @click="handleAdd">新增回款公司</el-button>
+        <!-- <el-button type="primary" plain v-hasPermi="['expenditure:Ancecompany:export']"  size="small" @click="handleExport" >导出</el-button> -->
         <el-button
         v-if="kaiguan"
           :disabled="single"
           type="danger"
-          @click="handleDelete(scope.row)"
-          v-hasPermi="['expenditure:Ancecompany:edit']"
+          @click="handleDelete"
+          v-hasPermi="['expenditure:Ancecompany:remove']"
         >删除</el-button>
       </div>
     </div>
@@ -85,58 +85,36 @@
       @pagination="getList"
     />
 
-    <!-- <div style="display: flex;justify-content: space-between;margin-bottom: 10px;margin-top: 50px;">
+    <div style="display: flex;justify-content: space-between;margin-bottom: 10px;margin-top: 50px;">
       <div style="font-weight: 400;font-size: 25px;">重点监测公司</div>
       <div>
-        <el-button  type="primary" size="small" @click="handleAdd2">新增检测公司</el-button>
-        <el-button type="primary" plain v-hasPermi="['expenditure:Ancecompany:export']"  size="small" @click="handleExport" >导出</el-button>
+        <el-button  type="primary" v-hasPermi="['expenditure:Ancecompany:add']" size="small" @click="handleAdd2">新增检测公司</el-button>
+        <!-- <el-button type="primary" plain v-hasPermi="['expenditure:Ancecompany:export']"  size="small" @click="handleExport" >导出</el-button> -->
         <el-button
-        v-if="kaiguan"
-          :disabled="single"
+          :disabled="single2"
           type="danger"
-          @click="handleDelete(scope.row)"
-          v-hasPermi="['expenditure:Ancecompany:edit']"
+          @click="handleDelete2"
+          v-hasPermi="['expenditure:Ancecompany:remove']"
         >删除</el-button>
       </div>
     </div>
 
-    <el-table v-loading="loading" :data="AncecompanyList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading2" :data="Monitoringlist" @selection-change="handleSelectionChange2">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号"  type="index" width="55"/>
-      <el-table-column label="客户名称" prop="corpName">
-        <template slot-scope="scope">
-          <el-button
-            type="text"
-            @click="handleSee(scope.row)"
-          >{{scope.row.corpName}}</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="人/月"  prop="manMonth" />
-      <el-table-column label="回款月份"  prop="actualMonth" />
-      <el-table-column label="应回款金额"  prop="actualMoney" />
-      <el-table-column label="未回款金额" >
-        <template slot-scope="scope">
-          <span v-if="scope.row.actualMoney!==null&&scope.row.receivedPayment!==null">{{scope.row.actualMoney-scope.row.receivedPayment}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="上个月工资"  prop="lastmonthWages" />
-      <el-table-column label="当月营收" >
-        <template slot-scope="scope">
-          <span v-if="scope.row.actualMoney!==null">{{scope.row.actualMoney-scope.row.lastmonthWages}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="已回款金额"  prop="receivedPayment" />
+      <el-table-column label="客户名称" prop="corpName" />
+      <el-table-column label="预回款月份"  prop="backMonth" />
+      <el-table-column label="目前欠款"  prop="currentArrears" />
+      <!-- <el-table-column label="总欠款"  prop="accumulatedCollection" />
+      <el-table-column label="总成本"  prop="allExpenditure" /> -->
       <el-table-column label="沟通情况"  prop="contactSituation" />
-      <el-table-column label="备注"  prop="remarks"/>
-      <el-table-column label="预回款时间"  prop="collectionTime" />
-      <el-table-column label="回款状态"  prop="collectionStatus" />
       <el-table-column label="操作"  class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             v-if="kaiguan"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleUpdate2(scope.row)"
             v-hasPermi="['expenditure:Ancecompany:edit']"
           >修改</el-button>
         </template>
@@ -144,16 +122,16 @@
     </el-table>
 
     <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      v-show="total2>0"
+      :total="total2"
+      :page.sync="queryParams2.pageNum"
+      :limit.sync="queryParams2.pageSize"
       @pagination="getList"
-    /> -->
+    />
     <!-- 添加或修改每月公司其他住处费用对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px" style="width: 300px;">
-        <el-form-item label="客户名称" >
+        <el-form-item label="客户名称">
           <span>{{form.corpName}}</span>
         </el-form-item>
         <el-form-item label="人/月" prop="manMonth">
@@ -166,7 +144,7 @@
             format="yyyy 年 MM 月 "
             value-format="yyyy-MM"
             v-model="form.actualMonth"
-            placeholder="请选择选择月份"
+            placeholder="请选择回款月份"
             :picker-options="pickerOptions3"
             >
           </el-date-picker>
@@ -202,7 +180,7 @@
             format="yyyy 年 MM 月 dd 日"
             value-format="yyyy-MM-dd"
             v-model="form.collectionTime"
-            placeholder="请选择选择时间"
+            placeholder="请选择预回款时间"
             >
           </el-date-picker>
         </el-form-item>
@@ -262,14 +240,16 @@
           <el-table-column label="回款状态"  prop="collectionStatus" />
         </el-table>
     </el-dialog>
-    
-    <!-- <el-dialog :title="title" :visible.sync="open4" width="500px" append-to-body>
+
+    <el-dialog :title="title" :visible.sync="open4" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px" style="width: 300px;">
-        <el-form-item label="客户名称" prop="corpName">
+        <el-form-item label="客户名称" prop="corpCode">
+          <span v-if="title=='修改重点监测公司'">{{form.corpName}}</span>
           <el-select
-              v-model="form.corpName"
+              v-else
+              v-model="form.corpCode"
               filterable
-              placeholder="请选择客户">
+              placeholder="请选择客户名称">
               <el-option
                 v-for="item in corpnamelists"
                 :key="item.corpCode"
@@ -278,67 +258,35 @@
               </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="回款月份" prop="actualMonth">
+
+        <el-form-item label="预回款月份" prop="backMonth">
           <el-date-picker
             type="month"
             style="width:200px;"
             format="yyyy 年 MM 月 "
             value-format="yyyy-MM"
-            v-model="form.actualMonth"
-            placeholder="请选择选择月份"
-            :picker-options="pickerOptions3"
+            v-model="form.backMonth"
+            placeholder="请选择预回款月份"
             >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="目前欠款" prop="actualMoney">
-          <el-input v-model="form.actualMoney" placeholder="请输入应回款" />
-        </el-form-item>
-        <el-form-item label="总欠款" prop="receivedPayment">
-          <el-input v-model="form.receivedPayment" placeholder="请输入已回款金额" />
-        </el-form-item>
-        <el-form-item label="上个月工资" prop="lastmonthWages">
-          <el-input v-model="form.lastmonthWages" placeholder="请输入其他" />
+        <el-form-item label="目前欠款" prop="currentArrears">
+          <el-input v-model="form.currentArrears" placeholder="请输入应回款" />
         </el-form-item>
         <el-form-item label="沟通情况" prop="contactSituation">
           <el-input type="textarea" v-model="form.contactSituation" placeholder="请输入沟通情况" />
         </el-form-item>
-        <el-form-item label="回款状态" prop="collectionStatus">
-            <el-select
-                v-model="form.collectionStatus"
-                placeholder="请选择回款状态">
-                <el-option
-                  v-for="item in contactSituationlist"
-                  :key="parseInt(item.dictValue)"
-                  :label="item.dictLabel"
-                  :value="parseInt(item.dictValue)">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="预回款时间" prop="collectionTime">
-          <el-date-picker
-            type="date"
-            style="width:200px;"
-            format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd"
-            v-model="form.collectionTime"
-            placeholder="请选择选择时间"
-            >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="备注" prop="remarks">
-          <el-input type="textarea" v-model="form.remarks" placeholder="请输入备注" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm1">确 定</el-button>
+        <el-button @click="open4=false">取 消</el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listAncecompany, getAncecompany, delAncecompany, addAncecompany, updateAncecompany, exportAncecompany,gethistory } from "@/api/finance/ancecompany";
+import { listAncecompany, getAncecompany, delAncecompany, addAncecompany, updateAncecompany, exportAncecompany,gethistory,listMonitoring,addMonitoring,updateMonitoring,getMonitoring,delMonitorid } from "@/api/finance/ancecompany";
 import {
     corpNames,
   } from "@/api/demand/follow";
@@ -374,6 +322,7 @@ export default {
       open3:false,
       // 非单个禁用
       single: true,
+      single2:true,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -383,6 +332,7 @@ export default {
       total: 0,
       // 每月公司其他住处费用表格数据
       AncecompanyList: [],
+      Monitoringlist:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -394,10 +344,16 @@ export default {
         pageSize: 10,
         addTime: null,
       },
+      queryParams2: {
+        pageNum: 1,
+        pageSize: 10,
+      },
       historyList:[],
+      total2:0,
       // 表单参数
       form: {},
       open4:false,
+      loading2:true,
       // 表单校验
       rules: {
         corpName:[{
@@ -450,12 +406,28 @@ export default {
             message: "预回款时间不能为空",
             trigger: ["blur","change"]
           },],
+        corpCode:[{
+            required: true,
+            message: "客户名称不能为空",
+            trigger: ["blur","change"]
+          },],
+        backMonth:[{
+            required: true,
+            message: "预回款月份不能为空",
+            trigger: ["blur","change"]
+          },],
+        currentArrears:[{
+            required: true,
+            validator: price,
+            trigger: ["blur","change"]
+          },],
       }
     };
   },
   created() {
     this.queryParams.addTime = this.time()
     this.getList();
+    this.getList2();
     this.getDicts("collectionStatus").then(response => {
       this.contactSituationlist = response.data;
     });
@@ -500,6 +472,14 @@ export default {
         this.loading = false;
       });
     },
+    getList2() {
+      this.loading2 = true;
+      listMonitoring(this.queryParams2).then(response => {
+        this.Monitoringlist = response.rows;
+        this.total2 = response.total;
+        this.loading2 = false;
+      });
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -521,6 +501,9 @@ export default {
         contactSituation:null,
         collectionTime:null,
         remarks:null,
+        backMonth:null,
+        currentArrears:null,
+        corpCode:null,
       };
       this.resetForm("form");
     },
@@ -549,9 +532,13 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.ids = selection.map(item => item.contactId)
       this.single = selection.length!==1
       this.multiple = !selection.length
+    },
+    handleSelectionChange2(selection){
+      this.ids = selection.map(item => item.id)
+      this.single2 = selection.length!==1
     },
     getCorpName(){
       corpNames().then(res=>{
@@ -572,6 +559,37 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改每月公司其他出处费用";
+      });
+    },
+    handleUpdate2(row) {
+      this.reset();
+      getMonitoring(row.id).then(response => {
+        this.form = response.data;
+        this.form.corpName = row.corpName
+        this.open4 = true;
+        this.title = "修改重点监测公司";
+      });
+    },
+    submitForm1:debounce(function(){
+      this.submitForm1s()
+    },500),
+    submitForm1s(){
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateMonitoring(this.form).then(response => {
+              this.msgSuccess("修改成功");
+              this.open4 = false;
+              this.getList2();
+            });
+          } else {
+            addMonitoring(this.form).then(response => {
+              this.msgSuccess("新增成功");
+              this.open4 = false;
+              this.getList2();
+            });
+          }
+        }
       });
     },
     /** 提交按钮 */
@@ -598,6 +616,19 @@ export default {
           }
         }
       });
+    },
+    handleDelete2() {
+      const ids = this.ids
+      this.$confirm('是否确认删除重点监测公司编号为"' + ids + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function() {
+          return  delMonitorid(ids);
+        }).then(() => {
+          this.getList2();
+          this.msgSuccess("删除成功");
+        })
     },
     /** 删除按钮操作 */
     handleDelete() {

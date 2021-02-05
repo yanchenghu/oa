@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" >
-      <el-form-item prop="customerName">
+      <el-form-item prop="name">
         <el-input
-          v-model="queryParams.customerName"
+          v-model="queryParams.name"
           placeholder="请输入姓名"
           clearable
           size="small"
@@ -14,14 +14,14 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery">查询</el-button>
       </el-form-item>
-      <el-form-item prop="months">
+      <el-form-item prop="sideMonths">
         <el-date-picker
           type="month"
           style="width:160px"
           format="yyyy 年 MM 月 "
           value-format="yyyy-MM-dd"
           size="small"
-          v-model="queryParams.months"
+          v-model="queryParams.sideMonths"
           placeholder="选择月"
           :picker-options="pickerOptions3"
           @change="handleQuery"
@@ -161,12 +161,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        customerName:null,
-        startTime:null,
-        endTime:null,
-        corpCode:null,
-        party:null,
-        status:null,
+        name:null,
+        sideMonths:null,
       },
       dialogImageUrl:"",
       dialogVisible:false,
@@ -179,7 +175,7 @@ export default {
       rules: {
         months: [{
           required: true,
-          message: "甲方公司不能为空",
+          message: "工资日期不能为空",
           trigger: ["blur","change" ]
         }, ],
       }

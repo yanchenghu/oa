@@ -57,10 +57,14 @@
          <el-table-column type="selection"  width="55" />
          <el-table-column prop="customerName" label="姓名" width="100">
            <template slot-scope="scope">
-             <el-button  type="text"  @click="handlesee(scope.row)" ><svg-icon  />{{scope.row.customerName}}</el-button>
+             <el-button  type="text"  @click="handlesee(scope.row)" >{{scope.row.customerName}}</el-button>
            </template>
          </el-table-column>
-         <el-table-column prop="customerTel" label="电话" width="110" />
+         <el-table-column prop="customerTel" label="电话" width="110" >
+           <template slot-scope="scope">
+             <span>{{scope.row.customerTel.replace(reg,"$1****$2")}}</span>
+           </template>
+         </el-table-column>
          <el-table-column prop="customerBirth" label="出生日期" width="100" >
          </el-table-column>
          <el-table-column prop="professionId" label="技术方向"  width="100" :formatter="professionIdopFormat">
@@ -87,7 +91,7 @@
                    <el-button type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
                      <svg-icon icon-class="preview" style="font-size: 14px;"/>预览
                    </el-button>
-                   <el-button  type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button" style="font-size: 14px;"/>抢占</el-button>
+                   <el-button  type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button"  style="font-size: 14px;"/>抢占</el-button>
 
                    <el-button  type="text"  @click="handlesee(scope.row)" ><svg-icon icon-class="eye-open" style="font-size: 14px;"/>查看</el-button>
            </template>
@@ -136,6 +140,7 @@
         nale:"",
         // 全选
         checkAll:false,
+        reg:/^(\d{3})\d{4}(\d{4})$/,
         // 表单内容
         fromdata: {
           pageNum: 1,
