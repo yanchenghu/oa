@@ -5,8 +5,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.resume.DingUtil;
+import com.ruoyi.conn.domain.ConDingtoken;
+import com.ruoyi.conn.mapper.ConDingtokenMapper;
 import com.ruoyi.finance.domain.FinAncecompany;
 import com.ruoyi.finance.mapper.FinAncecompanyMapper;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.finance.mapper.FinAncecontactMapper;
@@ -27,6 +32,8 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
     private FinAncecontactMapper finAncecontactMapper;
     @Autowired
     private FinAncecompanyMapper finAncecompanyMapper;
+    @Autowired
+    private ConDingtokenMapper conDingtokenMapper;
 
     /**
      * 查询财务最新跟踪
@@ -60,8 +67,13 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
      */
     @Override
     @Transactional
-    public AjaxResult insertFinAncecontact(FinAncecontact finAncecontact)
-    {
+    public AjaxResult insertFinAncecontact(FinAncecontact finAncecontact, LoginUser loginUser) throws Exception {
+
+        ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
+        if(cotoken==null){
+            JSONObject jsonToken =  DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+            cotoken.setToken(jsonToken.getString("access_token"));
+        }
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
         Date nowdate=new Date();
@@ -78,6 +90,24 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
             && finAncecontact.getLastmonthWages().equals(finAncecontact1.getLastmonthWages()) && finAncecontact.getContactSituation().equals(finAncecontact1.getContactSituation())){
              return AjaxResult.success("修改成功");
             }
+
+            if(!finAncecontact.getContactSituation().equals(finAncecontact1.getContactSituation())){
+                DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"01195548941584",
+                        finAncecontact.getCorpName()+"的最新沟通情况："+finAncecontact.getContactSituation());
+            }
+            if( finAncecontact.getReceivedPayment().equals(finAncecontact1.getReceivedPayment())){
+                DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"01195548941584",
+                        finAncecontact.getCorpName().toString()+",应回款金额为"+finAncecontact.getActualMoney()+"元"+"已回款了金额为："+finAncecontact.getReceivedPayment()+"元。"+"备注："+finAncecontact.getPaymentTime());
+                DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"055019496438124425",
+                        finAncecontact.getCorpName().toString()+"已回款了金额为："+finAncecontact.getReceivedPayment()+"元。"+"请抓紧把这部分人"+finAncecontact.getActualMonth()+"的请求书录入系统");//ccq钉钉提醒去录入请求书
+            }
+        }else {
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"01195548941584",
+                    finAncecontact.getCorpName()+"的最新沟通情况："+finAncecontact.getContactSituation());
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"01195548941584",
+                    finAncecontact.getCorpName().toString()+",应回款金额为"+finAncecontact.getActualMoney()+"元"+"已回款了金额为："+finAncecontact.getReceivedPayment()+"元。"+"备注："+finAncecontact.getPaymentTime());
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"055019496438124425",
+                    finAncecontact.getCorpName().toString()+"已回款了金额为："+finAncecontact.getReceivedPayment()+"元。"+"请抓紧把这部分人"+finAncecontact.getActualMonth()+"的请求书录入系统");//ccq钉钉提醒去录入请求书
         }
         FinAncecompany finAncecompa=new FinAncecompany();
         finAncecompa.setCorpCode(finAncecontact.getCorpCode());
@@ -92,6 +122,10 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
         }
         finAncecontact.setAddTime(nowdate);
         finAncecontactMapper.insertFinAncecontact(finAncecontact);
+
+
+
+
         return AjaxResult.success("操作成功");
     }
 

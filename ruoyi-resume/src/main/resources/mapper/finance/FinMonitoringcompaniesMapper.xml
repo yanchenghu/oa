@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="FinMonitoringcompanies" id="FinMonitoringcompaniesResult">
         <result property="id"    column="id"    />
         <result property="corpCode"    column="corp_code"    />
+        <result property="corpName"    column="corp_name"    />
         <result property="backMonth"    column="back_month"    />
         <result property="currentArrears"    column="current_arrears"    />
         <result property="contactSituation"    column="contact_situation"    />
@@ -18,13 +19,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectFinMonitoringcompaniesList" parameterType="FinMonitoringcompanies" resultMap="FinMonitoringcompaniesResult">
-        <include refid="selectFinMonitoringcompaniesVo"/>
+        select a.id, a.corp_code, a.back_month, a.current_arrears, a.contact_situation, a.add_time,b.corp_name from fin_monitoringcompanies a
+         left join mar_company b on a.corp_code=b.corp_code
         <where>  
-            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
-            <if test="backMonth != null  and backMonth != ''"> and back_month = #{backMonth}</if>
-            <if test="currentArrears != null  and currentArrears != ''"> and current_arrears = #{currentArrears}</if>
-            <if test="contactSituation != null  and contactSituation != ''"> and contact_situation = #{contactSituation}</if>
-            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>
+            <if test="backMonth != null  and backMonth != ''"> and a.back_month = #{backMonth}</if>
+            <if test="currentArrears != null  and currentArrears != ''"> and a.current_arrears = #{currentArrears}</if>
+            <if test="contactSituation != null  and contactSituation != ''"> and a.contact_situation = #{contactSituation}</if>
+            <if test="addTime != null "> and a.add_time = #{addTime}</if>
         </where>
     </select>
     

@@ -2,10 +2,13 @@ package com.ruoyi.web.controller.finance;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.finance.domain.FinAncecontact;
 import com.ruoyi.finance.domain.FinMonitoringcompanies;
 import com.ruoyi.finance.service.IFinAncecontactService;
 import com.ruoyi.finance.service.IFinMonitoringcompaniesService;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +44,8 @@ public class FinAncecompanyController extends BaseController
     private IFinAncecontactService finAncecontactService;
     @Autowired
     private IFinMonitoringcompaniesService finMonitoringcompaniesService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询添加合作公司列表
@@ -94,7 +99,15 @@ public class FinAncecompanyController extends BaseController
     @PostMapping(value = "/addAncecontact")
     public AjaxResult Ancecontact(@RequestBody FinAncecontact finAncecontact)
     {
-        return finAncecontactService.insertFinAncecontact(finAncecontact);
+
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+
+        try {
+            return finAncecontactService.insertFinAncecontact(finAncecontact,loginUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error("系统异常");
+        }
     }
     /**
      * 删除添加合作公司
@@ -137,7 +150,14 @@ public class FinAncecompanyController extends BaseController
     {
         return toAjax(finMonitoringcompaniesService.updateFinMonitoringcompanies(finMonitoringcompanies));
     }
-
+    /**
+     * 获取重点监测公司详细信息
+     */
+    @GetMapping(value = "/gettMon/{id}")
+    public AjaxResult getMonitoringInfo(@PathVariable("id") Integer id)
+    {
+        return AjaxResult.success(finMonitoringcompaniesService.selectFinMonitoringcompaniesById(id));
+    }
 
     /**
      * 删除重点监测公司

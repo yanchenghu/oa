@@ -1,10 +1,10 @@
-package com.ruoyi.web.controller.expenditure;
+package com.ruoyi.web.controller.finance;
 
 import java.util.List;
 
-import com.ruoyi.expenditure.domain.Expenditure;
-import com.ruoyi.expenditure.domain.FinOtherexpenses;
-import com.ruoyi.expenditure.service.IFinOtherexpensesService;
+import com.ruoyi.finance.domain.Expenditure;
+import com.ruoyi.finance.domain.FinOtherexpenses;
+import com.ruoyi.finance.service.IFinOtherexpensesService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2021-02-02
  */
 @RestController
-@RequestMapping("/expenditure/otherexpenses")
+@RequestMapping("/finance/otherexpenses")
 public class FinOtherexpensesController extends BaseController
 {
     @Autowired
@@ -38,7 +38,7 @@ public class FinOtherexpensesController extends BaseController
     /**
      * 查询每月公司其他住处费用列表
      */
-    @PreAuthorize("@ss.hasPermi('expenditure:otherexpenses:list')")
+    @PreAuthorize("@ss.hasPermi('finance:otherexpenses:list')")
     @GetMapping("/list")
     public TableDataInfo list(FinOtherexpenses finOtherexpenses)
     {
@@ -50,7 +50,7 @@ public class FinOtherexpensesController extends BaseController
     /**
      * 导出每月公司其他住处费用列表
      */
-    @PreAuthorize("@ss.hasPermi('expenditure:otherexpenses:export')")
+    @PreAuthorize("@ss.hasPermi('finance:otherexpenses:export')")
     @Log(title = "每月公司其他住处费用", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(FinOtherexpenses finOtherexpenses)
@@ -63,7 +63,7 @@ public class FinOtherexpensesController extends BaseController
     /**
      * 获取每月公司其他住处费用详细信息
      */
-    @PreAuthorize("@ss.hasPermi('expenditure:otherexpenses:query')")
+    @PreAuthorize("@ss.hasPermi('finance:otherexpenses:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -73,7 +73,7 @@ public class FinOtherexpensesController extends BaseController
     /**
      * 新增每月公司其他住处费用
      */
-    @PreAuthorize("@ss.hasPermi('expenditure:otherexpenses:add')")
+    @PreAuthorize("@ss.hasPermi('finance:otherexpenses:add')")
     @Log(title = "每月公司其他住处费用", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody FinOtherexpenses finOtherexpenses)
@@ -84,7 +84,7 @@ public class FinOtherexpensesController extends BaseController
     /**
      * 修改每月公司其他住处费用
      */
-    @PreAuthorize("@ss.hasPermi('expenditure:otherexpenses:edit')")
+    @PreAuthorize("@ss.hasPermi('finance:otherexpenses:edit')")
     @Log(title = "每月公司其他住处费用", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody FinOtherexpenses finOtherexpenses)
@@ -95,7 +95,7 @@ public class FinOtherexpensesController extends BaseController
     /**
      * 删除每月公司其他住处费用
      */
-    @PreAuthorize("@ss.hasPermi('expenditure:otherexpenses:remove')")
+    @PreAuthorize("@ss.hasPermi('finance:otherexpenses:remove')")
     @Log(title = "每月公司其他住处费用", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
