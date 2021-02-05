@@ -22,14 +22,14 @@
     <div style="display: flex;justify-content: space-between;margin-bottom: 10px;">
       <div style="font-weight: 400;font-size: 25px;">{{ parseTime(this.queryParams.addTime, '{y}年{m}月')}}份预计回款明细</div>
       <div>
-        <el-button  type="primary" v-hasPermi="['expenditure:Ancecompany:add']" size="small" @click="handleAdd">新增回款公司</el-button>
-        <!-- <el-button type="primary" plain v-hasPermi="['expenditure:Ancecompany:export']"  size="small" @click="handleExport" >导出</el-button> -->
+        <el-button  type="primary" v-hasPermi="['finance:ancecompany:add']" size="small" @click="handleAdd">新增回款公司</el-button>
+        <!-- <el-button type="primary" plain v-hasPermi="['finance:ancecompany:export']"  size="small" @click="handleExport" >导出</el-button> -->
         <el-button
         v-if="kaiguan"
           :disabled="single"
           type="danger"
           @click="handleDelete"
-          v-hasPermi="['expenditure:Ancecompany:remove']"
+          v-hasPermi="['finance:ancecompany:remove']"
         >删除</el-button>
       </div>
     </div>
@@ -71,7 +71,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['expenditure:Ancecompany:edit']"
+            v-hasPermi="['finance:ancecompany:edit']"
           >修改</el-button>
         </template>
       </el-table-column>
@@ -88,13 +88,13 @@
     <div style="display: flex;justify-content: space-between;margin-bottom: 10px;margin-top: 50px;">
       <div style="font-weight: 400;font-size: 25px;">重点监测公司</div>
       <div>
-        <el-button  type="primary" v-hasPermi="['expenditure:Ancecompany:add']" size="small" @click="handleAdd2">新增检测公司</el-button>
-        <!-- <el-button type="primary" plain v-hasPermi="['expenditure:Ancecompany:export']"  size="small" @click="handleExport" >导出</el-button> -->
+        <el-button  type="primary" v-hasPermi="['finance:ancecompany:add']" size="small" @click="handleAdd2">新增检测公司</el-button>
+        <!-- <el-button type="primary" plain v-hasPermi="['expenditure:ancecompany:export']"  size="small" @click="handleExport" >导出</el-button> -->
         <el-button
           :disabled="single2"
           type="danger"
           @click="handleDelete2"
-          v-hasPermi="['expenditure:Ancecompany:remove']"
+          v-hasPermi="['finance:ancecompany:remove']"
         >删除</el-button>
       </div>
     </div>
@@ -115,7 +115,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate2(scope.row)"
-            v-hasPermi="['expenditure:Ancecompany:edit']"
+            v-hasPermi="['finance:ancecompany:edit']"
           >修改</el-button>
         </template>
       </el-table-column>
