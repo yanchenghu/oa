@@ -21,6 +21,9 @@ public class FinMonitoringcompanies extends BaseEntity
     private Integer id;
 
     /** 合作公司代码 */
+    @Excel(name = "合作公司")
+    private String corpName;
+    /** 合作公司代码 */
     @Excel(name = "合作公司代码")
     private String corpCode;
 
@@ -94,6 +97,14 @@ public class FinMonitoringcompanies extends BaseEntity
     public Date getAddTime() 
     {
         return addTime;
+    }
+
+    public String getCorpName() {
+        return corpName;
+    }
+
+    public void setCorpName(String corpName) {
+        this.corpName = corpName;
     }
 
     @Override

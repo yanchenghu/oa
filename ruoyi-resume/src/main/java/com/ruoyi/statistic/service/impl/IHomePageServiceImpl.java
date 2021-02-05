@@ -49,9 +49,12 @@ public class IHomePageServiceImpl implements IHomePageService {
         map.put("AddPeople",loginUser.getUsername());
         PerCustomerinfo perCustomerinfo=new PerCustomerinfo();
         perCustomerinfo.setOpertCode(loginUser.getUsername());
+        int x=0;
         //获取本月录入
         List<PerCustomerinfo> EnterInfo = perCustomerinfoMapper.selectPerCustomerinfoByMonth(perCustomerinfo);
-        int firstEnter=0;
+
+        int firstEnter=(EnterInfo.size()>x)?EnterInfo.size():x;
+
 //        try {
 //            firstEnter = perCustomerinfoMapper.selectfirstEnter();
 //
@@ -60,7 +63,7 @@ public class IHomePageServiceImpl implements IHomePageService {
 //        }
         //获取抢占跟踪
         List<PerRobcustomer> ListperRob = perRobcustomerMapper.selectPerRobdatadisplayList(map);
-        int firstRob= 0;
+        int firstRob= (ListperRob.size()>x)?ListperRob.size():x;
 //        try {
 //            firstRob= perRobcustomerMapper.selectfirstRob();
 //        }catch (Exception e){
@@ -69,7 +72,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历绑定人数
         map.put("followStatus",1);
         List<Map> ListMarbing=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstMarbing=0;
+        int firstMarbing=(ListMarbing.size()>x)?ListMarbing.size():x;
 //        try {
 //            firstMarbing=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){
@@ -78,7 +81,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历通过
         map.put("followStatus",3);
         List<Map> resumeadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstresumeadopt=0;
+        int firstresumeadopt=(resumeadopt.size()>x)?resumeadopt.size():x;
 //        try {
 //            firstresumeadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){
@@ -88,7 +91,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历面试通过
         map.put("followStatus",5);
         List<Map> interviewadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstinterviewadopt=0;
+        int firstinterviewadopt=(interviewadopt.size()>x)?interviewadopt.size():x;
 //        try {
 //            firstinterviewadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){
@@ -98,7 +101,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历入项
         map.put("followStatus",7);
         List<Map> entryPeople=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstentryPeople=0;
+        int firstentryPeople=(entryPeople.size()>x)?entryPeople.size():x;
 //        try {
 //            firstentryPeople=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){

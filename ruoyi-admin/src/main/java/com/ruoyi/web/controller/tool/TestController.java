@@ -43,6 +43,11 @@ public class TestController extends BaseController
         List<UserEntity> userList = new ArrayList<UserEntity>(users.values());
         return AjaxResult.success(userList);
     }
+    @GetMapping("/lists")
+    public AjaxResult userLists()
+    {
+        return AjaxResult.success("");
+    }
 
     @ApiOperation("获取用户详细")
     @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "int", paramType = "path")

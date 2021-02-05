@@ -1,4 +1,4 @@
-package com.ruoyi.expenditure.domain;
+package com.ruoyi.finance.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;

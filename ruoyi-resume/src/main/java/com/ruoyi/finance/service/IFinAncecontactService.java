@@ -3,6 +3,7 @@ package com.ruoyi.finance.service;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.finance.domain.FinAncecontact;
 
 /**
@@ -35,7 +36,7 @@ public interface IFinAncecontactService
      * @param finAncecontact 财务最新跟踪
      * @return 结果
      */
-    public AjaxResult insertFinAncecontact(FinAncecontact finAncecontact);
+    public AjaxResult insertFinAncecontact(FinAncecontact finAncecontact, LoginUser loginUser) throws Exception;
 
     /**
      * 修改财务最新跟踪
