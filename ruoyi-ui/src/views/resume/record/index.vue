@@ -165,7 +165,10 @@
           </el-table-column>
           <el-table-column prop="customer_name" label="姓名"width="70" >
             </el-table-column>
-            <el-table-column prop="customer_tel" label="电话">
+          <el-table-column prop="customer_tel" label="电话">
+            <template slot-scope="scope"> 
+              <span>{{scope.row.customer_tel.replace(reg,"$1****$2")}}</span>
+            </template>
           </el-table-column>
           <el-table-column prop="customer_birth" label="出生日期">
           </el-table-column>
@@ -220,6 +223,7 @@
         loading:false,
         // 总条数
         total:0,
+        reg: /^(\d{3})\d{4}(\d{4})$/,
         vadio: 1,
         msg: "",
         // 接受文件
