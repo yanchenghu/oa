@@ -437,13 +437,16 @@ public class YxdemandServiceImpl implements IYxdemandService
     }
 
     @Override
-    public int yxdemByName(String companyName) {
+    public String  yxdemByName(String companyName) {
         Yxdemand yxdemand=yxdemandMapper.selectYxdemandByName(companyName);
-        int a=1;
         if(yxdemand!=null){
-            a=2;
+            String robPeople = yxdemand.getRobPeople();
+            if(StringUtils.isNotEmpty(robPeople)){
+                return "该客户已经被"+yxdemand.getEntryPeople()+"录入，占有人是"+robPeople;
+            }
+            return "该客户已经被"+yxdemand.getEntryPeople()+"录入，还未抢占，请去线索公海抢占";
         }
-        return a;
+        return "该客户不存在";
 
     }
 

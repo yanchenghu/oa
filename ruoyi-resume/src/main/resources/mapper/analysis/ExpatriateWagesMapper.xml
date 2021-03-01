@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.analysis.mapper.ExpatriateWagesMapper">
+    
+    <resultMap type="ExpatriateWages" id="ExpatriateWagesResult">
+        <result property="corpName"    column="corp_name"  />
+        <result property="corpCode"    column="corp_code"  />
+        <result property="customerName"    column="customer_name"  />
+        <result property="customerCode"    column="customer_code"  />
+        <result property="customerTel"    column="customer_tel" />
+        <result property="syqstartTime"    column="syqstart_time"  />
+        <result property="outofProjecttime"    column="outof_projecttime" />
+        <result property="salary"    column="salary"  />
+        <result property="servicePay"    column="service_pay"  />
+        <result property="lastcollecMoth"    column="lastcollec_moth"  />
+        <result property="cumulativeSalary"    column="cumulative_salary"  />
+        <result property="cumulativeServicepay"    column="cumulative_servicepay" />
+        <result property="startTime"    column="start_time"  />
+        <result property="endTime"    column="end_time" />
+    </resultMap>
+
+
+
+    <select id="selectExpatriateWagelist"  parameterType="ExpatriateWages"  resultMap="ExpatriateWagesResult">
+        SELECT a.corp_code,a.corp_name,b.customer_name,a.syqstart_time,a.outof_projecttime,a.salary,
+        a.service_pay, b.customer_code,b.customer_name,b.customer_tel from  mar_customerprojectpay a LEFT JOIN
+        fin_expatriatesalary b on a.customer_code=b.customer_code
+
+        where b.customer_code is not null
+        <if test="customerName != null  and customerName != ''"> and b.customer_name like concat('%', #{customerName}, '%')</if>
+        <if test="corpCode != null  and corpCode != ''">  and a.corp_code = #{corpCode}</if>
+        <if test="startTime != null  and startTime != ''">  and a.syqstart_time  BETWEEN #{startTime} and  #{endTime}
+        </if>
+        GROUP BY a.customer_code
+        <if test="corpCode == null ">  limit 10</if>
+    </select>
+
+     <select id="getCumulativenum"  parameterType="ExpatriateWages" resultMap="ExpatriateWagesResult">
+       SELECT expa.cumulative_salary,sta.cumulative_servicepay,cus.customer_name,
+       DATE_FORMAT(fin.lastcollec_moth,"%Y-%m-%d") as lastcollec_moth
+        from
+        ( SELECT b.customer_code, SUM( b.real_salary ) cumulative_salary
+        from  mar_customerprojectpay a  LEFT JOIN fin_expatriatesalary b
+        on a.customer_code=b.customer_code
+        where b.customer_code is not null and  a.corp_code =#{corpCode}
+        GROUP BY b.customer_code) expa LEFT JOIN
+        (SELECT customer_code,	SUM( com_bined ) cumulative_servicepay
+        FROM fin_statements
+        WHERE corp_code=#{corpCode} and `status`=3 GROUP BY customer_code )sta
+        on expa.customer_code=sta.customer_code
+        LEFT JOIN per_customerinfo cus on expa.customer_code=cus.customer_code
+        LEFT JOIN (SELECT customer_code, max(start_time) as lastcollec_moth  from fin_statements where customer_code=#{customerCode}) fin on expa.customer_code=fin.customer_code
+        where cus.customer_code=#{customerCode}
+			LIMIT 1
+
+     </select>
+
+    <select id="selectComlist" parameterType="Map" resultType="Map">
+        SELECT a.corp_code,a.corp_name from mar_company a
+        LEFT JOIN mar_customerprojectpay b on a.corp_code =b.corp_code
+        where b.id is not null
+        <if test="corpName != null  and corpName != ''"> and a.corp_name like concat('%', #{corpName}, '%')</if>
+        group by a.corp_code
+
+    </select>
+
+
+
+
+
+
+
+
+</mapper>

@@ -270,7 +270,12 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             }
             //期望薪资
             if(!basic_info.getString("desired_salary").equals("") && !basic_info.getString("desired_salary").equals("面议")){
-               perCustomerinfo.setExpectationSalary((basic_info.getString("desired_salary")).substring(0,5));
+                String desired_salary = basic_info.getString("desired_salary");
+                if(desired_salary.length()>6){
+                    perCustomerinfo.setExpectationSalary(desired_salary.substring(0,5));
+                }else{
+                    perCustomerinfo.setExpectationSalary(desired_salary);
+                }
             }
             if(!contact_info.getString("email").equals("")){
                 perCustomerinfo.setEmail(contact_info.getString("email"));

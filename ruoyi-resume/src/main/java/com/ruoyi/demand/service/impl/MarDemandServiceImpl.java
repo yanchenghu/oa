@@ -521,11 +521,14 @@ public class MarDemandServiceImpl implements IMarDemandService
         perCustomerinfoMapper.updatePerCustomerinfo(perCustomeri);
         ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(2);
         //钉钉提醒
-        try {
-            DingDingJiQi.DingDingd("喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员",cotoken.getToken());
-        } catch (ApiException e) {
-            return AjaxResult.error("入项失败，钉钉发送失败,请联系管理员");
+        if(cotoken!=null){
+            try {
+                DingDingJiQi.DingDingd("喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员",cotoken.getToken());
+            } catch (ApiException e) {
+                return AjaxResult.error("入项失败，钉钉发送失败,请联系管理员");
+            }
         }
+
 
         return AjaxResult.success("入项成功");
     }

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class DingDingJiQi {
 
 
-//	private static String dingtoken="https://oapi.dingtalk.com/robot/send?access_token=154c35150438993842b55213945c20f512dcf32977758a81701955f08ab1363a";
+	private static String dingtoken="https://oapi.dingtalk.com/robot/send?access_token=154c35150438993842b55213945c20f512dcf32977758a81701955f08ab1363a";
 
 
 	public static void DingDingd(String content,String dingtoken) throws ApiException {

@@ -115,7 +115,7 @@ public class YxdemandController extends BaseController
      * 根据公司名字获取营销录入公司
      */
     @PostMapping(value = "/yxdemByName")
-    public int getInfo(@RequestParam(value = "companyName", defaultValue = "") String companyName)
+    public String getInfo(@RequestParam(value = "companyName", defaultValue = "") String companyName)
     {
         return yxdemandService.yxdemByName(companyName);
     }
