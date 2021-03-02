@@ -142,12 +142,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="getInputProfitLists" parameterType="PersonnelData" resultType="map">
-   SELECT DATE_FORMAT(a.syqstart_time,'%Y-%m-%d') as addTime,count(a.id) as peopleNum,sum(salary) as costNum,sum(service_pay) as serviceNum from mar_customerprojectpay a LEFT JOIN
+   SELECT b.nick_name as nickName,count(a.id) as peopleNum,sum(salary) as costNum,sum(service_pay) as serviceNum from mar_customerprojectpay a LEFT JOIN
     sys_user b on a.opercode=b.user_name
     where  1=1
     and b.user_name=#{userName}
     and  a.syqstart_time between #{startTime} and #{endTime}
-    GROUP BY DATE_FORMAT(a.syqstart_time,'%Y%m%d')
+
     </select>
 
 
