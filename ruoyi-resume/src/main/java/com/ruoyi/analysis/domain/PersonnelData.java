@@ -15,7 +15,19 @@ public class PersonnelData {
     private String endTime;
     /*员工编码*/
     private String corpCode;
+    /*员工姓名*/
+    private String nickName;
 
+    /*员工编码*/
+    private String userName;
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
     public String getStartTime() {
         return startTime;
@@ -39,5 +51,13 @@ public class PersonnelData {
 
     public void setCorpCode(String corpCode) {
         this.corpCode = corpCode;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

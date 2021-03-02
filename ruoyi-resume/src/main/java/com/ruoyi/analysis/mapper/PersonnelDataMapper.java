@@ -2,6 +2,8 @@ package com.ruoyi.analysis.mapper;
 
 import com.ruoyi.analysis.domain.PersonnelData;
 import com.ruoyi.analysis.domain.PersonnelDataDetails;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 
 import java.util.List;
 import java.util.Map;
@@ -27,5 +29,22 @@ public interface PersonnelDataMapper {
 
     List<Map> getInputProfitList(PersonnelData personnelData);
 
+    //
     List<PersonnelDataDetails> getDataDetailsList();
+
+    List<Map> getInputdataLists(PersonnelData personnelData);
+
+    List<Map> getTrackLists(PersonnelData PersonnelData);
+
+    List<Map> getBindingLists(PersonnelData PersonnelData);
+
+    List<Map> getResumePassedLists(PersonnelData PersonnelData);
+
+    List<Map> getInterviewPassedLists(PersonnelData PersonnelData);
+
+    List<Map> getEntryPersonnelLists(PersonnelData PersonnelData);
+
+    List<Map> getInputProfitLists(PersonnelData PersonnelData);
+
+    List<Map> userlist();
 }
