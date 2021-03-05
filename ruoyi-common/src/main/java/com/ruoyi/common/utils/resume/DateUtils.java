@@ -1,6 +1,7 @@
 package com.ruoyi.common.utils.resume;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -579,4 +580,34 @@ public class DateUtils {
 		cal.set(Calendar.SECOND, 0);
         return cal.getTime();
 	}
+
+
+
+
+
+
+
+
+
+	/*
+	 *fromDate 开始时间，toDate结束时间
+	 *获取两个日期之间的天数
+	*@au ych
+	* */
+
+	public static List<Date> getBetweenDates(Date fromDate, Date toDate) {
+		List<Date> stamps = new ArrayList<>();
+		while (fromDate.getTime() <= toDate.getTime()) {
+			stamps.add(fromDate);
+			fromDate = DateUtils.addDays(1, fromDate);
+		}
+		return stamps;
+	}
+	//addDays方法是增加天数。
+	public static Date addDays(int days, Date stamp) {
+		Long milliseconds = Long.valueOf(days * 24 * 60 * 60 * 1000);
+		return new Date(stamp.getTime() + milliseconds);
+	}
+
+
 }

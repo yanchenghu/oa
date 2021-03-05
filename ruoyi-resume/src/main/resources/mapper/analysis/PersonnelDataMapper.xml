@@ -24,76 +24,113 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="getInputdataList" parameterType="PersonnelData" resultType="map">
-     SELECT a.opert_name as opertName ,count(a.customer_code) as inputdataNum from per_customerinfo a
-        LEFT JOIN sys_user b on a.opert_code=b.user_name
+      SELECT a.nick_name as  opertName,IFNULL(d.inputdataNum,0) as inputdataNum from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN (SELECT w.opert_code  ,count(w.customer_code) as inputdataNum from per_customerinfo w
         where 1=1
-        and b.STATUS=0
-        and a.add_time between #{startTime} and #{endTime}
-        GROUP BY a.opert_code
+        and w.add_time between #{startTime} and #{endTime}
+       GROUP BY w.opert_code) d on a.user_name=d.opert_code
+       where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
     </select>
     <select id="getTrackList" parameterType="PersonnelData" resultType="map">
-       SELECT b.nick_name as nickName,COUNT(a.contac_datecode) as trackNum from per_cuscontact a LEFT JOIN sys_user b on a.contact_usercode=b.user_name
-        where   1=1
-        and b.STATUS=0
-        and  a.contact_time between #{startTime} and #{endTime}
-      GROUP BY a.contact_usercode
+      SELECT a.nick_name as  nickName,IFNULL(d.inputdataNum,0) as trackNum from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN (SELECT w.contact_usercode  ,count(w.contac_datecode) as inputdataNum from per_cuscontact w
+        where 1=1
+        and w.contact_time between #{startTime} and #{endTime}
+    GROUP BY w.contact_usercode) d on a.user_name=d.contact_usercode
+    where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
     </select>
     <select id="getBindingList" parameterType="PersonnelData" resultType="map">
-     SELECT b.nick_name as nickName, COUNT(a.id) as bindingNum from mar_demandresume a LEFT JOIN
-     sys_user b on a.bind_people=b.user_name
-     where   1=1
-     and b.STATUS=0
-     and  a.bind_time between #{startTime} and #{endTime}
-     GROUP BY a.bind_people
+      SELECT a.nick_name as  nickName,IFNULL(d.inputdataNum,0) as bindingNum from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN (SELECT w.bind_people  ,count(w.id) as inputdataNum from mar_demandresume w
+        where 1=1
+         and w.bind_time between #{startTime} and #{endTime}
+        GROUP BY w.bind_people) d on a.user_name=d.bind_people
+        where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
     </select>
 
     <select id="getResumePassedList" parameterType="PersonnelData" resultType="map">
-      SELECT b.nick_name as nickName, COUNT(c.id) as resumePassedNum from mar_demandresume a
-        LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
-        LEFT JOIN sys_user b on a.bind_people=b.user_name
-        where   1=1
-        and c.follow_status=3
-        and b.STATUS=0
-        and  a.bind_time between #{startTime} and #{endTime}
-      GROUP BY a.bind_people
+    SELECT a.nick_name as  nickName,IFNULL(d.resumePassedNum,0) as resumePassedNum from sys_user a
+    LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+    LEFT JOIN sys_role c on b.role_id=c.role_id
+    LEFT JOIN ( SELECT w.bind_people, COUNT(q.id) as resumePassedNum from mar_demandresume w
+     LEFT JOIN mar_demandresumefollow q on w.id=q.demandresume_id
+    where q.follow_status=3
+    and  q.trackingtime between #{startTime} and #{endTime}
+    GROUP BY w.bind_people) d on a.user_name=d.bind_people
+    where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
     </select>
     <select id="getInterviewPassedList" parameterType="PersonnelData" resultType="map">
-      SELECT b.nick_name as nickName, COUNT(c.id) as interviewPassedNum from mar_demandresume a
-        LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
-        LEFT JOIN sys_user b on a.bind_people=b.user_name
-        where   1=1
-        and c.follow_status=5
-        and b.STATUS=0
-        and  a.bind_time between #{startTime} and #{endTime}
-      GROUP BY a.bind_people
+     	SELECT a.nick_name as  nickName,IFNULL(d.interviewPassedNum,0) as interviewPassedNum from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN ( SELECT w.bind_people, COUNT(q.id) as interviewPassedNum from mar_demandresume w
+         LEFT JOIN mar_demandresumefollow q on w.id=q.demandresume_id
+        where q.follow_status=5
+        and  q.trackingtime between #{startTime} and #{endTime}
+        GROUP BY w.bind_people) d on a.user_name=d.bind_people
+        where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
     </select>
     <select id="getEntryPersonnelList" parameterType="PersonnelData" resultType="map">
-      SELECT b.nick_name as nickName, COUNT(c.id) as entryPersonneNum  from mar_demandresume a
-        LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
-        LEFT JOIN sys_user b on a.bind_people=b.user_name
-        where   1=1
-        and c.follow_status=7
-        and b.STATUS=0
-        and  a.bind_time between #{startTime} and #{endTime}
-      GROUP BY a.bind_people
+    	SELECT a.nick_name as  nickName,IFNULL(d.entryPersonneNum,0) as entryPersonneNum from sys_user a
+	LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+	LEFT JOIN sys_role c on b.role_id=c.role_id
+	LEFT JOIN ( SELECT w.bind_people, COUNT(q.id) as entryPersonneNum from mar_demandresume w
+	 LEFT JOIN mar_demandresumefollow q on w.id=q.demandresume_id
+	where q.follow_status=7
+	and  q.trackingtime between #{startTime} and #{endTime}
+	GROUP BY w.bind_people) d on a.user_name=d.bind_people
+	where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
     </select>
 
 
     <select id="getInputProfitList" parameterType="PersonnelData" resultType="map">
-   SELECT b.nick_name as nickName,count(a.id) as peopleNum,
-   IFNULL(sum(salary),0) as costNum,IFNULL(sum(service_pay),0) as serviceNum
-   from mar_customerprojectpay a LEFT JOIN
-    sys_user b on a.opercode=b.user_name
-    where  1=1
-    and  a.syqstart_time between #{startTime} and #{endTime}
-    GROUP BY  a.opercode
+
+        SELECT a.nick_name as  nickName,IFNULL(costNum,0) as costNum ,  IFNULL(peopleNum,0) as peopleNum ,
+        IFNULL(serviceNum,0)  as serviceNum     from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN (SELECT opercode, count(id) as peopleNum,
+      sum(salary) as costNum,sum(service_pay) as serviceNum
+       from mar_customerprojectpay
+        where  1=1
+      and  syqstart_time between #{startTime} and #{endTime}
+    GROUP BY opercode) d on a.user_name=d.opercode
+        where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
     </select>
 
     <select id="getDataDetailsList"  resultMap="PersonnelDataDetailsResult">
+    SELECT a.nick_name  from sys_user a
+    LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+    LEFT JOIN sys_role c on b.role_id=c.role_id
 
-     SELECT nick_name,user_name from sys_user a where a.`status`=0 and del_flag=0
+    where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+
 
     </select>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -134,7 +171,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and b.user_name=#{userName}
         and c.follow_status=3
         and b.STATUS=0
-        and  a.bind_time between #{startTime} and #{endTime}
+        and  c.trackingtime between #{startTime} and #{endTime}
       GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
     </select>
     <select id="getInterviewPassedLists" parameterType="PersonnelData" resultType="map">
@@ -145,7 +182,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and b.user_name=#{userName}
         and c.follow_status=5
         and b.STATUS=0
-        and  a.bind_time between #{startTime} and #{endTime}
+        and  c.trackingtime between #{startTime} and #{endTime}
       GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
     </select>
     <select id="getEntryPersonnelLists" parameterType="PersonnelData" resultType="map">
@@ -156,7 +193,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and b.user_name=#{userName}
         and c.follow_status=7
         and b.STATUS=0
-        and  a.bind_time between #{startTime} and #{endTime}
+        and  c.trackingtime between #{startTime} and #{endTime}
       GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
     </select>
 
@@ -176,8 +213,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="userlist" resultType="map">
-     select user_name as userName,nick_name as nickName from sys_user
-     where user_name not in ("admin","ry") and status=0
+    SELECT a.nick_name as nickName,a.user_name as userName  from sys_user a
+    LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+    LEFT JOIN sys_role c on b.role_id=c.role_id
+
+    where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
     </select>
 
 

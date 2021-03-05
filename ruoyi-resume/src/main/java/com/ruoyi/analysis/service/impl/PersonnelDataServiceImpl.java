@@ -1,17 +1,18 @@
 package com.ruoyi.analysis.service.impl;
 
-import com.alibaba.fastjson.JSON;
+
 import com.ruoyi.analysis.domain.PersonnelData;
 import com.ruoyi.analysis.domain.PersonnelDataDetails;
 import com.ruoyi.analysis.mapper.PersonnelDataMapper;
 import com.ruoyi.analysis.service.IPersonnelDataService;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.page.TableDataInfo;
-import org.json.JSONObject;
+
+import com.ruoyi.common.utils.resume.DateUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -62,44 +63,39 @@ public class PersonnelDataServiceImpl implements IPersonnelDataService {
                 }
             }
             for(Map mp:bindingList){
-                if(map.get("nickName")!=null){
                     String nickName1 =(String) mp.get("nickName");
                     if(nickName.equals(nickName1)){
                         if(mp.get("bindingNum")!=null){
                             personnelDataDetails.setBindingNum((Long) mp.get("bindingNum"));
                         }
                     }
-                }
             }
             for(Map mp:resumePassedList){
-                if(mp.get("nickName")!=null){
                     String nickName1 =(String) mp.get("nickName");
                     if(nickName.equals(nickName1)){
                         if(mp.get("resumePassedNum")!=null){
                             personnelDataDetails.setResumePassedNum((Long) mp.get("resumePassedNum"));
                         }
                     }
-                }
+
             }
             for(Map mp:interviewPassedList){
-                if(mp.get("nickName")!=null){
-                    String nickName1 =(String) mp.get(nickName);
+                    String nickName1 =(String) mp.get("nickName");
                     if(nickName.equals(nickName1)){
                         if(mp.get("interviewPassedNum")!=null){
                             personnelDataDetails.setInterviewPassedNum((Long) mp.get("interviewPassedNum"));
                         }
                     }
-                }
             }
             for(Map mp:entryPersonnelList){
-                if(mp.get("nickName")!=null){
+
                     String  nickName1 =(String) mp.get("nickName");
-                    if(nickName.equals(nickName)){
-                        if(mp.get("entryPersonnelNum")!=null){
-                            personnelDataDetails.setEntryPersonnelNum((Long) mp.get("entryPersonnelNum"));
+                    if(nickName.equals(nickName1)){
+                        if(mp.get("entryPersonneNum")!=null){
+                            personnelDataDetails.setEntryPersonnelNum((Long) mp.get("entryPersonneNum"));
                         }
                     }
-                }
+
             }
             for(Map mp:inputProfitList){
                 if(mp.get("nickName")!=null){
@@ -139,10 +135,23 @@ public class PersonnelDataServiceImpl implements IPersonnelDataService {
         List<Map> entryPersonnelList= personnelDataMapper.getEntryPersonnelLists(personnelData);
         List<Map> inputProfitList= personnelDataMapper.getInputProfitLists(personnelData);
         //  数据详情
-        List<PersonnelDataDetails> dataDetailsList= personnelDataMapper.getDataDetailsList();
-        for (PersonnelDataDetails personnelDataDetails:dataDetailsList){
-            String addTime = String.valueOf(personnelDataDetails.getAddTime());
-            String nickName = personnelDataDetails.getNickName();
+        Date strdate = new Date();
+        Date enddate = new Date();
+        try {
+            strdate = DateUtils.formatY_M_D2Date(personnelData.getStartTime(), "yyyy-MM-dd");
+            enddate =DateUtils.formatY_M_D2Date(personnelData.getEndTime(), "yyyy-MM-dd");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        List<Date> betweenDates = DateUtils.getBetweenDates(strdate, enddate);
+        List<PersonnelDataDetails> listpersDetails=new ArrayList<>();
+        for (Date date:betweenDates){
+            PersonnelDataDetails personnelDat=new PersonnelDataDetails();
+            personnelDat.setAddTime(date);
+            listpersDetails.add(personnelDat);
+        }
+        for (PersonnelDataDetails personnelDataDetails:listpersDetails){
+            String addTime = DateUtils.formatY_M_D2String(personnelDataDetails.getAddTime(),"yyyy-MM-dd");
             for(Map mp:InputList){
                 if(mp.get("addTime")!=null){
                     String addTime1 =(String) mp.get("addTime");
@@ -194,30 +203,16 @@ public class PersonnelDataServiceImpl implements IPersonnelDataService {
                 }
             }
             for(Map mp:entryPersonnelList){
-                if(mp.get("addTime")!=null){
+
                     String addTime1 =(String) mp.get("addTime");
                     if(addTime.equals(addTime1)){
                         if(mp.get("entryPersonneNum")!=null){
-                            personnelDataDetails.setBindingNum((Long) mp.get("entryPersonneNum"));
+                            personnelDataDetails.setEntryPersonnelNum((Long) mp.get("entryPersonneNum"));
                         }
                     }
-                }
-            }
-            for(Map mp:inputProfitList){
-                if(mp.get("nickName")!=null){
-                    String nickName1 =(String) mp.get("nickName");
-                    if(nickName.equals(nickName1)){
-                        personnelDataDetails.setPeopleNum(((Long)mp.get("peopleNum")).doubleValue());
-                        Double  costNum = (Double) mp.get("costNum");
-                        personnelDataDetails.setCostNum(costNum);
-                        Double  serviceNum = (Double) mp.get("serviceNum");
-                        personnelDataDetails.setServiceNum(serviceNum);
-                    }
-                }
-            }
 
+            }
         }
-
 
         map.put("InputList",InputList);
         map.put("trackList",trackList);
@@ -226,7 +221,7 @@ public class PersonnelDataServiceImpl implements IPersonnelDataService {
         map.put("interviewPassedList",interviewPassedList);
         map.put("entryPersonnelList",entryPersonnelList);
         map.put("inputProfitList",inputProfitList);
-        map.put("dataDetailsList",dataDetailsList);
+        map.put("dataDetailsList",listpersDetails);
         return AjaxResult.success(map);
     }
 
