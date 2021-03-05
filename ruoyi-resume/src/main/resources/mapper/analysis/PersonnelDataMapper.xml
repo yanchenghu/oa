@@ -5,6 +5,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.analysis.mapper.PersonnelDataMapper">
 
 
+    <resultMap type="PersonnelDataDetails" id="PersonnelDataDetailsResult">
+        <result property="addTime"    column="add_time"  />
+        <result property="userName"    column="user_name"  />
+        <result property="nickName"    column="nick_name"  />
+        <result property="inputNum"    column="input_num"  />
+        <result property="trackNum"    column="track_num"  />
+        <result property="bindingNum"    column="binding_num" />
+        <result property="resumePassedNum"    column="resume_passed_num"  />
+        <result property="interviewPassedNum"    column="interview_passed_num" />
+        <result property="entryPersonnelNum"    column="entry_personnel_num"  />
+        <result property="peopleNum"    column="people_num"  />
+        <result property="costNum"    column="cost_num"  />
+        <result property="serviceNum"    column="service_num"  />
+    </resultMap>
+
+
+
+
     <select id="getInputdataList" parameterType="PersonnelData" resultType="map">
      SELECT a.opert_name as opertName ,count(a.customer_code) as inputdataNum from per_customerinfo a
         LEFT JOIN sys_user b on a.opert_code=b.user_name
@@ -62,16 +80,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="getInputProfitList" parameterType="PersonnelData" resultType="map">
-   SELECT b.nick_name as nickName,count(a.id) as peopleNum,sum(salary) as costNum,sum(service_pay) as serviceNum from mar_customerprojectpay a LEFT JOIN
+   SELECT b.nick_name as nickName,count(a.id) as peopleNum,
+   IFNULL(sum(salary),0) as costNum,IFNULL(sum(service_pay),0) as serviceNum
+   from mar_customerprojectpay a LEFT JOIN
     sys_user b on a.opercode=b.user_name
     where  1=1
     and  a.syqstart_time between #{startTime} and #{endTime}
     GROUP BY  a.opercode
     </select>
 
-    <select id="getDataDetailsList" resultType="map">
+    <select id="getDataDetailsList"  resultMap="PersonnelDataDetailsResult">
 
-    SELECT nick_name,user_name from sys_user a where a.`status`=0 and del_flag=0
+     SELECT nick_name,user_name from sys_user a where a.`status`=0 and del_flag=0
 
     </select>
 
@@ -149,6 +169,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     and  a.syqstart_time between #{startTime} and #{endTime}
 
     </select>
+
+
 
 
 
