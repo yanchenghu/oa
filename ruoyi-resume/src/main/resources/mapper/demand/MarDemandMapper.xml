@@ -38,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addTime"    column="add_time"    />
         <result property="operationuser"    column="operationuser"    />
         <result property="operUsername"    column="oper_username"    />
+        <result property="bz"    column="bz"    />
     </resultMap>
 
     <resultMap  type="MarEntryInfo" id="MarrInfo">
@@ -56,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectMarDemandVo">
-        select demand_id, corp_code, project_name, technology_direction, demand_years, education, demand_number, specificrequi_rement, project_location, address, direct_worklife, target_number, important_level, min_salary, max_salary, technical_requirement, Langue, demand_pic, interviewer, contact_phone, specific_location, attention, if_look, chsi_flag, coopnature, state, close_date, temp_id, temp_name, add_time, operationuser, oper_username from mar_demand
+        select demand_id, corp_code, project_name, technology_direction, demand_years, education, demand_number, specificrequi_rement, project_location, address, direct_worklife, target_number, important_level, min_salary, max_salary, technical_requirement, Langue, demand_pic, interviewer, contact_phone, specific_location, attention, if_look, chsi_flag, coopnature, state, close_date, temp_id, temp_name, add_time, operationuser, oper_username,bz from mar_demand
     </sql>
 
     <select id="selectMarDemandList" parameterType="MarDemand" resultMap="MarDemandResult">
@@ -98,8 +99,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectMarDemandById" parameterType="String" resultMap="MarDemandResult">
-        <include refid="selectMarDemandVo"/>
-        where demand_id = #{demandId}
+     select a.demand_id,a.corp_code,a.project_name,a.technology_direction,a.demand_years,a.education,a.demand_number,
+     a.specificrequi_rement,a.project_location,a.address,a.direct_worklife,a.target_number,a.important_level,a.min_salary,
+     a.max_salary,a.technical_requirement,a.Langue,a.demand_pic,a.interviewer,a.contact_phone,a.specific_location,
+     a.attention,a.if_look,a.chsi_flag,a.coopnature,a.state,a.close_date,a.temp_id,a.temp_name,a.add_time,
+     a.operationuser,a.oper_username,c.audited_path as bz from mar_demand a
+     LEFT JOIN mar_auditedtor_demand b on a.demand_id=b.demand_id
+     LEFT JOIN  mar_auditeditor c on b.audited_id= c.audited_id
+     where a.demand_id = #{demandId}
     </select>
 
     <insert id="insertMarDemand" parameterType="MarDemand">

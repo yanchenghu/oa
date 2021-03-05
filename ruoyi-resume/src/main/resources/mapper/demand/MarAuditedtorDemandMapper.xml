@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarAuditedtorDemandMapper">
+    
+    <resultMap type="MarAuditedtorDemand" id="MarAuditedtorDemandResult">
+        <result property="demandTopic"    column="demand_topic"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="auditedId"    column="audited_id"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarAuditedtorDemandVo">
+        select demand_topic, demand_id, audited_id, add_time from mar_auditedtor_demand
+    </sql>
+
+    <select id="selectMarAuditedtorDemandList" parameterType="MarAuditedtorDemand" resultMap="MarAuditedtorDemandResult">
+        <include refid="selectMarAuditedtorDemandVo"/>
+        <where>  
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+            <if test="auditedId != null "> and audited_id = #{auditedId}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarAuditedtorDemandById" parameterType="Integer" resultMap="MarAuditedtorDemandResult">
+        <include refid="selectMarAuditedtorDemandVo"/>
+        where demand_topic = #{demandTopic}
+    </select>
+        
+    <insert id="insertMarAuditedtorDemand" parameterType="MarAuditedtorDemand" useGeneratedKeys="true" keyProperty="demandTopic">
+        insert into mar_auditedtor_demand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="demandId != null">demand_id,</if>
+            <if test="auditedId != null">audited_id,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="demandId != null">#{demandId},</if>
+            <if test="auditedId != null">#{auditedId},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarAuditedtorDemand" parameterType="MarAuditedtorDemand">
+        update mar_auditedtor_demand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="demandId != null">demand_id = #{demandId},</if>
+            <if test="auditedId != null">audited_id = #{auditedId},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where demand_topic = #{demandTopic}
+    </update>
+
+    <delete id="deleteMarAuditedtorDemandById" parameterType="Integer">
+        delete from mar_auditedtor_demand where demand_topic = #{demandTopic}
+    </delete>
+
+    <delete id="deleteMarAuditedtorDemandByIds" parameterType="String">
+        delete from mar_auditedtor_demand where demand_topic in 
+        <foreach item="demandTopic" collection="array" open="(" separator="," close=")">
+            #{demandTopic}
+        </foreach>
+    </delete>
+
+    <delete id="deleteMarAuditedtorDemandByAuditedId" parameterType="Integer">
+        delete from mar_auditedtor_demand where audited_id = #{auditedId}
+    </delete>
+
+    
+</mapper>

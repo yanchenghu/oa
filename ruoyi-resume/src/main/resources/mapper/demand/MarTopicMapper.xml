@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarTopicMapper">
+    
+    <resultMap type="MarTopic" id="MarTopicResult">
+        <result property="id"    column="id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="topicPath"    column="topic__path"    />
+        <result property="topicBz"    column="topic__bz"    />
+        <result property="topicStatu"    column="topic_statu"    />
+        <result property="topicReason"    column="topic_reason"    />
+        <result property="topicUsername"    column="topic_username"    />
+        <result property="topicNickname"    column="topic_nickname"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarTopicVo">
+        select id, corp_code, demand_id, project_name, topic__path, topic__bz, topic_statu, topic_reason, topic_username, topic_nickname, add_time from mar_topic
+    </sql>
+
+    <select id="selectMarTopicList" parameterType="MarTopic" resultMap="MarTopicResult">
+        <include refid="selectMarTopicVo"/>
+        <where>  
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="topicPath != null  and topicPath != ''"> and topic__path = #{topicPath}</if>
+            <if test="topicBz != null  and topicBz != ''"> and topic__bz = #{topicBz}</if>
+            <if test="topicStatu != null "> and topic_statu = #{topicStatu}</if>
+            <if test="topicReason != null  and topicReason != ''"> and topic_reason = #{topicReason}</if>
+            <if test="topicUsername != null  and topicUsername != ''"> and topic_username like concat('%', #{topicUsername}, '%')</if>
+            <if test="topicNickname != null  and topicNickname != ''"> and topic_nickname like concat('%', #{topicNickname}, '%')</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarTopicById" parameterType="Integer" resultMap="MarTopicResult">
+        <include refid="selectMarTopicVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarTopic" parameterType="MarTopic" useGeneratedKeys="true" keyProperty="id">
+        insert into mar_topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">corp_code,</if>
+            <if test="demandId != null">demand_id,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="topicPath != null">topic__path,</if>
+            <if test="topicBz != null">topic__bz,</if>
+            <if test="topicStatu != null">topic_statu,</if>
+            <if test="topicReason != null">topic_reason,</if>
+            <if test="topicUsername != null">topic_username,</if>
+            <if test="topicNickname != null">topic_nickname,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="demandId != null">#{demandId},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="topicPath != null">#{topicPath},</if>
+            <if test="topicBz != null">#{topicBz},</if>
+            <if test="topicStatu != null">#{topicStatu},</if>
+            <if test="topicReason != null">#{topicReason},</if>
+            <if test="topicUsername != null">#{topicUsername},</if>
+            <if test="topicNickname != null">#{topicNickname},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarTopic" parameterType="MarTopic">
+        update mar_topic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
+            <if test="demandId != null">demand_id = #{demandId},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="topicPath != null">topic__path = #{topicPath},</if>
+            <if test="topicBz != null">topic__bz = #{topicBz},</if>
+            <if test="topicStatu != null">topic_statu = #{topicStatu},</if>
+            <if test="topicReason != null">topic_reason = #{topicReason},</if>
+            <if test="topicUsername != null">topic_username = #{topicUsername},</if>
+            <if test="topicNickname != null">topic_nickname = #{topicNickname},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarTopicById" parameterType="Integer">
+        delete from mar_topic where id = #{id}
+    </delete>
+
+    <delete id="deleteMarTopicByIds" parameterType="String">
+        delete from mar_topic where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectextopicList" parameterType="MarTopic" resultMap="MarTopicResult">
+        SELECT a.* from mar_topic a
+        LEFT JOIN mar_company b on a.corp_code=b.corp_code
+        where b.transforming_people=#{topicUsername}
+        <if test="corpCode != null  and corpCode != ''"> and b.corp_code = #{corpCode}</if>
+    </select>
+
+
+    
+</mapper>

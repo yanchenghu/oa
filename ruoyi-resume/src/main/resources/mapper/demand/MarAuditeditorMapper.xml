@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarAuditeditorMapper">
+    
+    <resultMap type="MarAuditeditor" id="MarAuditeditorResult">
+        <result property="auditedId"    column="audited_id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="corpName"    column="corp_name"    />
+        <result property="auditedName"    column="audited_name"    />
+        <result property="auditedPath"    column="audited_path"    />
+        <result property="auditedBz"    column="audited_bz"    />
+        <result property="topicUsername"    column="topic_username"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarAuditeditorVo">
+        select audited_id, corp_code, corp_name,audited_name, audited_path, audited_bz, topic_username, add_time from mar_auditeditor
+    </sql>
+
+    <select id="selectMarAuditeditorList" parameterType="MarAuditeditor" resultMap="MarAuditeditorResult">
+        <include refid="selectMarAuditeditorVo"/>
+        <where>  
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="auditedPath != null  and auditedPath != ''"> and audited_path = #{auditedPath}</if>
+            <if test="auditedBz != null  and auditedBz != ''"> and audited_bz = #{auditedBz}</if>
+            <if test="topicUsername != null  and topicUsername != ''"> and topic_username like concat('%', #{topicUsername}, '%')</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarAuditeditorById" parameterType="Integer" resultMap="MarAuditeditorResult">
+        <include refid="selectMarAuditeditorVo"/>
+        where audited_id = #{auditedId}
+    </select>
+        
+    <insert id="insertMarAuditeditor" parameterType="MarAuditeditor">
+        insert into mar_auditeditor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="auditedId != null">audited_id,</if>
+            <if test="corpCode != null">corp_code,</if>
+            <if test="corpName != null">corp_name,</if>
+            <if test="auditedName != null">audited_name,</if>
+            <if test="auditedPath != null">audited_path,</if>
+            <if test="auditedBz != null">audited_bz,</if>
+            <if test="topicUsername != null">topic_username,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="auditedId != null">#{auditedId},</if>
+            <if test="corpCode != null">#{corpCode},</if>
+            <if test="corpName != null">#{corpName},</if>
+            <if test="auditedName != null">#{auditedName},</if>
+            <if test="auditedPath != null">#{auditedPath},</if>
+            <if test="auditedBz != null">#{auditedBz},</if>
+            <if test="topicUsername != null">#{topicUsername},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarAuditeditor" parameterType="MarAuditeditor">
+        update mar_auditeditor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null">corp_code = #{corpCode},</if>
+            <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="auditedName != null">audited_name = #{auditedName},</if>
+            <if test="auditedPath != null">audited_path = #{auditedPath},</if>
+            <if test="auditedBz != null">audited_bz = #{auditedBz},</if>
+            <if test="topicUsername != null">topic_username = #{topicUsername},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where audited_id = #{auditedId}
+    </update>
+
+    <delete id="deleteMarAuditeditorById" parameterType="Integer">
+        delete from mar_auditeditor where audited_id = #{auditedId}
+    </delete>
+
+    <delete id="deleteMarAuditeditorByIds" parameterType="String">
+        delete from mar_auditeditor where audited_id in 
+        <foreach item="auditedId" collection="array" open="(" separator="," close=")">
+            #{auditedId}
+        </foreach>
+    </delete>
+    <select id="selectAuditeditorList" parameterType="MarAuditeditor" resultMap="MarAuditeditorResult">
+    SELECT a.* from mar_auditeditor a
+    LEFT JOIN mar_company b on a.corp_code=b.corp_code
+    where b.transforming_people=#{topicUsername}
+     <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
+     <if test="auditedName != null  and auditedName != ''"> and audited_name like concat('%', #{auditedName}, '%')</if>
+    </select>
+
+    <select id="selQuerydemand" parameterType="String" resultType="map">
+      SELECT b.project_name as projectName,b.demand_id as demandId from  mar_company a LEFT JOIN
+        mar_demand b on a.corp_code=b.corp_code
+      where a.corp_code=#{corpCode}
+    </select>
+</mapper>
