@@ -294,19 +294,19 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             perCustomerinfo.setOpertName(loginUser.getUser().getNickName());
             perCustomerinfo.setResumePath(avatar);
             //插入简历基本信息
-            perCustomerinfoMapper.insertPerCustomerinfo(perCustomerinfo);
-            PerRobcustomer perrobcustomer=new PerRobcustomer();
-            perrobcustomer.setSeizeId(UUID.randomUUID().toString());
-            perrobcustomer.setCustomerTel(phone_number);
-            perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
-            perrobcustomer.setResumeId(perCustomerinfo.getCustomerCode());
-            perrobcustomer.setAddTime(new Date());
-            perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
-            perrobcustomer.setAddPeople(loginUser.getUsername());
-            perrobcustomer.setAddName(loginUser.getUser().getNickName());
-            perrobcustomer.setStatus(0);
-            //插入简历抢占信息
-            perRobcustomerMapper.insertPerRobcustomer(perrobcustomer);
+//            perCustomerinfoMapper.insertPerCustomerinfo(perCustomerinfo);
+//            PerRobcustomer perrobcustomer=new PerRobcustomer();
+//            perrobcustomer.setSeizeId(UUID.randomUUID().toString());
+//            perrobcustomer.setCustomerTel(phone_number);
+//            perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
+//            perrobcustomer.setResumeId(perCustomerinfo.getCustomerCode());
+//            perrobcustomer.setAddTime(new Date());
+//            perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
+//            perrobcustomer.setAddPeople(loginUser.getUsername());
+//            perrobcustomer.setAddName(loginUser.getUser().getNickName());
+//            perrobcustomer.setStatus(0);
+//            //插入简历抢占信息
+//            perRobcustomerMapper.insertPerRobcustomer(perrobcustomer);
             PerProject cp = null;
             List<PerProject> proListArr = new ArrayList<PerProject>();
             for(GenProjectExperience arr:project_experienceListArr){
@@ -344,8 +344,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
 
 
             }
-            //简历项目经验
-            perProjectMapper.insertList(proListArr);
+//            //简历项目经验
+//            perProjectMapper.insertList(proListArr);
 
             PerEducation ed = null;
             List<PerEducation> edulistArr = new ArrayList<PerEducation>();
@@ -398,8 +398,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                 ed.setAddtime(new Date());
                 edulistArr.add(ed);
             }
-            //简历教育经验
-            perEducationMapper.insertList(edulistArr);
+//            //简历教育经验
+//            perEducationMapper.insertList(edulistArr);
 
             PerWork cw = null;
             List<PerWork> worklistArr = new ArrayList<PerWork>();
@@ -443,25 +443,25 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                 cw.setAddtime(new Date());
                 worklistArr.add(cw);
             }
-            //简历工作经验
-            perWorkMapper.insertList(worklistArr);
+//            //简历工作经验
+//            perWorkMapper.insertList(worklistArr);
 
-            //添加操作记录
-            ConOperationrecords record = new ConOperationrecords();
-            record.setType(1);
-            record.setDateTime(new Date());
-            record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
-            record.setUserName(loginUser.getUser().getUserName());
-            conOperationrecordsMapper.insertConOperationrecords(record);
-            PerCuscontact   percuscontact=new   PerCuscontact();
-            String serrialno = SerialNumber.createSerial("shzq", 6);
-            percuscontact.setContacDatecode(serrialno);
-            percuscontact.setContactTime(new Date());
-            percuscontact.setContactUsercode(loginUser.getUser().getUserName());
-            percuscontact.setContactCustomercode(perCustomerinfo.getCustomerCode());
-            percuscontact.setUpdateStatic(1);
-            percuscontact.setMemoDetail("录入人员信息");
-            perCuscontactMapper.insertPerCuscontact(percuscontact);
+//            //添加操作记录
+//            ConOperationrecords record = new ConOperationrecords();
+//            record.setType(1);
+//            record.setDateTime(new Date());
+//            record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
+//            record.setUserName(loginUser.getUser().getUserName());
+//            conOperationrecordsMapper.insertConOperationrecords(record);
+//            PerCuscontact   percuscontact=new   PerCuscontact();
+//            String serrialno = SerialNumber.createSerial("shzq", 6);
+//            percuscontact.setContacDatecode(serrialno);
+//            percuscontact.setContactTime(new Date());
+//            percuscontact.setContactUsercode(loginUser.getUser().getUserName());
+//            percuscontact.setContactCustomercode(perCustomerinfo.getCustomerCode());
+//            percuscontact.setUpdateStatic(1);
+//            percuscontact.setMemoDetail("录入人员信息");
+//            perCuscontactMapper.insertPerCuscontact(percuscontact);
         HashMap dsa=new HashMap();
         dsa.put("perCustomerinfo",perCustomerinfo);
         dsa.put("work_experienceListArr",worklistArr);
@@ -644,23 +644,29 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            perCustomerinfo.setResumePath(fsafsa);
         }
         //添加简历基本项目
         perCustomerinfo.setAddTime(new Date());
         perCustomerinfo.setOpertCode(loginUser.getUser().getUserName());
         perCustomerinfo.setOpertName(loginUser.getUser().getNickName());
-        perCustomerinfo.setResumePath(fsafsa);
+
         perCustomerinfoMapper.insertPerCustomerinfo(perCustomerinfo);
 
 
         //插入简历抢占信息
+
         PerRobcustomer perrobcustomer=new PerRobcustomer();
+        if(StringUtils.isEmpty(perCustomerinfo.getResumePath())){
+            perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),1));
+        }else{
+            perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),3));
+        }
         perrobcustomer.setSeizeId(UUID.randomUUID().toString());
         perrobcustomer.setCustomerTel(phone_number);
         perrobcustomer.setCustomerName(perCustomerinfo.getCustomerName());
         perrobcustomer.setResumeId(perCustomerinfo.getCustomerCode());
         perrobcustomer.setAddTime(new Date());
-        perrobcustomer.setEditTime(workDay.getAfterWorkDay(new Date(),1));
         perrobcustomer.setAddPeople(loginUser.getUsername());
         perrobcustomer.setAddName(loginUser.getUser().getNickName());
         perrobcustomer.setStatus(0);

@@ -134,7 +134,7 @@
             <if test="workYear != null">work_year = #{workYear},</if>
             <if test="resumeSource != null">resume_source = #{resumeSource},</if>
             <if test="resumeId != null">resume_id = #{resumeId},</if>
-            <if test="resumePath != null">resume_path = #{resumePath},</if>
+            <if test="resumePath != null and resumePath != ''">resume_path = #{resumePath},</if>
             <if test="relationshipZq != null">relationship_zq = #{relationshipZq},</if>
             <if test="email != null">email = #{email},</if>
             <if test="addTime != null">add_time = #{addTime},</if>
