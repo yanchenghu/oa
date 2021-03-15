@@ -103,15 +103,10 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
                 DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"01195548941584",
                         finAncecontact.getCorpName()+"的最新沟通情况："+finAncecontact.getContactSituation());
             }
-
-            if( finAncecontact.getReceivedPayment().equals(finAncecontact1.getReceivedPayment())){
-
-
                 DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"01195548941584",
                         finAncecontact.getCorpName().toString()+",应回款金额为"+finAncecontact.getActualMoney()+"元"+"已回款了金额为："+receivedPayment+"元。"+"备注："+paymentTime);
                 DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+"055019496438124425",
                         finAncecontact.getCorpName().toString()+"已回款了金额为："+receivedPayment+"元。"+"请抓紧把这部分人"+finAncecontact.getActualMonth()+"的请求书录入系统");//ccq钉钉提醒去录入请求书
-            }
         }else {
             String receivedPayment = finAncecontact.getReceivedPayment();
             if(StringUtils.isEmpty(receivedPayment)){

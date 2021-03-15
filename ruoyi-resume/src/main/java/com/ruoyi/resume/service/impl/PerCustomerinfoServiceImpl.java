@@ -703,15 +703,15 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         record.setRemark("录入简历-"+perCustomerinfo.getCustomerName());
         record.setUserName(loginUser.getUser().getUserName());
         conOperationrecordsMapper.insertConOperationrecords(record);
-        PerCuscontact   percuscontact=new   PerCuscontact();
-        String serrialno = SerialNumber.createSerial("shzq", 6);
-        percuscontact.setContacDatecode(serrialno);
-        percuscontact.setContactTime(new Date());
-        percuscontact.setContactUsercode(loginUser.getUser().getUserName());
-        percuscontact.setContactCustomercode(perCustomerinfo.getCustomerCode());
-        percuscontact.setUpdateStatic(1);
-        percuscontact.setMemoDetail("录入人员信息");
-        perCuscontactMapper.insertPerCuscontact(percuscontact);
+//        PerCuscontact   percuscontact=new   PerCuscontact();
+//        String serrialno = SerialNumber.createSerial("shzq", 6);
+//        percuscontact.setContacDatecode(serrialno);
+//        percuscontact.setContactTime(new Date());
+//        percuscontact.setContactUsercode(loginUser.getUser().getUserName());
+//        percuscontact.setContactCustomercode(perCustomerinfo.getCustomerCode());
+//        percuscontact.setUpdateStatic(1);
+//        percuscontact.setMemoDetail("录入人员信息");
+//        perCuscontactMapper.insertPerCuscontact(percuscontact);
         return AjaxResult.success("简历添加成功");
 
     }

@@ -4,8 +4,6 @@ import com.ruoyi.analysis.domain.PersonnelData;
 import com.ruoyi.analysis.service.IPersonnelDataService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +28,7 @@ public class PersonnelDataController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
-    @PreAuthorize("@ss.hasPermi('analysis:analysis:personnellist')")
+    @PreAuthorize("@ss.hasPermi('analysis:personneldata:personnellist')")
     @GetMapping(value = "/personnellist")
     public AjaxResult personnellist(PersonnelData personnelData)
     {
@@ -39,7 +37,7 @@ public class PersonnelDataController extends BaseController {
 
 
 
-    @PreAuthorize("@ss.hasPermi('analysis:analysis:everydaylist')")
+    @PreAuthorize("@ss.hasPermi('analysis:personneldata:personnellist')")
     @GetMapping(value = "/everydaylist")
     public AjaxResult everydaylist(PersonnelData personnelData)
     {

@@ -95,6 +95,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selQuerydemand" parameterType="String" resultType="map">
       SELECT b.project_name as projectName,b.demand_id as demandId from  mar_company a LEFT JOIN
         mar_demand b on a.corp_code=b.corp_code
-      where a.corp_code=#{corpCode}
+      where a.corp_code=#{corpCode} and b.state=0 and b.project_name is not null
     </select>
 </mapper>

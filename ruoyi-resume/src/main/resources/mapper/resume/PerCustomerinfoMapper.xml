@@ -187,8 +187,11 @@
         per_customerinfo a
         LEFT JOIN (SELECT customer_tel,add_name from per_robcustomer where Status=0 ) b ON a.customer_tel = b.customer_tel
         <where>
-            <if test="customerName != null and customerName != ''"> and a.customer_name like concat('%', #{customerName}, '%')</if>
-            <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
+            <if test="customerName != null and customerName != ''"> and
+              (a.customer_name like concat('%', #{customerName}, '%') or a.customer_tel = #{customerName})
+
+             </if>
+<!--            <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>-->
         </where>
 
         limit 0,10
