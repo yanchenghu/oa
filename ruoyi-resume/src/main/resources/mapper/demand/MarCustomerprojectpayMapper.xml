@@ -62,6 +62,7 @@
         <result property="customerTel" column="customer_tel" />
         <result property="joinStatus" column="join_status" />
         <result property="entryAssistant" column="entry_assistant" />
+        <result property="outofProjecttime" column="outof_projecttime" />
     </resultMap>
 
     <resultMap  type="ExportItemList" id="ExportItemListinfo">
@@ -304,7 +305,7 @@
     <select id="selectpersonnelTurnoverList"    parameterType="map" resultMap="PersonnelEssentialinfor">
         SELECT g.dept_name,f.nick_name,d.customer_name,d.join_status,d.customer_tel,a.salary,a.service_pay,(a.service_pay-a.salary) as profit,
         a.syqstart_time,a.syq_endtime,a.oper_time,b.corp_name,c.address as entry_address,
-        c.technology_direction,a.soc_secopt,a.entry_assistant from  mar_customerprojectpay a
+        c.technology_direction,a.soc_secopt,a.entry_assistant, a.outof_projecttime from  mar_customerprojectpay a
         LEFT JOIN mar_company b on a.corp_code=b.corp_code
         LEFT JOIN mar_demand c on a.demand_id=c.demand_id
         LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
@@ -373,7 +374,7 @@
         from mar_customerprojectpay a
         LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
         LEFT JOIN       mar_demand    c on a.demand_id=c.demand_id
-        <where>
+        where 1=1
             <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
             <choose>
@@ -394,7 +395,7 @@
                     </if>
                 </when>
             </choose>
-        </where>
+        order by a.syqstart_time asc
     </select>
 
 

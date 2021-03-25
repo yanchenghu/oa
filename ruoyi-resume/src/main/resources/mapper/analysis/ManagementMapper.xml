@@ -10,8 +10,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getPaymentCollection" parameterType="map" resultType="map">
     SELECT DATE_FORMAT(${plasticTime},"%Y-%m") as paymentCollectionTime,SUM(com_bined) as totlePayment from fin_statements a
-    where  1=1 and
-    ${plasticTime} between #{startTime} and #{endTime}
+    where  1=1
+     and status=3
+    and ${plasticTime} between #{startTime} and #{endTime}
     GROUP BY paymentCollectionTime
     </select>
 

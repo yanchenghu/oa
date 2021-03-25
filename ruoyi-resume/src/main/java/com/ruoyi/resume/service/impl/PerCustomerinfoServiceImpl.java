@@ -15,6 +15,7 @@ import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.resume.ClassPathResource;
 import com.ruoyi.common.utils.resume.ResumeParserUtil;
 
 import com.ruoyi.common.utils.resume.SerialNumber;
@@ -191,10 +192,21 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
         }
         JSONObject contact_info   = analyticalResults.getJSONObject("parsing_result").getJSONObject("contact_info");
              String phone_number = contact_info.getString("phone_number");
+             String email = contact_info.getString("email");
              if(phone_number.equals("")){
-                 f.delete();
-                return AjaxResult.error("该简历无联系方式，请查证");
-
+                 if(email.length()>13){
+                     String dsad=email.substring(0,11);
+                     boolean mobileNO = ClassPathResource.isMobileNO(dsad);
+                     if (mobileNO) {
+                         phone_number=dsad;
+                     }else{
+                         f.delete();
+                         return AjaxResult.error("该简历无联系方式，请查证");
+                     }
+                 }else{
+                     f.delete();
+                     return AjaxResult.error("该简历无联系方式，请查证");
+                 }
              }
             perCustomerinfo.setCustomerTel(phone_number);
             PerRobcustomer perrobcus = perRobcustomerMapper.selectByphone(phone_number);
@@ -254,6 +266,12 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             if(!basic_info.getString("name").equals("")){
                 perCustomerinfo.setCustomerName(basic_info.getString("name"));//姓名
             }
+
+            if(!basic_info.getString("num_work_experience").equals("")){
+                int a= basic_info.getInt("num_work_experience");
+                perCustomerinfo.setWorkYear(a);//工作年限
+            }
+
             if(basic_info.getString("gender").equals("男")){//性别
                 perCustomerinfo.setCustomerSex(0);
             }else if(basic_info.getString("gender").equals("女")){

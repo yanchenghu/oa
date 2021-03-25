@@ -57,6 +57,18 @@ public class MarCompanyController extends BaseController
     }
 
     /**
+     * 总合作公司列表
+     */
+    @PreAuthorize("@ss.hasPermi('customer:company:booslist')")
+    @GetMapping("/booslist")
+    public TableDataInfo booslist(MarCompany marCompany)
+    {
+        LoginUser loginUser =null;
+        startPage();
+        List<MarCompany> list = marCompanyService.selectMarCompanyList(marCompany,loginUser);
+        return getDataTable(list);
+    }
+    /**
      * 新增合作公司
      */
 

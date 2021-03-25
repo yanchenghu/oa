@@ -394,12 +394,13 @@ public class DateUtils {
 
 	public static void main(String[] args) throws ParseException {
 //		Date nMonthlastDate = getNMonthlastDate(new Date(), 8);
-//		Date nMonthlasde = getNMonthfirstDateforDate( 8,new Date());
+		Date nMonthlasde = getNMonthfirstDateforDate( 12,new Date());
 //		Date nMonthdde = getNMonthfirstDateforDate( 9,new Date());
 //
 ////		System.out.println(formatY_M_D2String(nMonthlastDate,FORMAT_Y_M));
 //		System.out.println(formatY_M_D2String(nMonthlasde,FORMAT_Y_M));
-		System.out.println(formatY_M_D2String(getyearFirstDate(new Date()),FORMAT_Y_M));
+//		System.out.println(formatY_M_D2String(getyearFirstDate(new Date()),FORMAT_Y_M));
+		System.out.println(formatY_M_D2String(nMonthlasde,FORMAT_Y_M_D));
 //	System.out.println(getyearFirstDate(new Date()));
 
 

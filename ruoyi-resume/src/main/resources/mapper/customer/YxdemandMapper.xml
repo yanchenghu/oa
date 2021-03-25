@@ -44,8 +44,7 @@
         <result property="qq"    column="qq"    />
     </resultMap>
     <sql id="selectYxdemandVo">
-        select entry_id, company_name, recruitment_job, contact_people, contact_position, contact_phone, info_sourse, company_situation, is_send_resume, interview_company, interviewer, interviewer_position, interview_contact, interview_address, final_party, entry_people, entry_people_id, insert_time, is_follow_submit, rob_people_id, rob_people, rob_time, is_accept, business_id, business_people, submit_time, is_business, cooperation_projects, is_signing, sing_time, personnel_into, is_return_money, update_date,  contact_information,wechat,mailbox,qq from yxdemand
-    </sql>
+  select entry_id, company_name, recruitment_job, contact_people, contact_position, contact_phone, info_sourse, company_situation, is_send_resume, interview_company, interviewer, interviewer_position, interview_contact, interview_address, final_party,  insert_time,  business_id, business_people,is_follow_submit, rob_people_id, rob_people,  rob_time,   cooperation_projects, is_signing, sing_time, personnel_into, is_return_money, update_date,  contact_information,wechat,mailbox,qq from yxdemand    </sql>
 
     <select id="selectYxdemandList" parameterType="Yxdemand" resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
@@ -62,7 +61,7 @@
             <if test="contactInformation != null "> and contact_information = #{contactInformation}</if>
             <if test="updateDate != null "> and update_date = #{updateDate}</if>
         </where>
-        order by  is_accept, update_date desc
+        order by  update_date desc
 
 
 
@@ -198,18 +197,12 @@
     </select>
     <select id="selectByDepartBus"  parameterType="Yxdemand"  resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
-        where   is_accept=1
+        <where>
         <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
-
+        </where>
     </select>
 
-    <select id="selectByDepartMark" parameterType="Yxdemand" resultMap="YxdemandResult">
-        <include refid="selectYxdemandVo"/>
-        where
-          is_accept=0
-        <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
 
-    </select>
 
     <!--   定时器自动执行 -->
     <select id="selrobYxdelist" resultMap="YxdemandResult" >

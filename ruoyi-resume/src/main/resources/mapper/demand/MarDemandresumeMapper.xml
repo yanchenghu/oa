@@ -146,7 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     where a.state=0 and a.operationuser=#{userName}
     and c.follow_status=#{followStatus}
     and  DATE_FORMAT( c.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
-
+    order by c.trackingtime desc
     </select>
 
     <select id="selectlastmapBylastMonth"  parameterType="map"  resultType="int">
@@ -155,6 +155,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id
         LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id
         where a.state=0
+        and a.operationuser=#{userName}
         and c.follow_status=#{followStatus}
         and  DATE_FORMAT( c.trackingtime, '%Y%m' ) = DATE_FORMAT(#{lastMonth}, '%Y%m' )
         GROUP BY b.bind_people ORDER BY sd desc LIMIT 1

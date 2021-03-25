@@ -46,13 +46,13 @@ public class HighseasController extends BaseController {
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         startPage();
-        if(loginUser.getUser().getDeptId()==104){//商务
-            List<Yxdemand> list = yxdemandService.selectByDepartBus(yxdemand,loginUser);
-            return getDataTable(list);
-        }else{
-            List<Yxdemand> list = yxdemandService.selectByDepartMark(yxdemand,loginUser);
-            return getDataTable(list);
-        }
+//        if(loginUser.getUser().getDeptId()==104){//商务
+        List<Yxdemand> list = yxdemandService.selectByDepartBus(yxdemand,loginUser);
+        return getDataTable(list);
+//        }else{
+//            List<Yxdemand> list = yxdemandService.selectByDepartMark(yxdemand,loginUser);
+//            return getDataTable(list);
+//        }
     }
 
 }

@@ -37,21 +37,18 @@ public class YxdemandController extends BaseController
     @Autowired
     private TokenService tokenService;
 
-
-
-
-    /**
-     * 查询营销录入公司列表
-     */
-    @PreAuthorize("@ss.hasPermi('customer:yxdemand:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(Yxdemand yxdemand)
-    {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        startPage();
-        List<Yxdemand> list = yxdemandService.selectYxdemandList(yxdemand,loginUser);
-        return getDataTable(list);
-    }
+//    /**
+//     * 查询营销录入公司列表
+//     */
+//    @PreAuthorize("@ss.hasPermi('customer:yxdemand:list')")
+//    @GetMapping("/list")
+//    public TableDataInfo list(Yxdemand yxdemand)
+//    {
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//        startPage();
+//        List<Yxdemand> list = yxdemandService.selectYxdemandList(yxdemand,loginUser);
+//        return getDataTable(list);
+//    }
 
 
     /**
@@ -63,16 +60,16 @@ public class YxdemandController extends BaseController
         return AjaxResult.success(yxdemandService.selectYxdemandById(entryId));
     }
 
-    /**
-     * 新增营销录入公司
-     */
-    @Log(title = "营销录入公司", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody Yxdemand yxdemand)
-    {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return yxdemandService.insertYxdemand(yxdemand,loginUser);
-    }
+//    /**
+//     * 新增营销录入公司
+//     */
+//    @Log(title = "营销录入公司", businessType = BusinessType.INSERT)
+//    @PostMapping
+//    public AjaxResult add(@RequestBody Yxdemand yxdemand)
+//    {
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//        return yxdemandService.insertYxdemand(yxdemand,loginUser);
+//    }
 
     /**
      * 跟进营销录入公司
@@ -93,24 +90,24 @@ public class YxdemandController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return yxdemandService.insertYxcontact(yxcontact,loginUser);
     }
-    /**
-     * 客户移交
-     */
-    @PostMapping(value = "/transfer")
-    public AjaxResult  Customertransfer(Yxdemand yxdemand)
-    {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return toAjax(yxdemandService.Customertransfer(yxdemand,loginUser));
-    }
-    /**
-     * 营销抢占功能营销
-     */
-    @PostMapping(value = "/rebMarByEnId")
-    public AjaxResult  rebClientByEnId(@RequestParam(value = "entryId", defaultValue = "") Integer entryId)
-    {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        return yxdemandService.rebMarByEnId(entryId,loginUser);
-    }
+//    /**
+//     * 客户移交
+//     */
+//    @PostMapping(value = "/transfer")
+//    public AjaxResult  Customertransfer(Yxdemand yxdemand)
+//    {
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//        return toAjax(yxdemandService.Customertransfer(yxdemand,loginUser));
+//    }
+//    /**
+//     * 营销抢占功能营销
+//     */
+//    @PostMapping(value = "/rebMarByEnId")
+//    public AjaxResult  rebClientByEnId(@RequestParam(value = "entryId", defaultValue = "") Integer entryId)
+//    {
+//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+//        return yxdemandService.rebMarByEnId(entryId,loginUser);
+//    }
     /**
      * 根据公司名字获取营销录入公司
      */

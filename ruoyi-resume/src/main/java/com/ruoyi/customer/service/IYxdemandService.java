@@ -40,13 +40,13 @@ public interface IYxdemandService
      */
     AjaxResult rebMarByEnId(Integer entryId, LoginUser loginUser);
 
-    /**
-     * 新增营销录入公司
-     * 
-     * @param yxdemand 营销录入公司
-     * @return 结果
-     */
-    public AjaxResult insertYxdemand(Yxdemand yxdemand,LoginUser loginUser);
+//    /**
+//     * 新增营销录入公司
+//     *
+//     * @param yxdemand 营销录入公司
+//     * @return 结果
+//     */
+//    public AjaxResult insertYxdemand(Yxdemand yxdemand,LoginUser loginUser);
 
     /**
      * 修改营销录入公司

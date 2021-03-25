@@ -74,8 +74,18 @@ public class PersonnelEssentialinfor {
     /** 入项协助人 */
     @Excel(name = "入项协助人")
     private String entryAssistant;
+    /** 入项协助人 */
+    @Excel(name = "出项时间")
+    private String outofProjecttime;
 
 
+    public String getOutofProjecttime() {
+        return outofProjecttime;
+    }
+
+    public void setOutofProjecttime(String outofProjecttime) {
+        this.outofProjecttime = outofProjecttime;
+    }
 
     public String getJoinStatus() {
         return joinStatus;

@@ -5,7 +5,6 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.demand.domain.BasicInfo;
 import com.ruoyi.demand.domain.MarDemand;
-import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.demand.domain.MarEntryInfo;
 import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
 import com.ruoyi.demand.mapper.MarDemandMapper;
@@ -19,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +52,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取本月录入
         List<PerCustomerinfo> EnterInfo = perCustomerinfoMapper.selectPerCustomerinfoByMonth(perCustomerinfo);
 
-        int firstEnter=(EnterInfo.size()>x)?EnterInfo.size():x;
+//        int firstEnter=(EnterInfo.size()>x)?EnterInfo.size():x;
 
 //        try {
 //            firstEnter = perCustomerinfoMapper.selectfirstEnter();
@@ -63,7 +62,7 @@ public class IHomePageServiceImpl implements IHomePageService {
 //        }
         //获取抢占跟踪
         List<PerRobcustomer> ListperRob = perRobcustomerMapper.selectPerRobdatadisplayList(map);
-        int firstRob= (ListperRob.size()>x)?ListperRob.size():x;
+//        int firstRob= (ListperRob.size()>x)?ListperRob.size():x;
 //        try {
 //            firstRob= perRobcustomerMapper.selectfirstRob();
 //        }catch (Exception e){
@@ -72,7 +71,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历绑定人数
         map.put("followStatus",1);
         List<Map> ListMarbing=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstMarbing=(ListMarbing.size()>x)?ListMarbing.size():x;
+//        int firstMarbing=(ListMarbing.size()>x)?ListMarbing.size():x;
 //        try {
 //            firstMarbing=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){
@@ -81,7 +80,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历通过
         map.put("followStatus",3);
         List<Map> resumeadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstresumeadopt=(resumeadopt.size()>x)?resumeadopt.size():x;
+//        int firstresumeadopt=(resumeadopt.size()>x)?resumeadopt.size():x;
 //        try {
 //            firstresumeadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){
@@ -91,7 +90,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历面试通过
         map.put("followStatus",5);
         List<Map> interviewadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstinterviewadopt=(interviewadopt.size()>x)?interviewadopt.size():x;
+//        int firstinterviewadopt=(interviewadopt.size()>x)?interviewadopt.size():x;
 //        try {
 //            firstinterviewadopt=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){
@@ -101,7 +100,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         //获取简历入项
         map.put("followStatus",7);
         List<Map> entryPeople=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-        int firstentryPeople=(entryPeople.size()>x)?entryPeople.size():x;
+//        int firstentryPeople=(entryPeople.size()>x)?entryPeople.size():x;
 //        try {
 //            firstentryPeople=marDemandresumeMapper.selectfirstMarbingBystatus(map);
 //        }catch (Exception e){
@@ -139,12 +138,12 @@ public class IHomePageServiceImpl implements IHomePageService {
         maps.put("listMarEntry",listMarEntry);
         maps.put("EnterInfosize",EnterInfo.size());
 
-        maps.put("firstEnter",firstEnter);
-        maps.put("firstRob",firstRob);
-        maps.put("firstMarbing",firstMarbing);
-        maps.put("firstresumeadopt",firstresumeadopt);
-        maps.put("firstinterviewadopt",firstinterviewadopt);
-        maps.put("firstentryPeople",firstentryPeople);
+//        maps.put("firstEnter",firstEnter);
+//        maps.put("firstRob",firstRob);
+//        maps.put("firstMarbing",firstMarbing);
+//        maps.put("firstresumeadopt",firstresumeadopt);
+//        maps.put("firstinterviewadopt",firstinterviewadopt);
+//        maps.put("firstentryPeople",firstentryPeople);
         return AjaxResult.success(maps);
     }
 
@@ -292,5 +291,61 @@ public class IHomePageServiceImpl implements IHomePageService {
             return AjaxResult.success(listOut);
         }
         return AjaxResult.error("获取失败");
+    }
+
+    @Override
+    public AjaxResult partjoblist(LoginUser loginUser) {
+        Map map=new HashMap();
+        map.put("AddPeople",loginUser.getUsername());
+        PerCustomerinfo perCustomerinfo=new PerCustomerinfo();
+        perCustomerinfo.setOpertCode(loginUser.getUsername());
+        int x=0;
+        //获取本月录入
+        List<PerCustomerinfo> EnterInfo = perCustomerinfoMapper.selectPerCustomerinfoByMonth(perCustomerinfo);
+
+
+        //获取抢占跟踪
+        List<PerRobcustomer> ListperRob = perRobcustomerMapper.selectPerRobdatadisplayList(map);
+
+        //获取简历绑定人数
+        map.put("followStatus",1);
+        List<Map> ListMarbing=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
+
+        //获取简历通过
+        map.put("followStatus",3);
+        List<Map> resumeadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
+        //获取简历面试通过
+        map.put("followStatus",5);
+        List<Map> interviewadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
+        //获取简历入项
+        map.put("followStatus",7);
+        List<Map> entryPeople=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
+
+        //获取分配给我的项目
+        Map mapss=new HashMap();
+        mapss.put("deptId",loginUser.getUser().getDeptId());
+        List<MarEntryInfo> listMarEntry= marDemandMapper.selectMarDemanddsaList(mapss);
+        mapss.put("bindPeople",loginUser.getUsername());
+        for(int i=listMarEntry.size()-1;i>=0;i--) {
+            MarEntryInfo marDe= listMarEntry.get(i);
+            mapss.put("demandId",marDe.getDemandId());
+            List<BasicInfo>  li= marDemandMapper.selectMarDem(mapss);
+            marDe.setBasicInfo(li);
+            if(li.size()==0){
+                listMarEntry.remove(i);
+            }
+        }
+        Map maps=new HashMap();
+        maps.put("entryrobnnum",ListperRob.size());
+        maps.put("bingdinnum",ListMarbing.size());
+        maps.put("resumeadopt",resumeadopt.size());
+        maps.put("interviewadopt",interviewadopt.size());
+        maps.put("entryPeople",entryPeople.size());
+
+        maps.put("ListperRob",ListperRob);
+        maps.put("listMarEntry",listMarEntry);
+        maps.put("EnterInfosize",EnterInfo.size());
+
+        return AjaxResult.success(maps);
     }
 }

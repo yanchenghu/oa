@@ -143,38 +143,38 @@ public class YxdemandServiceImpl implements IYxdemandService
     }
 
 
-    /**
-     * 新增营销录入公司
-     * 
-     * @param yxdemand 营销录入公司
-     * @return 结果
-     */
-    @Override
-    @Transactional
-    public AjaxResult insertYxdemand(Yxdemand yxdemand,LoginUser loginUser)
-    {
-        Yxdemand yxde=yxdemandMapper.selectYxdemandByName(yxdemand.getCompanyName());
-        if(yxde!=null){
-            return AjaxResult.error("当前公司已经存在");
-        }
-        yxdemand.setEntryPeopleId(loginUser.getUsername());
-        yxdemand.setEntryPeople(loginUser.getUser().getNickName());
-        yxdemand.setInsertTime(new Date());
-        yxdemand.setRobPeople(loginUser.getUser().getNickName());
-        yxdemand.setRobPeopleId(loginUser.getUsername());
-        yxdemand.setRobTime(new Date());
-        yxdemand.setUpdateDate(new Date());
-        yxdemandMapper.insertYxdemand(yxdemand);
-        Yxcontact yxcontact=new Yxcontact();
-        yxcontact.setNickName(loginUser.getUser().getNickName());
-        yxcontact.setContactTime(new Date());
-        yxcontact.setEntryId(yxdemand.getEntryId());
-        yxcontact.setContactDetail(yxdemand.getContactInformation());
-        yxcontact.setStatus(1);
-        yxcontactMapper.insertYxcontact(yxcontact);
-        return AjaxResult.success("添加成功");
-
-    }
+//    /**
+//     * 新增营销录入公司
+//     *
+//     * @param yxdemand 营销录入公司
+//     * @return 结果
+//     */
+//    @Override
+//    @Transactional
+//    public AjaxResult insertYxdemand(Yxdemand yxdemand,LoginUser loginUser)
+//    {
+//        Yxdemand yxde=yxdemandMapper.selectYxdemandByName(yxdemand.getCompanyName());
+//        if(yxde!=null){
+//            return AjaxResult.error("当前公司已经存在");
+//        }
+//        yxdemand.setEntryPeopleId(loginUser.getUsername());
+//        yxdemand.setEntryPeople(loginUser.getUser().getNickName());
+//        yxdemand.setInsertTime(new Date());
+//        yxdemand.setRobPeople(loginUser.getUser().getNickName());
+//        yxdemand.setRobPeopleId(loginUser.getUsername());
+//        yxdemand.setRobTime(new Date());
+//        yxdemand.setUpdateDate(new Date());
+//        yxdemandMapper.insertYxdemand(yxdemand);
+//        Yxcontact yxcontact=new Yxcontact();
+//        yxcontact.setNickName(loginUser.getUser().getNickName());
+//        yxcontact.setContactTime(new Date());
+//        yxcontact.setEntryId(yxdemand.getEntryId());
+//        yxcontact.setContactDetail(yxdemand.getContactInformation());
+//        yxcontact.setStatus(1);
+//        yxcontactMapper.insertYxcontact(yxcontact);
+//        return AjaxResult.success("添加成功");
+//
+//    }
 
     /**
      * 修改营销录入公司
@@ -467,9 +467,10 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Override
     public AjaxResult newIntention(Yxdemand yxdemand, LoginUser loginUser) {
 
-
-
-
+        Yxdemand yxde=yxdemandMapper.selectYxdemandByName(yxdemand.getCompanyName());
+        if(yxde!=null){
+            return AjaxResult.error("当前公司已经存在");
+        }
         yxdemand.setIsAccept(1);
         yxdemand.setSubmitTime(new Date());
         yxdemand.setIsBusiness(1);
@@ -477,22 +478,19 @@ public class YxdemandServiceImpl implements IYxdemandService
         yxdemand.setRobPeople(loginUser.getUser().getNickName());
         yxdemand.setRobPeopleId(loginUser.getUsername());
         yxdemand.setRobTime(new Date());
-        yxdemand.setEntryPeopleId(loginUser.getUsername());
-        yxdemand.setEntryPeople(loginUser.getUser().getNickName());
         yxdemand.setBusinessId(loginUser.getUsername());
         yxdemand.setBusinessPeople(loginUser.getUser().getNickName());
         yxdemand.setUpdateDate(new Date());
         yxdemandMapper.insertYxdemand(yxdemand);
-        if(StringUtils.isNotEmpty(yxdemand.getContactInformation())){
-            Yxcontact  yxcontact=new Yxcontact();
-            yxcontact.setNickName(loginUser.getUser().getNickName());
-            yxcontact.setContactTime(new Date());
-            yxcontact.setEntryId(yxdemand.getEntryId());
-            yxcontact.setContactDetail(yxdemand.getContactInformation());
-            yxcontact.setStatus(1);
-            yxcontactMapper.insertYxcontact(yxcontact);
-        }
-        return AjaxResult.success("新建意向客户成功");
+        Yxcontact  yxcontact=new Yxcontact();
+        yxcontact.setNickName(loginUser.getUser().getNickName());
+        yxcontact.setContactTime(new Date());
+        yxcontact.setEntryId(yxdemand.getEntryId());
+        yxcontact.setContactDetail(yxdemand.getContactInformation());
+        yxcontact.setStatus(1);
+        yxcontactMapper.insertYxcontact(yxcontact);
+
+        return AjaxResult.success("新建客户线索成功");
     }
 
 
