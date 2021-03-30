@@ -15,7 +15,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 
 public class ResumeParserUtil {
-    public static final String URL = "http://49.234.150.229:8000/parse_base";//解析简历word
+    public static final String URL = "http://49.234.150.229:8000/parse_base/?handle_image=1";//解析简历word
 
     public static final String insertURL = "http://49.234.150.229:9000/resumes";//插入简历word
 

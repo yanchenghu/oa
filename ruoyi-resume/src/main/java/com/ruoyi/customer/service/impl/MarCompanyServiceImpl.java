@@ -68,7 +68,10 @@ public class MarCompanyServiceImpl implements IMarCompanyService
     @Override
     public List<MarCompany> selectMarCompanyList(MarCompany marCompany, LoginUser loginUser)
     {
-        marCompany.setTransformingPeople(loginUser.getUsername());
+        if(loginUser!=null){
+            marCompany.setTransformingPeople(loginUser.getUsername());
+        }
+
         return marCompanyMapper.selectMarCompanyList(marCompany);
     }
 

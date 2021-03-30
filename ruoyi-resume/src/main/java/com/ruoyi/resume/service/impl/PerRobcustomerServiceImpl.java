@@ -146,7 +146,7 @@ public class PerRobcustomerServiceImpl implements IPerRobcustomerService
                     customenamelist+=customename+",";
                 }
                 DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
-                        "您好，系统监控到您抢占的：("+customenamelist+")这些人没有录入简历原件，请抓紧录入");//罗梦莹
+                        "您好，系统监控到您抢占的：("+customenamelist+")这些人没有录入简历原件，请抓紧录入");
             }
         }
     }

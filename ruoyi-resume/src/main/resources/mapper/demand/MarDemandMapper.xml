@@ -38,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addTime"    column="add_time"    />
         <result property="operationuser"    column="operationuser"    />
         <result property="operUsername"    column="oper_username"    />
+        <result property="bz"    column="bz"    />
     </resultMap>
 
     <resultMap  type="MarEntryInfo" id="MarrInfo">
@@ -56,50 +57,57 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectMarDemandVo">
-        select demand_id, corp_code, project_name, technology_direction, demand_years, education, demand_number, specificrequi_rement, project_location, address, direct_worklife, target_number, important_level, min_salary, max_salary, technical_requirement, Langue, demand_pic, interviewer, contact_phone, specific_location, attention, if_look, chsi_flag, coopnature, state, close_date, temp_id, temp_name, add_time, operationuser, oper_username from mar_demand
+        select demand_id, corp_code, project_name, technology_direction, demand_years, education, demand_number, specificrequi_rement, project_location, address, direct_worklife, target_number, important_level, min_salary, max_salary, technical_requirement, Langue, demand_pic, interviewer, contact_phone, specific_location, attention, if_look, chsi_flag, coopnature, state, close_date, temp_id, temp_name, add_time, operationuser, oper_username,bz from mar_demand
     </sql>
 
     <select id="selectMarDemandList" parameterType="MarDemand" resultMap="MarDemandResult">
-        <include refid="selectMarDemandVo"/>
+        select a.demand_id, b.corp_name as operationuser,a.project_name,a.technology_direction,a.demand_years,a.education,a.demand_number,a.specificrequi_rement,a.project_location,a.address,a.direct_worklife,a.target_number,a.important_level,a.min_salary,a.max_salary,a.technical_requirement,a.Langue,a.demand_pic,a.interviewer,a.contact_phone,a.specific_location,a.attention,a.if_look,a.chsi_flag,a.coopnature,a.state,a.close_date,a.temp_id,a.temp_name,a.add_time,a.operationuser,a.oper_username,a.bz from mar_demand a
+        LEFT JOIN mar_company b on a.corp_code=b.corp_code
         <where>
-            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
-            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
-            <if test="technologyDirection != null  and technologyDirection != ''"> and technology_direction = #{technologyDirection}</if>
-            <if test="demandYears != null  and demandYears != ''"> and demand_years = #{demandYears}</if>
-            <if test="education != null  and education != ''"> and education = #{education}</if>
-            <if test="demandNumber != null "> and demand_number = #{demandNumber}</if>
-            <if test="specificrequiRement != null  and specificrequiRement != ''"> and specificrequi_rement = #{specificrequiRement}</if>
-            <if test="projectLocation != null  and projectLocation != ''"> and project_location = #{projectLocation}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="directWorklife != null "> and direct_worklife = #{directWorklife}</if>
-            <if test="targetNumber != null "> and target_number = #{targetNumber}</if>
-            <if test="importantLevel != null "> and important_level = #{importantLevel}</if>
-            <if test="minSalary != null "> and min_salary = #{minSalary}</if>
-            <if test="maxSalary != null "> and max_salary = #{maxSalary}</if>
-            <if test="technicalRequirement != null  and technicalRequirement != ''"> and technical_requirement = #{technicalRequirement}</if>
-            <if test="langue != null "> and Langue = #{langue}</if>
-            <if test="demandPic != null  and demandPic != ''"> and demand_pic = #{demandPic}</if>
-            <if test="interviewer != null  and interviewer != ''"> and interviewer = #{interviewer}</if>
-            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
-            <if test="specificLocation != null  and specificLocation != ''"> and specific_location = #{specificLocation}</if>
-            <if test="attention != null  and attention != ''"> and attention = #{attention}</if>
-            <if test="ifLook != null "> and if_look = #{ifLook}</if>
-            <if test="chsiFlag != null "> and chsi_flag = #{chsiFlag}</if>
-            <if test="coopnature != null "> and coopnature = #{coopnature}</if>
-            <if test="state != null "> and state = #{state}</if>
-            <if test="closeDate != null "> and close_date = #{closeDate}</if>
-            <if test="tempId != null  and tempId != ''"> and temp_id = #{tempId}</if>
-            <if test="tempName != null  and tempName != ''"> and temp_name like concat('%', #{tempName}, '%')</if>
-            <if test="addTime != null "> and add_time = #{addTime}</if>
-            <if test="operationuser != null  and operationuser != ''"> and operationuser = #{operationuser}</if>
-            <if test="operUsername != null  and operUsername != ''"> and oper_username like concat('%', #{operUsername}, '%')</if>
+            <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>
+            <if test="projectName != null  and projectName != ''"> and a.project_name like concat('%', #{projectName}, '%')</if>
+            <if test="technologyDirection != null  and technologyDirection != ''"> and a.technology_direction = #{technologyDirection}</if>
+            <if test="demandYears != null  and demandYears != ''"> and a.demand_years = #{demandYears}</if>
+            <if test="education != null  and education != ''"> and a.education = #{education}</if>
+            <if test="demandNumber != null "> and a.demand_number = #{demandNumber}</if>
+            <if test="specificrequiRement != null  and specificrequiRement != ''"> and a.specificrequi_rement = #{specificrequiRement}</if>
+            <if test="projectLocation != null  and projectLocation != ''"> and a.project_location = #{projectLocation}</if>
+            <if test="address != null  and address != ''"> and a.address = #{address}</if>
+            <if test="directWorklife != null "> and a.direct_worklife = #{directWorklife}</if>
+            <if test="targetNumber != null "> and a.target_number = #{targetNumber}</if>
+            <if test="importantLevel != null "> and a.important_level = #{importantLevel}</if>
+            <if test="minSalary != null "> and a.min_salary = #{minSalary}</if>
+            <if test="maxSalary != null "> and a.max_salary = #{maxSalary}</if>
+            <if test="technicalRequirement != null  and technicalRequirement != ''"> and a.technical_requirement = #{technicalRequirement}</if>
+            <if test="langue != null "> and a.Langue = #{langue}</if>
+            <if test="demandPic != null  and demandPic != ''"> and a.demand_pic = #{demandPic}</if>
+            <if test="interviewer != null  and interviewer != ''"> and a.interviewer = #{interviewer}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and a.contact_phone = #{contactPhone}</if>
+            <if test="specificLocation != null  and specificLocation != ''"> and a.specific_location = #{specificLocation}</if>
+            <if test="attention != null  and attention != ''"> and a.attention = #{attention}</if>
+            <if test="ifLook != null "> and a.if_look = #{ifLook}</if>
+            <if test="chsiFlag != null "> and a.chsi_flag = #{chsiFlag}</if>
+            <if test="coopnature != null "> and a.coopnature = #{coopnature}</if>
+            <if test="state != null "> and a.state = #{state}</if>
+            <if test="closeDate != null "> and a.close_date = #{closeDate}</if>
+            <if test="tempId != null  and tempId != ''"> and a.temp_id = #{tempId}</if>
+            <if test="tempName != null  and tempName != ''"> and a.temp_name like concat('%', #{tempName}, '%')</if>
+            <if test="addTime != null "> and a.add_time = #{addTime}</if>
+            <if test="operationuser != null  and operationuser != ''"> and a.operationuser = #{operationuser}</if>
+            <if test="operUsername != null  and operUsername != ''"> and a.oper_username like concat('%', #{operUsername}, '%')</if>
         </where>
-        order  by add_time desc
+        order  by a.add_time desc
     </select>
 
     <select id="selectMarDemandById" parameterType="String" resultMap="MarDemandResult">
-        <include refid="selectMarDemandVo"/>
-        where demand_id = #{demandId}
+     select a.demand_id,a.corp_code,a.project_name,a.technology_direction,a.demand_years,a.education,a.demand_number,
+     a.specificrequi_rement,a.project_location,a.address,a.direct_worklife,a.target_number,a.important_level,a.min_salary,
+     a.max_salary,a.technical_requirement,a.Langue,a.demand_pic,a.interviewer,a.contact_phone,a.specific_location,
+     a.attention,a.if_look,a.chsi_flag,a.coopnature,a.state,a.close_date,a.temp_id,a.temp_name,a.add_time,
+     a.operationuser,a.oper_username,c.audited_path as bz from mar_demand a
+     LEFT JOIN mar_auditedtor_demand b on a.demand_id=b.demand_id
+     LEFT JOIN  mar_auditeditor c on b.audited_id= c.audited_id
+     where a.demand_id = #{demandId}
     </select>
 
     <insert id="insertMarDemand" parameterType="MarDemand">
@@ -271,9 +279,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectmarDWorLitList" parameterType="Map" resultMap="MarDemandResult">
-        <include refid="selectMarDemandVo"/>
-        where state=0 and operationuser=#{userName}
-		 order by add_time desc
+        select a.demand_id, a.corp_code,a.project_name,b.corp_name as address ,a.add_time from mar_demand a
+        LEFT JOIN mar_company b on a.corp_code=b.corp_code
+        where a.state=0 and a.operationuser=#{userName}
+		 order by a.add_time desc
 
     </select>
     <select id="selectThreeLit" parameterType="Map" resultMap="MarDemandResult">

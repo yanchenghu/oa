@@ -146,6 +146,9 @@ public class MarDemand extends BaseEntity
     /** 录入人姓名 */
     @Excel(name = "录入人姓名")
     private String operUsername;
+    /** 录入人姓名 */
+    @Excel(name = "备注")
+    private String bz;
 
     public void setDemandId(String demandId) 
     {
@@ -436,41 +439,50 @@ public class MarDemand extends BaseEntity
         return operUsername;
     }
 
+    public String getBz() {
+        return bz;
+    }
+
+    public void setBz(String bz) {
+        this.bz = bz;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("demandId", getDemandId())
-            .append("corpCode", getCorpCode())
-            .append("projectName", getProjectName())
-            .append("technologyDirection", getTechnologyDirection())
-            .append("demandYears", getDemandYears())
-            .append("education", getEducation())
-            .append("demandNumber", getDemandNumber())
-            .append("specificrequiRement", getSpecificrequiRement())
-            .append("projectLocation", getProjectLocation())
-            .append("address", getAddress())
-            .append("directWorklife", getDirectWorklife())
-            .append("targetNumber", getTargetNumber())
-            .append("importantLevel", getImportantLevel())
-            .append("minSalary", getMinSalary())
-            .append("maxSalary", getMaxSalary())
-            .append("technicalRequirement", getTechnicalRequirement())
-            .append("langue", getLangue())
-            .append("demandPic", getDemandPic())
-            .append("interviewer", getInterviewer())
-            .append("contactPhone", getContactPhone())
-            .append("specificLocation", getSpecificLocation())
-            .append("attention", getAttention())
-            .append("ifLook", getIfLook())
-            .append("chsiFlag", getChsiFlag())
-            .append("coopnature", getCoopnature())
-            .append("state", getState())
-            .append("closeDate", getCloseDate())
-            .append("tempId", getTempId())
-            .append("tempName", getTempName())
-            .append("addTime", getAddTime())
-            .append("operationuser", getOperationuser())
-            .append("operUsername", getOperUsername())
-            .toString();
+        return "MarDemand{" +
+                "demandId='" + demandId + '\'' +
+                ", corpCode='" + corpCode + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", technologyDirection='" + technologyDirection + '\'' +
+                ", demandYears='" + demandYears + '\'' +
+                ", education='" + education + '\'' +
+                ", demandNumber=" + demandNumber +
+                ", specificrequiRement='" + specificrequiRement + '\'' +
+                ", projectLocation='" + projectLocation + '\'' +
+                ", address='" + address + '\'' +
+                ", directWorklife=" + directWorklife +
+                ", targetNumber=" + targetNumber +
+                ", importantLevel=" + importantLevel +
+                ", minSalary=" + minSalary +
+                ", maxSalary=" + maxSalary +
+                ", technicalRequirement='" + technicalRequirement + '\'' +
+                ", langue=" + langue +
+                ", demandPic='" + demandPic + '\'' +
+                ", interviewer='" + interviewer + '\'' +
+                ", contactPhone='" + contactPhone + '\'' +
+                ", specificLocation='" + specificLocation + '\'' +
+                ", attention='" + attention + '\'' +
+                ", ifLook=" + ifLook +
+                ", chsiFlag=" + chsiFlag +
+                ", coopnature=" + coopnature +
+                ", state=" + state +
+                ", closeDate=" + closeDate +
+                ", tempId='" + tempId + '\'' +
+                ", tempName='" + tempName + '\'' +
+                ", addTime=" + addTime +
+                ", operationuser='" + operationuser + '\'' +
+                ", operUsername='" + operUsername + '\'' +
+                ", bz='" + bz + '\'' +
+                '}';
     }
 }

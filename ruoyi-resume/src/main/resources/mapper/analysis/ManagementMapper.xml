@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.analysis.mapper.ManagementMapper">
+
+
+
+
+
+    <select id="getPaymentCollection" parameterType="map" resultType="map">
+    SELECT DATE_FORMAT(${plasticTime},"%Y-%m") as paymentCollectionTime,SUM(com_bined) as totlePayment from fin_statements a
+    where  1=1
+     and status=3
+    and ${plasticTime} between #{startTime} and #{endTime}
+    GROUP BY paymentCollectionTime
+    </select>
+
+    <select id="getExpenditureAmount" parameterType="map" resultType="map">
+    SELECT DATE_FORMAT(${actualExpenditureTime},"%Y-%m") as expenditureTime, SUM(real_salary) as expenditureAmount from fin_expatriatesalary
+    where  1=1 and
+    ${actualExpenditureTime} between #{startTime} and #{endTime}
+    GROUP BY expenditureTime
+    </select>
+
+    <select id="getlastyeartPaymentCollection" parameterType="map" resultType="map">
+    SELECT DATE_FORMAT(${plasticTime},"%Y-%m") as paymentCollectionTime,SUM(com_bined) as totlePayment from fin_statements a
+    where  1=1 and
+    ${plasticTime} between #{samePeriodTime} and #{startTime}
+    GROUP BY paymentCollectionTime
+    </select>
+
+    <select id="getlastyearExpenditureAmount" parameterType="map" resultType="map">
+    SELECT DATE_FORMAT(${actualExpenditureTime},"%Y-%m") as expenditureTime, SUM(real_salary) as expenditureAmount from fin_expatriatesalary
+    where  1=1  and
+    ${actualExpenditureTime} between #{samePeriodTime} and #{startTime}
+    GROUP BY expenditureTime
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="getInputdataLists" parameterType="PersonnelData" resultType="map">
+     SELECT DATE_FORMAT(a.add_time,'%Y-%m-%d') as addTime ,count(a.customer_code) as inputdataNum from per_customerinfo a
+        LEFT JOIN sys_user b on a.opert_code=b.user_name
+        where 1=1
+        and b.user_name=#{userName}
+        and b.STATUS=0
+        and a.add_time between #{startTime} and #{endTime}
+        GROUP BY DATE_FORMAT(a.add_time,'%Y%m%d')
+    </select>
+    <select id="getTrackLists" parameterType="PersonnelData" resultType="map">
+       SELECT DATE_FORMAT(a.contact_time,'%Y-%m-%d') as addTime,COUNT(a.contac_datecode) as trackNum from per_cuscontact a LEFT JOIN sys_user b on a.contact_usercode=b.user_name
+        where   1=1
+        and b.user_name=#{userName}
+        and b.STATUS=0
+        and  a.contact_time between #{startTime} and #{endTime}
+      GROUP BY DATE_FORMAT(a.contact_time,'%Y%m%d')
+    </select>
+    <select id="getBindingLists" parameterType="PersonnelData" resultType="map">
+     SELECT DATE_FORMAT(a.bind_time,'%Y-%m-%d') as addTime, COUNT(a.id) as bindingNum from mar_demandresume a LEFT JOIN
+     sys_user b on a.bind_people=b.user_name
+     where   1=1
+     and b.user_name=#{userName}
+     and b.STATUS=0
+     and  a.bind_time between #{startTime} and #{endTime}
+     GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
+    </select>
+
+    <select id="getResumePassedLists" parameterType="PersonnelData" resultType="map">
+      SELECT DATE_FORMAT(a.bind_time,'%Y-%m-%d') as addTime, COUNT(c.id) as resumePassedNum from mar_demandresume a
+        LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
+        LEFT JOIN sys_user b on a.bind_people=b.user_name
+        where   1=1
+        and b.user_name=#{userName}
+        and c.follow_status=3
+        and b.STATUS=0
+        and  c.trackingtime between #{startTime} and #{endTime}
+      GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
+    </select>
+    <select id="getInterviewPassedLists" parameterType="PersonnelData" resultType="map">
+      SELECT DATE_FORMAT(a.bind_time,'%Y-%m-%d') as addTime, COUNT(c.id) as interviewPassedNum from mar_demandresume a
+        LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
+        LEFT JOIN sys_user b on a.bind_people=b.user_name
+        where   1=1
+        and b.user_name=#{userName}
+        and c.follow_status=5
+        and b.STATUS=0
+        and  c.trackingtime between #{startTime} and #{endTime}
+      GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
+    </select>
+    <select id="getEntryPersonnelLists" parameterType="PersonnelData" resultType="map">
+      SELECT DATE_FORMAT(a.bind_time,'%Y-%m-%d') as addTime, COUNT(c.id) as entryPersonneNum  from mar_demandresume a
+        LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
+        LEFT JOIN sys_user b on a.bind_people=b.user_name
+        where   1=1
+        and b.user_name=#{userName}
+        and c.follow_status=7
+        and b.STATUS=0
+        and  c.trackingtime between #{startTime} and #{endTime}
+      GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
+    </select>
+
+
+    <select id="getInputProfitLists" parameterType="PersonnelData" resultType="map">
+   SELECT b.nick_name as nickName,if(count(id)=0,null,count(id)) as peopleNum ,sum(salary) as costNum,sum(service_pay) as serviceNum from mar_customerprojectpay a LEFT JOIN
+    sys_user b on a.opercode=b.user_name
+    where  1=1
+    and b.user_name=#{userName}
+    and  a.syqstart_time between #{startTime} and #{endTime}
+
+    </select>
+
+
+
+
+
+
+    <select id="userlist" resultType="map">
+    SELECT a.nick_name as nickName,a.user_name as userName  from sys_user a
+    LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+    LEFT JOIN sys_role c on b.role_id=c.role_id
+
+    where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

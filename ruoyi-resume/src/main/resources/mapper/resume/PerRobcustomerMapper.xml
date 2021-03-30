@@ -169,9 +169,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         GROUP BY add_people ORDER BY nums desc LIMIT 1) a
     </select>
 
-
-
-
+    <select id="getAllresumenull"  parameterType="String" resultType="String">
+        SELECT a.customer_name from per_robcustomer a LEFT JOIN
+            per_customerinfo b on a.resume_id=b.customer_code
+            where a.Status='0' and  b.resume_path is null
+        and a.add_people=#{addPeople}
+    </select>
 
 
 

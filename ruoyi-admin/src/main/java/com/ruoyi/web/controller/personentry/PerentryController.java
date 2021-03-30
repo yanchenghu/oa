@@ -198,16 +198,22 @@ public class PerentryController extends BaseController {
             entrys.setOutofProjecttime(e.getOutofProjecttime());
             entrys.setSalary(e.getSalary());
             entrys.setServicePay(e.getServicePay());
-            if(e.getSocSecopt()==1){
-                entrys.setSocSecopt("是");
-            }else {
-                entrys.setSocSecopt("否");
+            if(e.getSocSecopt()!=null){
+                if(e.getSocSecopt()==1){
+                    entrys.setSocSecopt("是");
+                }else {
+                    entrys.setSocSecopt("否");
+                }
             }
-            if(e.getTechnologyDirection()==1){
-                entrys.setSign("是");
-            }else {
-                entrys.setSign("否");
+
+            if(e.getTechnologyDirection()!=null){
+                if(e.getTechnologyDirection()==1){
+                    entrys.setSign("是");
+                }else {
+                    entrys.setSign("否");
+                }
             }
+
             list1.add(entrys);
         }
         ExcelUtil<Entrys> util = new ExcelUtil<Entrys>(Entrys.class);

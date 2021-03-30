@@ -4,16 +4,13 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
+
+import com.ruoyi.demand.domain.MarTopic;
+import com.ruoyi.demand.service.IMarTopicService;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -38,6 +35,8 @@ public class MarDemandFollowController extends BaseController
     private IMarDemandService marDemandService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private IMarTopicService marTopicService;
 
     /**
      * 查询我的需求列表
@@ -141,6 +140,28 @@ public class MarDemandFollowController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return marDemandService.demandOpen(demandId,loginUser);
     }
+    /**
+     * 发布需求面试题
+     */
+    @PreAuthorize("@ss.hasPermi('demand:follow:postInterview')")
+    @Log(title = "需求绑定面试题", businessType = BusinessType.INSERT)
+    @PostMapping(value = "/postInterview")
+    public AjaxResult postInterview(String zm,MultipartFile multipartFile)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return marTopicService.postInterview(zm, multipartFile,loginUser);
+    }
+
+    @Log(title = "查询是否发布过需求绑定面试题", businessType = BusinessType.INSERT)
+    @PostMapping(value = "/ispostInterview")
+    public String ispostInterview(MarTopic marTopic)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        marTopic.setTopicUsername(loginUser.getUsername());
+        return marTopicService.ispostInterview(marTopic);
+    }
+
+
 
 
 

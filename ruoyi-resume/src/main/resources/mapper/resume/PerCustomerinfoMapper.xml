@@ -134,7 +134,7 @@
             <if test="workYear != null">work_year = #{workYear},</if>
             <if test="resumeSource != null">resume_source = #{resumeSource},</if>
             <if test="resumeId != null">resume_id = #{resumeId},</if>
-            <if test="resumePath != null">resume_path = #{resumePath},</if>
+            <if test="resumePath != null and resumePath != ''">resume_path = #{resumePath},</if>
             <if test="relationshipZq != null">relationship_zq = #{relationshipZq},</if>
             <if test="email != null">email = #{email},</if>
             <if test="addTime != null">add_time = #{addTime},</if>
@@ -187,8 +187,11 @@
         per_customerinfo a
         LEFT JOIN (SELECT customer_tel,add_name from per_robcustomer where Status=0 ) b ON a.customer_tel = b.customer_tel
         <where>
-            <if test="customerName != null and customerName != ''"> and a.customer_name like concat('%', #{customerName}, '%')</if>
-            <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
+            <if test="customerName != null and customerName != ''"> and
+              (a.customer_name like concat('%', #{customerName}, '%') or a.customer_tel = #{customerName})
+
+             </if>
+<!--            <if test="customerTel != null and customerTel != ''"> and a.customer_tel = #{customerTel}</if>-->
         </where>
 
         limit 0,10

@@ -86,11 +86,15 @@ public class MarDemandServiceImpl implements IMarDemandService
     {
         marDemand.setOperationuser(loginUser.getUsername());
         List<MarDemand>  list=marDemandMapper.selectMarDemandList(marDemand);
-        MarDemandresume marDema=new MarDemandresume();
+
         for (MarDemand marDe:list){
         //查询当前需求绑定了多少简历
+        MarDemandresume marDema=new MarDemandresume();
         marDema.setDemandId(marDe.getDemandId());
         List<MarDemandresume>  li= marDemandresumeMapper.selectMarDemandresumeList(marDema);
+        if(li.size()>0){
+            System.out.println(123);
+        }
         marDe.setIfLook(li.size());
         //查询当前需求面试通过多少
         marDema.setDownloadStatus(5);
@@ -335,8 +339,9 @@ public class MarDemandServiceImpl implements IMarDemandService
         map.put("importantLevel",marDemand.getImportantLevel());
         map.put("corpCode",marDemand.getCorpCode());
         List<MarDemand> list= marDemandMapper.selectMarDemandbindingList(map);
-        MarDemandresume marDema=new MarDemandresume();
+
         for (MarDemand marDe:list){
+            MarDemandresume marDema=new MarDemandresume();
             //查询当前需求绑定了多少简历
             marDema.setDemandId(marDe.getDemandId());
             List<MarDemandresume>  li= marDemandresumeMapper.selectMarDemandresumeList(marDema);
@@ -521,11 +526,14 @@ public class MarDemandServiceImpl implements IMarDemandService
         perCustomerinfoMapper.updatePerCustomerinfo(perCustomeri);
         ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(2);
         //钉钉提醒
-        try {
-            DingDingJiQi.DingDingd("喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员",cotoken.getToken());
-        } catch (ApiException e) {
-            return AjaxResult.error("入项失败，钉钉发送失败,请联系管理员");
+        if(cotoken!=null){
+            try {
+                DingDingJiQi.DingDingd("喜报！！！恭喜，"+user.getNickName()+"成功入项一名人员",cotoken.getToken());
+            } catch (ApiException e) {
+                return AjaxResult.error("入项失败，钉钉发送失败,请联系管理员");
+            }
         }
+
 
         return AjaxResult.success("入项成功");
     }

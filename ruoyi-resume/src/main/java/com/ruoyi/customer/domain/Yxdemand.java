@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 营销录入公司对象 yxdemand
  * 
  * @author ruoyi
- * @date 2020-11-12
+ * @date 2021-03-25
  */
 public class Yxdemand extends BaseEntity
 {
@@ -76,17 +76,9 @@ public class Yxdemand extends BaseEntity
     @Excel(name = "最终甲方")
     private String finalParty;
 
-    /** 录入人 */
-    @Excel(name = "录入人")
-    private String entryPeople;
-
-    /** 录入人ID */
-    @Excel(name = "录入人ID")
-    private String entryPeopleId;
-
     /** 添加时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date insertTime;
 
     /** 营销转化情况（0、暂未回复，1、无意向，2、需跟进，3、无效联系，4、意向客户） */
@@ -102,13 +94,9 @@ public class Yxdemand extends BaseEntity
     private String robPeople;
 
     /** 抢占时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "抢占时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "抢占时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date robTime;
-
-    /** 是否提交给商务（0、是1、否） */
-    @Excel(name = "是否提交给商务", readConverterExp = "0=、是1、否")
-    private Integer isAccept;
 
     /** 跟进人ID */
     @Excel(name = "跟进人ID")
@@ -117,15 +105,6 @@ public class Yxdemand extends BaseEntity
     /** 跟进人姓名 */
     @Excel(name = "跟进人姓名")
     private String businessPeople;
-
-    /** 提交给商务时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "提交给商务时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    private Date submitTime;
-
-    /** 商务转化（0、无意向1、需跟进2、成为客户3、无效联系） */
-    @Excel(name = "商务转化", readConverterExp = "0=、无意向1、需跟进2、成为客户3、无效联系")
-    private Integer isBusiness;
 
     /** 合作项目（0、代理招聘1、外派2、猎头） */
     @Excel(name = "合作项目", readConverterExp = "0=、代理招聘1、外派2、猎头")
@@ -136,8 +115,8 @@ public class Yxdemand extends BaseEntity
     private Integer isSigning;
 
     /** 签署时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "签署时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "签署时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date singTime;
 
     /** 人员是否入项（0、是1否） */
@@ -149,8 +128,8 @@ public class Yxdemand extends BaseEntity
     private Integer isReturnMoney;
 
     /** 更新时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updateDate;
 
     /** 最近一次联系情况 */
@@ -304,24 +283,6 @@ public class Yxdemand extends BaseEntity
     {
         return finalParty;
     }
-    public void setEntryPeople(String entryPeople) 
-    {
-        this.entryPeople = entryPeople;
-    }
-
-    public String getEntryPeople() 
-    {
-        return entryPeople;
-    }
-    public void setEntryPeopleId(String entryPeopleId) 
-    {
-        this.entryPeopleId = entryPeopleId;
-    }
-
-    public String getEntryPeopleId() 
-    {
-        return entryPeopleId;
-    }
     public void setInsertTime(Date insertTime) 
     {
         this.insertTime = insertTime;
@@ -367,15 +328,6 @@ public class Yxdemand extends BaseEntity
     {
         return robTime;
     }
-    public void setIsAccept(Integer isAccept) 
-    {
-        this.isAccept = isAccept;
-    }
-
-    public Integer getIsAccept() 
-    {
-        return isAccept;
-    }
     public void setBusinessId(String businessId) 
     {
         this.businessId = businessId;
@@ -394,25 +346,7 @@ public class Yxdemand extends BaseEntity
     {
         return businessPeople;
     }
-    public void setSubmitTime(Date submitTime) 
-    {
-        this.submitTime = submitTime;
-    }
-
-    public Date getSubmitTime() 
-    {
-        return submitTime;
-    }
-
-    public Integer getIsBusiness() {
-        return isBusiness;
-    }
-
-    public void setIsBusiness(Integer isBusiness) {
-        this.isBusiness = isBusiness;
-    }
-
-    public void setCooperationProjects(Integer cooperationProjects)
+    public void setCooperationProjects(Integer cooperationProjects) 
     {
         this.cooperationProjects = cooperationProjects;
     }
@@ -505,44 +439,39 @@ public class Yxdemand extends BaseEntity
 
     @Override
     public String toString() {
-        return "Yxdemand{" +
-                "entryId=" + entryId +
-                ", companyName='" + companyName + '\'' +
-                ", recruitmentJob='" + recruitmentJob + '\'' +
-                ", contactPeople='" + contactPeople + '\'' +
-                ", contactPosition='" + contactPosition + '\'' +
-                ", contactPhone='" + contactPhone + '\'' +
-                ", infoSourse='" + infoSourse + '\'' +
-                ", companySituation=" + companySituation +
-                ", isSendResume=" + isSendResume +
-                ", interviewCompany='" + interviewCompany + '\'' +
-                ", interviewer='" + interviewer + '\'' +
-                ", interviewerPosition='" + interviewerPosition + '\'' +
-                ", interviewContact='" + interviewContact + '\'' +
-                ", interviewAddress='" + interviewAddress + '\'' +
-                ", finalParty='" + finalParty + '\'' +
-                ", entryPeople='" + entryPeople + '\'' +
-                ", entryPeopleId='" + entryPeopleId + '\'' +
-                ", insertTime=" + insertTime +
-                ", isFollowSubmit=" + isFollowSubmit +
-                ", robPeopleId='" + robPeopleId + '\'' +
-                ", robPeople='" + robPeople + '\'' +
-                ", robTime=" + robTime +
-                ", isAccept=" + isAccept +
-                ", businessId='" + businessId + '\'' +
-                ", businessPeople='" + businessPeople + '\'' +
-                ", submitTime=" + submitTime +
-                ", isBusiness=" + isBusiness +
-                ", cooperationProjects=" + cooperationProjects +
-                ", isSigning=" + isSigning +
-                ", singTime=" + singTime +
-                ", personnelInto=" + personnelInto +
-                ", isReturnMoney=" + isReturnMoney +
-                ", updateDate=" + updateDate +
-                ", contactInformation='" + contactInformation + '\'' +
-                ", wechat='" + wechat + '\'' +
-                ", mailbox='" + mailbox + '\'' +
-                ", qq='" + qq + '\'' +
-                '}';
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("entryId", getEntryId())
+            .append("companyName", getCompanyName())
+            .append("recruitmentJob", getRecruitmentJob())
+            .append("contactPeople", getContactPeople())
+            .append("contactPosition", getContactPosition())
+            .append("contactPhone", getContactPhone())
+            .append("infoSourse", getInfoSourse())
+            .append("companySituation", getCompanySituation())
+            .append("isSendResume", getIsSendResume())
+            .append("interviewCompany", getInterviewCompany())
+            .append("interviewer", getInterviewer())
+            .append("interviewerPosition", getInterviewerPosition())
+            .append("interviewContact", getInterviewContact())
+            .append("interviewAddress", getInterviewAddress())
+            .append("finalParty", getFinalParty())
+            .append("insertTime", getInsertTime())
+            .append("isFollowSubmit", getIsFollowSubmit())
+            .append("robPeopleId", getRobPeopleId())
+            .append("robPeople", getRobPeople())
+            .append("robTime", getRobTime())
+            .append("businessId", getBusinessId())
+            .append("businessPeople", getBusinessPeople())
+            .append("cooperationProjects", getCooperationProjects())
+            .append("isSigning", getIsSigning())
+            .append("singTime", getSingTime())
+            .append("personnelInto", getPersonnelInto())
+            .append("isReturnMoney", getIsReturnMoney())
+            .append("updateDate", getUpdateDate())
+            .append("contactInformation", getContactInformation())
+            .append("wechat", getWechat())
+            .append("mailbox", getMailbox())
+            .append("qq", getQq())
+            .toString();
     }
 }

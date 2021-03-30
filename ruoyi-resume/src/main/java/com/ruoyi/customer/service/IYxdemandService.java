@@ -40,13 +40,13 @@ public interface IYxdemandService
      */
     AjaxResult rebMarByEnId(Integer entryId, LoginUser loginUser);
 
-    /**
-     * 新增营销录入公司
-     * 
-     * @param yxdemand 营销录入公司
-     * @return 结果
-     */
-    public AjaxResult insertYxdemand(Yxdemand yxdemand,LoginUser loginUser);
+//    /**
+//     * 新增营销录入公司
+//     *
+//     * @param yxdemand 营销录入公司
+//     * @return 结果
+//     */
+//    public AjaxResult insertYxdemand(Yxdemand yxdemand,LoginUser loginUser);
 
     /**
      * 修改营销录入公司
@@ -79,11 +79,8 @@ public interface IYxdemandService
      * @return 结果
      */
     AjaxResult insertYxcontact(Yxcontact yxcontact,LoginUser loginUser);
-    /**
-     * 客户移交
-     */
 
-    int Customertransfer(Yxdemand yxdemand, LoginUser loginUser);
+
 
 
     /**
@@ -120,7 +117,7 @@ public interface IYxdemandService
     /**
      * 根据公司名字获取营销录入公司
      */
-    int yxdemByName(String companyName);
+    String yxdemByName(String companyName);
 
     AjaxResult workresultlist(LoginUser loginUser);
 

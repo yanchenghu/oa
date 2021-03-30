@@ -95,6 +95,18 @@ public class HomePageController extends BaseController {
     }
 
 
+    /**
+     * 兼职hr首页数据展示
+     */
+    @PreAuthorize("@ss.hasPermi('statistc:homepage:partjob')")
+    @GetMapping(value = "/partjob")
+    public AjaxResult partjoblist()
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return homePageService.partjoblist(loginUser);
+    }
+
+
 
 
 

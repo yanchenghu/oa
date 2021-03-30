@@ -20,4 +20,6 @@ public interface IHomePageService {
      * 商务首页点击弹框数据详情展示
      */
     AjaxResult businessdetailsplay(LoginUser loginUser, Integer followStatus);
+
+    AjaxResult partjoblist(LoginUser loginUser);
 }
