@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="transformingPeople != null  and transformingPeople != ''"> and transforming_people = #{transformingPeople}</if>
             <if test="addTime != null "> and add_time = #{addTime}</if>
         </where>
-        order by add_time asc
+        order by add_time desc
     </select>
 
     <select id="selectMarCompanyById" parameterType="String" resultMap="MarCompanyResult">

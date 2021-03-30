@@ -164,7 +164,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getResumePassedLists" parameterType="PersonnelData" resultType="map">
-      SELECT DATE_FORMAT(a.bind_time,'%Y-%m-%d') as addTime, COUNT(c.id) as resumePassedNum from mar_demandresume a
+      SELECT DATE_FORMAT(c.trackingtime,'%Y-%m-%d') as addTime, COUNT(c.id) as resumePassedNum from mar_demandresume a
         LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
         LEFT JOIN sys_user b on a.bind_people=b.user_name
         where   1=1
@@ -172,10 +172,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and c.follow_status=3
         and b.STATUS=0
         and  c.trackingtime between #{startTime} and #{endTime}
-      GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
+      GROUP BY DATE_FORMAT(c.trackingtime,'%Y%m%d')
     </select>
     <select id="getInterviewPassedLists" parameterType="PersonnelData" resultType="map">
-      SELECT DATE_FORMAT(a.bind_time,'%Y-%m-%d') as addTime, COUNT(c.id) as interviewPassedNum from mar_demandresume a
+      SELECT DATE_FORMAT(c.trackingtime,'%Y-%m-%d') as addTime, COUNT(c.id) as interviewPassedNum from mar_demandresume a
         LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
         LEFT JOIN sys_user b on a.bind_people=b.user_name
         where   1=1
@@ -183,10 +183,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and c.follow_status=5
         and b.STATUS=0
         and  c.trackingtime between #{startTime} and #{endTime}
-      GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
+      GROUP BY DATE_FORMAT(c.trackingtime,'%Y%m%d')
     </select>
     <select id="getEntryPersonnelLists" parameterType="PersonnelData" resultType="map">
-      SELECT DATE_FORMAT(a.bind_time,'%Y-%m-%d') as addTime, COUNT(c.id) as entryPersonneNum  from mar_demandresume a
+      SELECT DATE_FORMAT(c.trackingtime,'%Y-%m-%d') as addTime, COUNT(c.id) as entryPersonneNum  from mar_demandresume a
         LEFT JOIN mar_demandresumefollow c on a.id=c.demandresume_id
         LEFT JOIN sys_user b on a.bind_people=b.user_name
         where   1=1
@@ -194,7 +194,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and c.follow_status=7
         and b.STATUS=0
         and  c.trackingtime between #{startTime} and #{endTime}
-      GROUP BY DATE_FORMAT(a.bind_time,'%Y%m%d')
+      GROUP BY DATE_FORMAT(c.trackingtime,'%Y%m%d')
     </select>
 
 

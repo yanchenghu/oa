@@ -80,7 +80,7 @@ public interface MarDemandresumeMapper
 
     int selectfirstMarbingBystatus(Map map);
 
-    int selectlastmapBylastMonth(Map map);
+//    int selectlastmapBylastMonth(Map map);
 
     List<Map> selectlitoutPeople(Map map);
 

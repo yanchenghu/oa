@@ -149,17 +149,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     order by c.trackingtime desc
     </select>
 
-    <select id="selectlastmapBylastMonth"  parameterType="map"  resultType="int">
-        SELECT COUNT(b.bind_people) as sd
-        from mar_demand a
-        LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id
-        LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id
-        where a.state=0
-        and a.operationuser=#{userName}
-        and c.follow_status=#{followStatus}
-        and  DATE_FORMAT( c.trackingtime, '%Y%m' ) = DATE_FORMAT(#{lastMonth}, '%Y%m' )
-        GROUP BY b.bind_people ORDER BY sd desc LIMIT 1
-     </select>
+<!--    <select id="selectlastmapBylastMonth"  parameterType="map"  resultType="int">-->
+<!--        SELECT IFNUll(COUNT(b.bind_people),0) as sd-->
+<!--        from mar_demand a-->
+<!--        LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id-->
+<!--        LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id-->
+<!--        where a.state=0-->
+<!--        and a.operationuser=#{userName}-->
+<!--        and c.follow_status=#{followStatus}-->
+<!--        and  DATE_FORMAT( c.trackingtime, '%Y%m' ) = DATE_FORMAT(#{lastMonth}, '%Y%m' )-->
+<!--        GROUP BY b.bind_people ORDER BY sd desc LIMIT 1-->
+<!--     </select>-->
 
     <select id="selectlitoutPeople"  parameterType="map"  resultType="map">
         SELECT c.customer_name,a.outof_projecttime,a.quit_proreason from mar_customerprojectpay a

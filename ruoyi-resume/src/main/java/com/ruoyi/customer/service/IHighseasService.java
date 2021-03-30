@@ -30,13 +30,7 @@ public interface IHighseasService
      */
     public List<Yxdemand> selectYxdemandList(Yxdemand yxdemand, LoginUser loginUser) throws Exception;
 
-    /**
-     * 新增营销录入公司
-     *
-     * @param yxdemand 营销录入公司
-     * @return 结果
-     */
-    public int insertYxdemand(Yxdemand yxdemand, LoginUser loginUser);
+
 
     /**
      * 修改营销录入公司

@@ -71,7 +71,6 @@ public class MarCompanyController extends BaseController
     /**
      * 新增合作公司
      */
-
     @Log(title = "合作公司", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MarCompany marCompany)

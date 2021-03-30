@@ -79,11 +79,8 @@ public interface IYxdemandService
      * @return 结果
      */
     AjaxResult insertYxcontact(Yxcontact yxcontact,LoginUser loginUser);
-    /**
-     * 客户移交
-     */
 
-    int Customertransfer(Yxdemand yxdemand, LoginUser loginUser);
+
 
 
     /**

@@ -187,21 +187,17 @@ public class YxdemandServiceImpl implements IYxdemandService
     public AjaxResult updateYxdemand(Yxdemand yxdemand,LoginUser loginUser)
     {
         Yxdemand yxde=yxdemandMapper.selectYxdemandById(yxdemand.getEntryId());
+        Integer b=yxdemand.getIsFollowSubmit();
         Integer a=yxde.getIsFollowSubmit();
-        Integer c=yxde.getIsBusiness();
-
-        if(a!=yxdemand.getIsFollowSubmit()){
-            Integer b=yxdemand.getIsFollowSubmit();
-            String abc="";
-            if(b==1){
+        String abc="";
+        if(a!=b ){
+            if(b==0){
                 abc="无意向";
-            }else if (b==0){
-                abc="暂未回复";
-            }else if (b==2){
+            }else if (b==1){
                 abc="需跟进";
-            }else if (b==3){
+            }else if (b==2){
                 abc="无效联系";
-            }else if (b==4){
+            }else if (b==3){
                 abc="意向客户";
             }
             Yxcontact yxcontact=new Yxcontact();
@@ -212,28 +208,7 @@ public class YxdemandServiceImpl implements IYxdemandService
             yxcontact.setStatus(2);
             yxcontactMapper.insertYxcontact(yxcontact);
         }
-        Integer f=yxdemand.getIsBusiness();
-        if(c!=null&&f!=null){
-           if(c!=f){
-               String abc="";
-               if(f==0){
-                   abc="无意向";
-               }else if (f==1){
-                   abc="需跟进";
-               }else if(f==2){
-                   abc="成为客户";
-               }else if(f==3){
-                   abc="无效联系";
-               }
-               Yxcontact yxcontact=new Yxcontact();
-               yxcontact.setNickName(loginUser.getUser().getNickName());
-               yxcontact.setContactTime(new Date());
-               yxcontact.setEntryId(yxdemand.getEntryId());
-               yxcontact.setContactDetail("将线索状态改为"+abc);
-               yxcontact.setStatus(2);
-               yxcontactMapper.insertYxcontact(yxcontact);
-           }
-        }
+
         yxdemandMapper.updateYxdemand(yxdemand);
         return AjaxResult.success("修改成功");
     }
@@ -290,16 +265,7 @@ public class YxdemandServiceImpl implements IYxdemandService
         yxcontactMapper.insertYxcontact(yxcontact);
         return AjaxResult.success("发布成功");
     }
-    /**
-     * 客户移交
-     */
-    @Override
-    public int Customertransfer(Yxdemand yxdemand, LoginUser loginUser) {
-        yxdemand.setIsAccept(1);
-        yxdemand.setSubmitTime(new Date());
-        yxdemand.setIsBusiness(1);
-        return yxdemandMapper.updateYxdemand(yxdemand);
-    }
+
     /**
      * 商务意向客户列表
      */
@@ -312,7 +278,7 @@ public class YxdemandServiceImpl implements IYxdemandService
         String zuotian=sdf.format(DateUtils.getDayBefore(new Date(),1));
         //前天时间
         String qiantian=sdf.format(DateUtils.getDayBefore(new Date(),2));
-        yxdemand.setBusinessId(loginUser.getUsername());
+        yxdemand.setRobPeopleId(loginUser.getUsername());
         List<Yxdemand> list=yxdemandMapper.selectYxdemandList(yxdemand);
         for (Yxdemand yxd:list){
             String dangqia=sdf.format(yxd.getInsertTime());
@@ -340,11 +306,11 @@ public class YxdemandServiceImpl implements IYxdemandService
         if(yxdemand==null){
             return AjaxResult.error("需求不存在");
         }else{//5
-           Integer a= yxdemand.getIsBusiness();
-           if(a==5){
+           Integer a= yxdemand.getIsFollowSubmit();
+           if(a==4){
                return AjaxResult.error("当前需求已经转化为合作客户");
            } else{
-               yxdemand.setIsBusiness(4);
+               yxdemand.setIsFollowSubmit(4);
                yxdemandMapper.updateYxdemand(yxdemand);
            }
         }
@@ -366,12 +332,6 @@ public class YxdemandServiceImpl implements IYxdemandService
         List<Yxdemand> lis =yxdemandMapper.selrobYxdelist();
         Date date= workDay.getBeforeWorkDay(new Date(),2);
         for (Yxdemand yxdem:lis){
-           Integer isAaccept=yxdem.getIsAccept();
-           if(isAaccept==0){//营销的
-//               //昨天时间
-//               String zuotian=sdf.format(workDay.getBeforeWorkDay(new Date(),1));
-//               //前天时间
-//               String qiantian=sdf.format(workDay.getBeforeWorkDay(new Date(),2));
                Date libdate=yxdem.getUpdateDate();
                if(libdate.before(date)){
                    Yxdemand yxd=new Yxdemand();
@@ -379,20 +339,6 @@ public class YxdemandServiceImpl implements IYxdemandService
                    yxd.setRobPeopleId("");
                    yxd.setRobPeople("");
                    yxdemandMapper.updateYxdemand(yxd);
-               }
-           }else{//商务的
-               Date libdate=yxdem.getUpdateDate();
-               Integer sa=yxdem.getIsBusiness();
-               if(libdate.before(date)){
-                   if(null ==sa||sa!=2||sa!=4){
-                       Yxdemand yxd=new Yxdemand();
-                       yxd.setEntryId(yxdem.getEntryId());
-                       yxd.setBusinessId("");
-                       yxd.setBusinessPeople("");
-                       yxdemandMapper.updateYxdemand(yxd);
-                   }
-
-               }
            }
         }
     }
@@ -416,15 +362,15 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Transactional
     public AjaxResult rebBusByEnId(Integer entryId, LoginUser loginUser) {
         Yxdemand yxdemand=yxdemandMapper.selectYxdemandById(entryId);
-        String businessId=yxdemand.getBusinessId();
-        if(StringUtils.isNotEmpty(businessId)){
-            return AjaxResult.error("当前人已被"+yxdemand.getBusinessPeople()+"抢占");
+        String robPeopleId=yxdemand.getRobPeopleId();
+        if(StringUtils.isNotEmpty(robPeopleId)){
+            return AjaxResult.error("当前人已被"+yxdemand.getRobPeople()+"抢占");
         }
         Yxdemand yxdema=new Yxdemand();
         yxdema.setEntryId(entryId);
-        yxdema.setBusinessId(loginUser.getUsername());
-        yxdema.setBusinessPeople(loginUser.getUser().getNickName());
-        yxdema.setSubmitTime(new Date());
+        yxdema.setRobPeopleId(loginUser.getUsername());
+        yxdema.setRobPeople(loginUser.getUser().getNickName());
+//        yxdema.setSubmitTime(new Date());
         yxdema.setUpdateDate(new Date());
         yxdemandMapper.updateYxdemand(yxdema);
         Yxrob yxrob=new Yxrob();
@@ -442,9 +388,9 @@ public class YxdemandServiceImpl implements IYxdemandService
         if(yxdemand!=null){
             String robPeople = yxdemand.getRobPeople();
             if(StringUtils.isNotEmpty(robPeople)){
-                return "该客户已经被"+yxdemand.getEntryPeople()+"录入，占有人是"+robPeople;
+                return "该客户已经被"+yxdemand.getBusinessPeople()+"录入，占有人是"+robPeople;
             }
-            return "该客户已经被"+yxdemand.getEntryPeople()+"录入，还未抢占，请去线索公海抢占";
+            return "该客户已经被"+yxdemand.getBusinessPeople()+"录入，还未抢占，请去线索公海抢占";
         }
         return "该客户不存在";
 
@@ -471,9 +417,9 @@ public class YxdemandServiceImpl implements IYxdemandService
         if(yxde!=null){
             return AjaxResult.error("当前公司已经存在");
         }
-        yxdemand.setIsAccept(1);
-        yxdemand.setSubmitTime(new Date());
-        yxdemand.setIsBusiness(1);
+//        yxdemand.setIsAccept(1);
+//        yxdemand.setSubmitTime(new Date());
+//        yxdemand.setIsBusiness(1);
         yxdemand.setInsertTime(new Date());
         yxdemand.setRobPeople(loginUser.getUser().getNickName());
         yxdemand.setRobPeopleId(loginUser.getUsername());

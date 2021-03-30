@@ -204,20 +204,20 @@ public class IHomePageServiceImpl implements IHomePageService {
         map.put("lastMonth", DateUtils.getlastMonthfirstDate());
         //简历绑定
         List<Map> litmap=marDemandresumeMapper.selBinMardandPeople(map);
-        int lastmap=marDemandresumeMapper.selectlastmapBylastMonth(map);
+//        int lastmap=marDemandresumeMapper.selectlastmapBylastMonth(map);
 
         //简历通过
         map.put("followStatus",3);
         List<Map> litinfo=marDemandresumeMapper.selBinMardandPeople(map);
-        int lastinfo=marDemandresumeMapper.selectlastmapBylastMonth(map);
+//        int lastinfo=marDemandresumeMapper.selectlastmapBylastMonth(map);
         //面试通过
         map.put("followStatus",5);
         List<Map> litview=marDemandresumeMapper.selBinMardandPeople(map);
-        int lastview=marDemandresumeMapper.selectlastmapBylastMonth(map);
+//        int lastview=marDemandresumeMapper.selectlastmapBylastMonth(map);
         //面试入项
         map.put("followStatus",7);
         List<Map> litentry=marDemandresumeMapper.selBinMardandPeople(map);
-        int lastlitentry=marDemandresumeMapper.selectlastmapBylastMonth(map);
+//        int lastlitentry=marDemandresumeMapper.selectlastmapBylastMonth(map);
         //出项数据
         List<Map> litout=marDemandresumeMapper.selectlitoutPeople(map);
         int lastlitout=marDemandresumeMapper.selectlitoutNum(map);
@@ -245,10 +245,10 @@ public class IHomePageServiceImpl implements IHomePageService {
         maps.put("RankingEntry",RankingEntry);
         maps.put("InterviewEntry",InterviewEntry);
 
-        maps.put("lastmap",lastmap);
-        maps.put("lastinfo",lastinfo);
-        maps.put("lastview",lastview);
-        maps.put("lastlitentry",lastlitentry);
+//        maps.put("lastmap",lastmap);
+//        maps.put("lastinfo",lastinfo);
+//        maps.put("lastview",lastview);
+//        maps.put("lastlitentry",lastlitentry);
         maps.put("litout",litout.size());
         maps.put("lastlitout",lastlitout);
         maps.put("marThreeLit",marThreeLit);

@@ -111,26 +111,7 @@ public class HighseasServiceImpl implements IHighseasService
         return day ;
     }
 
-    /**
-     * 新增营销录入公司
-     * 
-     * @param yxdemand 营销录入公司
-     * @return 结果
-     */
-    @Override
-    public int insertYxdemand(Yxdemand yxdemand,LoginUser loginUser)
-    {
-        yxdemand.setEntryPeopleId(loginUser.getUsername());
-        yxdemand.setEntryPeople(loginUser.getUser().getNickName());
-        yxdemand.setInsertTime(new Date());
-        yxdemand.setRobPeople(loginUser.getUser().getNickName());
-        yxdemand.setRobPeopleId(loginUser.getUsername());
-        yxdemand.setRobTime(new Date());
 
-
-        yxdemand.setUpdateDate(new Date());
-        return highseasMapper.insertYxdemand(yxdemand);
-    }
 
     /**
      * 修改营销录入公司
