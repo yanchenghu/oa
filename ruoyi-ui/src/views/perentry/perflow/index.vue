@@ -136,16 +136,13 @@
       border
       v-loading="loading2">
       <el-table-column label="姓名" prop="customer_name"/>
+      <el-table-column label="离项原因" prop="quit_proreason" :formatter="customerFormat"/>
+      <el-table-column label="离职备注" prop="quit_remark"/>
       <el-table-column label="电话" prop="customer_tel"/>
       <el-table-column label="入职公司" prop="corp_name"/>
       <el-table-column label="人员成本" prop="salary"/>
       <el-table-column label="服务费" prop="service_pay"/>
       <el-table-column label="利润" prop="profit"/>
-      <el-table-column label="利润率" >
-        <template slot-scope="scope">
-          <span>{{(scope.row.profit/scope.row.salary*100).toFixed(2)}}%</span>
-        </template>
-      </el-table-column>
       <el-table-column label="入项日期" prop="syqstart_time"/>
       <el-table-column label="出项日期" prop="outof_projecttime"/>
       <el-table-column label="借用物品" prop="borrow_sth">
@@ -154,13 +151,13 @@
         </template>
       </el-table-column>
       <el-table-column label="招聘人员" prop="nick_name"/>
-      <el-table-column label="离项原因" prop="quit_proreason" :formatter="customerFormat"/>
     </el-table>
     <pagination
       v-show="total2>0"
       :total="total2"
       :page.sync="queryParam.pageNum"
       :limit.sync="queryParam.pageSize"
+      :autoScroll="false"
       @pagination="getoutList"
     />
   </div>
@@ -400,9 +397,11 @@
       },
 
        tableRowClassName({row, rowIndex}) {
-          if (row.joinStatus == 4) {
-            return 'warning-row';
-          }
+         if(row.outofProjecttime!==null){
+           return 'warning-row';
+         }else if (row.joinStatus == 4) {
+            return 'warning-green';
+         }
           return '';
       },
       OutRowClassName({row, rowIndex}) {
@@ -423,6 +422,9 @@
   .el-table .warning-row {
       color: red;
     }
+  .el-table .warning-green{
+    color: green;
+  }
   .app-container{
     /* background-color: rgb(240, 242, 245); */
   }

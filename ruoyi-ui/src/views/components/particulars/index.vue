@@ -63,6 +63,13 @@
         timer:null,
       }
     },
+    watch:{
+      "bangding.open2"(newValue, oldValue){
+        if(newValue==true){
+          this.searchmsg =""
+        }
+      }
+    },
     methods:{
       // 搜索简历
       search(){

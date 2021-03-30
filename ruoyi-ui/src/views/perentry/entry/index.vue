@@ -1105,12 +1105,11 @@ export default {
             cancelButtonText: "取消",
             type: "warning"
           }).then(function() {
-            delEntry(_this.form3).then(res=>{
-              _this.msgInfo("出项成功")
-            })
+            delEntry(_this.form3)
           }).then(() => {
-            this.open3 = false
-            this.handleUpdate(this.yxdemandone.id);
+            _this.msgSuccess("出项成功")
+            _this.open3 = false
+            _this.handleUpdate(this.yxdemandone.id);
           }).catch();
         }
       });

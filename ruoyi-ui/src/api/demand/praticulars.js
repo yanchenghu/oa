@@ -52,8 +52,9 @@ export function submitstart(data) {
 // 获取简历模板
 export function addFollow(data) {
   return request({
-    url: '/demand/binding/myRobresume/'+data,
-    method: 'get',
+    url: '/demand/binding/myRobresume',
+    method: 'post',
+    data:data
   })
 }
 // 绑定简历

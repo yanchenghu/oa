@@ -23,8 +23,6 @@ export function educaDel(query) {
     params: query
   })
 }
-
-
 // 修改信息
 export function handupdata(data) {
   return request({

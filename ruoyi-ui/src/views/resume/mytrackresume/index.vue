@@ -19,7 +19,7 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
-        <el-form-item >
+        <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
         </el-form-item>
       </el-form>

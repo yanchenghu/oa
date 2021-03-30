@@ -4,10 +4,10 @@
         <el-form-item label="需求名称" prop="projectName">
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
-        <el-form-item label="公司名称" prop="corpCode">
+        <el-form-item v-hasPermi="['demand:follow:edit']" label="公司名称" prop="corpCode">
           <el-select filterable  v-model="queryParams.corpCode"  placeholder="请选择" size="small" clearable  @change="handleQuery">
             <el-option
-                v-for="dict in corpnamelists"
+                v-for="dict in corpnamelist"
                 :key="dict.corpCode"
                 :label="dict.corpName"
                 :value="dict.corpCode"
@@ -71,6 +71,7 @@
     </el-row>
 
     <el-table v-loading="loading" border :data="followList" >
+      <el-table-column label="公司名称" align="left" prop="operationuser" />
       <el-table-column label="需求名称" align="left" prop="projectName" width="80" />
       <el-table-column label="技术要求/技术方向" align="left">
         <template slot-scope="scope">
@@ -108,7 +109,7 @@
             <el-button  type="text" icon="el-icon-edit"  @click="handleUpdate(scope.row,1)" v-hasPermi="['demand:follow:edit']">修改</el-button>
           </p>
           <p>
-            <el-button  type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open"/> 查看</el-button>
+            <el-button  type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open" class="icons"/> 查看</el-button>
           </p>
           <p>
             <el-switch v-model="scope.row.state" :active-value="0" :inactive-value="1"  @change="handleStatusChange(scope.row)"></el-switch>
@@ -317,12 +318,10 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm(1)">立即保存</el-button>
-        <el-button v-if="title=='添加需求'" @click="submitForm(2)">保存并继续</el-button>
+        <el-button type="primary" @click="submitForm()">立即保存</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
@@ -528,7 +527,7 @@ import {getCompany} from "@/api/customer/company";
     },
     created() {
       this.getList();
-      this.getCorpName();
+      this.getcorpName();
       this.getTreeselect()
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
@@ -653,18 +652,11 @@ import {getCompany} from "@/api/customer/company";
           this.corpnamelist=res
         });
       },
-      getCorpName(){
-        corpNames().then(res=>{
-          this.corpnamelists=res
-        });
-      },
-
       DetSelect(datalist){
         let arrs = [] //总列表
         let i = datalist[0].id
         let j = datalist[0].children[0].id
         datalist[0].children[0].children.forEach(item=>{
-
           let arr = []
           arr.push(i)
           arr.push(j)
@@ -782,7 +774,7 @@ import {getCompany} from "@/api/customer/company";
         });
       },
       /** 提交按钮 */
-      submitForm(i){
+      submitForm(){
         let list =[]
         this.form.list.forEach(item=>{
            list.push(item[2])
@@ -805,26 +797,17 @@ import {getCompany} from "@/api/customer/company";
                   this.getList();
                 });
               }else{
-
               updateFollow(formData).then(response => {
                 this.msgSuccess("修改成功");
                 this.open = false;
                 this.getList();
               });}
             }else{
-              if(i==1){
                 addFollow(formData).then(response => {
                   this.msgSuccess("新增成功");
                   this.open = false;
                   this.getList();
                 });
-              }else{
-                addFollow(formData).then(response => {
-                  this.msgSuccess("新增成功");
-                  this.handleAdd();
-                  this.getList();
-                });
-              }
             }
           }else{
             this.msg=null

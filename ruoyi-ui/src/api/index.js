@@ -15,6 +15,12 @@ export function getdata() {
   })
 }
 
+export function partjob() {
+  return request({
+    url: '/statistc/homepage/partjob',
+    method: 'get'
+  })
+}
 export function getmsg(data) {
   return request({
     url: '/statistc/homepage/viewdetailsplay',
@@ -43,5 +49,3 @@ export function getbusinessData(data) {
     method: 'get',
   })
 }
-
-

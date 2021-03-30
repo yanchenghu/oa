@@ -4,7 +4,7 @@
        <el-form-item label="" prop="corpName">
          <el-input
            v-model.trim="queryParams.corpName"
-           placeholder="请输入客户名称"s
+           placeholder="请输入客户名称"
            clearable
            size="small"
            @keyup.enter.native="handleQuery"
@@ -79,7 +79,6 @@
         </template>
       </el-table-column>
       <el-table-column label="录入人"  prop="entryPeople" />
-      <el-table-column label="转化人"  prop="transformingPeople" :formatter="usernameFormat"/>
       <el-table-column label="更多"  class-name="small-padding fixed-width" >
         <template slot-scope="scope">
           <el-button
@@ -144,7 +143,8 @@
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="公司名称" prop="corpName">
-          <el-input v-model.trim="form.corpName" placeholder="请输入公司名称" class="indd"/>
+          <el-input v-model.trim="form.corpName" placeholder="请输入公司名称" @blur="findname(form.corpName)" class="indd"/>
+          &nbsp;<span v-if="msg=='该客户不存在'" style="color: green;line-height: 40px;position: absolute;"> <i class="el-icon-success"></i></span>
         </el-form-item>
         <el-form-item label="联系人" prop="contactPeople">
           <el-input v-model.trim="form.contactPeople" placeholder="请输入联系人" class="indd"/>
@@ -233,14 +233,13 @@
              </el-select>
            </el-form-item>
            <el-form-item prop="customerLevel" label="客户级别">
-             <el-select v-model.trim="yxdemandone.customerLevel" placeholder="请选择客户级别" clearable size="small" @change="changes">
+             <el-select v-model.trim="yxdemandone.customerLevel" placeholder="请选择客户级别"  size="small" @change="changes">
                <el-option
                    v-for="dict in customerleve"
                    :key="dict.dictValue"
                    :label="dict.dictLabel"
                    :value="parseInt(dict.dictValue)"
                  />
-
              </el-select>
            </el-form-item>
            <el-form-item  prop="paybackPeriod" label="回款周期">
@@ -393,11 +392,45 @@
 </template>
 
 <script>
-import { listCompany, getCompany,  addCompany, updateCompany,contractCompany,addcontract } from "@/api/customer/company";
+import { listCompanys, getCompany,  addCompany, updateCompany,contractCompany,addcontract } from "@/api/customer/company";
 import {debounce} from "@/utils/ruoyi.js"
+import { findnames}from "@/api/customer/business";
 export default {
   name: "Company",
   data() {
+    var checkAge = (rule, value, callback) => {
+       if (!value) {
+         return callback(new Error('公司名称不能为空'));
+       }
+       setTimeout(() => {
+        if(value.length<5){
+          callback(new Error("公司名称长度不能小于5"));
+          this.msg="该客户"
+        }else if(value.indexOf("公司") == -1){
+          callback(new Error("公司名称包含公司两字"));
+          this.msg="该客户"
+        }else{
+          if (this.msg!=="该客户不存在") {
+            callback(new Error(this.msg));
+          }else{
+            callback()
+          }
+        }
+       }, 1000);
+      };
+      var phone = (rule, value, callback) => {
+          if (!value) {
+           return callback(new Error('不能为空'))
+          } else {
+            const reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/
+            const isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/
+            if (reg.test(value)||isPhone.test(value)) {
+              callback()
+            } else {
+              return callback(new Error('请输入正确的手机号'))
+            }
+          }
+        }
     return {
       pickerOptions1:{
         disabledDate:(time) => {
@@ -456,30 +489,26 @@ export default {
       // 表单参数
       form: {},
       forms:{},
+      msg:"",
       // 表单校验
       rules: {
         corpName: [{
           required: true,
-          message: "公司名称不能为空",
-          trigger: ["blur", "change"]
+          validator: checkAge,
+          trigger: ["blur", ]
         }, ],
         contactPeople: [{
           required: true,
           message: "联系人姓名不能为空",
-          trigger: ["blur", "change"]
+          trigger: ["blur", ]
         }, ],
         contactPosition: [{
           required: true,
           message: "联系人职位不能为空",
-          trigger: ["blur", "change"]
+          trigger: ["blur", ]
         }, ],
         contactPhone: [
-          { required: true, message: "手机号码不能为空", trigger: "blur" },
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: ["blur", "change"]
-          }
+          { required: true,validator: phone, trigger: ["blur", ] },
         ],
         companySituation: [{
           required: true,
@@ -582,11 +611,7 @@ export default {
       updateCompany(this.yxdemandone)
     },
     sees:debounce(function(){
-      this.$refs["formmsg"].validate(valid => {
-        if (valid) {
           this.set()
-        }
-        })
     },1000),
     changes(){
       updateCompany(this.yxdemandone).then(res=>{
@@ -596,6 +621,17 @@ export default {
     },
     dra(){
        this.getList()
+    },
+    findname(name){
+      if(name==""||name==null){
+        this.msg=null
+      }else{
+        let formData = new FormData()
+        formData.append("companyName",name)
+        findnames(formData).then(res=>{
+          this.msg=res
+        })
+      }
     },
     upoplodad(){
       this.$refs.upload.clearFiles()
@@ -608,7 +644,7 @@ export default {
     /** 查询合作公司列表 */
     getList() {
       this.loading = true;
-      listCompany(this.queryParams).then(response => {
+      listCompanys(this.queryParams).then(response => {
         this.companyList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -743,20 +779,20 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
   .indd{width: 240px;}
-  .el-tabs__item:focus.is-active.is-focus:not(:active) {
+  >>>.el-tabs__item:focus.is-active.is-focus:not(:active) {
         -webkit-box-shadow: none !important;
         box-shadow: none !important;
   }
-    .el-tabs__header{
+    >>>.el-tabs__header{
       background: #F5F5F9;
       padding-left:3%;
     }
-    .el-tabs__content{
+    >>>.el-tabs__content{
       padding:20px 3% 0 3%;
     }
-     .el-drawer.rtl{
+     >>>.el-drawer.rtl{
           overflow: auto;
       }
       .span{

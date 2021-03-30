@@ -2,6 +2,7 @@
  * 通用js方法封装处理
  * Copyright (c) 2019 ruoyi
  */
+import store from "@/store"
 
 const baseURL = process.env.VUE_APP_BASE_API
 
@@ -27,7 +28,7 @@ export function friendlyDate(timestamp) {
       if (days > 0) {
           diffType = 'day';
           diffValue = days;
-      } else {          
+      } else {
           if (hours > 0) {
               diffType = 'hour';
               diffValue = hours;
@@ -64,7 +65,7 @@ export function friendlyDate(timestamp) {
                     }
                   }
                 }
-                  
+
               }
           }
       }
@@ -72,7 +73,32 @@ export function friendlyDate(timestamp) {
 }
 
 
-
+export function checkImg(file){
+        let img_id = file
+        var index= img_id.indexOf("."); //（考虑严谨用lastIndexOf(".")得到）得到"."在第几位
+         img_id=img_id.substring(index); //截断"."之前的，得到后缀
+          if(img_id!=".bmp"&&img_id!=".png"&&img_id!=".gif"&&img_id!=".jpg"&&img_id!=".jpeg"){  //根据后缀，判断是否符合图片格式
+              return false
+            }else{
+              return true
+          }
+       }
+export function permission(file){
+      let permissionFlag = "statistc:homepage:businessData"
+      let permissionFlag1 = "statistc:homepage:datadisplay"
+      let permissionFlag2 = "statistc:homepage:partjob"
+      let hasPermissions  = null
+      store.getters.permissions.forEach(permission => {
+        if(permission == permissionFlag){
+          hasPermissions = 1
+        }else if(permission==permissionFlag1){
+          hasPermissions = 2
+        }else if(permission==permissionFlag2){
+          hasPermissions = 3
+        }
+      })
+      return hasPermissions
+  }
 // 日期格式化
 export function parseTime(time, pattern) {
 	if (arguments.length === 0 || !time) {

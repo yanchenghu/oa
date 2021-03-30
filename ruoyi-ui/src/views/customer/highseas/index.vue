@@ -59,10 +59,9 @@
         width="90"
       />
       <el-table-column label="联系方式"  prop="contactPhone" width="110"/>
-      <el-table-column label="录入人"  prop="entryPeople" width="80"/>
+      <el-table-column label="录入人"  prop="businessPeople" width="80"/>
       <el-table-column
         label="线索状态"
-
         prop="isFollowSubmit"
         :formatter="isFollowSubmitFormat"
          width="90"
@@ -74,43 +73,26 @@
       </el-table-column>
       <el-table-column label="更新时间"  prop="updateDate" width="150">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="抢占人"  prop="robPeople" width="80">
-        <template slot-scope="scope">
-          <span v-if="scope.row.isAccept==0">
-            {{scope.row.robPeople}}
-          </span>
-          <span v-else>
-            {{scope.row.businessPeople}}
-          </span>
-        </template>
+
       </el-table-column>
       <el-table-column label="操作"  class-name="small-padding fixed-width"  width="120">
         <template slot-scope="scope">
-          <span  v-if="scope.row.isAccept==0">
+          <span  >
             <el-button
+            size="small"
                 v-if="scope.row.robPeopleId==null || scope.row.robPeopleId==''"
                 type="text"
                 @click="handleClick(scope.row)"
               ><svg-icon icon-class="button"/>抢占</el-button>
              <el-button
                 type="text"
+                size="small"
                 @click="followUp(scope.row.entryId)"
               ><svg-icon icon-class="eye-open"/>查看</el-button>
-          </span>
-
-          <span v-else>
-            <el-button
-               v-if="scope.row.businessId==null || scope.row.businessId==''"
-               type="text"
-               @click="handleClick(scope.row)"
-             ><svg-icon icon-class="button"/>抢占</el-button>
-            <el-button
-               type="text"
-               @click="followUp(scope.row.entryId)"
-             ><svg-icon icon-class="eye-open"/>查看</el-button>
           </span>
         </template>
       </el-table-column>
@@ -160,10 +142,8 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item v-if="yxdemandone.isAccept==0">
-                  <el-button v-show="yxdemandone.robPeopleId==null || yxdemandone.robPeopleId=='' "   type="warning" @click="handleClick(yxdemandone)">抢占</el-button>
-            </el-form-item>
-            <el-form-item v-else>
+
+            <el-form-item >
                   <el-button v-show="yxdemandone.businessId==null || yxdemandone.businessId=='' "   type="warning" @click="handleClick(yxdemandone)">抢占</el-button>
             </el-form-item>
           </el-form>
@@ -172,45 +152,45 @@
           <el-tabs>
             <el-tab-pane label="联系人信息">
               <div style="display: flex; justify-content: space-between;">
-              <el-form label-position="left" label-width="80px" :model="yxdemandone">
+              <el-form label-position="left" label-width="80px" :model="yxdemandone" disabled>
                  <b>联系人信息</b>
                  <p></p>
                  <el-form-item label="姓名" >
-                   <el-input disabled v-model.trim="yxdemandone.contactPeople" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.contactPeople" ></el-input>
                  </el-form-item>
                  <el-form-item label="职位">
-                   <el-input disabled v-model.trim="yxdemandone.contactPosition" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.contactPosition" ></el-input>
                  </el-form-item>
                  <el-form-item label="电话">
-                   <el-input disabled v-model.trim="yxdemandone.contactPhone"></el-input>
+                   <el-input  v-model.trim="yxdemandone.contactPhone"></el-input>
                  </el-form-item>
                  <el-form-item label="邮箱">
-                   <el-input disabled v-model.trim="yxdemandone.mailbox" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.mailbox" ></el-input>
                  </el-form-item>
                  <el-form-item label="微信">
-                   <el-input disabled v-model.trim="yxdemandone.wechat" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.wechat" ></el-input>
                  </el-form-item>
                  <el-form-item label="QQ">
-                   <el-input disabled v-model.trim="yxdemandone.qq" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.qq" ></el-input>
                  </el-form-item>
               </el-form>
               <el-form label-position="left" label-width="100px" :model="yxdemandone">
                 <b>外包公司信息</b>
                 <p></p>
                  <el-form-item label="面试名义公司">
-                   <el-input disabled v-model.trim="yxdemandone.interviewCompany" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewCompany" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试官">
-                   <el-input disabled v-model.trim="yxdemandone.interviewer" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewer" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试职位">
-                   <el-input disabled v-model.trim="yxdemandone.interviewerPosition" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewerPosition" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试地点">
-                   <el-input disabled v-model.trim="yxdemandone.interviewaddress" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewaddress" ></el-input>
                  </el-form-item>
                  <el-form-item label="最终甲方">
-                   <el-input disabled v-model.trim="yxdemandone.finalparty" ></el-input>
+                   <el-input  v-model.trim="yxdemandone.finalparty" ></el-input>
                  </el-form-item>
               </el-form>
             </div>
@@ -336,7 +316,7 @@ export default {
     this.getDicts("yxdemand_company_situation").then(response => {
       this.companySituationOptions = response.data;
     });
-    this.getDicts("yxdemand_isfollow_submit").then(response => {
+    this.getDicts("business_isfollow_submin").then(response => {
       this.isFollowSubmitOptions = response.data;
     });
   },
@@ -398,19 +378,11 @@ export default {
     handleClick(value){
       var formData = new FormData()
       formData.append("entryId",value.entryId)
-      if(value.isAccept==0){
-        // 营销抢占
-        yxhandrob(formData).then(res=>{
-          this.msgSuccess("抢占成功")
-          this.getList()
-        })
-      }else{
         // 商务抢占
         swhandrob(formData).then(res=>{
           this.msgSuccess("抢占成功")
           this.getList()
         })
-      }
     },
     /** 查看 */
     followUp(value){
@@ -427,19 +399,19 @@ export default {
   }
 };
 </script>
-<style>
-  .el-tabs__item:focus.is-active.is-focus:not(:active) {
+<style scoped>
+  >>>.el-tabs__item:focus.is-active.is-focus:not(:active) {
       -webkit-box-shadow: none !important;
       box-shadow: none !important;
 }
-  .el-tabs__header{
+  >>>.el-tabs__header{
     background: #F5F5F9;
     padding-left:3%;
   }
-  .el-tabs__content{
+  >>>.el-tabs__content{
     padding:20px 3% 0 3%;
   }
-   .el-drawer.rtl{
+   >>>.el-drawer.rtl{
         overflow: auto;
     }
   .msg{

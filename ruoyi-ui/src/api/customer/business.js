@@ -35,6 +35,13 @@ export function see(data) {
   })
 }
 
+export function findnames(data) {
+  return request({
+    url: '/customer/yxdemand/yxdemByName',
+    method: 'post',
+    data: data
+  })
+}
 // 删除营销录入公司
 export function delYxdemand(entryId) {
   return request({

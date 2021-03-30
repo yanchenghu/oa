@@ -4,7 +4,8 @@
     <panel-group  :data-list="datalist" />
 
     <el-row>
-      <line-chart :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"/>
+      <jianzhi v-if="datalist.numb===3"  :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"></jianzhi>
+      <line-chart v-else :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"/>
     </el-row>
 
 
@@ -26,12 +27,11 @@ import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
-
-
-import { getlist,getbusinessData,getlists } from "@/api/index.js"
+import jianzhi from './dashboard/jianzhi'
+import { getlist,getbusinessData,getlists,partjob } from "@/api/index.js"
 import{genzongbut}from'@/api/resume/mytrckresume.js'
 import mytrack from "./components/resume/mytrack.vue"
-import store from "@/store";
+import {permission} from "@/utils/ruoyi.js"
 export default {
   name: 'Index',
   components: {
@@ -40,7 +40,8 @@ export default {
     RaddarChart,
     PieChart,
     BarChart,
-    mytrack
+    mytrack,
+    jianzhi
   },
   data() {
     return {
@@ -57,6 +58,10 @@ export default {
         litmap: 0,
         litmarD: 0,
         litview: 0,
+        lastmap:0,
+        lastview:0,
+        lastinfo:0,
+        lastlitentry:0,
         listMarEntry:[],
         followStatus:1,
         firstEnter:0,
@@ -65,8 +70,10 @@ export default {
         firstresumeadopt:0,
         firstinterviewadopt:0,
         firstentryPeople:0,
+        litout:0,
+        lastlitout:0,
       },
-      por:store.getters.permissions,
+
       open:{
         opens:false
       },
@@ -87,17 +94,7 @@ export default {
   },
   methods: {
     getList(){
-      let permissionFlag = "statistc:homepage:businessData"
-      let permissionFlag1 = "statistc:homepage:datadisplay"
-      let hasPermissions  = null
-      this.por.forEach(permission => {
-        if(permission == permissionFlag){
-          hasPermissions = 1
-        }else if(permission==permissionFlag1){
-          hasPermissions = 2
-        }
-      })
-
+      let hasPermissions = permission()
       if(hasPermissions == 1){
         this.datalist.numb = 1
         getbusinessData().then(res=>{
@@ -110,16 +107,17 @@ export default {
             this.datalist = res.data
             this.datalist.numb = hasPermissions
         });
+      }else if(hasPermissions == 3){
+        this.datalist.numb = 3
+   
+        partjob().then(res=>{
+            this.datalist = res.data
+            this.datalist.numb = hasPermissions
+        });
       }else{
         this.datalist.numb = 2
         getlists().then(res=>{
           this.datalist = res.data
-          // this.datalist.firstEnter = 0
-          // this.datalist.firstRob = 0
-          // this.datalist.firstMarbing = 0
-          // this.datalist.firstresumeadopt = 0
-          // this.datalist.firstinterviewadopt = 0
-          // this.datalist.firstentryPeople = 0
           this.datalist.numb = 2
         });
       }

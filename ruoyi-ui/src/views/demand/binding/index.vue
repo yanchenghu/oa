@@ -5,7 +5,7 @@
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
 
-        <el-form-item label="公司名称" prop="corpCode">
+        <!-- <el-form-item label="公司名称" prop="corpCode">
           <el-select filterable  v-model="queryParams.corpCode"  placeholder="请选择" size="small" clearable  @change="handleQuery">
             <el-option
                 v-for="dict in corpnamelists"
@@ -14,7 +14,7 @@
                 :value="dict.corpCode"
               />
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="技术方向" prop="technologyDirection">
           <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" filterable size="small" @change="handleQuery">
             <el-option
@@ -59,7 +59,15 @@
     </el-row>
 
     <el-table v-loading="loading" border :data="followList" >
-      <el-table-column label="需求名称" align="left" prop="projectName" />
+      <el-table-column label="需求名称" align="left" prop="projectName" >
+        <template slot-scope="scope">
+          <span>{{scope.row.projectName}}</span>
+          <div>
+            <el-button type="text" v-hasPermi="['demand:follow:postInterview']" @click="uplodmian(scope.row)">上传面试题</el-button>
+          </div>
+         </template>
+      </el-table-column>
+
       <el-table-column label="技术要求/技术方向" align="left">
         <template slot-scope="scope">
           <span>{{scope.row.demandYears==1?"中级":scope.row.demandYears==0?"初级":"高级"}} / {{professionIdopFormat(scope.row)}}</span>
@@ -92,20 +100,63 @@
       <el-table-column label="录入人姓名" align="left" prop="operUsername" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <p>
-            <el-button  type="text" @click="handleUpdate(scope.row)"><svg-icon icon-class="bangding"/>绑定</el-button>
-          </p>
-          <p>
-            <el-button type="text" @click="see(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open"/>查看</el-button>
-          </p>
+          <div>
+            <el-button  type="text" @click="handleUpdate(scope.row)"><svg-icon icon-class="bangding" class="icons"/>绑定</el-button>
+          </div>
+          <div>
+            <el-button  type="text" @click="see(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open" class="icons"/>查看</el-button>
+          </div>
+
         </template>
       </el-table-column>
     </el-table>
-
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
-
     <index :bangding="bangding"></index>
 
+
+    <el-dialog title="上传面试题" :visible.sync="open"  width="500px" append-to-body>
+      <el-form :model="form" label-width="80px"   ref="form" style="width: 400px;">
+        <el-form-item label="需求名称">
+           <span>{{form.projectName}}</span>
+        </el-form-item>
+        <el-form-item label="选择文件">
+           <el-upload
+             action="#"
+             list-type="picture-card"
+             :auto-upload="false"
+             ref="file"
+             :limit="1"
+             :on-change="handleRemov"
+             :on-exceed="handleExceed"
+             >
+             <!-- <div slot="tip" class="el-upload__tip">仅支持上传jpg/png文件</div> -->
+               <i slot="default" class="el-icon-plus"></i>
+               <div slot="file" slot-scope="{file}">
+                 <img
+                   class="el-upload-list__item-thumbnail"
+                   :src="file.url" alt=""
+                 >
+                 <span class="el-upload-list__item-actions">
+                   <span
+                     v-if="!disabled"
+                     class="el-upload-list__item-delete"
+                     @click="handleRemove(file)"
+                   >
+                     <i class="el-icon-delete"></i>
+                   </span>
+                 </span>
+               </div>
+           </el-upload>
+        </el-form-item>
+        <el-form-item label="备注" prop="topicBz">
+           <el-input v-model="form.topicBz" size="medium"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm2">确定</el-button>
+        <el-button @click="open=false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -118,6 +169,8 @@
     updateFollow,
     exportFollow,
     template,
+    postInterview,
+    ispostInterview
   } from "@/api/demand/binding";
   import {
     corpNames
@@ -155,6 +208,7 @@ import index from "../../components/particulars/index"
         showSearch: true,
         // 总条数
         total: 0,
+        disabled:false,
         // 需求表格数据
         followList: [],
         // 是否显示弹出层
@@ -172,12 +226,14 @@ import index from "../../components/particulars/index"
           demandNumber: null,
         },
         // 表单参数
-        form: [],
+        form: {},
+        open:false,
+        single:null,
       };
     },
     created() {
       this.getList();
-      this.getCorpName()
+      // this.getCorpName()
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
         this.customerSpecialitiesoptions = response.data;
@@ -196,6 +252,72 @@ import index from "../../components/particulars/index"
       });
     },
     methods: {
+
+      uplodmian(row){
+        this.form = {
+          corpCode:null,
+          demandId:null,
+          projectName:null,
+          topicBz:null,
+        }
+        this.resetForm("form")
+        this.form = {
+          corpCode:row.corpCode,
+          demandId:row.demandId,
+          projectName:row.projectName,
+        }
+        let formData = new FormData()
+        formData.append("demandId",row.demandId)
+        ispostInterview(formData).then(res=>{
+            if(res=="你未发布过该需求的面试题"){
+              this.open = true
+              if(this.$refs.file!==undefined){
+                this.handleRemove()
+              }
+            }else{
+              let that = this
+              this.$confirm(res+'是否继续添加', "警告", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning"
+              }).then(function() {
+
+              }).then(() => {
+                that.open = true
+                if(that.$refs.file!==undefined){
+                  that.handleRemove()
+                }
+              }).catch(function() {
+              });
+            }
+        })
+
+
+
+      },
+      handleExceed(){
+        this.msgError(`当前限制选择 1 个文件`);
+      },
+      submitForm2(){
+        if(this.single==null && this.form.topicBz==null){
+          this.msgError("文件或备注选填一项")
+        }else{
+              let formData = new FormData()
+              formData.append("zm",JSON.stringify({marTopic:this.form}))
+              formData.append("multipartFile",this.single)
+              postInterview(formData).then(res=>{
+                  this.msgSuccess("上传成功")
+                  this.open=false
+              })
+        }
+      },
+      handleRemov(value,filelist){
+        this.single=value.raw;
+      },
+      handleRemove(file) {
+          this.$refs.file.clearFiles()
+          this.single = null
+      },
       getCorpName(){
         corpNames().then(res=>{
           this.corpnamelists=res

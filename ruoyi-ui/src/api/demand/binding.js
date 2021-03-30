@@ -90,3 +90,18 @@ export function exportFollow(query) {
     params: query
   })
 }
+
+export function postInterview(data) {
+  return request({
+    url: '/demand/follow/postInterview',
+    method: 'post',
+    data: data
+  })
+}
+export function ispostInterview(data) {
+  return request({
+    url: '/demand/follow/ispostInterview',
+    method: 'post',
+    data: data
+  })
+}
