@@ -56,6 +56,8 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Autowired
     private ConDingtokenMapper conDingtokenMapper;
 
+    @Autowired
+    private MarWaitingentryMapper marWaitingentryMapper;
 
     /**
      * 查询需求
@@ -69,6 +71,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         MarSign marSign=new MarSign();
         marSign.setDemandId(demandId);
         List<MarSign> Signlis=marSignMapper.selectMarSignList(marSign);
+
         MarDemand marDeman=marDemandMapper.selectMarDemandById(demandId);
         map.put("Signlis",Signlis);
         map.put("marDeman",marDeman);
@@ -84,9 +87,10 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Override
     public List<MarDemand> selectMarDemandList(MarDemand marDemand, LoginUser loginUser)
     {
-        marDemand.setOperationuser(loginUser.getUsername());
+        if(!loginUser.getUsername().equals("wlg2020")){
+            marDemand.setOperationuser(loginUser.getUsername());
+        }
         List<MarDemand>  list=marDemandMapper.selectMarDemandList(marDemand);
-
         for (MarDemand marDe:list){
         //查询当前需求绑定了多少简历
         MarDemandresume marDema=new MarDemandresume();
@@ -444,6 +448,7 @@ public class MarDemandServiceImpl implements IMarDemandService
      *需求已绑定简历跟踪
      */
     @Override
+    @Transactional
     public AjaxResult demandResumeTrack(MarDemandresumefollow marDemandresumefollow, LoginUser loginUser) {
 
           if(StringUtils.isEmpty(marDemandresumefollow.getDemandresumeId())){
@@ -453,8 +458,23 @@ public class MarDemandServiceImpl implements IMarDemandService
           MarDemandresume marDemandres=new MarDemandresume();
           marDemandres.setId(marDemandresumefollow.getDemandresumeId());
           marDemandres.setNewfollowtime(date);
-
           int a=marDemandresumeMapper.updateMarDemandresume(marDemandres);
+          //添加待入项信息
+          if(marDemandresumefollow.getFollowStatus()==5){
+              MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(marDemandresumefollow.getDemandresumeId());
+              MarWaitingentry  marWaiting=new MarWaitingentry();
+              marWaiting.setDemandId(marDemandresume.getDemandId());
+              marWaiting.setCustomerCode(marDemandresume.getCustomerCode());
+              List<MarWaitingentry> marWaitingentries = marWaitingentryMapper.selectMarWaitingentryList(marWaiting);
+              marWaiting.setInterviewTime(date);
+              marWaiting.setStayTime(marDemandresumefollow.getTrackingtime());
+              marWaiting.setNickName(marDemandresume.getTrackzPeoname());
+              if(marWaitingentries.size()>0){
+                  marWaitingentryMapper.updateMarWaitingentryby(marWaiting);
+              }else{
+                  marWaitingentryMapper.insertMarWaitingentry(marWaiting);
+              }
+          }
           if(a==1){
               marDemandresumefollow.setTrackingtime(date);
               marDemandresumefollow.setTrackingPeople(loginUser.getUsername());

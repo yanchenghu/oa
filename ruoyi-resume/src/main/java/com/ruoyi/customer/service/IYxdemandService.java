@@ -7,6 +7,7 @@ import com.ruoyi.customer.domain.Yxcontact;
 import com.ruoyi.customer.domain.Yxdemand;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 营销录入公司Service接口
@@ -26,7 +27,7 @@ public interface IYxdemandService
 
     /**
      * 查询营销录入公司列表
-     * 
+     *
      * @param yxdemand 营销录入公司
      * @return 营销录入公司集合
      */
@@ -122,4 +123,9 @@ public interface IYxdemandService
     AjaxResult workresultlist(LoginUser loginUser);
 
     AjaxResult newIntention(Yxdemand yxdemand, LoginUser loginUser);
+
+    List<Yxdemand> selectAllYxdemandListBy(Yxdemand yxdemand);
+
+    List<Map>  getAllBusiness();
+
 }

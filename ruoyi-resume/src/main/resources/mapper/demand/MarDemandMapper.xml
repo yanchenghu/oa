@@ -201,7 +201,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="maxSalary != null">max_salary = #{maxSalary},</if>
             <if test="technicalRequirement != null">technical_requirement = #{technicalRequirement},</if>
             <if test="langue != null">Langue = #{langue},</if>
-            <if test="demandPic != null">demand_pic = #{demandPic},</if>
+            <if test="demandPic != null and demandPic != ''">demand_pic = #{demandPic},</if>
             <if test="interviewer != null">interviewer = #{interviewer},</if>
             <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
             <if test="specificLocation != null">specific_location = #{specificLocation},</if>

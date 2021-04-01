@@ -86,4 +86,6 @@ public interface YxdemandMapper
     List<Yxdemand> selectByDepartMark(Yxdemand yxdemand);
 
     List<ConOperationrecords> getinput(Map<String, Object> map);
+
+    List<Map> getAllBusiness();
 }

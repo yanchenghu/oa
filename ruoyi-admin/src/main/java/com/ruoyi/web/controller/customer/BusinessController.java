@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 商务意向客户Controller
+ * 商务客户线索Controller
  * 
  * @author ruoyi
  * @date 2020-11-06

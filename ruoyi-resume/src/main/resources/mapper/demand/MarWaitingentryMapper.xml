@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarWaitingentryMapper">
+    
+    <resultMap type="MarWaitingentry" id="MarWaitingentryResult">
+        <result property="id"    column="id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="interviewTime"    column="interview_time"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="stayTime"    column="stay_time"    />
+        <result property="bz"    column="bz"    />
+        <result property="insertTime"    column="insert_time"    />
+    </resultMap>
+
+    <sql id="selectMarWaitingentryVo">
+        select id, nick_name, demand_id, interview_time, customer_code, stay_time, bz, insert_time from mar_waitingentry
+    </sql>
+
+    <select id="selectMarWaitingentryList" parameterType="MarWaitingentry" resultMap="MarWaitingentryResult">
+        <include refid="selectMarWaitingentryVo"/>
+        <where>  
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+            <if test="interviewTime != null "> and interview_time = #{interviewTime}</if>
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="stayTime != null "> and stay_time = #{stayTime}</if>
+            <if test="bz != null  and bz != ''"> and bz = #{bz}</if>
+            <if test="insertTime != null "> and insert_time = #{insertTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarWaitingentryById" parameterType="Integer" resultMap="MarWaitingentryResult">
+        <include refid="selectMarWaitingentryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarWaitingentry" parameterType="MarWaitingentry">
+        insert into mar_waitingentry
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="demandId != null">demand_id,</if>
+            <if test="interviewTime != null">interview_time,</if>
+            <if test="customerCode != null and customerCode != ''">customer_code,</if>
+            <if test="stayTime != null">stay_time,</if>
+            <if test="bz != null">bz,</if>
+            <if test="insertTime != null">insert_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="demandId != null">#{demandId},</if>
+            <if test="interviewTime != null">#{interviewTime},</if>
+            <if test="customerCode != null and customerCode != ''">#{customerCode},</if>
+            <if test="stayTime != null">#{stayTime},</if>
+            <if test="bz != null">#{bz},</if>
+            <if test="insertTime != null">#{insertTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarWaitingentry" parameterType="MarWaitingentry">
+        update mar_waitingentry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="demandId != null">demand_id = #{demandId},</if>
+            <if test="interviewTime != null">interview_time = #{interviewTime},</if>
+            <if test="customerCode != null and customerCode != ''">customer_code = #{customerCode},</if>
+            <if test="stayTime != null">stay_time = #{stayTime},</if>
+            <if test="bz != null">bz = #{bz},</if>
+            <if test="insertTime != null">insert_time = #{insertTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarWaitingentryById" parameterType="Integer">
+        delete from mar_waitingentry where id = #{id}
+    </delete>
+
+    <delete id="deleteMarWaitingentryByIds" parameterType="String">
+        delete from mar_waitingentry where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <update id="updateMarWaitingentryby" parameterType="MarWaitingentry">
+        update mar_waitingentry
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="interviewTime != null">interview_time = #{interviewTime},</if>
+            <if test="stayTime != null">stay_time = #{stayTime},</if>
+            <if test="bz != null">bz = #{bz},</if>
+            <if test="insertTime != null">insert_time = #{insertTime},</if>
+        </trim>
+        where customer_code = #{customerCode} and demand_id = #{demandId}
+    </update>
+    <select id="getMarWaitingentr"  resultType="map">
+     SELECT a.nick_name,f.corp_name,d.project_name,DATE_FORMAT(a.interview_time,'%Y-%m-%d') as interview_time,
+     u.customer_name, DATE_FORMAT(a.stay_time,'%Y-%m-%d') as stay_time,c.follow_status,follow_detail from mar_waitingentry a
+    LEFT JOIN mar_demandresume b  on a.demand_id=b.demand_id and a.customer_code=b.customer_code
+    LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id and b.newfollowtime=c.trackingtime
+    LEFT JOIN per_customerinfo u on a.customer_code=u.customer_code
+    LEFT JOIN mar_demand d on a.demand_id=d.demand_id
+    LEFT JOIN mar_company f on d.corp_code=f.corp_code
+    ORDER BY a.stay_time desc
+    </select>
+</mapper>

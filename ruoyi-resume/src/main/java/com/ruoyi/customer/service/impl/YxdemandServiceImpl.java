@@ -370,7 +370,7 @@ public class YxdemandServiceImpl implements IYxdemandService
         yxdema.setEntryId(entryId);
         yxdema.setRobPeopleId(loginUser.getUsername());
         yxdema.setRobPeople(loginUser.getUser().getNickName());
-//        yxdema.setSubmitTime(new Date());
+
         yxdema.setUpdateDate(new Date());
         yxdemandMapper.updateYxdemand(yxdema);
         Yxrob yxrob=new Yxrob();
@@ -417,9 +417,7 @@ public class YxdemandServiceImpl implements IYxdemandService
         if(yxde!=null){
             return AjaxResult.error("当前公司已经存在");
         }
-//        yxdemand.setIsAccept(1);
-//        yxdemand.setSubmitTime(new Date());
-//        yxdemand.setIsBusiness(1);
+
         yxdemand.setInsertTime(new Date());
         yxdemand.setRobPeople(loginUser.getUser().getNickName());
         yxdemand.setRobPeopleId(loginUser.getUsername());
@@ -437,6 +435,19 @@ public class YxdemandServiceImpl implements IYxdemandService
         yxcontactMapper.insertYxcontact(yxcontact);
 
         return AjaxResult.success("新建客户线索成功");
+    }
+
+    //根据查询全部商务录入的客户线索
+    @Override
+    public List<Yxdemand> selectAllYxdemandListBy(Yxdemand yxdemand) {
+
+        return yxdemandMapper.selectYxdemandList(yxdemand);
+    }
+
+    @Override
+    public List<Map> getAllBusiness() {
+        return yxdemandMapper.getAllBusiness();
+
     }
 
 
