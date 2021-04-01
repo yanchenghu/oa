@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row :gutter="35" class="panel-group" v-if="dataList.numb==2">
+    <el-row :gutter="35" class="panel-group" v-if="dataList.numb!==1">
       <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartData(0)">
           <div class="card-panel-description">
@@ -8,7 +8,7 @@
               录入
             </div>
             <count-to  :start-val="0" :end-val="dataList.EnterInfosize" :duration="2600" class="card-panel-num4" />
-            <count-to  :start-val="0" :end-val="dataList.firstEnter" :duration="2600" class="card-panel-num" />
+
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -25,7 +25,6 @@
               抢占
             </div>
             <count-to :start-val="0" :end-val="dataList.entryrobnnum" :duration="2600" class="card-panel-num5" />
-            <count-to :start-val="0" :end-val="dataList.firstRob" :duration="2600" class="card-panel-num" />
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -43,7 +42,6 @@
               绑定
             </div>
             <count-to :start-val="0" :end-val="dataList.bingdinnum" :duration="3000" class="card-panel-num6" />
-            <count-to :start-val="0" :end-val="dataList.firstMarbing" :duration="3000" class="card-panel-num" />
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -61,7 +59,6 @@
               简历通过
             </div>
             <count-to :start-val="0" :end-val="dataList.resumeadopt" :duration="3200" class="card-panel-num1 " />
-            <count-to :start-val="0" :end-val="dataList.firstresumeadopt" :duration="3200" class="card-panel-num " />
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -78,7 +75,6 @@
               面试通过
             </div>
             <count-to :start-val="0" :end-val="dataList.interviewadopt" :duration="3600" class="card-panel-num2" />
-            <count-to :start-val="0" :end-val="dataList.firstinterviewadopt" :duration="3600" class="card-panel-num" />
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -95,7 +91,6 @@
               入项
             </div>
             <count-to :start-val="0" :end-val="dataList.entryPeople" :duration="3600" class="card-panel-num3" />
-            <count-to :start-val="0" :end-val="dataList.firstentryPeople" :duration="3600" class="card-panel-num" />
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -107,7 +102,7 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="35" class="panel-group" v-if="dataList.numb==1">
+    <el-row :gutter="35" class="panel-group" v-else>
       <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
         <div class="card-panel" @click="handleSetLineChartDatas(0)">
           <div class="card-panel-description">
@@ -132,7 +127,7 @@
               简历绑定
             </div>
             <count-to :start-val="0" :end-val="dataList.litmap" :duration="3000" class="card-panel-num6" />
-            <count-to  :start-val="0" :end-val="dataList.lastmap " :duration="2600" class="card-panel-num" />
+
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -150,7 +145,7 @@
               简历通过
             </div>
             <count-to :start-val="0" :end-val="dataList.litinfo" :duration="3200" class="card-panel-num1 " />
-            <count-to  :start-val="0" :end-val="dataList.lastinfo" :duration="2600" class="card-panel-num" />
+
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -167,7 +162,7 @@
               面试通过
             </div>
             <count-to :start-val="0" :end-val="dataList.litview" :duration="3600" class="card-panel-num2" />
-            <count-to  :start-val="0" :end-val="dataList.lastinfo" :duration="2600" class="card-panel-num" />
+
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -184,7 +179,6 @@
               人员入项
             </div>
             <count-to :start-val="0" :end-val="dataList.litentry" :duration="3600" class="card-panel-num3" />
-            <count-to  :start-val="0" :end-val="dataList.lastlitentry" :duration="2600" class="card-panel-num" />
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
@@ -200,14 +194,13 @@
             <div class="card-panel-text">
               人员出项
             </div>
-            <count-to :start-val="0" :end-val="dataList.litout " :duration="3600" class="card-panel-num3" />
-            <count-to  :start-val="0" :end-val="dataList.lastlitout" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="dataList.litout " :duration="3600" class="card-panel-num5" />
             <div>
               <el-button type="text">查看详情</el-button>
             </div>
           </div>
-          <div class="card-panel-icon-wrapper icon-ruxiang">
-            <svg-icon icon-class="ruxiang" class-name="card-panel-icon" />
+          <div class="card-panel-icon-wrapper icon-qaingzhan">
+            <svg-icon icon-class="out" class-name="card-panel-icon" />
           </div>
         </div>
       </el-col>
@@ -220,7 +213,7 @@
       </el-table>
     </el-dialog>
     <el-dialog v-else :title="title" :visible.sync="dialogTableVisible"  width="500px">
-      <el-table :data="gridData" v-if="dataList.numb==2" v-loading="loading">
+      <el-table :data="gridData" v-if="dataList.numb==2||dataList.numb==3" v-loading="loading">
         <el-table-column property="customerName" label="姓名" ></el-table-column>
         <el-table-column property="customerTel" label="电话"  ></el-table-column>
         <el-table-column v-if="title=='录入'||title=='抢占'" property="addTime" label="录入时间"></el-table-column>
@@ -269,7 +262,7 @@ export default {
   methods: {
     professionIdopFormat(row, column) {
       return this.selectDictLabel(this.customerleve, row.quit_proreason);},
-      
+
     handleSetLineChartData(type) {
       // this.$emit('handleSetLineChartData', type)
       let form = new FormData()
@@ -373,7 +366,7 @@ export default {
     }
     .icon-qaingzhan{
      color: #FF9F43;
-     background-color: rgba(170,102,204,0.1) ;
+     background-color: rgba(255,159,67,0.1);
     }
     .icon-bangd{
       color:#28C76F;

@@ -3,6 +3,13 @@ import request from '@/utils/request'
 // 查询合作公司列表
 export function listCompany(query) {
   return request({
+    url: '/customer/company/booslist',
+    method: 'get',
+    params: query
+  })
+}
+export function listCompanys(query) {
+  return request({
     url: '/customer/company/list',
     method: 'get',
     params: query

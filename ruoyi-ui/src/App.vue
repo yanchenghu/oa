@@ -14,14 +14,13 @@ export default  {
     /* min-height: 850px; */
     border-radius: 2px;
     background-color: #fff;
-    margin: 10px 10px 0 10px;
+    margin: 15px 10px 0 10px;
   }
   .el-icon-circle-check{
     display: none;
   }
   .el-icon-close{
-    font-size: 18px;
-    display: inline !important;
+    display: inline-block !important;
   }
   .el-table th.gutter{
       display: table-cell!important;

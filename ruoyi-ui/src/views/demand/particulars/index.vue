@@ -17,7 +17,7 @@
               <td><span class="name">学历要求</span>{{customerFormat(form)}}</td>
               <td><span class="name">语言要求</span>{{form.langue == 0?"无":form.langue==2?"日语":"英语"}}</td>
               <td><span class="name">简历格式</span>{{form.demandNumber}}</td>
-              <td><span class="name">简历模板</span><el-button type="text" @click="see(1,templateFormat(templist,form.tempId)[1])">{{templateFormat(templist,form.tempId)[0]}}</el-button> </td>
+              <td><span class="name">简历模板</span><el-button type="text" @click="see(templateFormat(templist,form.tempId)[1],1)">{{templateFormat(templist,form.tempId)[0]}}</el-button> </td>
             </tr>
             <tr>
               <td><span class="name">客户级别</span>{{customerleveFormat(form)}}</td>
@@ -26,8 +26,11 @@
               <td><span class="name">面试地点</span>{{form.specificLocation}}</td>
               <td><span class="name">发布时间</span>{{form.addTime}}</td>
             </tr>
+            <tr>
+              <td><span class="name">需求图片</span><el-button @click="see(3)" type="text" >点击预览</el-button></td>
+              <td><span class="name">面试题</span><el-button @click="see(form.bz)" type="text" :disabled="form.bz==''">点击预览</el-button></td>
+            </tr>
           </table>
-          <div class="div"> <span style="width: 70px; color:#909399;float: left;">需求图片</span><el-button @click="see" type="text" style="height: 20px;margin-top: -11px;">点击预览</el-button></div>
           <div class="div">
             <div style=" width: 125px; color:#909399;">技术要求</div>
               <div v-html='form.specificrequiRement'></div>
@@ -276,7 +279,7 @@
                   </el-col>
                 </el-form-item>
               <el-form-item label="结算周期" prop="settledCycle">
-                 <el-select v-model="comform.settledCycle" placeholder="请选择结算周期" clearable size="small">
+                 <el-select v-model="comform.settledCycle" placeholder="请选择结算周期" clearable size="small" :change="change">
                    <el-option
                        v-for="dict in companyperiod"
                        :key="dict.dictValue"
@@ -286,7 +289,7 @@
                  </el-select>
               </el-form-item>
               <el-form-item label="人员成本" prop="salary">
-                  <el-input v-model="comform.salary" placeholder="请输入人员成本"  size="small" />
+                  <el-input v-model="comform.salary" placeholder="请输入人员成本"  size="small"/>
               </el-form-item>
               <el-form-item label="服务费用" prop="servicePay">
                   <el-input v-model="comform.servicePay" placeholder="请输入服务费用"  size="small" />
@@ -324,7 +327,7 @@
 
 <script>
   import {gettemplist,template,getFollow,submitstart,addFollow,delFollow,getInputInformation,entryPersonnel,submitstarts,chongzhizhuang} from '@/api/demand/praticulars'
-  import {debounce} from "@/utils/ruoyi.js"
+  import {debounce,checkImg} from "@/utils/ruoyi.js"
   import index from "../../components/particulars/index"
   export default {
     name:'particulars',
@@ -645,6 +648,9 @@
           this.tempID=row.id
         }
       },
+      change(){
+        this.$forceUpdate()
+      },
       // 提交
       submit(){
         let form =new FormData()
@@ -662,7 +668,9 @@
           this.getDicts("mar_company_period").then(response => {
             this.companyperiod = response.data;
           });
-          this.comform = {}
+          this.comform = {
+              settledCycle:null
+          }
           this.resetForm("comform")
           getInputInformation(form).then(res=>{
             this.comform=res.data
@@ -816,13 +824,25 @@
         this.caozuo2 = true
         this.caozuos = 1
       },
-      see(ind,file){
+
+      see(file,ind){
         this.dialogImageUrl = ""
         let srcs = process.env.VUE_APP_BASE_API
+        if(file!==3){
+          if(checkImg(file)){
+            ind = 2
+          }else{
+            ind = 1
+          }
+        }
         if(ind==1){
           this.open3 = true
           this.title = '预览简历模板'
           this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+file}`
+        }else if(ind==2){
+          this.dialogVisible=true
+          this.title2 = "面试题图片"
+          this.dialogImageUrl = srcs+file
         }else{
           if(this.form.demandPic){
             this.dialogVisible=true
@@ -831,7 +851,6 @@
           }else{
             this.msgError("暂无需求图片请上传")
           }
-
         }
       },
     }

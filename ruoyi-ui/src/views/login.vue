@@ -2,7 +2,7 @@
   <div class="login">
     <div style="display: flex;">
       <div class="login-left">
-
+        Welcome!
       </div>
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
         <h3 class="title">用户登录</h3>
@@ -56,6 +56,7 @@
     <div class="el-login-footer">
      <!-- <span>Copyright © 2018-2020 ruoyi.vip All Rights Reserved.</span> -->
     </div>
+
   </div>
 </template>
 
@@ -64,7 +65,6 @@ import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import {debounce} from "@/utils/ruoyi.js"
-
 export default {
   name: "Login",
   data() {
@@ -100,6 +100,7 @@ export default {
       immediate: true
     }
   },
+
   created() {
     this.getCode();
     this.getCookie();
@@ -152,6 +153,9 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+  #canv{
+    position: absolute;
+  }
 .login {
   display: flex;
   justify-content: center;
@@ -166,12 +170,15 @@ export default {
   color: #707070;
 }
 .login-left{
+  font-size: 40px;
+  font-weight: 600;
+  padding: 40px 0 0 50px;
+  color: #ffffff;
   border-radius:6px 0  0 6px ;
   width: 450px;
   background-image: url("../assets/image/login-background.png");
-  background-size: 100% 100%;
-  // height: 700px;
-  background-color: #fff;
+  background-size:cover ;
+  -webkit-filter:brightness(200%);
 }
 
 .login-form {

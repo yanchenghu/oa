@@ -5,11 +5,14 @@
       <el-button style="border-radius: 0;"><b><router-link to="/resume/record">录入解析简历</router-link></b></el-button>
       <el-button style="margin-left: 0;border-radius: 0;" type="primary"><b>手动上传简历</b></el-button>
     </div>
+    <el-input prefix-icon="el-icon-search" style="width: 400px;"  v-model="finddata.customerName" placeholder="请输入姓名或电话"  @keyup.enter.native="find" size="medium">
+         <el-button slot="append"  @click="find" >查询</el-button>
+     </el-input>
     <div style="margin-top:30px;margin-bottom: 20px;">
       <el-radio v-model="perCustomerinfo.resumeDirection" :label="1" >国内开发</el-radio>
       <el-radio v-model="perCustomerinfo.resumeDirection" :label="2" style="margin-left: -10px;">对日开发</el-radio>
     </div>
-    <el-upload style="padding-bottom: 30px;" action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad" :file-list="filelist">
+    <el-upload style="padding-bottom: 30px;width: 260px;" action="wqewq" ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad" :file-list="filelist">
       <div v-if="wen">
         <i class="el-icon-upload"></i>
         <div><b>点击或拖拽上传简历</b></div>
@@ -18,16 +21,13 @@
       <div v-else>
         <i class="el-icon-success" style="color:rgb(0,218,175);
           font-size: 67px;
-          margin: 40px 0 16px;
+          margin: 20px 0 16px;
           line-height: 50px;"></i>
         <div><b>上传成功 </b></div>
       </div>
     </el-upload>
     <div>
-      <div class="tit">
-        <b style="margin-right: 20px;">基本信息</b>
-        <span style="font-size:13px ;color:#EA5455 ;">请核对 ( * ) 必填项信息是否正确完整，否则无法上传</span>
-      </div>
+      <span><svg-icon icon-class="jiben" class-name="card-panel-icon" /></span><span class="tit">基本信息</span><span style="font-size:12px ;color:#ea5455 ;">请核对 ( * ) 必填项信息是否正确完整，并保存否则上传失败</span>
       <div style="margin-top: 20px;">
         <el-form  :model="perCustomerinfo"  label-width="100px" :inline="true" ref="forms" label-position="right" :rules="rules">
           <el-form-item label="姓名" prop="customerName">
@@ -85,10 +85,7 @@
         </el-form>
         </div>
         </div>
-        <div class="tit">
-          <b style="margin-right: 20px;">教育经历</b>
-          <i v-show="input3" class="el-icon-edit-outline i"  @click="adds(3)"></i>
-        </div>
+        <span><svg-icon icon-class="jiaoyu" class-name="card-panel-icon" /></span><span class="tit">教育经历</span><i v-show="input3" class="el-icon-edit-outline i"  @click="adds(3)"></i>
         <p></p>
         <el-form v-show="!input3" ref="form" :model="perEduc" label-width="80px" style="width: 400px; margin-left: 10px;">
           <el-form-item label="学校名称" prop="schoolName">
@@ -129,11 +126,7 @@
 
           </li>
         </ul>
-
-        <div class="tit">
-          <b style="margin-right: 20px; margin-bottom: 20px;">工作经历</b>
-          <i v-show="input" class="el-icon-edit-outline i"  @click="adds(1)"></i>
-        </div>
+        <span><svg-icon icon-class="work" class-name="card-panel-icon" /></span><span class="tit">工作经历</span><i v-show="input" class="el-icon-edit-outline i"  @click="adds(1)"></i>
         <p></p>
         <el-form v-show="!input" ref="form" :model="work_experienceList" label-width="80px" style="width: 400px; margin-left: 10px;">
           <el-form-item label="公司名称" prop="companyName">
@@ -174,10 +167,8 @@
 
           </li>
         </ul>
-        <div class="tit" id="tit2">
-          <b style="margin-right: 20px;">项目经厉</b>
-           <i v-show="input2" class="el-icon-edit-outline i"  @click="adds(2)"></i>
-        </div>
+        <span><svg-icon icon-class="xiangmu" class-name="card-panel-icon" /></span><span class="tit">项目经厉</span>
+        <i v-show="input2" class="el-icon-edit-outline i"  @click="adds(2)"></i>
         <br/>
         <el-form v-show="!input2" ref="form" :model="project_exper" label-width="80px" style="width: 400px;margin-left: 10px;">
 
@@ -222,13 +213,63 @@
            </div>
          </div>
 
+         <el-dialog :visible.sync="open"  title="简历查询" append-to-body>
+           <div >
+             <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+               </el-table-column>
+               <el-table-column  label="姓名"width="70" >
+                  <template slot-scope="scope">
+                      <span v-if="scope.row.customer_name.length>2">{{scope.row.customer_name.substring(0,1)+" * "+scope.row.customer_name.substr(-1, 1)}}</span>
+                      <span v-else>{{scope.row.customer_name.substring(0,1)+" * "}}</span>
+                  </template>
+               </el-table-column>
+               <el-table-column prop="customer_tel" label="电话">
+                 <template slot-scope="scope">
+
+                   <span>{{scope.row.customer_tel.replace(reg,"$1****$2")}}</span>
+                 </template>
+               </el-table-column>
+               <el-table-column prop="customer_birth" label="出生日期">
+               </el-table-column>
+               <el-table-column prop="profession_id" label="技术方向" :formatter="professionIdSituationFormat" width="60">
+               </el-table-column>
+               <el-table-column label="录入简历时间"  prop="add_time" >
+                 <template slot-scope="scope">
+                   <span>{{ parseTime(scope.row.add_time, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                 </template>
+               </el-table-column>
+               <el-table-column label="更新简历时间"  prop="add_time" >
+                 <template slot-scope="scope">
+                   <span>{{ parseTime(scope.row.update_time, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                 </template>
+               </el-table-column>
+               <el-table-column prop="add_name" label="占有人" width="70"  fixed="right">
+               </el-table-column>
+               <el-table-column label="操作"  width="90" fixed="right">
+                 <template slot-scope="scope">
+                   <el-button v-hasPermi="['resume:record:query']" @click="handsee(scope.row.customer_code)" type="text" size="small">查看</el-button>
+                   <el-button v-if="!scope.row.add_name" @click="handleClick(scope.row.customer_code)" type="text" size="small">抢占</el-button>
+                 </template>
+               </el-table-column>
+             </el-table>
+           </div>
+           <pagination
+             v-show="total > 0"
+             :total="total"
+             :page.sync="finddata.pageNum"
+             :limit.sync="finddata.pageSize"
+             @pagination="select"
+                   />
+         </el-dialog>
+
   </div>
 </template>
 
 <script>
 
   import {workDel, getRecord, handupdata, handInsert, projdeDel, educaDel} from "@/api/resume/record/customerinfo";
-  import {debounce} from "@/utils/ruoyi.js"
+  import {listRecord,addRecord} from "@/api/resume/record/customerinfo";
+  import {debounce,} from "@/utils/ruoyi.js"
   export default{
     name:"manually",
     data(){
@@ -240,7 +281,11 @@
         input2:true,
         input:true,
         vadio:1,
+        loading:false,
         filelist:[],
+        open:false,
+        reg: /^(\d{3})\d{4}(\d{4})$/,
+        tableData:[],
         // 技术方向字典
         professionIdoptions: [],
         // 简历学历字典
@@ -255,6 +300,13 @@
         // 基础信息
         perCustomerinfo:{
           resumeDirection:1,
+        },
+        total:0,
+        finddata: {
+          pageNum: 1,
+          pageSize: 10,
+          customerName: "",
+          customerTel: "",
         },
         // 教育经历
         perEduc:{},
@@ -379,6 +431,29 @@
       "$route":"getcustomerCode"
     },
     methods:{
+      select(){
+          this.loading=true
+          listRecord(this.finddata).then(res =>{
+          this.total = res.total;
+          this.loading=false
+          this.tableData=res.rows
+          // if(res.rows.length==0){
+          //   this.sous=true
+          // }else{
+          //   this.sous=false
+
+          // }
+          });
+      },
+
+      find() {
+        if(this.finddata.customerName==""){
+          this.msgError("请输入姓名或电话")
+        }else{
+          this.open = true;
+          this.select()
+        }
+      },
       upoplodad(file) {
         this.$refs.file.clearFiles()
         this.wen = true
@@ -396,14 +471,27 @@
         }
         return time.getTime() >  Date.now()
       },
-
+      handsee(value){
+         let customerCode = value
+         this.$router.push({path:"/record/particulars",query:{customerCode:customerCode}});
+         this.open = false;
+      },
+      handleClick(val) {
+        var formData = new FormData()
+        formData.append("customerCode",val)
+        addRecord(formData).then(res=>{
+          if(res.code===200){
+            this.msgSuccess("抢占成功"),
+            this.select()
+          }
+        })
+      },
       // 获取简历详情信息
       getcustomerCode(){
           let query = this.$route.query.customerCode
           if(query==null){
             this.handleQuery()
             this.button2=1
-            this.wen=true
           }else{
             this.button2=2
             var formData = new FormData()
@@ -423,7 +511,9 @@
             })
           }
       },
-
+       professionIdSituationFormat(row,column){
+         return this.selectDictLabel(this.professionIdoptions, row.profession_id);
+       },
       //保存
       resetQuerys(but){
           this.$refs["forms"].validate((valid) => {
@@ -437,7 +527,7 @@
               zm = JSON.stringify(zm)
               let file = null
               if (this.$refs.file.uploadFiles[0] == null) {
-                file={}
+                file=null
               }else{
                 file = this.$refs.file.uploadFiles[0].raw
               }
@@ -494,7 +584,6 @@
       },
       oplodad(file) {
         // console.log(file)
-
         this.wen = false
       },
       // 取消
@@ -607,12 +696,30 @@
         this.project_experience = []
         this.work_experienceListArr=[]
         this.resetForm("forms");
+        this.wen=true
       },
     }
   }
 </script>
 
 <style scoped>
+  >>>.el-upload-dragger{
+    width: 260px;
+    height: 150px;
+  }
+  >>>.el-input-group__append{
+    background-color: #1682e6 ;
+    border-color: #1890ff;
+    color: #FFFFFF;
+  }
+  >>>.el-input-group__append:hover{
+    background: #46a6ff;
+    border-color: #46a6ff;
+    color: #FFFFFF;
+  }
+  >>>.el-icon-upload{
+    margin: 16px 0 16px;
+  }
   .upload-demo{
     width: 360px;
   }
@@ -628,10 +735,13 @@
   .i:hover{
     cursor:pointer
   }
-  .tit {
+  .card-panel-icon{
+    margin-right:10px;
+    color: #303133;
+  }
+  .tit{
     height: 42px;
-    background: #F5F5F9;
-    line-height: 42px;
-    padding-left: 20px;
+    font-weight: 700;
+    margin-right: 10px;
   }
 </style>

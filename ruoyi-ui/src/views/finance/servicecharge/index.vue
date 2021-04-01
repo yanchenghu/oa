@@ -67,8 +67,8 @@
      </el-form-item>
     </el-form>
     <el-button type="primary" plain v-hasPermi="['finance:servicecharge:export']" size="small" @click="handleExport" style=" float: right;margin-bottom: 10px;">导出</el-button>
-    <el-table :row-class-name="OutRowClassName"  :data="servicechargeList" @selection-change="handleSelectionChange" v-loading="loading">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table :row-class-name="OutRowClassName"  :data="servicechargeList" @selection-change="handleSelectionChange" v-loading="loading" show-summary :summary-method="getSummaries">
+      <el-table-column type="selection" width="65" align="center" />
       <el-table-column label="姓名"  prop="customerName">
         <template slot-scope="scope">
           <el-button
@@ -178,17 +178,17 @@
           <span class="span">{{form.paymentTime}}</span>
         </el-form-item>
         <el-form-item label="付款图片">
-          <li class="li-li" v-if="form.paymentTime">
-              <img  width="100%"  :src="srcs+form.paymentTime">
+          <li class="li-li" v-if="form.Picture">
+              <img  width="100%"  :src="srcs+form.Picture">
                 <span class="imgs">
                   <span
                    class="el-upload-list__item-preview"
-                    @click="filesee(form.paymentTime)"
+                    @click="filesee(form.Picture)"
                   >
                     <i class="el-icon-zoom-in"></i>
                   </span>
                   <span
-                    @click="filedow(form.paymentTime)"
+                    @click="filedow(form.Picture)"
                   >
                     <i class="el-icon-download"></i>
                   </span>
@@ -249,7 +249,7 @@
     <el-dialog title="选择付款日期" :visible.sync="fukuan" width="500px">
       <el-form ref="form1" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="付款时间" prop="paymentTime">
-              <el-date-picker type="date" placeholder="选择借用时间" v-model="form.paymentTime" value-format="yyyy-MM-dd" size="small" :picker-options="pickerOptions3"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择付款时间" v-model="form.paymentTime" value-format="yyyy-MM-dd" size="small" :picker-options="pickerOptions3"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -444,16 +444,40 @@ export default {
     });
   },
   methods: {
+    getSummaries(param) {
+            const { columns, data } = param;
+            const sums = [];
+            columns.forEach((column, index) => {
+              if (index === 0) {
+                sums[index] = '总价';
+                return;
+              }
+              const values = data.map(item => Number(item[column.property]));
+              if(column.property === "comBined"){
+                sums[index] = values.reduce((prev, curr) => {
+                  const value = Number(curr);
+                  if (!isNaN(value)) {
+                    return prev + curr;
+                  } else {
+                    return prev;
+                  }
+                }, 0);
+              }else{
+                sums[index] = ''
+              }
+            });
+          return sums;
+        },
     seemuban(){
       this.wenjian = true
       this.title = "文件模板预览"
       this.src = "https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://115.159.35.233:8090/profile/avatar/system/%E8%AF%B7%E6%B1%82%E4%B9%A6%E5%BD%95%E5%85%A5%E7%B3%BB%E7%BB%9F%E6%A8%A1%E6%9D%BF.xls"
     },
     handsee(row){
-      if(row.excelPath==null){
+      if(row.excelPicture==null){
         this.msgError("暂无原文件")
       }else{
-        let srcs = process.env.VUE_APP_BASE_API+row.excelPath
+        let srcs = process.env.VUE_APP_BASE_API+row.excelPicture
         this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
         this.wenjian = true
         this.title = "预览人员信息"
@@ -553,7 +577,7 @@ export default {
             paymentTime:this.form.paymentTime
           }
           formData.append("zm",JSON.stringify(zm))
-          this.$confirm('确认开票所选数据项吗?', "提示", {
+          this.$confirm('确认付款所选数据项吗?', "提示", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
               type: "warning"
@@ -569,6 +593,9 @@ export default {
     },
     kaipiao(){
       this.fukuan = true
+      this.form={
+        paymentTime:null
+      }
       this.resetForm("form1");
     },
     batchfukuan(row){

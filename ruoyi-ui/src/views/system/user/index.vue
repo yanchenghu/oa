@@ -416,7 +416,7 @@ export default {
         pageSize: 10,
         userName: undefined,
         phonenumber: undefined,
-        status: 0,
+        status: "0",
         deptId: undefined
       },
       // 表单校验

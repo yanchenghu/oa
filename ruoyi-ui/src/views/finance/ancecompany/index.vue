@@ -34,27 +34,24 @@
       </div>
     </div>
 
-    <el-table v-loading="loading" :data="AncecompanyList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="AncecompanyList" @selection-change="handleSelectionChange" show-summary :summary-method="getSummaries" :default-sort = "{prop: 'collectionStatus', order: 'ascending'}" :row-class-name="OutRowClassName">
+      <el-table-column type="selection" width="60" align="center" />
       <el-table-column label="序号"  type="index" width="55"/>
-      <el-table-column label="客户名称" prop="corpName">
+      <el-table-column label="客户名称" prop="corpName" width="240">
         <template slot-scope="scope">
-          <el-button
-            type="text"
-            @click="handleSee(scope.row)"
-          >{{scope.row.corpName}}</el-button>
+          <span class="xiugai"  @click="handleSee(scope.row)">{{scope.row.corpName}}</span>
         </template>
       </el-table-column>
       <el-table-column label="人/月"  prop="manMonth" />
       <el-table-column label="回款月份"  prop="actualMonth" />
       <el-table-column label="应回款金额"  prop="actualMoney" />
-      <el-table-column label="未回款金额" >
+      <el-table-column label="未回款金额" prop="weihuikuan">
         <template slot-scope="scope">
           <span v-if="scope.row.actualMoney!==null&&scope.row.receivedPayment!==null">{{scope.row.actualMoney-scope.row.receivedPayment}}</span>
         </template>
       </el-table-column>
       <el-table-column label="上个月工资"  prop="lastmonthWages" />
-      <el-table-column label="当月营收" >
+      <el-table-column label="当月营收" prop="dengyue">
         <template slot-scope="scope">
           <span v-if="scope.row.actualMoney!==null">{{scope.row.actualMoney-scope.row.lastmonthWages}}</span>
         </template>
@@ -63,16 +60,10 @@
       <el-table-column label="沟通情况"  prop="contactSituation" />
       <el-table-column label="备注"  prop="remarks"/>
       <el-table-column label="预回款时间"  prop="collectionTime" />
-      <el-table-column label="回款状态"  prop="collectionStatus" />
-      <el-table-column label="操作"  class-name="small-padding fixed-width">
+      <el-table-column label="回款状态"  prop="collectionStatus" :formatter="customerSexFormat" sortable  width="100"/>
+      <el-table-column label="操作" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            v-if="kaiguan"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['finance:ancecompany:edit']"
-          >修改</el-button>
+          <span class="xiugai" v-hasPermi="['finance:ancecompany:edit']" @click="handleUpdate(scope.row)"><i class="el-icon-edit" />修改</span>
         </template>
       </el-table-column>
     </el-table>
@@ -88,7 +79,7 @@
     <div style="display: flex;justify-content: space-between;margin-bottom: 10px;margin-top: 50px;">
       <div style="font-weight: 400;font-size: 25px;">重点监测公司</div>
       <div>
-        <el-button  type="primary" v-hasPermi="['finance:ancecompany:add']" size="small" @click="handleAdd2">新增检测公司</el-button>
+        <el-button  type="primary" v-hasPermi="['finance:ancecompany:add']" size="small" @click="handleAdd2">新增监测公司</el-button>
         <!-- <el-button type="primary" plain v-hasPermi="['expenditure:ancecompany:export']"  size="small" @click="handleExport" >导出</el-button> -->
         <el-button
           :disabled="single2"
@@ -138,24 +129,15 @@
           <el-input v-model="form.manMonth" placeholder="请输入应回款人数" />
         </el-form-item>
         <el-form-item label="回款月份" prop="actualMonth">
-          <el-date-picker
-            type="month"
-            style="width:200px;"
-            format="yyyy 年 MM 月 "
-            value-format="yyyy-MM"
-            v-model="form.actualMonth"
-            placeholder="请选择回款月份"
-            :picker-options="pickerOptions3"
-            >
-          </el-date-picker>
+          <el-input v-model="form.actualMonth" placeholder="请输入回款月份" />
         </el-form-item>
         <el-form-item label="应回款金额" prop="actualMoney">
           <el-input v-model="form.actualMoney" placeholder="请输入应回款" />
         </el-form-item>
-        <el-form-item label="已回款金额" prop="receivedPayment">
+        <el-form-item label="已回款金额" >
           <el-input v-model="form.receivedPayment" placeholder="请输入已回款金额" />
         </el-form-item>
-        <el-form-item label="上个月工资" prop="lastmonthWages">
+        <el-form-item label="上个月工资">
           <el-input v-model="form.lastmonthWages" placeholder="请输入其他" />
         </el-form-item>
         <el-form-item label="沟通情况" prop="contactSituation">
@@ -184,7 +166,7 @@
             >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="备注" prop="remarks">
+        <el-form-item label="备注">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
@@ -237,7 +219,7 @@
           <el-table-column label="沟通情况"  prop="contactSituation" />
           <el-table-column label="备注"  prop="remarks"/>
           <el-table-column label="预回款时间"  prop="collectionTime" />
-          <el-table-column label="回款状态"  prop="collectionStatus" />
+          <el-table-column label="回款状态" :formatter="customerSexFormat" prop="collectionStatus" />
         </el-table>
     </el-dialog>
 
@@ -258,7 +240,6 @@
               </el-option>
           </el-select>
         </el-form-item>
-
         <el-form-item label="预回款月份" prop="backMonth">
           <el-date-picker
             type="month"
@@ -433,6 +414,44 @@ export default {
     });
   },
   methods: {
+    getSummaries(param) {
+      const { columns, data } = param
+      const len = columns.length
+      const sums = []
+      let values = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总计'
+          return
+          //如果是最后一列，索引为列数-1，则显示计算总和
+        }
+        if(column.property === "weihuikuan"){
+          values = data.map(item => Number(item.actualMoney-item.receivedPayment))
+        }else if(column.property === "dengyue"){
+          values = data.map(item => Number(item.actualMoney-item.lastmonthWages))
+        }else{
+          values = data.map(item => Number(item[column.property]))
+        }
+        if(column.property === "weihuikuan" || column.property === "dengyue" || column.property === "actualMoney" || column.property === "lastmonthWages"|| column.property === "receivedPayment"){
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+          sums[index] = sums[index].toFixed(2)
+        }else{
+          sums[index] = ''
+        }
+      })
+      return sums
+    },
+
+    customerSexFormat(row, column) {
+      return this.selectDictLabel(this.contactSituationlist, row.collectionStatus);
+    },
     time(){
       var nowDate = new Date();
       var cloneNowDate = new Date();
@@ -472,6 +491,7 @@ export default {
         this.loading = false;
       });
     },
+
     getList2() {
       this.loading2 = true;
       listMonitoring(this.queryParams2).then(response => {
@@ -503,7 +523,6 @@ export default {
         remarks:null,
         backMonth:null,
         currentArrears:null,
-        corpCode:null,
       };
       this.resetForm("form");
     },
@@ -601,7 +620,7 @@ export default {
       formdata.append("zm",JSON.stringify({corpCodelist:this.form.corpName}))
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.contactId != null) {
+          if (this.title=="修改每月公司其他出处费用"){
             updateAncecompany(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -656,7 +675,36 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
-    }
+    },
+    OutRowClassName({row, rowIndex}) {
+      if(row.collectionStatus==1){
+        return 'warning-row';
+      }else if(row.collectionStatus==2){
+        return 'blue-row';
+      }else if(row.collectionStatus==3){
+        return 'suir-row';
+      }else if(row.collectionStatus==4){
+        return 'red-row';
+      }
+      return '';
+    },
   }
 };
 </script>
+<style scoped>
+  >>>.el-table .warning-row {
+      color: green;
+  }
+  >>>.el-table .blue-row {
+      color: blue;
+  }
+  >>>.el-table .suir-row {
+      color: #ff000070;
+  }
+  >>>.el-table .red-row {
+      color: red;
+  }
+  .xiugai:hover{
+    cursor:pointer
+  }
+</style>

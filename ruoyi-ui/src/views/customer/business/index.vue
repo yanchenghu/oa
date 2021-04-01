@@ -11,14 +11,34 @@
         />
       </el-form-item>
       <el-form-item >
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery">查询</el-button>
       </el-form-item>
-      <!-- <el-button
+      <el-form-item  prop="companySituation">
+        <el-select v-model.trim="queryParams.companySituation"   placeholder="请选择公司性质" clearable size="small" @change="change">
+          <el-option
+            v-for="dict in companySituationOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item  prop="isFollowSubmit">
+        <el-select v-model.trim="queryParams.isFollowSubmit" placeholder="请选择线索状态" clearable size="small" @change="change">
+          <el-option
+            v-for="dict in isFollowSubmitOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-button
           type="primary"
           size="small"
           @click="handleAdd"
           style="position: absolute;right: 0;margin-right: 30px"
-        >新建意向客户</el-button> -->
+        >新建客户线索</el-button>
     </el-form>
    <el-row :gutter="10" class="mb8">
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -46,10 +66,10 @@
         width="90"
       />
       <el-table-column label="联系方式"  prop="contactPhone" width="110"/>
-      <el-table-column label="录入人"  prop="entryPeople" />
+      <el-table-column label="录入人"  prop="businessPeople" />
       <el-table-column
         label="线索状态"
-        prop="isBusiness"
+        prop="isFollowSubmit"
         :formatter="isFollowSubmitFormat"
          width="90"
       />
@@ -60,7 +80,7 @@
       </el-table-column>
       <el-table-column label="更新时间"  prop="updateDate" width="150">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ parseTime(scope.row.updateDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -76,7 +96,7 @@
       <el-table-column label="操作"  class-name="small-padding fixed-width"  width="60">
         <template slot-scope="scope">
           <el-button
-            v-if="scope.row.isBusiness!==4"
+            v-if="scope.row.isFollowSubmit!==4"
             type="text"
             @click="followUp(scope.row.entryId)"
           ><svg-icon icon-class="genzong"/>跟进</el-button>
@@ -113,7 +133,7 @@
          <br/>
           <el-form :inline="true" :model="yxdemandone" class="demo-form-inline">
             <el-form-item label="公司性质">
-              <el-select  v-model.trim="yxdemandone.companySituation"  @change="changes(yxdemandone.entryId)" size="small" :disabled="yxdemandone.isBusiness==4">
+              <el-select  v-model.trim="yxdemandone.companySituation"  @change="changes(yxdemandone.entryId)" size="small" :disabled="yxdemandone.isFollowSubmit==4">
                 <el-option
                   v-for="dict in companySituationOptions"
                   :key="dict.dictValue"
@@ -123,7 +143,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="线索状态">
-              <el-select  v-model.trim="yxdemandone.isBusiness" @change="changes(yxdemandone.entryId)"  size="small" :disabled="yxdemandone.isBusiness==4">
+              <el-select  v-model.trim="yxdemandone.isFollowSubmit" @change="changes(yxdemandone.entryId)"  size="small" :disabled="yxdemandone.isFollowSubmit==4">
                 <el-option
                     v-for="dict,index in isFollowSubmitOptions"
                     :disabled="index==4"
@@ -134,8 +154,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button :disabled="yxdemandone.isBusiness!==2" type="primary" @click="onSubmit">转化为合作用户</el-button>
-
+                <el-button :disabled="yxdemandone.isFollowSubmit!==3" type="primary" @click="onSubmit">转化为合作用户</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -143,45 +162,45 @@
           <el-tabs>
             <el-tab-pane label="联系人信息">
               <div style="display: flex; justify-content: space-between;">
-              <el-form ref="formmsg" label-position="right" label-width="80px" :model="yxdemandone" :rules="rules">
+              <el-form ref="formmsg" label-position="right" label-width="80px" :model="yxdemandone" :disabled="yxdemandone.isFollowSubmit==4" :rules="rules">
                  <b>联系人信息</b>
                  <p></p>
                  <el-form-item label="姓名" prop="contactPeople">
-                   <el-input  v-model.trim="yxdemandone.contactPeople" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.contactPeople" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="职位" prop="contactPosition">
-                   <el-input  v-model.trim="yxdemandone.contactPosition" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.contactPosition" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="电话" prop="contactPhone">
-                   <el-input  v-model.trim="yxdemandone.contactPhone" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.contactPhone" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="邮箱" prop="mailbox">
-                   <el-input  v-model.trim="yxdemandone.mailbox" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.mailbox" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="微信">
-                   <el-input  v-model.trim="yxdemandone.wechat" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.wechat" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="QQ">
-                   <el-input  v-model.trim="yxdemandone.qq" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.qq" @input="sees" ></el-input>
                  </el-form-item>
               </el-form>
-              <el-form label-position="left" label-width="100px" :model="yxdemandone">
+              <el-form label-position="left" label-width="100px" :model="yxdemandone" :disabled="yxdemandone.isFollowSubmit==4">
                 <b>外包公司信息</b>
                 <p></p>
                  <el-form-item label="面试名义公司">
-                   <el-input  v-model.trim="yxdemandone.interviewCompany" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewCompany" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试官">
-                   <el-input  v-model.trim="yxdemandone.interviewer" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewer" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试职位">
-                   <el-input  v-model.trim="yxdemandone.interviewerPosition" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewerPosition" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="面试地点">
-                   <el-input  v-model.trim="yxdemandone.interviewAddress" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.interviewAddress" @input="sees" ></el-input>
                  </el-form-item>
                  <el-form-item label="最终甲方">
-                   <el-input  v-model.trim="yxdemandone.finalParty" @input="sees" :disabled="yxdemandone.isBusiness==4"></el-input>
+                   <el-input  v-model.trim="yxdemandone.finalParty" @input="sees" ></el-input>
                  </el-form-item>
               </el-form>
             </div>
@@ -192,7 +211,7 @@
                 <div class="msg">
                   <b>联系记录</b>
                 </div>
-                <el-input type="textarea"   autosize placeholder="添加跟进信息"  v-model.trim="putmsg" @focus="put=true" @blur="bul" :disabled="yxdemandone.isBusiness==4"></el-input>
+                <el-input type="textarea"   autosize placeholder="添加跟进信息"  v-model.trim="putmsg" @focus="put=true" @blur="bul" :disabled="yxdemandone.isFollowSubmit==4"></el-input>
                 <el-button v-show="put" style="margin-top: 10px;" type="primary" @click="putmsgbut(yxdemandone.entryId)">发布</el-button>
                 <div style="clear: both;margin-top: 10px;"></div>
                 <ul style="list-style: none;padding-left: 10px;">
@@ -212,32 +231,33 @@
      </el-drawer>
      <el-dialog title="确认信息并转化为合作用户" :visible.sync="opens"  style="text-align: center;">
         <div style="display: flex; justify-content: center;">
-          <el-form label-position="right" label-width="80px" :model="yxdemandone" :rules="rules" ref="formmsg">
+          <el-form label-position="right"  label-width="100px" :model="yxdemandone2" :rules="rules" ref="formmsgs">
              <b>联系人信息</b>
              <p></p>
              <el-form-item label=" 公司名称" >
-               <el-input disabled v-model.trim="yxdemandone.companyName"/>
+               <el-input size="small" disabled v-model.trim="yxdemandone2.companyName"/>
              </el-form-item>
              <el-form-item label="姓名" prop="contactPeople">
-               <el-input  v-model.trim="yxdemandone.contactPeople" @input="sees"></el-input>
+               <el-input size="small" v-model.trim="yxdemandone2.contactPeople" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label="职位" prop="contactPosition">
-               <el-input  v-model.trim="yxdemandone.contactPosition" @input="sees"></el-input>
+               <el-input size="small" v-model.trim="yxdemandone2.contactPosition" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label="电话" prop="contactPhone">
-               <el-input  v-model.trim="yxdemandone.contactPhone" v-on:input="sees"></el-input>
+               <el-input size="small" v-model.trim="yxdemandone2.contactPhone" v-on:input="sees"></el-input>
              </el-form-item>
              <el-form-item label=" 邮箱" prop="mailbox">
-               <el-input  v-model.trim="yxdemandone.mailbox" @input="sees"></el-input>
+               <el-input size="small" v-model.trim="yxdemandone2.mailbox" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label=" 微信">
-               <el-input  v-model.trim="yxdemandone.wechat" @input="sees"></el-input>
+               <el-input  size="small" v-model.trim="yxdemandone2.wechat" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label=" QQ">
-               <el-input  v-model.trim="yxdemandone.qq" @input="sees"></el-input>
+               <el-input size="small"  v-model.trim="yxdemandone2.qq" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label="客户级别" prop="customerLevel">
-               <el-select  v-model.trim="yxdemandone.customerLevel"  size="small">
+
+               <el-select style="width:100%" v-model="yxdemandone2.customerLevel"  size="small">
                  <el-option
                      v-for="dict,index in customerleve"
                      :key="dict.dictValue"
@@ -245,46 +265,48 @@
                      :value="parseInt(dict.dictValue)"
                    />
                  </el-select>
+
              </el-form-item>
              <el-form-item label="回款周期" prop="paybackPeriod">
-               <el-select  v-model.trim="yxdemandone.paybackPeriod"  size="small">
+               <el-select style="width:100%"  v-model="yxdemandone2.paybackPeriod"  size="small">
                  <el-option
                      v-for="dict,index in companyperiod"
                      :key="dict.dictValue"
                      :label="dict.dictLabel"
                      :value="parseInt(dict.dictValue)"
                    />
-                 </el-select>
+                </el-select>
              </el-form-item>
              <el-form-item label="合作日期" prop="cooperationTime">
               <el-date-picker
-                 v-model.trim="yxdemandone.cooperationTime"
+                 size="small"
+                 v-model.trim="yxdemandone2.cooperationTime"
                  type="date"
                  placeholder="选择日期"
                  value-format="yyyy-MM-dd">
               </el-date-picker>
              </el-form-item>
              <el-form-item label="备注">
-               <el-input type="textarea" autosize placeholder="请输入内容"  v-model.trim="yxdemandone.remark"></el-input>
+               <el-input type="textarea" autosize placeholder="请输入内容"  v-model.trim="yxdemandone2.remark"></el-input>
              </el-form-item>
           </el-form>
-          <el-form label-position="right" label-width="120px" :model="yxdemandone" v-show="yxdemandone.companySituation==0">
+          <el-form label-position="right" label-width="120px" :model="yxdemandone2" v-show="yxdemandone2.companySituation==0">
             <b>外包公司信息</b>
             <p></p>
              <el-form-item label="面试名义公司">
-               <el-input  v-model.trim="yxdemandone.interviewCompany" @input="sees"></el-input>
+               <el-input  v-model.trim="yxdemandone2.interviewCompany" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label="面试官">
-               <el-input  v-model.trim="yxdemandone.interviewer" @input="sees"></el-input>
+               <el-input  v-model.trim="yxdemandone2.interviewer" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label="面试职位">
-               <el-input  v-model.trim="yxdemandone.interviewerPosition" @input="sees"></el-input>
+               <el-input  v-model.trim="yxdemandone2.interviewerPosition" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label="面试地点">
                <el-input  v-model.trim="yxdemandone.interviewAddress" @input="sees"></el-input>
              </el-form-item>
              <el-form-item label="最终甲方">
-               <el-input  v-model.trim="yxdemandone.finalParty" @input="sees"></el-input>
+               <el-input  v-model.trim="yxdemandone2.finalParty" @input="sees"></el-input>
              </el-form-item>
           </el-form>
         </div>
@@ -298,8 +320,8 @@
      <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
        <el-form ref="form" :model="form" :rules="rules" label-width="125px" style="width: 620px;">
          <el-form-item label="公司名称" prop="companyName" >
-           <el-input  v-model="form.companyName"  placeholder="请输入公司名称"  @blur="findname(form.companyName)" style="width: 251px;"/>
-           &nbsp;<span v-if="msg==1" style="color: green;line-height: 40px;position: absolute;"> <i class="el-icon-success"></i></span>
+           <el-input  v-model.trim="form.companyName"  placeholder="请输入公司名称"  @blur="findname(form.companyName)" style="width: 251px;"/>
+           &nbsp;<span v-if="msg=='该客户不存在'" style="color: green;line-height: 40px;position: absolute;"> <i class="el-icon-success"></i></span>
          </el-form-item>
          <el-form-item label="联系人姓名" prop="contactPeople">
            <el-input v-model.trim="form.contactPeople"  placeholder="请输入联系人" style="width: 251px;"/>
@@ -334,8 +356,7 @@
 </template>
 
 <script>
-  import { getYxdemand,listbusiness,addYxdemand,see,exportYxdemand,release}from "@/api/customer/business";
-  import { findnames} from "@/api/customer/yxdemand";
+  import { getYxdemand,listbusiness,addYxdemand,see,exportYxdemand,release,findnames}from "@/api/customer/business";
   import {debounce} from "@/utils/ruoyi.js"
 export default {
   name: "Yxdemand",
@@ -345,11 +366,19 @@ export default {
          return callback(new Error('公司名称不能为空'));
        }
        setTimeout(() => {
-         if (this.msg==2) {
-           callback(new Error('该公司已存在'));
-         }else{
-           callback()
-         }
+        if(value.length<5){
+          callback(new Error("公司名称长度不能小于5"));
+          this.msg="该客户"
+        }else if(value.indexOf("公司") == -1){
+          callback(new Error("公司名称包含公司两字"));
+          this.msg="该客户"
+        }else{
+          if (this.msg!=="该客户不存在") {
+            callback(new Error(this.msg));
+          }else{
+            callback()
+          }
+        }
        }, 1000);
       };
     var phone = (rule, value, callback) => {
@@ -435,7 +464,7 @@ export default {
           trigger: ["blur", "change"]
         }, ],
         contactPhone: [
-          { required: true,validator: phone, trigger: ["blur", "change"] },
+          { required: true,validator: phone, trigger: ["blur", ] },
         ],
         mailbox:[{
           type: 'email',
@@ -480,6 +509,7 @@ export default {
       put:false,
       username:[],
       timer:-1,
+      yxdemandone2:{},
     };
   },
   created() {
@@ -507,17 +537,16 @@ export default {
   methods: {
     // 确认
     onSu(){
-      this.yxdemandone.corpName=this.yxdemandone.companyName
+      this.yxdemandone2.corpName=this.yxdemandone2.companyName
       let that = this
-      this.$refs["formmsg"].validate(valid=>{
+      this.$refs["formmsgs"].validate(valid=>{
         if(valid){
-          console.log(that.yxdemandone)
           this.$confirm('是否确认把该客户转化为合作客户吗吗?', "警告", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
               type: "warning"
             }).then(function() {
-               exportYxdemand(that.yxdemandone)
+               exportYxdemand(that.yxdemandone2)
             }).then(() => {
               that.drawer=false
               that.opens=false
@@ -552,7 +581,7 @@ export default {
     },
     // 线索状态字典翻译
     isFollowSubmitFormat(row, column) {
-      return this.selectDictLabel(this.isFollowSubmitOptions, row.isBusiness);
+      return this.selectDictLabel(this.isFollowSubmitOptions, row.isFollowSubmit);
     },
     // 距进入公海天数翻译
     entryDaysFormat(row, column) {
@@ -605,7 +634,7 @@ export default {
         businessId: null,
         businessPeople: null,
         submitTime: null,
-        isBusiness: null,
+        isFollowSubmit: null,
         cooperationProjects: null,
         isSigning: null,
         singTime: null,
@@ -677,6 +706,9 @@ export default {
     // 移交
     onSubmit(id){
       this.opens=true
+      this.yxdemandone2 = {}
+      this.resetForm("formmsgs");
+      this.yxdemandone2 = JSON.parse(JSON.stringify(this.yxdemandone))
     },
     // 发布按钮
     putmsgbut(id){
@@ -713,19 +745,19 @@ export default {
   }
 };
 </script>
-<style>
-  .el-tabs__item:focus.is-active.is-focus:not(:active) {
+<style scoped>
+  >>>.el-tabs__item:focus.is-active.is-focus:not(:active) {
       -webkit-box-shadow: none !important;
       box-shadow: none !important;
 }
-  .el-tabs__header{
+  >>>.el-tabs__header{
     background: #F5F5F9;
     padding-left:3%;
   }
-  .el-tabs__content{
+  >>>.el-tabs__content{
     padding:20px 3% 0 3%;
   }
-   .el-drawer.rtl{
+   >>>.el-drawer.rtl{
         overflow: auto;
     }
   .msg{

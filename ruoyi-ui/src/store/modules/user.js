@@ -8,6 +8,7 @@ const user = {
     avatar: '',
     roles: [],
     nickname:"",
+    sex:null,
     permissions: []
   },
 
@@ -26,6 +27,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_SEX: (state, sex) => {
+      state.sex = sex
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
@@ -63,6 +67,7 @@ const user = {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
           commit('SET_NAME', user.userName)
+          commit('SET_SEX', user.sex)
           commit('SET_NICKNAME', user.nickName)
           commit('SET_AVATAR', avatar)
           resolve(res)

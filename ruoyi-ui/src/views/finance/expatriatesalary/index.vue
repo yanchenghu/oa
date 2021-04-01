@@ -35,7 +35,7 @@
      </el-form-item>
     </el-form>
 
-    <el-table  :data="servicechargeList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="servicechargeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名"  prop="customerName" />
       <el-table-column label="电话"  prop="customerTel" />

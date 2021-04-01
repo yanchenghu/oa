@@ -6,7 +6,7 @@
           <span>
             排行榜
           </span>
-          <el-tabs v-model="biaoqian">
+          <el-tabs v-model="biaoqian" >
               <el-tab-pane label="入项" name="first">
                </el-tab-pane>
               <el-tab-pane label="面试通过" name="second"></el-tab-pane>
@@ -109,7 +109,7 @@
       <div style="height: 100%;background: #fff; width: 100%;border-radius: 2px;">
         <div class="div-a aa" >
           <span>录入的需求</span>
-          <el-tabs v-model="biaoqian1" style="width:400px;">
+          <el-tabs v-model="biaoqian1">
               <el-tab-pane label="发布时间" name="time">
                </el-tab-pane>
               <el-tab-pane label="绑定最多" name="moer"></el-tab-pane>
@@ -118,13 +118,13 @@
         <ul class="cont-ul" >
           <div style="height: 600px; overflow: auto; width: 100%; margin-left: -35px;" >
             <el-col :xs="24" :sm="24" :lg="12" v-for="list,index in biaoqian1=='time'?dataList.marDWorLit:dataList.marThreeLit" :key="index" >
-              <li>
+              <li style="margin-top: 5px;">
                 <el-avatar style="background-color: #0081FF;"> {{list.projectName.slice(2,4)}} </el-avatar>
                 <div class="ul-div">
-                  <span>{{list.projectName}} </span>
-                  <p>{{list.addTime}}</p>
+                  <span >{{list.address}}</span>
+                  <p><span style="color: #999999;font-size: 12px;">{{list.projectName.slice(0,10)}}</span> {{list.addTime}}</p>
                 </div>
-                <div style=" position: absolute;right: 10px;">
+                <div style=" position: absolute;right: 20px;">
                   <el-button type="warning" @click="tiaozhuan(list)">查看</el-button>
                 </div>
               </li>
@@ -208,7 +208,7 @@ export default {
   }
   .img-circle{
     position: absolute;
-    top: 0;
+    top: 1px;
     left: 9px;
     width: 38px;
     height: 51px;
@@ -231,7 +231,7 @@ export default {
   >>>.el-tabs__active-bar{
     bottom: 8px;
   }
-  .customer-no-border-table::before{
+  >>>.customer-no-border-table::before{
         width: 0;
       }
   >>>.customer-no-border-table .is-right{
@@ -264,6 +264,10 @@ export default {
     top: 18px;
     margin-left: 15px;
   }
+  >>>.el-tabs__header{
+    background-color: #fff;
+    padding: 0;
+  }
   .aa{
     display: flex;
     justify-content: space-between;
@@ -281,7 +285,7 @@ export default {
   }
   .ul-div{
     width: 55%;
-    margin-top: 4px;
+    margin-top: 5px;
     margin-left: 10px;
   }
   .ul-div span{

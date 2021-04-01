@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 import { getdata } from "@/api/index"
 require('echarts/theme/macarons') // echarts theme
 import resize from '../../dashboard/mixins/resize.js'
@@ -91,7 +91,7 @@ export default {
         var currdate = new Date(currDate);
         var ddate2 = currdate.getDay();
        var day9 = new Date(new Date(new Date().toLocaleDateString()).getTime() + 8 * 60 * 60 * 1000);
-       var day22 = new Date(new Date(new Date().toLocaleDateString()).getTime() + 18 * 60 * 60 * 1000);
+       var day22 = new Date(new Date(new Date().toLocaleDateString()).getTime() + 19 * 60 * 60 * 1000);
       if (ddate2 == 1) { //星期1
       	qiantian = crtTimeFtt(new Date(currDate - tian * 4)); //星期4
       	zuotian = crtTimeFtt(new Date(currDate - tian * 3)); //星期5
@@ -184,7 +184,7 @@ export default {
           color: '#0081FF',
           data:type1,
           type:'scatter',
-          symbolSize:7,
+          symbolSize:10,
           symbol:"rect",
              tooltip: {
                 formatter: function (params, ticket, callback) {
@@ -199,7 +199,7 @@ export default {
           })
       series.push({name: '跟踪',
       type:'scatter',
-      symbolSize:7,
+      symbolSize:10,
       symbol:"circle",
           color:'rgb(0,0,0)',data:type2,
           tooltip: {
@@ -211,7 +211,7 @@ export default {
           })
       series.push({name: '抢占简历',
       type:'scatter',
-      symbolSize:7,
+      symbolSize:10,
       symbol:"diamond",
           color: '#FF9F43',data:type3,
           tooltip: {
@@ -222,7 +222,7 @@ export default {
           }})
       series.push({name: '绑定简历',
       type:'scatter',
-      symbolSize:7,
+      symbolSize:10,
       symbol:"triangle",
           color: '#28C76F',data:type4,tooltip: {
               formatter: function (params, ticket, callback) {
@@ -232,7 +232,7 @@ export default {
           }})
       series.push({name: '入项',
       type:'scatter',
-      symbolSize:7,
+      symbolSize:10,
       z:3,
       symbol:"diamond",
           color: '#EA5455',data:type5,tooltip: {
