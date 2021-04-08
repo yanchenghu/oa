@@ -71,7 +71,6 @@ public class MarDemandServiceImpl implements IMarDemandService
         MarSign marSign=new MarSign();
         marSign.setDemandId(demandId);
         List<MarSign> Signlis=marSignMapper.selectMarSignList(marSign);
-
         MarDemand marDeman=marDemandMapper.selectMarDemandById(demandId);
         map.put("Signlis",Signlis);
         map.put("marDeman",marDeman);
@@ -565,6 +564,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         List<String> listDemand = JSON.parseArray(JSON.parseObject(zm).getString("list"), String.class);
         Integer type=JSON.parseObject(zm).getInteger("type");
         String followDetail=JSON.parseObject(zm).getString("followDetail");
+        Date stayTime= JSON.parseObject(zm).getDate("trackingtime");
         if(type==null){
             return AjaxResult.error("传入类型为空");
         }
@@ -578,6 +578,23 @@ public class MarDemandServiceImpl implements IMarDemandService
             marDemandres.setId(Id);
             marDemandres.setNewfollowtime(date);
             int a=marDemandresumeMapper.updateMarDemandresume(marDemandres);
+
+            //添加待入项信息
+            if(type==5){
+                MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(Id);
+                MarWaitingentry  marWaiting=new MarWaitingentry();
+                marWaiting.setDemandId(marDemandresume.getDemandId());
+                marWaiting.setCustomerCode(marDemandresume.getCustomerCode());
+                List<MarWaitingentry> marWaitingentries = marWaitingentryMapper.selectMarWaitingentryList(marWaiting);
+                marWaiting.setInterviewTime(date);
+                marWaiting.setStayTime(stayTime);
+                marWaiting.setNickName(marDemandresume.getTrackzPeoname());
+                if(marWaitingentries.size()>0){
+                    marWaitingentryMapper.updateMarWaitingentryby(marWaiting);
+                }else{
+                    marWaitingentryMapper.insertMarWaitingentry(marWaiting);
+                }
+            }
             if(a==1){
                 MarDemandresumefollow marDemandresumefollow=new MarDemandresumefollow();
                 marDemandresumefollow.setDemandresumeId(Id);

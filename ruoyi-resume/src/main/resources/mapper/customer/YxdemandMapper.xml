@@ -77,7 +77,7 @@
             <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
             <if test="mailbox != null  and mailbox != ''"> and mailbox = #{mailbox}</if>
             <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
-            ORDER BY update_date,insert_time desc
+            ORDER BY insert_time,update_date desc
 
 
     </select>

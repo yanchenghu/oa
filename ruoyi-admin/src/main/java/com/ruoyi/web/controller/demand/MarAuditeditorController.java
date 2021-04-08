@@ -84,28 +84,27 @@ public class MarAuditeditorController extends BaseController {
      * 查询该公司下所有的需求
      */
     @PostMapping("/querydemand")
-    public AjaxResult selQuerydemand(String corpCode)
+    public AjaxResult selQuerydemand(String demandId)
     {
-        List<Map> list=marAuditeditorService.selQuerydemand(corpCode);
-        return AjaxResult.success(list);
+        return marAuditeditorService.selQuerydemand(demandId);
     }
 
+//    /**
+//     * 查询已经绑定过的需求
+//     */
+//    @PostMapping("/afterbinding")
+//    public AjaxResult selafterbinding(Integer auditedId)
+//    {
+//        List<MarAuditedtorDemand> list=marAuditedtorDemandService.selafterbinding(auditedId);
+//        return AjaxResult.success(list);
+//    }
     /**
-     * 查询已经绑定过的需求
-     */
-    @PostMapping("/afterbinding")
-    public AjaxResult selafterbinding(Integer auditedId)
-    {
-        List<MarAuditedtorDemand> list=marAuditedtorDemandService.selafterbinding(auditedId);
-        return AjaxResult.success(list);
-    }
-    /**
-     * 面试题绑定需求
+     * 需求绑定面试题
      */
     @PostMapping("/addaudbindingdemand")
-    public AjaxResult addaudbindingdemand(String zm)
+    public AjaxResult addaudbindingdemand(String demandId,Integer auditedId)
     {
-        return  marAuditedtorDemandService.addaudbindingdemand(zm);
+        return  marAuditedtorDemandService.addaudbindingdemand(demandId,auditedId);
     }
 
 

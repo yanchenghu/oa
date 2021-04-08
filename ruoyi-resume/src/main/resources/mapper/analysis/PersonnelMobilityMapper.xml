@@ -5,16 +5,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.analysis.mapper.PersonnelMobilityMapper">
 
     <select id="getLitoutPeople" parameterType="map" resultType="map">
-     SELECT DATE_FORMAT(syqstart_time,'%Y-%m') as customMonth,COUNT(id)as outPeople,(SUM(service_pay)-SUM(salary)) as gradation  from  mar_customerprojectpay
-        where
-      syqstart_time  between #{startTime} and #{endTime}
+       SELECT DATE_FORMAT(outof_projecttime,'%Y-%m') as customMonth,COUNT(id)as outPeople ,(SUM(service_pay)-SUM(salary)) as gradation from  mar_customerprojectpay
+      where
+       outof_projecttime between #{startTime} and #{endTime}
       GROUP BY customMonth
     </select>
 
     <select id="getLitentryPeople" parameterType="map" resultType="map">
-      SELECT DATE_FORMAT(outof_projecttime,'%Y-%m') as customMonth,COUNT(id)as entryPeople ,(SUM(service_pay)-SUM(salary)) as gradation from  mar_customerprojectpay
-      where
-       outof_projecttime between #{startTime} and #{endTime}
+         SELECT DATE_FORMAT(syqstart_time,'%Y-%m') as customMonth,COUNT(id)as entryPeople ,(SUM(service_pay)-SUM(salary)) as gradation  from  mar_customerprojectpay
+        where
+      syqstart_time  between #{startTime} and #{endTime}
       GROUP BY customMonth
     </select>
 

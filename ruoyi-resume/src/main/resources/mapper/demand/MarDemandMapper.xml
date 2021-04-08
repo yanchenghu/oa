@@ -104,9 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
      a.specificrequi_rement,a.project_location,a.address,a.direct_worklife,a.target_number,a.important_level,a.min_salary,
      a.max_salary,a.technical_requirement,a.Langue,a.demand_pic,a.interviewer,a.contact_phone,a.specific_location,
      a.attention,a.if_look,a.chsi_flag,a.coopnature,a.state,a.close_date,a.temp_id,a.temp_name,a.add_time,
-     a.operationuser,a.oper_username,c.audited_path as bz from mar_demand a
-     LEFT JOIN mar_auditedtor_demand b on a.demand_id=b.demand_id
-     LEFT JOIN  mar_auditeditor c on b.audited_id= c.audited_id
+     a.operationuser,a.oper_username from mar_demand a
      where a.demand_id = #{demandId}
     </select>
 
@@ -251,7 +249,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selectMarDemandbindingList" parameterType="Map" resultMap="MarDemandResult">
-        SELECT b.* from mar_sign a LEFT JOIN mar_demand b on a.demand_id=b.demand_id
+        SELECT d.audited_path as bz,b.* from mar_sign a LEFT JOIN mar_demand b on a.demand_id=b.demand_id
+        LEFT JOIN mar_auditedtor_demand c on b.demand_id=c.demand_id
+        LEFT JOIN  mar_auditeditor d on c.audited_id= d.audited_id
         where  1 = 1 and b.state=0
         <if test="deptId !=null">and a.dept_id = #{deptId} </if>
         <if test="projectName != null  and projectName != ''"> and b.project_name like concat('%', #{projectName}, '%')</if>

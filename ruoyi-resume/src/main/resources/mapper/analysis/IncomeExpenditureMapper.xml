@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.analysis.mapper.IncomeExpenditureMapper">
 
     <select id="getListIncome" parameterType="map" resultType="map">
-    SELECT DATE_FORMAT(payment_time,"%Y-%m") as paymentCollectionTime,SUM(com_bined) as totlePayment from fin_statements
+    SELECT DATE_FORMAT(payment_time,"%Y-%m") as paymentCollectionTime,IFNULL(SUM(com_bined),0) as totlePayment from fin_statements
     where  1=1
     and status=3
     and payment_time between #{startTime} and #{endTime}
@@ -13,21 +13,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getListExpenditure" parameterType="map" resultType="map">
-    SELECT DATE_FORMAT(add_date,"%Y-%m") as expenditureTime, SUM(real_salary) as expenditureAmount from fin_expatriatesalary
+    SELECT DATE_FORMAT(add_date,"%Y-%m") as expenditureTime, IFNULL(SUM(real_salary),0) as expenditureAmount from fin_expatriatesalary
     where  1=1 and
     add_date between #{startTime} and #{endTime}
     GROUP BY expenditureTime
     </select>
 
     <select id="getlistinsideSalary" parameterType="map" resultType="map">
-      SELECT DATE_FORMAT(add_date,'%Y-%m') as addDate,SUM(real_salary) as realSalaryTotle FROM `fin_insidesalary`
+      SELECT DATE_FORMAT(add_date,'%Y-%m') as addDate,IFNULL(SUM(real_salary),0) as realSalaryTotle FROM `fin_insidesalary`
       where  1=1 and
      add_date between #{startTime} and #{endTime}
 	GROUP BY addDate
     </select>
 
     <select id="getlistotherexpensesSalary" parameterType="map" resultType="map">
-    SELECT DATE_FORMAT(insert_time,'%Y-%m') as inserTime,SUM(merge_money) as mergeMoneyTotle FROM `fin_otherexpenses`
+    SELECT DATE_FORMAT(insert_time,'%Y-%m') as inserTime,IFNULL(SUM(merge_money),0) as mergeMoneyTotle FROM `fin_otherexpenses`
       where  1=1 and
      insert_time between #{startTime} and #{endTime}
 	GROUP BY inserTime

@@ -243,7 +243,7 @@
         from mar_customerprojectpay a
         LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
         LEFT JOIN       mar_demand    c on a.demand_id=c.demand_id
-        <where>
+        where 1=1
             <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
             <choose>
@@ -264,7 +264,7 @@
                     </if>
                 </when>
             </choose>
-        </where>
+        order by a.syqstart_time
     </select>
     <select id="selectMarCustomePerinfoById"  parameterType="String"  resultType="map">
     SELECT a.id,b.customer_name as customerName,b.customer_tel as customerTel,a.corp_name as corpName,
@@ -344,6 +344,7 @@
         where 1=1
         and   a.outof_projecttime is not null
         and a.outof_projecttime between #{startTime} and #{endTime}
+        order by b.corp_name,a.outof_projecttime
     </select>
 
     <select id="isInitem" parameterType="String" resultMap="MarCustomerprojectpayResult">

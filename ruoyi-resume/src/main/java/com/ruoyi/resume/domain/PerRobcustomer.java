@@ -33,7 +33,7 @@ public class PerRobcustomer extends BaseEntity
     private String resumeId;
 
     /** 修改状态时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Excel(name = "修改状态时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date editTime;
 
@@ -42,7 +42,7 @@ public class PerRobcustomer extends BaseEntity
     private String wechat;
 
     /** 添加时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date addTime;
 

@@ -8,6 +8,7 @@ import com.ruoyi.common.utils.resume.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -81,7 +82,8 @@ public class IncomeExpenditureServiceImpl implements IIncomeExpenditureService {
                 if(customMonth.equals(inserTime)){
                     double mergeMoneyTotle=0.00;
                     if(maOtherex.get("mergeMoneyTotle")!=null){
-                         mergeMoneyTotle= (double) maOtherex.get("mergeMoneyTotle");
+                        String num_str=maOtherex.get("mergeMoneyTotle").toString();
+                         mergeMoneyTotle= Double.parseDouble(num_str);
                     }
                     incomeExp.setOtherExpenses(mergeMoneyTotle);
                 }

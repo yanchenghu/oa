@@ -316,6 +316,7 @@ public class YxdemandServiceImpl implements IYxdemandService
         }
         marCom.setCorpCode(SerialNumber.createSerial("hzgs", 6));
         marCom.setTransformingPeople(loginUser.getUsername());
+        marCom.setEntryPeople(loginUser.getUser().getNickName());
         marCom.setAddTime(new Date());
         marCompanyMapper.insertMarCompany(marCom);
 

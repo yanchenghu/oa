@@ -90,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     where b.transforming_people=#{topicUsername}
      <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
      <if test="auditedName != null  and auditedName != ''"> and audited_name like concat('%', #{auditedName}, '%')</if>
+     ORDER BY  a.corp_code,a.add_time
     </select>
 
     <select id="selQuerydemand" parameterType="String" resultType="map">

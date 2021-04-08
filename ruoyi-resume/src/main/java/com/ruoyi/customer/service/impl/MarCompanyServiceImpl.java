@@ -11,6 +11,8 @@ import com.ruoyi.customer.domain.MarContractfollow;
 import com.ruoyi.customer.domain.Yxdemand;
 import com.ruoyi.customer.mapper.MarContractMapper;
 import com.ruoyi.customer.mapper.MarContractfollowMapper;
+import com.ruoyi.demand.domain.MarAuditeditor;
+import com.ruoyi.demand.mapper.MarAuditeditorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.customer.mapper.MarCompanyMapper;
@@ -35,6 +37,8 @@ public class MarCompanyServiceImpl implements IMarCompanyService
 
     @Autowired
     private MarContractMapper marContractMapper;
+    @Autowired
+    private MarAuditeditorMapper marAuditeditorMapper;
 
     /**
      * 查询合作公司
@@ -52,10 +56,16 @@ public class MarCompanyServiceImpl implements IMarCompanyService
         MarContractfollow marContractfollow = new MarContractfollow();
         marContractfollow.setCorpCode(marCompany.getCorpCode());
         List<MarContractfollow> mar = marContractfollowMapper.selectMarContractfollowList(marContractfollow);
+        //面试题
+        MarAuditeditor marAuditeditor=new MarAuditeditor();
+        marAuditeditor.setCorpCode(corpCode);
+        List<MarAuditeditor> listAuditeditors = marAuditeditorMapper.selectMarAuditeditorList(marAuditeditor);
+
         HashMap hashmap = new HashMap();
         hashmap.put("marContracts",marContracts);
         hashmap.put("marCompany",marCompany);
         hashmap.put("mar",mar);
+        hashmap.put("listAuditeditors",listAuditeditors);
         return AjaxResult.success("hashmap",hashmap);
     }
 

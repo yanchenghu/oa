@@ -2,6 +2,7 @@ package com.ruoyi.demand.service.impl;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,12 @@ import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.demand.domain.MarAuditedtorDemand;
+import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.mapper.MarAuditedtorDemandMapper;
+import com.ruoyi.demand.mapper.MarDemandMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarAuditeditorMapper;
@@ -28,6 +34,10 @@ public class MarAuditeditorServiceImpl implements IMarAuditeditorService
 {
     @Autowired
     private MarAuditeditorMapper marAuditeditorMapper;
+    @Autowired
+    private MarAuditedtorDemandMapper marAuditedtorDemandMapper;
+    @Autowired
+    private MarDemandMapper marDemandMapper;
 
 
     @Override
@@ -51,7 +61,20 @@ public class MarAuditeditorServiceImpl implements IMarAuditeditorService
     }
 
     @Override
-    public List<Map> selQuerydemand(String corpCode) {
-        return marAuditeditorMapper.selQuerydemand(corpCode);
+    public AjaxResult selQuerydemand(String demandId) {
+        if(StringUtils.isEmpty(demandId)){
+            return AjaxResult.error("需求ID为空,请联系管理员");
+        }
+        MarDemand marDemand=marDemandMapper.selectMarDemandById(demandId);
+        Map map=new HashMap();
+        //查询该公司下所有的面试题
+        MarAuditeditor marAuditeditor=new MarAuditeditor();
+        marAuditeditor.setCorpCode(marDemand.getCorpCode());
+        List<MarAuditeditor> list=marAuditeditorMapper.selectMarAuditeditorList(marAuditeditor);
+        //查询该该需求绑定的面试题
+        Integer audited_id= marAuditedtorDemandMapper.selectMarAuditedtorDemandByDemandId(demandId);
+        map.put("list",list);
+        map.put("audited_id",audited_id);
+        return AjaxResult.success(map);
     }
 }

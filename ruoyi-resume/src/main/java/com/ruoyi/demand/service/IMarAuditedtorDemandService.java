@@ -13,7 +13,7 @@ import com.ruoyi.demand.domain.MarAuditedtorDemand;
  */
 public interface IMarAuditedtorDemandService 
 {
-    List<MarAuditedtorDemand> selafterbinding(Integer auditedId);
+//    List<MarAuditedtorDemand> selafterbinding(Integer auditedId);
 
-    AjaxResult addaudbindingdemand(String zm);
+    AjaxResult addaudbindingdemand(String demandId,Integer auditedId);
 }
