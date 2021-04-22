@@ -16,20 +16,20 @@
               <td><span class="name">经验要求</span>{{form.directWorklife}}年</td>
               <td><span class="name">学历要求</span>{{customerFormat(form)}}</td>
               <td><span class="name">语言要求</span>{{form.langue == 0?"无":form.langue==2?"日语":"英语"}}</td>
-              <td><span class="name">简历格式</span>{{form.demandNumber}}</td>
-              <td><span class="name">简历模板</span><el-button type="text" @click="see(templateFormat(templist,form.tempId)[1],1)">{{templateFormat(templist,form.tempId)[0]}}</el-button> </td>
+              <td><span class="name">需求图片</span><el-button @click="see(3)" type="text" :disabled="!form.demandPic">点击预览</el-button></td>
+              <td><span class="name">简历模板</span><el-button v-if="form.tempId" type="text" @click="see(templateFormat(templist,form.tempId)[1],1)">{{templateFormat(templist,form.tempId)[0]}}</el-button><span v-else>无</span></td>
             </tr>
             <tr>
-              <td><span class="name">客户级别</span>{{customerleveFormat(form)}}</td>
+              <td v-if="ident==8"><span class="name" >客户级别</span>{{customerleveFormat(form)}}</td>
               <td><span class="name">工作地点</span>{{intentionareaFormat(form)}}</td>
               <td><span class="name">面试官</span>{{form.interviewer}}</td>
               <td><span class="name">面试地点</span>{{form.specificLocation}}</td>
               <td><span class="name">发布时间</span>{{form.addTime}}</td>
             </tr>
-            <tr>
-              <td><span class="name">需求图片</span><el-button @click="see(3)" type="text" >点击预览</el-button></td>
-              <td><span class="name">面试题</span><el-button @click="see(form.bz)" type="text" :disabled="form.bz==''">点击预览</el-button></td>
+            <tr >
+              <td colspan="5"><span class="name">详细地址</span>{{form.address}}</td>
             </tr>
+            <!-- <span><span class="name">详细地址</span>{{form.address}}</span> -->
           </table>
           <div class="div">
             <div style=" width: 125px; color:#909399;">技术要求</div>
@@ -42,14 +42,14 @@
           <b>绑定的简历</b>
           <p></p>
           <el-form  ref="queryForm" :inline="true" @submit.native.prevent>
-            <el-input v-model="customerName" placeholder="请输入简历姓名" clearable size="small" @keyup.enter.native="handleQuery" style="width: 190px;" />
+            <el-input v-model="customerName" placeholder="请输入简历姓名或电话" clearable size="small" @keyup.enter.native="handleQuery" style="width: 190px;" />
             <el-button
                 type="primary"
                 size="small"
                 @click="handleQuery"
               >搜索</el-button>
             <el-button
-                v-if="ident==1"
+                v-if="ident==8"
                 type="warning"
                 size="mini"
                 @click="miaoshi"
@@ -57,7 +57,7 @@
                 style="float: right;"
             >批量操作</el-button>
             <!-- <el-button
-                v-if="ident==1"
+                v-if="ident==8"
                 type="primary"
                 size="mini"
                 @click="downloadlist"
@@ -65,7 +65,7 @@
                 style="float: right;"
               >批量下载简历</el-button> -->
               <!-- <el-button
-                  v-if="ident==1"
+                  v-if="ident==8"
                   type="primary"
                   size="mini"
                   @click="downloadlist(2)"
@@ -73,7 +73,7 @@
                   style="float: right;"
                 >批量下载附件</el-button> -->
             <el-button
-                v-if="ident==1"
+                v-if="ident==8"
                 type="danger"
                 size="mini"
                 @click="chongzhi"
@@ -86,10 +86,21 @@
             <el-table-column type="selection" key="1"/>
             <el-table-column label="姓名" align="left" prop="customerName" key="2"/>
             <el-table-column label="电话" align="left" prop="customerTel" key="3"/>
+            <el-table-column label="期望薪资" align="left" prop="expectationSalary" key="9">
+              <template slot-scope="scope">
+                <span v-if="scope.row.expectationSalary">{{scope.row.expectationSalary }}</span>
+                <span v-else>未知</span>
+               </template>
+            </el-table-column>
+            <el-table-column label="学历/工作经验" align="left" prop="expectationSalary" key="10">
+              <template slot-scope="scope">
+                <span >{{scope.row.education?customerFormat(scope.row):"未知"}}/{{scope.row.workYear?scope.row.workYear+"年":"未知"}}</span>
+               </template>
+            </el-table-column>
             <el-table-column label="绑定人" align="left" prop="trackzPeoname" key="4"/>
             <el-table-column label="绑定时间" align="left" key="5">
               <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.bindTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                <span>{{ parseTime(scope.row.bindTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                </template>
             </el-table-column>
             <el-table-column label="简历状态" align="left" width="500" key="6" >
@@ -114,7 +125,7 @@
                 </el-steps>
                 <div title="简历跟踪">
                 <el-steps
-                v-if="ident==1"
+                v-if="ident==8"
                 :active="scope.row.active"
                 finish-status="success"
                 :process-status="scope.row.process"
@@ -139,7 +150,7 @@
             </el-table-column>
             <el-table-column label="跟踪时间" align="left" key="7">
               <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.newfollowtime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+                <span>{{ parseTime(scope.row.newfollowtime, '{y}-{m}-{d} {h}:{i}') }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="left" key="8" width="150">
@@ -157,13 +168,13 @@
                 </p>
                 <p>
                   <el-button
-                    v-if="ident==1"
+                    v-if="ident==8"
                     size="mini"
                     type="text"
                     @click="download(scope.row,1)"
                   >下载原版</el-button>
                   <el-button
-                    v-if="ident==1"
+                    v-if="ident==8"
                     size="mini"
                     type="text"
                     @click="download(scope.row,2)"
@@ -194,12 +205,27 @@
             </el-radio-group>
             <p></p>
 
-            <div v-if="followstart==4||followstart==6||followstart==8">
-
-                <el-form label-width="100px" :model="qqq" ref="ruxing">
-                  <el-form-item v-if="followstart==8"
+            <div v-if="followstart==4||followstart==6||followstart==8||followstart==5">
+                <el-form label-width="100px" :model="qqq" style="width: 65%;" ref="ruxing" >
+                  <el-form-item
+                    v-if="followstart==5"
+                    :rules="[{ required: true, message: '日期不能为空', trigger: 'change' },]"
+                    prop="stayTime"
+                    label="预入项日期">
+                    <el-date-picker
+                        v-model="qqq.stayTime"
+                        type="date"
+                        :picker-options="pickerOptions2"
+                        :clearable="false"
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                    </el-date-picker>
+                  </el-form-item>
+                  <el-form-item v-else-if="followstart==8"
                     :rules="[{ required: true, message: '请输入原因', trigger: 'blur' },]"
-                    prop="textarea1" label="未通过原因">
+                    prop="textarea1"
+                    label="未通过原因">
                     <el-input
                       type="textarea"
                       autosize
@@ -295,7 +321,7 @@
                   <el-input v-model="comform.servicePay" placeholder="请输入服务费用"  size="small" />
               </el-form-item>
               <el-form-item label="入职时间" prop="syqstartTime">
-                  <el-date-picker type="date" placeholder="选择入职时间" v-model="comform.syqstartTime" size="small" value-format="yyyy-MM-dd" style="width: 100%;" ></el-date-picker>
+                  <el-date-picker type="date" placeholder="选择入职时间" v-model="comform.syqstartTime" size="small" value-format="yyyy-MM-dd" style="width: 100%;" :picker-options="pickerOptions4"></el-date-picker>
               </el-form-item>
               <el-form-item label="转正时间" prop="syqEndtime">
                   <el-date-picker type="date" placeholder="选择转正时间" v-model="comform.syqEndtime" size="small" value-format="yyyy-MM-dd" style="width: 100%;" ></el-date-picker>
@@ -357,6 +383,16 @@
             }
           }
         },
+        pickerOptions2:{
+          disabledDate:(time) => {
+              return time.getTime() < Date.now()-86400000;
+          }
+        },
+        pickerOptions4:{
+          disabledDate:(time) => {
+             return time.getTime() > Date.now();
+          }
+        },
         pickerOptions3:{
           disabledDate:(time) => {
             if (this.comform.startTime) {
@@ -374,7 +410,8 @@
         comform:{},
         // 未通过原因
         qqq:{
-          textarea1:""
+          textarea1:"",
+          stayTime:"",
         },
         opens:false,
         titles:"",
@@ -617,6 +654,11 @@
         }else{
           this.tempID=array
           this.open=true
+          this.qqq={
+            textarea1 :"",
+            stayTime:"",
+          }
+          this.resetForm("ruxing")
           }
       },
       miaoshi(){
@@ -628,6 +670,11 @@
         this.getlist()
       },
       resume(row,ind){
+        this.qqq={
+          textarea1 :"",
+          stayTime:"",
+        }
+        this.resetForm("ruxing")
         if(ind==1){
           // 简历点击
           this.followstart=3
@@ -657,7 +704,8 @@
         let zm ={
           list:this.tempID,
           type:this.followstart,
-          followDetail:this.qqq.textarea1
+          followDetail:this.qqq.textarea1,
+          trackingtime:this.qqq.stayTime,
         }
         form.append("followStatus",this.followstart)
         form.append("demandresumeId",this.tempID)
@@ -679,7 +727,8 @@
           })
         }else{
           let that = this
-          if(this.followstart==8){
+          if(this.followstart==8||this.followstart==5){
+            form.append("trackingtime",this.qqq.stayTime)
             this.$refs["ruxing"].validate((valid) => {
                 if(valid){
                   this.$confirm('确认"'+that.title+'"结果为"'+ that.list[that.followstart] + '"吗?', "警告", {
@@ -687,13 +736,22 @@
                     cancelButtonText: "取消",
                     type: "warning"
                   }).then(function() {
-                    return submitstart(form).then(res=>{
-                    })
+                    if(that.followstart==8){
+                      return submitstart(form).then(res=>{
+                      })
+                    }else{
+                      if(typeof that.tempID =="string"){
+                        return submitstart(form)
+                      }else{
+                        return submitstarts(form)
+                      }
+                    }
                   }).then(() => {
                     this.msgSuccess("操作成功");
                     this.templists=[]
                     this.gettelist()
                     this.open=false
+                    this.caozuo = false
                   }).catch(()=>{})
                 }
               })
@@ -719,6 +777,7 @@
 
         }
       },
+
       // 确定
       submitForm2(){
         this.comform.id=this.tempID
@@ -870,18 +929,20 @@
   >>>.is-error{
     font-size: 14px;
   }
-  >>>.centart{
+  .centart{
     padding:20px 20px;
   }
   .div{
-    border: 1.5px solid #DCDFE6;
+    border-left: 1px solid #DCDFE6;
+    border-right: 1px solid #DCDFE6;
+    border-bottom: 1px solid #DCDFE6;
     width: 100%;
     padding: 10px;
     font-size: 14px;
     display: flex;
   }
   .table{
-    margin-top: 20px;
+   margin-top: 20px;
     width: 100%;
     border-collapse:collapse;
     font-size: 14px;

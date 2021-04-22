@@ -47,7 +47,7 @@
            </el-card>
       </li>
     </ul>
-    <el-dialog title="预览" :visible.sync="open" width="70%"  >
+    <el-dialog  :visible.sync="open" width="70%"  >
       <iframe
         :src="'https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc='+drees"
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"

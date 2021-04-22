@@ -2,7 +2,7 @@
   <div class="app-containe">
       <el-row :gutter="10">
         <el-col :span="16">
-          <div style="position: fixed;z-index: 5; background-color: #fff;width: calc(58.33333% - 16px); border-bottom: 1px solid #dcdfe6 ;padding: 40px 0 0 40px;">
+          <div style="position: fixed;z-index: 5; background-color: #fff;width: calc(70% - 203px); border-bottom: 1px solid #dcdfe6 ;padding: 40px 0 0 40px;">
             <el-button style="border-radius: 0;" type="primary"><b>智能解析简历</b></el-button>
             <el-button  style="margin-left: 0;border-radius: 0; margin-bottom: 20px;"><b><router-link to="/record/manually">手动上传简历</router-link></b></el-button>
           </div>
@@ -14,11 +14,11 @@
                     </el-input>
                  </div>
                  <span><svg-icon icon-class="jiben" class-name="card-panel-icon" /></span><span class="tit">基本信息</span><span style="font-size:12px ;color:#ea5455 ;">请核对 ( * ) 必填项信息是否正确完整，并保存否则上传失败</span>
-                  <el-form  :model="perCustomerinfo" style="margin-left: 30px;margin-top: 20px;"  label-width="70px" :inline="true" ref="form" label-position="right" :rules="rules">
+                  <el-form  :model="perCustomerinfo" style="margin-left: 30px;margin-top: 20px;"  label-width="70px" :inline="true" ref="form" label-position="right" :rules="rules" >
                     <el-col :span="12">
                       <span class="bitian">*</span>
                       <el-form-item label="姓名" prop="customerName">
-                        <el-input v-model="perCustomerinfo.customerName" size="small"  :disabled="true" suffix-icon="xxx"/>
+                        <el-input  v-model="perCustomerinfo.customerName" size="small"  :disabled="true" suffix-icon="xxx"/>
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -88,12 +88,13 @@
                         <el-input v-model="perCustomerinfo.expectationSalary" size="small"  suffix-icon="xxx"/>
                       </el-form-item>
                     </el-col>
-                    <el-cpl :span="12">
+                    <el-col :span="12">
                       <el-form-item label="邮箱" prop="email">
                         <el-input v-model="perCustomerinfo.email" size="small" suffix-icon="xxx" />
                       </el-form-item>
-                    </el-cpl>
+                    </el-col>
                   </el-form>
+                  <div style="clear: both;"></div>
                   <span><svg-icon icon-class="jiaoyu" class-name="card-panel-icon" /></span><span class="tit">教育经历</span>
                     <ul style="list-style: none;" class="font">
                       <li v-for="work,i in perEducList"
@@ -134,7 +135,7 @@
                </div>
 
           </div>
-          <div style="text-align: center;position: fixed; bottom: 0; background-color: #fff;width: calc(58.33333% - 16px);border-top: 1px solid #dcdfe6 ; padding: 5px 0;">
+          <div style="text-align: center;position: fixed; bottom: 0; background-color: #fff;width: calc(70% - 203px);border-top: 1px solid #dcdfe6 ; padding: 5px 0;">
               <el-button size="medium "  @click="handleQuery" >取消</el-button>
               <el-button size="medium " @click="resetQuery" type="primary" v-hasPermi="['resume:record:edit']">立即保存</el-button>
           </div>
@@ -142,7 +143,7 @@
 
         <el-col :span="8">
             <div class="col-right" :style="{'height':height}">
-                  <el-upload style="width:358px;margin: 0 auto;" action="wqewq"  ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
+                  <el-upload style="width:338px;margin: 0 auto;" action="wqewq"  ref="file" class="upload-demo" drag accept=".docx,.doc,.pdf" :limit="1" :on-exceed="handleExceed" :auto-upload="false" :on-change="oplodad" :before-remove="upoplodad">
                     <div v-if="wen">
                         <i class="el-icon-upload"></i>
                       <div><b>点击或拖拽上传简历</b></div>
@@ -175,8 +176,7 @@
           </el-table-column>
           <el-table-column  label="姓名"width="70" >
             <template slot-scope="scope">
-                <span v-if="scope.row.customer_name.length>2">{{scope.row.customer_name.substring(0,1)+" * "+scope.row.customer_name.substr(-1, 1)}}</span>
-                <span v-else>{{scope.row.customer_name.substring(0,1)+" * "}}</span>
+                <span >{{scope.row.customer_name.substring(0,1)+ new Array(scope.row.customer_name.length).join('*')}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="customer_tel" label="电话">
@@ -497,7 +497,7 @@
           content: none !important;
       }
     >>>.el-form-item {
-      margin-right: 50px;
+      margin-right: 20px;
       margin-bottom: -10px;
     }
   .col-left{

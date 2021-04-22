@@ -68,22 +68,34 @@
       </div>
       <receipts-bur :chart-data="chartData"></receipts-bur>
     </div>
-    <div style="background-color: #fff;margin-top:20px;padding: 30px;">
+    <div v-if="biaoshi!==1" style="background-color: #fff;margin-top:20px;padding: 30px;">
       <span  style="font-size: 18px;color: #303133;font-weight: 400;">数据详情</span>
       <p></p>
       <el-table v-loading="loading" :data="zongdatas" border>
 
         <el-table-column label="日期"  prop="customMonth"/>
-        <el-table-column label="总收入"  prop="income"/>
-        <el-table-column label="总支出" >
+        <el-table-column label="总收入"  prop="income">
           <template slot-scope="scope">
-            <span>{{scope.row.expatriateSalary + scope.row.insideSalary + scope.row.otherExpenses}}</span>
+            <span>{{scope.row.income.toFixed(2)}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="外派工资支出"  prop="expatriateSalary"/>
+        <el-table-column label="总支出" >
+          <template slot-scope="scope">
+            <span>{{(scope.row.expatriateSalary + scope.row.insideSalary + scope.row.otherExpenses).toFixed(2)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="外派工资支出"  prop="expatriateSalary">
+        <template slot-scope="scope">
+            <span>{{scope.row.expatriateSalary.toFixed(2)}}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="内部工资支出"  prop="insideSalary"/>
         <el-table-column label="其他支出"  prop="otherExpenses"/>
-        <el-table-column label="利润"  prop="profit"/>
+        <el-table-column label="利润"  prop="profit">
+          <template slot-scope="scope">
+            <span>{{scope.row.profit.toFixed(2)}}</span>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -95,6 +107,7 @@
  import CountTo from 'vue-count-to'
   export default {
     name:"incomeexpenditure",
+    props:["biaoshi"],
     data(){
       return{
         queryParem:{
@@ -233,7 +246,7 @@
     .card-panel-description {
       float: left;
       font-weight: bold;
-      margin:20px 40px 20px 10px;
+      margin:20px 20px 20px 10px;
     }
     .zongzhichu{
       border-left:1px solid #dcdfe6;

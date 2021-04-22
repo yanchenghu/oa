@@ -1,23 +1,22 @@
 <template>
-  <div class="dashboard-editor-container">
+  <div v-if="datalist.numb===4">
+    <boss-home ></boss-home>
+  </div>
+  <div class="dashboard-editor-container" v-else>
+      <panel-group  :data-list="datalist" />
+      <el-row>
+        <jianzhi v-if="datalist.numb===3"  :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"></jianzhi>
+        <line-chart v-else :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"/>
+      </el-row>
+      <mytrack :open="open" :title="title" :form="form" @getlist="getList"></mytrack>
 
-    <panel-group  :data-list="datalist" />
-
-    <el-row>
-      <jianzhi v-if="datalist.numb===3"  :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"></jianzhi>
-      <line-chart v-else :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"/>
-    </el-row>
-
-
-    <mytrack :open="open" :title="title" :form="form" @getlist="getList"></mytrack>
-
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="12" :lg="8" v-for="data,i in datalist.listMarEntry" :key="i">
-        <div class="chart-wrapper">
-          <raddar-chart :followstatus="followstatus"  :data="data" @getList="getList"/>
-        </div>
-      </el-col>
-    </el-row>
+      <el-row :gutter="32">
+        <el-col :xs="24" :sm="12" :lg="8" v-for="data,i in datalist.listMarEntry" :key="i">
+          <div class="chart-wrapper">
+            <raddar-chart :followstatus="followstatus"  :data="data" @getList="getList"/>
+          </div>
+        </el-col>
+      </el-row>
   </div>
 </template>
 
@@ -28,6 +27,7 @@ import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import jianzhi from './dashboard/jianzhi'
+import bossHome from"./components/particulars/bossHome.vue"
 import { getlist,getbusinessData,getlists,partjob } from "@/api/index.js"
 import{genzongbut}from'@/api/resume/mytrckresume.js'
 import mytrack from "./components/resume/mytrack.vue"
@@ -41,7 +41,8 @@ export default {
     PieChart,
     BarChart,
     mytrack,
-    jianzhi
+    jianzhi,
+    bossHome
   },
   data() {
     return {
@@ -73,7 +74,6 @@ export default {
         litout:0,
         lastlitout:0,
       },
-
       open:{
         opens:false
       },
@@ -109,11 +109,12 @@ export default {
         });
       }else if(hasPermissions == 3){
         this.datalist.numb = 3
-   
         partjob().then(res=>{
             this.datalist = res.data
             this.datalist.numb = hasPermissions
         });
+      }else if(hasPermissions == 4){
+        this.datalist.numb = 4
       }else{
         this.datalist.numb = 2
         getlists().then(res=>{

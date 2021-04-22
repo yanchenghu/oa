@@ -31,11 +31,24 @@ export function addCompany(data) {
     data: data
   })
 }
-
+export function find(data) {
+  return request({
+    url: '/customer/company/checkingcompany',
+    method: 'post',
+    data: data
+  })
+}
 // 新增合作公司
 export function addcontract(data) {
   return request({
     url: '/customer/company',
+    method: 'post',
+    data: data
+  })
+}
+export function addcontracts(data) {
+  return request({
+    url: '/customer/company/addcontacts',
     method: 'post',
     data: data
   })

@@ -1,5 +1,20 @@
 import request from '@/utils/request'
 
+
+export function allBusiness() {
+  return request({
+    url: '/customer/yxdemand/allBusiness',
+    method: 'get',
+  })
+}
+export function alllist(query) {
+  return request({
+    url: '/customer/yxdemand/alllist',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询营销录入公司列表
 export function listbusiness(query) {
   return request({
@@ -66,5 +81,3 @@ export function release(data) {
     data: data
   })
 }
-
-

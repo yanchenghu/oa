@@ -59,10 +59,11 @@
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
         <el-button
-            type="primary"
-            size="mini"
-            @click="handleAdd"
-            style="position: absolute;right: 0;margin-right: 25px"
+          v-hasPermi="['demand:follow:add']"
+          type="primary"
+          size="small"
+          @click="handleAdd"
+          style="position: absolute;right: 0;margin-right: 25px"
           >新建需求</el-button>
     </el-form>
 
@@ -71,14 +72,21 @@
     </el-row>
 
     <el-table v-loading="loading" border :data="followList" >
-      <el-table-column label="公司名称" align="left" prop="operationuser" />
-      <el-table-column label="需求名称" align="left" prop="projectName" width="80" />
+      <el-table-column label="公司名称" align="left" prop="operationuser">
+        <template slot-scope="scope">
+          {{scope.row.operationuser}}
+          <div>
+            <el-button type="text" @click="handlebding(scope.row)">发布面试题</el-button>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="需求名称" align="left" prop="projectName" width="78" />
       <el-table-column label="技术要求/技术方向" align="left">
         <template slot-scope="scope">
           <span>{{scope.row.demandYears==1?"中级":scope.row.demandYears==0?"初级":"高级"}} / {{professionIdopFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="进度" align="left"  width="130">
+      <el-table-column label="进度" align="left"  width="125">
         <template slot-scope="scope">
           <div>需求人数:{{scope.row.demandNumber}}</div>
           <div>目标人数:{{scope.row.targetNumber}}</div>
@@ -112,7 +120,7 @@
             <el-button  type="text" @click="handleDelete(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open" class="icons"/> 查看</el-button>
           </p>
           <p>
-            <el-switch v-model="scope.row.state" :active-value="0" :inactive-value="1"  @change="handleStatusChange(scope.row)"></el-switch>
+            <el-switch v-hasPermi="['demand:follow:edit']" v-model="scope.row.state" :active-value="0" :inactive-value="1"  @change="handleStatusChange(scope.row)"></el-switch>
           </p>
           <!-- <p v-if='scope.row.state==1'>
             <el-button type="text"  @click="handleUpdate(scope.row,2)">复制</el-button>
@@ -206,13 +214,13 @@
         <el-form-item label="薪资范围" required>
           <el-col :span="11">
             <el-form-item prop="minSalary">
-                <el-input v-model="form.minSalary" placeholder="最小薪资"  size="small" style="width: 85px;"/>
+                <el-input v-model.number="form.minSalary" placeholder="最小薪资"  size="small" style="width: 85px;"/>
             </el-form-item>
           </el-col>
           <el-col :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item prop="maxSalary">
-              <el-input v-model="form.maxSalary" placeholder="最大薪资"  size="small" style="width: 85px;"/>
+              <el-input v-model.number="form.maxSalary" placeholder="最大薪资"  size="small" style="width: 85px;"/>
             </el-form-item>
           </el-col>
         </el-form-item>
@@ -325,6 +333,19 @@
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
+
+    <el-dialog :title="title" :visible.sync="open3" width="500px" append-to-body>
+
+       <el-radio-group v-model="bangdlist" style="width: 100%;">
+         <el-col :span="12" v-for="city in xuqiulist" :key="city.auditedId" style="margin-bottom: 10px;">
+           <el-radio :label="city.auditedId">{{city.auditedName}}</el-radio>
+         </el-col>
+       </el-radio-group>
+      <div slot="footer" class="dialog-footer" style="padding-top: 40px;">
+        <el-button type="primary" @click="submitForm3">确 定</el-button>
+        <el-button @click="open3=false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -343,6 +364,7 @@
     findnames,
     changeopenStatus
   } from "@/api/demand/follow";
+  import { getAuditeditor,addaudbindingdemand  } from "@/api/demand/auditeditor";
 import { treeselect } from "@/api/system/dept";
 import Editor from '@/components/Editor';
 import {debounce} from "@/utils/ruoyi.js"
@@ -380,6 +402,7 @@ import {getCompany} from "@/api/customer/company";
         corpnamelist:[],
         // 简历模板列表
         templist:[],
+        bangdlist:null,
         // 文件
         filelist:[],
         // 公司名称列表
@@ -432,6 +455,8 @@ import {getCompany} from "@/api/customer/company";
           demandId:null,
         },
         msg:null,
+        open3:false,
+        xuqiulist:[],
         // 表单校验
         rules: {
           corpCode: [{
@@ -484,12 +509,14 @@ import {getCompany} from "@/api/customer/company";
             required: true,
             message: "最小值不能为空",
             trigger: ["blur", "change"]
-          }, ],
+          }, { type: 'number',
+              message: '必须为数字值'}],
           maxSalary: [{
             required: true,
             message: "最大值不能为空",
             trigger: ["blur", "change"]
-          }, ],
+          }, { type: 'number',
+              message: '必须为数字值'}],
           targetNumber: [{
             required: true,
             message: "目标人数不能为空",
@@ -513,11 +540,6 @@ import {getCompany} from "@/api/customer/company";
             trigger: ["blur", "change"]
           }, ],
           importantLevel:[{
-            required: true,
-            message: "客户级别不能为空",
-            trigger: ["blur", "change"]
-          }, ],
-          tempId:[{
             required: true,
             message: "客户级别不能为空",
             trigger: ["blur", "change"]
@@ -550,6 +572,7 @@ import {getCompany} from "@/api/customer/company";
       pipei(balue){
         getCompany(balue).then(res=>{
           let data = res.data.data.marCompany
+          this.form.importantLevel = data.customerLevel
           this.form.interviewer=data.interviewer
           this.form.contactPhone = data.contactPhone
           this.form.specificLocation = data.interviewAddress
@@ -673,7 +696,6 @@ import {getCompany} from "@/api/customer/company";
         this.form.list= this.DetSelect(this.deptOptions)
         this.open = true;
         this.title = "添加需求";
-
       },
       findname(name){
         if(name==""||name==null){
@@ -712,7 +734,7 @@ import {getCompany} from "@/api/customer/company";
                 for (var j = 0; j < childrenData.length; j++) {
                   depth = depthN; // 将执行的层级赋值 到 全局层级
                   arr[depthN] = childrenData[j].id;
-                  if (childrenData[j].id== key) {
+                  if (childrenData[j].id== key){
                     returnArr = arr.slice(0, depthN + 1); //将目前匹配的数组，截断并保存到结果数组，
                     break;
                   } else {
@@ -748,7 +770,6 @@ import {getCompany} from "@/api/customer/company";
             this.title = "复制需求";
           }
         });
-
       },
 
       // 用户状态修改
@@ -817,7 +838,36 @@ import {getCompany} from "@/api/customer/company";
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:1}})
+        this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:8}})
+      },
+      handlebding(row){
+        let form = new FormData()
+        form.append("demandId",row.demandId)
+        getAuditeditor(form).then(res=>{
+          this.bangdlist = null
+          if(res.data.list.length == 0){
+            this.msgError("该客户暂无可绑定面试题")
+          }else{
+            this.xuqiulist = res.data.list
+            this.bangdlist = res.data.audited_id
+            this.multiple = row.demandId
+            this.open3 = true
+            this.title = "绑定需求"
+          }
+        })
+      },
+      submitForm3(){
+        if(this.bangdlist==null){
+          this.msgError("发布面试题不能为空")
+        }else{
+          let form = new FormData()
+          form.append("demandId",this.multiple)
+          form.append("auditedId",this.bangdlist)
+          addaudbindingdemand(form).then(res=>{
+            this.msgSuccess("发布成功")
+            this.open3 = false
+          })
+        }
       },
       /** 导出按钮操作 */
       // handleExport() {

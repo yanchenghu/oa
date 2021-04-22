@@ -219,8 +219,7 @@
                </el-table-column>
                <el-table-column  label="姓名"width="70" >
                   <template slot-scope="scope">
-                      <span v-if="scope.row.customer_name.length>2">{{scope.row.customer_name.substring(0,1)+" * "+scope.row.customer_name.substr(-1, 1)}}</span>
-                      <span v-else>{{scope.row.customer_name.substring(0,1)+" * "}}</span>
+                      <span >{{scope.row.customer_name.substring(0,1)+ new Array(scope.row.customer_name.length).join('*')}}</span>
                   </template>
                </el-table-column>
                <el-table-column prop="customer_tel" label="电话">
@@ -273,6 +272,18 @@
   export default{
     name:"manually",
     data(){
+      var price = (rule, value, callback) => {
+            const nameReg = /^[\u4E00-\u9FA5]{2,4}$/;
+            if (!value) {
+              callback(new Error('姓名不能为空'))
+            }  else {
+              if (nameReg.test(value)) {
+                callback()
+              } else {
+                callback(new Error('姓名必须是汉字并且大于两个字'))
+              }
+            }
+          }
       return{
         wen:true,
         button2:1,
@@ -380,7 +391,7 @@
            ],
           customerName:[{
             required: true,
-            message: "姓名不能为空",
+            validator: price,
             trigger: ["blur", "change"]
           }, ],
           education: [{

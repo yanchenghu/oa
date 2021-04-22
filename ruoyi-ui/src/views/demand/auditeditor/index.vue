@@ -136,7 +136,7 @@
             <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作"  class-name="small-padding fixed-width">
+        <!-- <el-table-column label="操作"  class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
               size="small"
@@ -144,7 +144,7 @@
               @click="handlebding(scope.row)"
             >绑定</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <pagination
         v-show="total2>0"
@@ -241,13 +241,13 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="open4" width="70%">
+    <el-dialog  :visible.sync="open4" width="70%">
      <iframe
         :src="src"
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
-    <el-dialog :visible.sync="dialogVisible" width="500px" :title="title">
+    <el-dialog :visible.sync="dialogVisible" width="500px" >
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
 
@@ -424,11 +424,9 @@ export default {
         }
         if(ind==1){
           this.open4 = true
-          this.title = '预览简历模板'
           this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+row.topicPath}`
         }else if(ind==2){
           this.dialogVisible=true
-          this.title = "面试题图片"
           this.dialogImageUrl = srcs+row.topicPath
         }
     },

@@ -32,7 +32,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="项目地点" prop="projectLocation">
-          <el-select v-model="queryParams.projectLocation" placeholder="请选择" filterable clearable size = "small" @change="handleQuery">
+          <el-select  v-model="queryParams.projectLocation" placeholder="请选择" filterable clearable size = "small" @change="handleQuery">
             <el-option
                 v-for="dict in intentionareaOptions"
                 :key="dict.dictValue"
@@ -41,7 +41,7 @@
               />
           </el-select>
         </el-form-item>
-        <el-form-item label="客户级别" prop="importantLevel">
+       <!-- <el-form-item label="客户级别" prop="importantLevel">
           <el-select  v-model="queryParams.importantLevel"  size="small" @change="handleQuery">
             <el-option
                 v-for="dict,index in customerleve"
@@ -50,7 +50,7 @@
                 :value="parseInt(dict.dictValue)"
               />
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
     </el-form>
 
@@ -62,9 +62,9 @@
       <el-table-column label="需求名称" align="left" prop="projectName" >
         <template slot-scope="scope">
           <span>{{scope.row.projectName}}</span>
-          <div>
-            <el-button type="text" v-hasPermi="['demand:follow:postInterview']" @click="uplodmian(scope.row)">上传面试题</el-button>
-          </div>
+           <div>
+              <el-button :disabled="!scope.row.bz" type="text" v-hasPermi="['demand:follow:postInterview']" @click="handsee(scope.row.bz)">面试题</el-button>
+           </div>
          </template>
       </el-table-column>
 
@@ -82,7 +82,7 @@
           <div>已提交简历数:{{scope.row.ifLook}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="客户级别" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
+      
       <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat" width="55"/>
       <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
       <el-table-column label="具体要求" align="left" width="500">
@@ -106,7 +106,9 @@
           <div>
             <el-button  type="text" @click="see(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open" class="icons"/>查看</el-button>
           </div>
-
+          <div>
+            <el-button type="text" v-hasPermi="['demand:follow:postInterview']" @click="uplodmian(scope.row)">上传面试题</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -157,6 +159,17 @@
         <el-button @click="open=false">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="title" :visible.sync="open3" width="70%">
+      <el-button type="primary" @click="dowloc">下載面试题</el-button>
+     <iframe
+        :src="src"
+        style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
+      ></iframe>
+    </el-dialog>
+    <el-dialog :visible.sync="dialogVisible" width="500px" :title="title">
+      <el-button type="primary" @click="dowloc" >下載面试题</el-button>
+      <img width="100%" :src="src" alt="">
+    </el-dialog>
   </div>
 </template>
 
@@ -176,6 +189,7 @@
     corpNames
   } from "@/api/demand/follow";
 import { treeselect } from "@/api/system/dept";
+import {checkImg} from "@/utils/ruoyi.js"
 import index from "../../components/particulars/index"
   export default {
     name: "Follow",
@@ -229,6 +243,11 @@ import index from "../../components/particulars/index"
         form: {},
         open:false,
         single:null,
+        open3:false,
+        dialogVisible:false,
+        title:"",
+        src:"",
+        dialogImageUrl:"",
       };
     },
     created() {
@@ -380,6 +399,29 @@ import index from "../../components/particulars/index"
         this.resetForm("queryForm");
         this.handleQuery();
       },
+      handsee(file,ind){
+        this.src = ""
+        this.dialogImageUrl = ""
+        let srcs = process.env.VUE_APP_BASE_API
+        if(checkImg(file)){
+          ind = 2
+        }else{
+          ind = 1
+        }
+        if(ind==1){
+          this.open3 = true
+          this.title = '面试题'
+          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+file}`
+        }else if(ind==2){
+          this.dialogVisible=true
+          this.title = "面试题图片"
+          this.src = srcs+file
+        }
+        this.dialogImageUrl = srcs+file
+      },
+      dowloc(){
+        window.open(this.dialogImageUrl, '_blank');
+      }
     }
   };
 </script>

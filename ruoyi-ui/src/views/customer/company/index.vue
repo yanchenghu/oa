@@ -204,7 +204,26 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
+<el-dialog :title="title" :visible.sync="open2" width="650px" append-to-body>
+      <el-form ref="form3" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="联系人" prop="contactPeople">
+          <el-input v-model.trim="form.contactPeople" placeholder="请输入联系人" class="indd"/>
+        </el-form-item>
+        <el-form-item label="职位" prop="contactPosition">
+          <el-input v-model.trim="form.contactPosition" placeholder="请输入职位" class="indd"/>
+        </el-form-item>
+        <el-form-item label="电话" prop="contactPhone">
+          <el-input v-model.trim="form.contactPhone" placeholder="请输入电话" class="indd"/>
+        </el-form-item>
+        <el-form-item label="备注" prop="bz">
+          <el-input v-model.trim="form.bz" placeholder="请输入备注" class="indd"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm3">确 定</el-button>
+        <el-button @click="open2=false">取 消</el-button>
+      </div>
+    </el-dialog>
     <!-- 抽屉 -->
     <el-drawer
       title="信息"
@@ -217,7 +236,7 @@
       <div style=" padding:20px 3% 30px 3%; border-bottom: 1px solid #E6E6E6;">
         <div>
           <b>
-            {{yxdemandone.corpName}}
+            <el-input v-model.trim="yxdemandone.corpName" @blur="findnames2(yxdemandone.corpName,yxdemandone.corpCode)"></el-input>
           </b>
         </div>
         <br/>
@@ -339,8 +358,17 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-
-            <el-tab-pane label="联系记录">
+            <el-tab-pane label="其他联系方式">
+              <el-button type="primary" @click="handAdds">新建联系方式</el-button>
+              <p></p>
+              <el-table  :data="listlianxi">
+                <el-table-column label="姓名" align="left" prop="contactPeople" />
+                <el-table-column label="职位" align="left" prop="contactPosition" />
+                <el-table-column label="电话" align="left" prop="contactPhone" />
+                <el-table-column label="备注" align="left" prop="bz" />
+              </el-table>
+            </el-tab-pane>
+            <!-- <el-tab-pane label="联系记录">
               <div style="padding-left:2%; float: left;width: 60%;">
                 <div class="msg">
                   <b>转化记录</b>
@@ -350,14 +378,11 @@
                 <el-form-item label="合作日期">
                   <span class="sp">{{yxdemandone.cooperationTime}}</span>
                 </el-form-item>
-                <el-form-item label="转化人">
-                  <span class="sp">{{yxdemandone.transformingPeople}}</span>
-                </el-form-item>
                 <el-form-item label="录入人">
                   <span class="sp">{{yxdemandone.entryPeople}}</span>
                 </el-form-item>
                 <el-form-item label="备注">
-                  <el-input size="mini" v-model.trim="yxdemandone.remark" @input="sees" style="width:200px;"></el-input>
+                  <span class="sp">{{yxdemandone.remark}}</span>
                 </el-form-item>
                 </el-form>
               </div>
@@ -376,24 +401,47 @@
                   </li>
                 </ul>
               </div>
+              </el-tab-pane> -->
+              <el-tab-pane label="面试题">
+                  <el-table style="width: 50%;"  :data="listAuditeditor">
+                    <el-table-column label="面试题名称" align="left" prop="auditedName" />
+                    <el-table-column label="面试题添加日期" align="left" prop="addTime" >
+                      <template slot-scope="scope">
+                        <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d}') }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="面试题预览" align="left" class-name="small-padding fixed-width" >
+                      <template slot-scope="scope">
+                        <el-button
+                          size="small"
+                          type="text"
+                          @click="handsee(scope.row.auditedPath)"
+                        >预览面试题</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
               </el-tab-pane>
           </el-tabs>
        </div>
       </div>
     </el-drawer>
     <!-- 简历预览 -->
-    <el-dialog title="预览" :visible.sync="open3" width="70%">
+    <el-dialog  :visible.sync="open3" width="70%">
      <iframe
         :src="src"
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
+    <el-dialog :visible.sync="dialogVisible" width="500px" :title="title">
+
+      <img width="100%" :src="src" alt="">
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listCompanys, getCompany,  addCompany, updateCompany,contractCompany,addcontract } from "@/api/customer/company";
-import {debounce} from "@/utils/ruoyi.js"
+import { listCompanys, getCompany,  addCompany, updateCompany,contractCompany,addcontract,addcontracts,find} from "@/api/customer/company";
+import {debounce,checkImg} from "@/utils/ruoyi.js"
 import { findnames}from "@/api/customer/business";
 export default {
   name: "Company",
@@ -449,6 +497,7 @@ export default {
       opens:false,
       open3:false,
       activeName:"popmsg",
+      listAuditeditor:[],
       // 抽屉
       drawer:false,
       // 遮罩层
@@ -465,12 +514,15 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      dialogImageUrl:"",
+      dialogVisible:false,
       // 合同列表
       total2:0,
       // 合作公司表格数据
       companyList: [],
       // 合同列表
       contractlist:[],
+      listlianxi:[],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -564,7 +616,7 @@ export default {
       },
       companySituationOptions:[],
       customerleve:[],
-
+      open2:false,
       companyperiod:[],
       username:[],
       // 单个数据
@@ -588,6 +640,26 @@ export default {
     });
   },
   methods: {
+    handsee(file,ind){
+      this.src = ""
+      this.dialogImageUrl = ""
+      let srcs = process.env.VUE_APP_BASE_API
+      if(checkImg(file)){
+        ind = 2
+      }else{
+        ind = 1
+      }
+      if(ind==1){
+        this.open3 = true
+        this.title = '面试题'
+        this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+file}`
+      }else if(ind==2){
+        this.dialogVisible=true
+        this.title = "面试题图片"
+        this.src = srcs+file
+      }
+      this.dialogImageUrl = srcs+file
+    },
     // 公司性质
     companySituationFormat(row, column) {
       return this.selectDictLabel(this.companySituationOptions, row.companySituation);
@@ -608,7 +680,11 @@ export default {
       this.getList()
     },
     set(){
-      updateCompany(this.yxdemandone)
+        this.$refs["formmsg"].validate(valid => {
+          if (valid) {
+            updateCompany(this.yxdemandone)
+          }
+        });
     },
     sees:debounce(function(){
           this.set()
@@ -632,6 +708,32 @@ export default {
           this.msg=res
         })
       }
+    },
+    findnames2(name,code){
+        if (name==""||name==null) {
+         this.msgError('公司名称不能为空');
+        }else{
+          setTimeout(() => {
+           if(name.length<5){
+             this.msgError('公司名称长度不能小于5');
+           }else if(name.indexOf("公司") == -1){
+             this.msgError("公司名称包含公司两字");
+           }else{
+             let formData = new FormData()
+             formData.append("corpName",name)
+             formData.append("corpCode",code)
+             find(formData).then(res=>{
+               if (res=="当前公司名称已存在") {
+                 this.msgError(res);
+               }else if(res=="修改名称与原名称相同"){
+                 this.msgError(res);
+               }else{
+                 this.sees()
+               }
+             })
+           }
+          }, 1000);
+        }
     },
     upoplodad(){
       this.$refs.upload.clearFiles()
@@ -666,11 +768,26 @@ export default {
         party:null,
         corpCode: null,
         corpName: null,
+        contactPeople:null,
+        contactPosition:null,
+        contactPhone:null,
+        mailbox:null,
+        wechat:null,
+        qq:null,
         customerLevel: null,
+        companySituation:null,
+        remark:null,
         paybackPeriod: null,
         cooperationTime: null,
         enteredBy: null,
-        transformingPeople: null,
+        startTime:null,
+        endTime:null,
+        clientSigner:null,
+        companySigner:null,
+      };
+      this.forms = {
+        party:null,
+        firstParty:null,
         startTime:null,
         endTime:null,
         clientSigner:null,
@@ -694,7 +811,9 @@ export default {
       getCompany(value.corpCode).then(res=>{
         this.drawer = true
         this.yxdemandone=res.data.data.marCompany
+        this.listlianxi = res.data.data.listMarCompanyC
         this.putmsgs = res.data.data.mar
+        this.listAuditeditor=res.data.data.listAuditeditors
       })
     },
     // 更多
@@ -735,6 +854,12 @@ export default {
       this.title = "新建合同";
       this.forms.firstParty = this.yxdemandone.corpName
     },
+    handAdds(){
+      this.reset();
+      this.form.corpCode = this.yxdemandone.corpCode
+      this.open2 = true;
+      this.title = "新建联系人";
+    },
 
     /** 提交按钮 */
     submitForm() {
@@ -744,6 +869,17 @@ export default {
             this.msgSuccess("新增成功");
             this.open = false;
             this.getList();
+          });
+        }
+      });
+    },
+    submitForm3() {
+      this.$refs["form3"].validate(valid => {
+        if (valid) {
+          addcontracts(this.form).then(response => {
+            this.msgSuccess("新增成功");
+            this.open2 = false;
+            this.getone(this.yxdemandone)
           });
         }
       });

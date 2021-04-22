@@ -83,7 +83,7 @@
          <el-table-column prop="intentionArea"  label="期望城市" :formatter="intentionareaFormat"/>
          <el-table-column prop="intentionArea"  label="添加时间">
            <template slot-scope="scope">
-             <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+             <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d}') }}</span>
            </template>
          </el-table-column>
          <el-table-column label="操作"  class-name="small-padding fixed-width" width="180">
@@ -108,7 +108,7 @@
 
  <!-- 筛选列表 -->
     </el-row>
-       <el-dialog title="预览" :visible.sync="open" width="70%"  >
+       <el-dialog  :visible.sync="open" width="70%"  >
        <iframe
           :src="src"
           style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%;border: none;"></iframe>

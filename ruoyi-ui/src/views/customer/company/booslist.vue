@@ -239,9 +239,6 @@
                 <el-form-item label="合作日期">
                   <span class="sp">{{yxdemandone.cooperationTime}}</span>
                 </el-form-item>
-                <el-form-item label="转化人">
-                  <span class="sp">{{yxdemandone.transformingPeople}}</span>
-                </el-form-item>
                 <el-form-item label="录入人">
                   <span class="sp">{{yxdemandone.entryPeople}}</span>
                 </el-form-item>
@@ -271,7 +268,7 @@
       </div>
     </el-drawer>
     <!-- 简历预览 -->
-    <el-dialog title="预览" :visible.sync="open3" width="70%">
+    <el-dialog  :visible.sync="open3" width="70%">
      <iframe
         :src="src"
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
