@@ -75,15 +75,15 @@
       search(){
         this.corpnamelist=null
         let that = this
-        this.bangding.loading2=true
-        if(this.searchmsg==""){
+        that.bangding.loading2=true
+        if(that.searchmsg==""){
         setTimeout(function(){
           that.bangding.templist2=that.bangding.forms
           that.bangding.loading2=false
         },1000)
         }else{
-          clearInterval(this.timer)
-          this.timer=setTimeout(function(){
+          clearInterval(that.timer)
+          that.timer=setTimeout(function(){
             var data= that.bangding.forms.filter(item=>{
               return item.customer_name == that.searchmsg || item.customer_tel==that.searchmsg
              })
@@ -115,14 +115,19 @@
           if(this.$refs.file.uploadFiles[0] == null){
             this.msgError("请选择简历附件")
           }else{
-            form.append("resumeEnclosurepath",this.$refs.file.uploadFiles[0].raw)
-            delFollow(form).then(res=>{
-              this.msgSuccess("绑定成功")
-              this.opens=false
-              this.bangding.open2=false
-              this.$emit("gettelist")
-              this.$emit("getList")
-            })
+              if(this.$refs.file.uploadFiles[0].raw.size>10*1000*1000){
+              this.msgError("文件过大，请重新上传")
+              this.upoplodad()
+              }else{
+                form.append("resumeEnclosurepath",this.$refs.file.uploadFiles[0].raw)
+                delFollow(form).then(res=>{
+                  this.msgSuccess("绑定成功")
+                  this.opens=false
+                  this.bangding.open2=false
+                  this.$emit("gettelist")
+                  this.$emit("getList")
+                })
+              }
           }
         },
         oplodad(){

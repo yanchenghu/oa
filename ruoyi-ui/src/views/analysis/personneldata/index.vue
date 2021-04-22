@@ -73,14 +73,14 @@
           <el-table-column label="简历通过"  prop="resumePassedNum"/>
           <el-table-column label="绑定成活率">
             <template slot-scope="scope">
-                <span v-if="scope.row.bindingNum!==0">{{(scope.row.resumePassedNum/scope.row.bindingNum).toFixed(2)*100}}%</span>
+                <span v-if="scope.row.bindingNum!==0">{{(scope.row.resumePassedNum/scope.row.bindingNum*100).toFixed(2)}}%</span>
                 <span v-else>0</span>
             </template>
           </el-table-column>
           <el-table-column label="面试通过"  prop="interviewPassedNum"/>
           <el-table-column label="面试成活率">
             <template slot-scope="scope">
-                <span v-if="scope.row.resumePassedNum!==0">{{(scope.row.interviewPassedNum/scope.row.resumePassedNum).toFixed(2)*100}}%</span>
+                <span v-if="scope.row.resumePassedNum!==0">{{(scope.row.interviewPassedNum/scope.row.resumePassedNum*100).toFixed(2)}}%</span>
                 <span v-else>0</span>
             </template>
           </el-table-column>
@@ -105,7 +105,6 @@
           <el-table-column label="面试通过"  prop="interviewPassedNum" />
           <el-table-column label="入项"  prop="entryPersonnelNum" />
         </el-table>
-
       </div>
    </div>
 </template>
@@ -241,8 +240,8 @@
           this.value1 = [getFullDate(sever),getFullDate()]
         },
         getList(){
-          this.queryParams.startTime = this.value1[0]
-          this.queryParams.endTime = this.value1[1]
+          this.queryParams.startTime = this.value1[0]+" "+'00:00:00'
+          this.queryParams.endTime = this.value1[1]+" "+'23:59:59'
           if(this.radio2=="chengyuan"){
             listmingxi(this.queryParams).then(res=>{
               this.resers()

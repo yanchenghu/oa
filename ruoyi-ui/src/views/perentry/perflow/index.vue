@@ -135,11 +135,12 @@
       style="width: 100%;"
       border
       v-loading="loading2">
+      <el-table-column label="序号" type="index" width="50"/>
+      <el-table-column label="入职公司" prop="corp_name"/>
       <el-table-column label="姓名" prop="customer_name"/>
       <el-table-column label="离项原因" prop="quit_proreason" :formatter="customerFormat"/>
       <el-table-column label="离职备注" prop="quit_remark"/>
       <el-table-column label="电话" prop="customer_tel"/>
-      <el-table-column label="入职公司" prop="corp_name"/>
       <el-table-column label="人员成本" prop="salary"/>
       <el-table-column label="服务费" prop="service_pay"/>
       <el-table-column label="利润" prop="profit"/>
@@ -326,6 +327,7 @@
             data[this.NormKindIndex].zongshu = zong
             data[this.NormKindIndex].lvrun = zong/zonggongzi*100
             data[this.normSubKindIndex].hrzongshu = hrzong
+
           } else {
             if (data[i].deptName === data[i - 1].deptName) {
               this.NormKindArr[this.NormKindIndex] += 1
@@ -334,9 +336,8 @@
               zonggongzi+=data[i].salary
               data[this.NormKindIndex].zongshu = zong
               data[this.NormKindIndex].lvrun = zong/zonggongzi*100
+
             } else {
-              data[0].zongshu = zong
-              data[0].lvrun = zong/zonggongzi*100
               zong=0
               zonggongzi = 0
               zong+=data[i].profit
@@ -363,7 +364,7 @@
         }
       },
       objectSpanMethod({ row, column, rowIndex, columnIndex }){
-        if(columnIndex === 1 || columnIndex === 2 || columnIndex === 3){
+        if(columnIndex === 1 ||columnIndex === 2  || columnIndex === 3){
           const _row = this.NormKindArr[rowIndex]
           return {
             rowspan: _row,

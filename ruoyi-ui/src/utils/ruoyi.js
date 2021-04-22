@@ -87,6 +87,7 @@ export function permission(file){
       let permissionFlag = "statistc:homepage:businessData"
       let permissionFlag1 = "statistc:homepage:datadisplay"
       let permissionFlag2 = "statistc:homepage:partjob"
+      let permissionFlag3 = "statistc:homepage:boss"
       let hasPermissions  = null
       store.getters.permissions.forEach(permission => {
         if(permission == permissionFlag){
@@ -95,6 +96,8 @@ export function permission(file){
           hasPermissions = 2
         }else if(permission==permissionFlag2){
           hasPermissions = 3
+        }else if(permission==permissionFlag3){
+          hasPermissions = 4
         }
       })
       return hasPermissions

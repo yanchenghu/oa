@@ -27,6 +27,7 @@ export default {
       type: Boolean,
       default: true
     },
+
   },
   data() {
     return {
@@ -43,7 +44,6 @@ export default {
     }
   },
   mounted() {
-    this.getData()
     this.$nextTick(() => {
       this.initChart()
     })
@@ -56,8 +56,10 @@ export default {
     this.chart = null
   },
   methods: {
-    getData(){
-      getdata().then(res=>{
+    getData(username){
+      let form = new FormData()
+      form.append("usercode",username)
+      getdata(form).then(res=>{
           this.newVisitis = res.data
       })
     },

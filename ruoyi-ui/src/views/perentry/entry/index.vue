@@ -781,8 +781,6 @@ export default {
     });
   },
   methods: {
-
-
     professionIdopFormat(row, column) {
       return this.selectDictLabel(this.professionIdoptions, row.technologyDirection);
     },

@@ -52,9 +52,7 @@ export default {
     handleSetLineChartData(type){
       this.$emit("handleSetLineChartData",type)
     },
-    tiaozhuan(list){
-      this.$router.push({path:'/follow/particulars',query:{row:list.demandId,ident:1}})
-    },
+    
   }
 }
 </script>

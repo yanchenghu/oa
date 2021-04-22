@@ -68,7 +68,7 @@
                     // containLabel: true
                   },
                   title:{
-                      text:"经营情况"
+                      text:"人员增减及利润"
                   },
                   tooltip: {
                           trigger: 'axis',

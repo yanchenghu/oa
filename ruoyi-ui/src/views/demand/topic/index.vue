@@ -43,13 +43,13 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <el-dialog :title="title" :visible.sync="open4" width="70%">
+    <el-dialog :visible.sync="open4" width="70%">
      <iframe
         :src="src"
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
-    <el-dialog :visible.sync="dialogVisible" width="500px" :title="title">
+    <el-dialog :visible.sync="dialogVisible" width="500px" >
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
   </div>

@@ -219,8 +219,18 @@
         <el-table-column v-if="title=='录入'||title=='抢占'" property="addTime" label="录入时间"></el-table-column>
         <el-table-column v-else  property="trackingtime" label="操作时间"></el-table-column>
       </el-table>
+      <div v-if="title == '简历绑定'">
+        <el-input v-model="searchmsg" placeholder="请输入" clearable size="small" @keyup.enter.native="search" style="width: 170px;margin-right: 10px;"/>
+      <el-button type="cyan" icon="el-icon-search" size="mini" @click="search">查询</el-button>
+      </div>
+      
+
       <el-table :data="gridData" v-if="dataList.numb==1" v-loading="loading">
-        <el-table-column v-if="title!=='录入需求'" property="customerName" label="姓名" width="80"></el-table-column>
+        <el-table-column v-if="title!=='录入需求'" property="customerName" label="姓名" width="80">
+          <template slot-scope="scope">
+            <el-button @click="tiaozhuan(scope.row)" type="text" size="medium">{{scope.row.customerName}}</el-button>
+          </template>
+        </el-table-column>
         <el-table-column  property="projectName" label="公司名称" ></el-table-column>
         <el-table-column v-if="title=='录入需求'" property="addTime" label="添加时间" ></el-table-column>
         <el-table-column v-else property="trackingtime" label="操作时间" ></el-table-column>
@@ -239,10 +249,12 @@ export default {
   data(){
     return{
       loading:false,
-      gridData:{},
+      gridData:[],
+      gridDatas:[],
       dialogTableVisible:false,
       title:"",
       customerleve:[],
+      searchmsg:"",
     }
   },
   created() {
@@ -260,6 +272,30 @@ export default {
     CountTo
   },
   methods: {
+    search(){
+      let that = this
+      that.loading=true
+      if(that.searchmsg==""){
+        setTimeout(function(){
+          that.gridData=that.gridDatas
+          that.loading=false
+        },1000)
+        console.log(that.gridDatas)
+      }else{
+        clearInterval(that.timer)
+        that.timer=setTimeout(function(){
+          var data= that.gridDatas.filter(item=>{
+            return item.customerName == that.searchmsg
+           })
+          that.gridData = data
+          that.loading=false
+        },1000)
+      }
+    },
+
+    tiaozhuan(list){
+      this.$router.push({path:'/follow/particulars',query:{row:list.demandId,ident:8}})
+    },
     professionIdopFormat(row, column) {
       return this.selectDictLabel(this.customerleve, row.quit_proreason);},
 
@@ -293,6 +329,7 @@ export default {
       this.loading=true
       getbusmsg(form).then(res=>{
         this.gridData = res.data
+        this.gridDatas = res.data
         this.dialogTableVisible = true
         this.loading=false
       })

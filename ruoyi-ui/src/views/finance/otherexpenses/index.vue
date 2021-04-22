@@ -28,9 +28,14 @@
       <el-table-column label="房租费"  prop="rent" />
       <el-table-column label="水电费"  prop="hydropower" />
       <el-table-column label="物业费"  prop="property" />
-      <el-table-column label="材料费"  prop="materiaCost" />
+      <el-table-column label="社保费"  prop="socialSecurity" />
       <el-table-column label="税费"  prop="taxation" />
       <el-table-column label="其他"  prop="otherCost" />
+      <el-table-column label="总费用" >
+        <template slot-scope="scope">
+          {{zong(scope.row.rent,scope.row.hydropower,scope.row.property,scope.row.socialSecurity,scope.row.taxation,scope.row.otherCost,)}}
+        </template>
+      </el-table-column>
       <el-table-column label="备注"  prop="remarks" />
       <el-table-column label="添加时间">
         <template slot-scope="scope">
@@ -59,25 +64,38 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" style="width: 300px;">
         <el-form-item label="房租费" prop="rent">
-          <el-input v-model="form.rent" placeholder="请输入房租费" />
+          <el-input v-model.number="form.rent" placeholder="请输入房租费" />
         </el-form-item>
         <el-form-item label="水电费" prop="hydropower">
-          <el-input v-model="form.hydropower" placeholder="请输入水电费" />
+          <el-input v-model.number="form.hydropower" placeholder="请输入水电费" />
         </el-form-item>
         <el-form-item label="物业费" prop="property">
-          <el-input v-model="form.property" placeholder="请输入物业费" />
+          <el-input v-model.number="form.property" placeholder="请输入物业费" />
         </el-form-item>
-        <el-form-item label="材料费" prop="materiaCost">
-          <el-input v-model="form.materiaCost" placeholder="请输入材料费" />
+        <el-form-item label="社保费" prop="socialSecurity">
+          <el-input v-model.number="form.socialSecurity" placeholder="请输入社保费" />
         </el-form-item>
         <el-form-item label="税费" prop="taxation">
-          <el-input v-model="form.taxation" placeholder="请输入税费" />
+          <el-input v-model.number="form.taxation" placeholder="请输入税费" />
         </el-form-item>
         <el-form-item label="其他" prop="otherCost">
-          <el-input v-model="form.otherCost" placeholder="请输入其他" />
+          <el-input v-model.number="form.otherCost" placeholder="请输入其他" />
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入备注" />
+        </el-form-item>
+        <el-form-item label="总费用" prop="remarks">
+          {{zong(form.rent,form.hydropower,form.property,form.socialSecurity,form.taxation,form.otherCost)}}
+        </el-form-item>
+        <el-form-item label="费用日期" prop="insertTime">
+          <el-date-picker
+                :disabled="form.id !== null"
+                v-model="form.insertTime"
+                type="date"
+                format="yyyy 年 MM 月 dd 日"
+                      value-format="yyyy-MM-dd"
+                placeholder="选择日期">
+              </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -107,6 +125,7 @@ export default {
             }
           }
         }
+        let data = { type: 'number', message: '必须为数字值'}
     return {
       pickerOptions3:{
         disabledDate:(time) => {
@@ -138,42 +157,32 @@ export default {
         insertTime: null,
       },
       // 表单参数
-      form: {},
+      form: {
+        
+      },
       // 表单校验
       rules: {
-        rent:[{
-            required: true,
-            validator: price,
-            trigger: "blur",
-          },],
-        hydropower:[{
-            required: true,
-            validator: price,
-            trigger: ["blur","change"]
-          },],
-        property:[{
-            required: true,
-            validator: price,
-            trigger: ["blur","change"]
-          },],
-        materiaCost:[{
-            required: true,
-            validator: price,
-            trigger: "blur"
-          },],
-        taxation:[{
-            required: true,
-            validator: price,
-            trigger: ["blur","change"]
-          },],
-        otherCost:[{
-          required: true,
-          validator: price,
-          trigger: ["blur","change"]
-        },],
+        rent:[{ required: true, message: '房租费不能为空'},
+           data,],
+        hydropower:[{ required: true, message: '水电费不能为空'},
+           data,],
+        property:[
+            { required: true, message: '物业费不能为空'},
+               data,],
+        socialSecurity:[{ required: true, message: '社保费不能为空'},
+           data,],
+        taxation:[{ required: true, message: '税费不能为空'},
+           data,],
+        otherCost:[{ required: true, message: '其他不能为空'},
+           data,],
         remarks:[{
             required: true,
             message: "备注不能为空",
+            trigger: ["blur","change"]
+          },],
+        insertTime :[{
+            required: true,
+            message: "时间不能为空",
             trigger: ["blur","change"]
           },],
       }
@@ -181,6 +190,9 @@ export default {
   },
   created() {
     this.getList();
+  },
+  computed:{
+
   },
   methods: {
     /** 查询每月公司其他住处费用列表 */
@@ -192,6 +204,9 @@ export default {
         this.loading = false;
       });
     },
+    zong(a,b,c,d,e,f){
+      return parseInt(a)+parseInt(b)+parseInt(c)+parseInt(d)+parseInt(e)+parseInt(f)
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -201,12 +216,12 @@ export default {
     reset() {
       this.form = {
         id: null,
-        rent: null,
-        hydropower: null,
-        property: null,
-        materiaCost: null,
-        taxation: null,
-        otherCost: null,
+        rent:0,
+        hydropower:0,
+        property:0,
+        socialSecurity:0,
+        taxation:0,
+        otherCost:0,
         remarks: null,
         insertTime: null,
         updateTime: null,

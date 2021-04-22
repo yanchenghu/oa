@@ -108,7 +108,7 @@
           </el-col>
         </el-row>
       </div>
-      <el-row :gutter="20">
+      <el-row :gutter="20" v-if="biaoshi!==1">
             <el-col  :sm="24" :lg="12">
               <div class="dom-dow">
                 <person-top :chart-data="chartData.entryPeople" :tad-data="entryPeople" :mone="expectedData" :title="'入项人员及利润'" :legend='["今年入项","去年入项","今年利润","去年利润"]' ></person-top>
@@ -121,12 +121,12 @@
             </el-col>
             <el-col  :sm="24" :lg="12">
               <div class="dom-dow">
-                <person-top :chart-data="chartData.gradation" :tad-data="gradation" :mone="expectedData" :title="'人员增减对比'" :legend='["今年人员","今年人员","去年人员"]'></person-top>
+                <person-top :chart-data="chartData.gradation" :tad-data="gradation" :mone="expectedData" :title="'人员增减对比'" :legend='["今年人员","去年人员"]'></person-top>
               </div>
             </el-col>
             <el-col  :sm="24" :lg="12">
               <div class="dom-dow">
-                <person-top :chart-data="chartData.gradationProfit" :tad-data="gradationProfit" :mone="expectedData" :title="'利润增减对比'" :legend='["今年增减利润","去年增减利润","去年增减利润"]'></person-top>
+                <person-top :chart-data="chartData.gradationProfit" :tad-data="gradationProfit" :mone="expectedData" :title="'利润增减对比'" :legend='["今年增减利润","去年增减利润"]'></person-top>
               </div>
             </el-col>
           </el-row>
@@ -140,6 +140,7 @@
   import CountTo from 'vue-count-to'
   export default {
     name:"management",
+    props:["biaoshi"],
     data(){
       return{
         queryParem:{
@@ -164,10 +165,10 @@
           lastyearEntryPeopleProfit:[],
         },
         gradation:{
-          entryPeopleProfit:[],
+          lastyearEntryPeople:[],
         },
         gradationProfit:{
-          entryPeopleProfit:[],
+          lastyearEntryPeople:[],
         },
         zongData:{},
         expectedData:[],
@@ -215,8 +216,8 @@
             this.entryPeople.lastyearEntryPeopleProfit.push(item.lastyearEntryPeopleProfit)
             this.outPeople.lastyearEntryPeople.push(item.lastyearOutPeople)
             this.outPeople.lastyearEntryPeopleProfit.push(item.lastyearOutPeopleProfit)
-            this.gradation.entryPeopleProfit.push(item.lastyearGradation)
-            this.gradationProfit.entryPeopleProfit.push(item.lastyearProfit)
+            this.gradation.lastyearEntryPeople.push(item.lastyearGradation)
+            this.gradationProfit.lastyearEntryPeople.push(item.lastyearProfit)
           })
         })
       },
@@ -239,10 +240,10 @@
           lastyearEntryPeopleProfit:[],
         }
         this.gradation={
-          entryPeopleProfit:[],
+          lastyearEntryPeople:[],
         }
         this.gradationProfit={
-          entryPeopleProfit:[],
+          lastyearEntryPeople:[],
         }
         this.zongData={}
         this.expectedData=[]

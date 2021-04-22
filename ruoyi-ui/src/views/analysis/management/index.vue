@@ -97,7 +97,7 @@
           </el-col>
         </el-row>
       </div>
-      <el-row :gutter="20">
+      <el-row v-if="biaoshi!==1" :gutter="20">
             <el-col :xs="24" :sm="12" :lg="8">
               <div class="dom-dow">
                 <xiangqing :chart-data="chartData.lirunData" :tad-data="onProfitData" :mone="expectedData" :title="'利润数据'"></xiangqing>
@@ -113,7 +113,7 @@
                 <xiangqing :chart-data="chartData.shouruData" :tad-data="onExpenditureData" :mone="expectedData" :title="'支出数据'"></xiangqing>
               </div>
             </el-col>
-          </el-row>
+     </el-row>
   </div>
 </template>
 
@@ -124,6 +124,7 @@
   import CountTo from 'vue-count-to'
   export default {
     name:"management",
+    props: ["biaoshi"],
     data(){
       return{
         queryParem:{
@@ -152,6 +153,7 @@
     created() {
       this.time()
       this.getList()
+
     },
     methods:{
       time(){

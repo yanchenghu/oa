@@ -2,6 +2,14 @@ import request from '@/utils/request'
 
 
 
+// 查询待入项
+export function listdata(query) {
+  return request({
+    url: '/demand/waitingentry/list',
+    method: 'get',
+    params:query
+  })
+}
 // 查询简历模板
 export function template() {
   return request({

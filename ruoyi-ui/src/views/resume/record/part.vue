@@ -2,9 +2,9 @@
   <div class="app-containe">
     <div style="display: flex;">
        <!-- 左边信息栏 -->
-      <div style="width:calc(100% - 390px); padding:0 25px;border-radius: 2px; background-color: #fff;">
+      <div style="width:calc(100% - 360px); padding:0 15px;border-radius: 2px; background-color: #fff;">
           <!-- top -->
-          <div style="display: flex; position: fixed;width: calc(100% - 660px);background-color: #fff; z-index: 10;padding-top: 35px;padding-bottom: 20px; height: height: 300px;" >
+          <div style="display: flex; position: fixed;width: calc(100% - 605px);background-color: #fff; z-index: 10;padding-top: 35px;padding-bottom: 20px; height: 200px;" >
             <div>
               <el-avatar class="avatar" size="medium">
                 <img v-if="perCustomerinfo.customerSex==1" :src="name1" alt="">
@@ -12,58 +12,56 @@
               </el-avatar>
             </div>
             <div class="top-right">
-              
               <div class="top-top">
                 <span v-if="perro.addPeople===name">{{perCustomerinfo.customerName}}</span>
                 <span v-else>
-                  <span v-if="perCustomerinfo.customerName.length>2">{{perCustomerinfo.customerName.substring(0,1)+" * "+perCustomerinfo.customerName.substr(-1, 1)}}</span>
-                <span v-else>{{perCustomerinfo.customerName.substring(0,1)+" * "}}</span>
+                <span >{{perCustomerinfo.customerName.substring(0,1)+ new Array(perCustomerinfo.customerName.length).join('*')}}</span>
                 </span>
               </div>
               <div class="font">
-                    <el-col :sm="8" :lg="4">
-                      <svg-icon icon-class="dianhua" class-name="card-panel-icon" />{{perCustomerinfo.customerTel}}
+                    <el-col :sm="8" class="padding">
+                        <svg-icon icon-class="dianhua" class-name="card-panel-icon" />{{perCustomerinfo.customerTel}}
                     </el-col>
-                    <el-col :sm="8" :lg="4">
+                    <el-col :sm="8" class="padding" >
                       <svg-icon icon-class="sex" class-name="card-panel-icon" />{{customerSexOptionsFormat(perCustomerinfo)}}
                     </el-col>
-                    <el-col :sm="8" :lg="4" >
+                    <el-col :sm="8" class="padding" >
                       <svg-icon icon-class="chusheng" class-name="card-panel-icon" />{{perCustomerinfo.customerBirth?perCustomerinfo.customerBirth:"生日未知"}}
                     </el-col>
-                    <el-col :sm="8" :lg="4">
+                    <el-col :sm="8" class="padding">
                       <svg-icon icon-class="jishu" class-name="card-panel-icon" />{{perCustomerinfo.professionId?professionIdoptionsFormat(perCustomerinfo):"专业未知"}}
                     </el-col>
-                    <el-col :sm="8" :lg="4">
+                    <el-col :sm="8" class="padding">
                       <svg-icon icon-class="jiaoyu" class-name="card-panel-icon" />{{perCustomerinfo.education?customerSpecialitiesoptionsFormat(perCustomerinfo):"学历未知"}}
                     </el-col>
-                    <el-col :sm="8" :lg="4">
+                    <el-col :sm="8" class="padding">
                       <svg-icon icon-class="work" class-name="card-panel-icon" />{{perCustomerinfo.workYear?perCustomerinfo.workYear+'年':'工作经验未知'}}
                     </el-col>
-                    <el-col :sm="8" :lg="4">
+                    <el-col :sm="8" class="padding">
                       <svg-icon icon-class="xuexiao" class-name="card-panel-icon" />{{perCustomerinfo.customerUniversity?perCustomerinfo.customerUniversity:"毕业学校未知"}}
                     </el-col>
-                    <el-col :sm="8" :lg="4">
+                    <el-col :sm="8" class="padding">
                       <svg-icon icon-class="chengshi" class-name="card-panel-icon" />{{perCustomerinfo.intentionArea?intentionareaOptionsFormat(perCustomerinfo):"意向地区未知"}}
                     </el-col>
-                    <el-col :sm="8" :lg="4">
+                    <el-col :sm="8" class="padding" >
                       <svg-icon icon-class="xinzi" class-name="card-panel-icon" />{{perCustomerinfo.expectationSalary?perCustomerinfo.expectationSalary:"薪资未知"}}
                     </el-col>
-                    <el-col :sm="8" :lg="4" v-if="perCustomerinfo.email">
+                    <el-col :sm="8" class="padding"  v-if="perCustomerinfo.email">
                       <svg-icon icon-class="youxiang" class-name="card-panel-icon"/>
-                      <el-tooltip v-if="perCustomerinfo.email.length>=11"  class="item" effect="dark" :content="perCustomerinfo.email" placement="top-end">
-                        <span>{{`${perCustomerinfo.email.slice(0,11)}...`}}</span>
+                      <el-tooltip v-if="perCustomerinfo.email.length>=10"  class="item" effect="dark" :content="perCustomerinfo.email" placement="top-end">
+                        <span>{{`${perCustomerinfo.email.slice(0,10)}...`}}</span>
                       </el-tooltip>
                       <span v-else>
                         {{perCustomerinfo.email}}
                       </span>
                     </el-col>
-                    <el-col :sm="8" :lg="4" v-else>
+                    <el-col :sm="8" class="padding" v-else>
                       <svg-icon icon-class="youxiang" class-name="card-panel-icon"/>
                       <span >
                         邮箱未知
                       </span>
                     </el-col>
-                    <el-col :sm="8" :lg="4" v-if="perCustomerinfo.addTime">
+                    <el-col :sm="8" class="padding"  v-if="perCustomerinfo.addTime">
                       <svg-icon icon-class="luru" class-name="card-panel-icon" />
                        <el-tooltip  class="item" effect="dark" :content="perCustomerinfo.addTime" placement="top-end">
                         <span>{{`${perCustomerinfo.addTime.slice(0,11)}...`}}</span>
@@ -157,7 +155,7 @@
           <div style="padding: 5px 0 0 10px;">
             <div class="font zhanyou">占有人：{{perro.addName}}</div>
             <div style="font-size: 12px;color: #909399;">
-                 占有时间：{{perro.addTime}} - {{perro.editTime}}
+                 {{perro.addTime}} - {{perro.editTime}}
             </div>
           </div>
         </div>
@@ -180,7 +178,7 @@
           <div class="caozuo" @click="buttoncli(2)" v-show="!button[2].disabled"> <svg-icon icon-class="preview" class-name="el-col icon-but" /><br><span class="zhanyou font">预览简历</span></div>
         </div>
       </div>
-      <el-dialog title="预览" :visible.sync="open2" width="70%">
+      <el-dialog  :visible.sync="open2" width="70%">
        <iframe
           :src="src"
           style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
@@ -457,13 +455,13 @@
 <style scoped>
   >>>.el-tabs__header{
     position: fixed;
-    background-color: #fff ;
+    background-color: #fff;
     z-index: 10;
-    width:calc(100% - 660px);
-    top: 255px;
+    width:calc(100% - 605px);
+    top: 277px;
   }
   >>>.el-tabs__content{
-    padding-top: 215px;
+    padding-top: 245px;
     height: calc(100vh - 100px);
     overflow: auto;
   }
@@ -499,7 +497,7 @@
     margin-bottom:9px;
   }
   .card-panel-icon{
-    margin-right:10px;
+    margin-right:5px;
     color: #606266;
   }
   .el-col{
@@ -515,8 +513,13 @@
         width: 20%;
     }
   }
+  @media only screen and (min-width: 1350px){
+    .padding {
+        width: 16.66667%;
+    }
+  }
   .right-but{
-    width:380px;
+    width:360px;
     height: 300px;
     margin-left: 10px;
     border-radius: 2px;

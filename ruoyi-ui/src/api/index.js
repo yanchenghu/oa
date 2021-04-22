@@ -8,10 +8,11 @@ export function getlist() {
   })
 }
 
-export function getdata() {
+export function getdata(data) {
   return request({
     url: 'work/statistic/workresultlist',
-    method: 'get'
+    method: 'post',
+    data:data
   })
 }
 

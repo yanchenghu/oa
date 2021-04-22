@@ -35,18 +35,18 @@
         <el-table-column label="电话"  prop="customerTel" width="110"/>
         <el-table-column label="添加时间"  prop="addTime" width="180">
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="释放时间" prop="editTime" width="180">
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.editTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            <span>{{ parseTime(scope.row.editTime, '{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="最近一次联系记录"  prop="memoDetail" />
         <el-table-column label="联系时间" prop="contactTime" width="180">
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.contactTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+            <span>{{ parseTime(scope.row.contactTime, '{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作"  class-name="small-padding fixed-width" width="120">

@@ -32,8 +32,8 @@
                   <img v-if="scope.$index==2" class="img-circle" src="../../assets/image/thirdly.png" alt="">
                   <el-avatar class="avatar" size="medium" v-if="scope.row.avatar" :src="avart+scope.row.avatar"></el-avatar>
                   <el-avatar class="avatar" size="medium" v-else>
-                    <img v-if="scope.row.sex==1" :src="name" alt="">
-                    <img v-else :src="name2" alt="">
+                    <img v-if="scope.row.sex==1" :src="index1" alt="">
+                    <img v-else :src="index2" alt="">
                   </el-avatar>
                   <span class="table-span">{{scope.row.nick_name}}</span>
                 </template>
@@ -65,8 +65,8 @@
                   <img v-if="scope.$index==2" class="img-circle" src="../../assets/image/thirdly.png" alt="">
                   <el-avatar class="avatar" size="medium" v-if="scope.row.avatar" :src="avart+scope.row.avatar"></el-avatar>
                   <el-avatar class="avatar" size="medium" v-else>
-                    <img v-if="scope.row.sex==1" :src="name1" alt="">
-                    <img v-else :src="name2" alt="">
+                    <img v-if="scope.row.sex==1" :src="index1" alt="">
+                    <img v-else :src="index2" alt="">
                   </el-avatar>
                   <span class="table-span">{{scope.row.nick_name}}</span>
                 </template>
@@ -90,7 +90,8 @@
           <div style="height: 600px; overflow: auto; width: 100%; margin-left: -35px;">
             <el-col :xs="24" :sm="24" :lg="12" v-for="list,index in dataList.ListperRob" :key="index">
                 <li>
-                  <router-link :to="{path:'/record/particulars',query:{customerCode:list.resumeId}}"><el-avatar style="background-color: #0081FF;"> {{list.customerName}} </el-avatar></router-link>
+                  <router-link :to="{path:'/record/particulars',query:{customerCode:list.resumeId}}"><el-avatar style="background-color: #0081FF;"  class="avatar" size="medium"> {{list.customerName}}</el-avatar></router-link>
+
                   <div class="ul-div">
                     <span>{{list.customerName}} </span>
                     <span> {{list.customerTel}}</span>
@@ -197,7 +198,7 @@ export default {
       this.$emit("handleSetLineChartData",type)
     },
     tiaozhuan(list){
-      this.$router.push({path:'/follow/particulars',query:{row:list.demandId,ident:1}})
+      this.$router.push({path:'/follow/particulars',query:{row:list.demandId,ident:8}})
     },
   }
 }

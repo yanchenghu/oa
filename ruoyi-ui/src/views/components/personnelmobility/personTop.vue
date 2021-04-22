@@ -99,13 +99,20 @@
                       borderRadius: [15, 15, 0, 0,]
                     },
                     barMaxWidth:10,
-                    data:  lastyearEntryPeople,
+                    data:  lastyearEntryPeople.map(item=>{
+                        return{
+                            value:item,
+                            itemStyle: {
+                                  borderRadius: item > 0 ? [15, 15, 0, 0] : [0, 0, 15, 15], // 动态设置柱状图圆角
+                              }
+                        }
+                    }),
                 },
                 {
                     name: data1[2],
                     type: 'line',
                     smooth: true,
-                    yAxisIndex: data1.length>3?1:0,
+                    yAxisIndex: 1,
                     symbolSize: 10,
                     showSymbol:false,
                     itemStyle:{
@@ -138,7 +145,7 @@
             series = series
          }else{
              series = series.map((item,i)=>{
-                 if(i==0||i==2){
+                 if(i==0||i==1){
                      return item
                  }
              })
@@ -176,7 +183,6 @@
                           yAxis: [
                               {
                                   type: 'value',
-                                  name: '人数',
                               },
                               {
                                   type: 'value',
