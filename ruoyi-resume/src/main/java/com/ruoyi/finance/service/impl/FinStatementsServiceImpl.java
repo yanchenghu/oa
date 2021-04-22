@@ -233,7 +233,7 @@ public class FinStatementsServiceImpl implements IFinStatementsService
        for(Integer Id:liId){
            FinStatements finStatements = finStatementsMapper.selectFinStatementsById(Id);
            if(finStatements.getStatus()!=1){
-            return AjaxResult.error("当前选中的状态有已开票的，或已付款");
+            return AjaxResult.error("当前选中的状态有"+finStatements.getCustomerName()+ "已开票的，或已付款");
            }
            FinStatements finStat=new FinStatements();
            finStat.setStatus(2);
@@ -255,7 +255,7 @@ public class FinStatementsServiceImpl implements IFinStatementsService
         for(Integer Id:liId){
             FinStatements finStatements = finStatementsMapper.selectFinStatementsById(Id);
             if(finStatements.getStatus()!=2){
-                return AjaxResult.error("当前选中的状态有已开票的，或已付款");
+                return AjaxResult.error("当前选中的状态"+finStatements.getCustomerName()+"已开票的，或已付款");
             }
             FinStatements finStat=new FinStatements();
             finStat.setStatus(3);

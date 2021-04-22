@@ -111,9 +111,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             a.customer_name,
             a.customer_tel,
             a.resume_id,
-            a.edit_time,
+             a.edit_time,
             a.wechat,
-            a.add_time,
+             a.add_time,
             a.STATUS,
             a.remark,
             a.add_people,
@@ -150,10 +150,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </update>
     <select id="selectPerRobdatadisplayList" parameterType="map" resultMap="PerRobcustomerResult">
-        <include refid="selectPerRobcustomerVo"/>
-        where add_people=#{AddPeople}
-        and Status=0
-        and DATE_FORMAT( add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+       select a.seize_id, a.customer_name, a.customer_tel, a.resume_id, a.edit_time, a.wechat, a.add_time, a.Status,  a.add_people, a.add_name,b.customer_sex         as remark from per_robcustomer a
+		LEFT JOIN per_customerinfo b on a.resume_id=b.customer_code        where add_people=#{AddPeople}
+        and a.Status=0
+        and DATE_FORMAT( a.add_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        order  by a.add_time desc
     </select>
     <select id="selectAllrobPeo"  resultMap="User">
 		SELECT b.* from  per_robcustomer a

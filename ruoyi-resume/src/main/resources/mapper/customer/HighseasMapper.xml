@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectYxdemandList" parameterType="Yxdemand" resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
-        <where>
+        where  1=1
             <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
             <if test="recruitmentJob != null  and recruitmentJob != ''"> and recruitment_job = #{recruitmentJob}</if>
             <if test="contactPeople != null  and contactPeople != ''"> and contact_people = #{contactPeople}</if>
@@ -87,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
             <if test="mailbox != null  and mailbox != ''"> and mailbox = #{mailbox}</if>
             <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
-        </where>
+        order by insert_time,rob_time desc
     </select>
 
     <select id="selectYxdemandById" parameterType="Integer" resultMap="YxdemandResult">

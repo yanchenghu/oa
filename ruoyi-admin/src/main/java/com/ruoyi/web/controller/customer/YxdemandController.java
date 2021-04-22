@@ -21,7 +21,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 营销录入公司Controller
+ * 商务录入客户线索Controller
  * 
  * @author ruoyi
  * @date 2020-11-06
@@ -37,19 +37,26 @@ public class YxdemandController extends BaseController
     @Autowired
     private TokenService tokenService;
 
-//    /**
-//     * 查询营销录入公司列表
-//     */
-//    @PreAuthorize("@ss.hasPermi('customer:yxdemand:list')")
-//    @GetMapping("/list")
-//    public TableDataInfo list(Yxdemand yxdemand)
-//    {
-//        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-//        startPage();
-//        List<Yxdemand> list = yxdemandService.selectYxdemandList(yxdemand,loginUser);
-//        return getDataTable(list);
-//    }
+    /**
+     * 查询全部营销录入客户线索列表
+     */
+    @PreAuthorize("@ss.hasPermi('customer:yxdemand:alllist')")
+    @GetMapping("/alllist")
+    public TableDataInfo list(Yxdemand yxdemand)
+    {
+        startPage();
+        List<Yxdemand> list = yxdemandService.selectAllYxdemandListBy(yxdemand);
+        return getDataTable(list);
+    }
 
+    /**
+     * 获取查询所有在职的商务
+     */
+    @GetMapping(value = "/allBusiness")
+    public AjaxResult getAllBusiness()
+    {
+        return AjaxResult.success(yxdemandService.getAllBusiness());
+    }
 
     /**
         * 获取营销录入公司详细信息

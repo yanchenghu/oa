@@ -45,7 +45,7 @@
 
     <select id="selectYxdemandList" parameterType="Yxdemand" resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
-        <where>
+        where 1=1
             <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
             <if test="recruitmentJob != null  and recruitmentJob != ''"> and recruitment_job = #{recruitmentJob}</if>
             <if test="contactPeople != null  and contactPeople != ''"> and contact_people = #{contactPeople}</if>
@@ -77,8 +77,9 @@
             <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
             <if test="mailbox != null  and mailbox != ''"> and mailbox = #{mailbox}</if>
             <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
-        </where>
-        ORDER BY update_date desc
+            ORDER BY insert_time,update_date desc
+
+
     </select>
 
     <select id="selectYxdemandById" parameterType="Integer" resultMap="YxdemandResult">
@@ -212,6 +213,14 @@
         <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
         </where>
     </select>
+    <!--查询所有在职的商务-->
+    <select id="getAllBusiness"  resultType="map">
+       SELECT a.nick_name ,a.user_name  from sys_user a
+            LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+            LEFT JOIN sys_role c on b.role_id=c.role_id
+        where c.role_key='business' and a.`status`=0 and a.del_flag !=2
+    </select>
+
 
 
 

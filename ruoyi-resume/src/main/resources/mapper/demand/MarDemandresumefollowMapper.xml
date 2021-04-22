@@ -111,15 +111,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             DATE_FORMAT(b.newfollowtime,'%Y-%m-%d %H:%i:%s') as newfollowtime,
             d.resume_path as resumePath,
              b.resume_enclosurepath as resumeEnclosurepath,
-             b.download_status as downloadStatus
-
+             b.download_status as downloadStatus,
+            d.expectation_salary as expectationSalary,
+            d.education as education,
+            d.work_year as workYear
         FROM
          mar_demandresume b
              LEFT JOIN mar_demand a ON a.demand_id = b.demand_id
             LEFT JOIN mar_demandresumefollow c ON b.id = c.demandresume_id and b.newfollowtime =c.trackingtime
             LEFT JOIN per_customerinfo d on b.customer_code=d.customer_code
             where a.demand_id=#{demandId}
-        <if test="customerName != null  and customerName != ''"> and d.customer_name = #{customerName}</if>
+        <if test="customerName != null  and customerName != ''">
+         and (d.customer_name like concat(#{customerName}, '%') or d.customer_tel=#{customerName})
+         </if>
          order by b.bind_time desc
     </select>
     <delete id="deleteMarDemandresumefollowByDemand_id" parameterType="String">

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarAuditedtorDemandMapper;
@@ -26,32 +27,28 @@ public class MarAuditedtorDemandServiceImpl implements IMarAuditedtorDemandServi
 
 
 
-    @Override
-    public List<MarAuditedtorDemand> selafterbinding(Integer auditedId) {
-        MarAuditedtorDemand marAuditedtorDemand=new MarAuditedtorDemand();
-        marAuditedtorDemand.setAuditedId(auditedId);
-        return marAuditedtorDemandMapper.selectMarAuditedtorDemandList(marAuditedtorDemand);
-    }
+//    @Override
+//    public List<MarAuditedtorDemand> selafterbinding(Integer auditedId) {
+//        MarAuditedtorDemand marAuditedtorDemand=new MarAuditedtorDemand();
+//        marAuditedtorDemand.setAuditedId(auditedId);
+//        return marAuditedtorDemandMapper.selectMarAuditedtorDemandList(marAuditedtorDemand);
+//    }
 
     @Override
-    public AjaxResult addaudbindingdemand(String zm) {
-      List<String> strList = JSON.parseArray(JSON.parseObject(zm).getString("list"), String.class);
-      Integer auditedId= Integer.valueOf(JSON.parseObject(zm).getString("auditedId"));
-      if(auditedId==null){
-          return AjaxResult.error("未传入面试题ID，请联系管理员");
+    public AjaxResult addaudbindingdemand(String demandId,Integer auditedId) {
+      if(auditedId==null || StringUtils.isEmpty(demandId)){
+          return AjaxResult.error("未传入面试题ID或者需求ID，请联系管理员");
       }
       Date date = new Date();
       MarAuditedtorDemand marAuditedtorDemand=new MarAuditedtorDemand();
-      marAuditedtorDemand.setAuditedId(auditedId);
+      marAuditedtorDemand.setDemandId(demandId);
       List<MarAuditedtorDemand> marAuditedtorDemands = marAuditedtorDemandMapper.selectMarAuditedtorDemandList(marAuditedtorDemand);
       if(marAuditedtorDemands.size()>0){
-          marAuditedtorDemandMapper.deleteMarAuditedtorDemandByAuditedId(auditedId);
+          marAuditedtorDemandMapper.deleteMarAuditedtorDemandByAuditedId(demandId);
       }
-      for(String demandId: strList){
-          marAuditedtorDemand.setDemandId(demandId);
-          marAuditedtorDemand.setAddTime(date);
-          marAuditedtorDemandMapper.insertMarAuditedtorDemand(marAuditedtorDemand);
-      }
+      marAuditedtorDemand.setAuditedId(auditedId);
+      marAuditedtorDemand.setAddTime(date);
+      marAuditedtorDemandMapper.insertMarAuditedtorDemand(marAuditedtorDemand);
       return AjaxResult.success("添加成功");
     }
 }

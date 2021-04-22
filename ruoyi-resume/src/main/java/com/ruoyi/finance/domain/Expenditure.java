@@ -14,37 +14,39 @@ import java.util.Date;
 
 
 public class Expenditure {
-    /** 序号 */
-    @Excel(name = "序号")
+    /** $column.columnComment */
     private Long id;
 
     /** 房租 */
     @Excel(name = "房租")
-    private String rent;
+    private Integer rent;
 
     /** 水电 */
     @Excel(name = "水电")
-    private String hydropower;
+    private Integer hydropower;
 
     /** 物业 */
     @Excel(name = "物业")
-    private String property;
-
-    /** 材料费 */
-    @Excel(name = "材料费")
-    private String materiaCost;
+    private Integer property;
 
     /** 税费 */
     @Excel(name = "税费")
-    private String taxation;
+    private Integer taxation;
 
     /** 其他 */
     @Excel(name = "其他")
-    private String otherCost;
+    private Integer otherCost;
 
-    /** 备注 */
-    @Excel(name = "备注")
-    private String remarks;
+    /** 社保 */
+    @Excel(name = "社保")
+    private Integer socialSecurity;
+
+
+
+    /** 合并支出 */
+    @Excel(name = "合并支出")
+    private Integer mergeMoney;
+
 
     public Long getId() {
         return id;
@@ -54,59 +56,59 @@ public class Expenditure {
         this.id = id;
     }
 
-    public String getRent() {
+    public Integer getRent() {
         return rent;
     }
 
-    public void setRent(String rent) {
+    public void setRent(Integer rent) {
         this.rent = rent;
     }
 
-    public String getHydropower() {
+    public Integer getHydropower() {
         return hydropower;
     }
 
-    public void setHydropower(String hydropower) {
+    public void setHydropower(Integer hydropower) {
         this.hydropower = hydropower;
     }
 
-    public String getProperty() {
+    public Integer getProperty() {
         return property;
     }
 
-    public void setProperty(String property) {
+    public void setProperty(Integer property) {
         this.property = property;
     }
 
-    public String getMateriaCost() {
-        return materiaCost;
-    }
-
-    public void setMateriaCost(String materiaCost) {
-        this.materiaCost = materiaCost;
-    }
-
-    public String getTaxation() {
+    public Integer getTaxation() {
         return taxation;
     }
 
-    public void setTaxation(String taxation) {
+    public void setTaxation(Integer taxation) {
         this.taxation = taxation;
     }
 
-    public String getOtherCost() {
+    public Integer getOtherCost() {
         return otherCost;
     }
 
-    public void setOtherCost(String otherCost) {
+    public void setOtherCost(Integer otherCost) {
         this.otherCost = otherCost;
     }
 
-    public String getRemarks() {
-        return remarks;
+    public Integer getSocialSecurity() {
+        return socialSecurity;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setSocialSecurity(Integer socialSecurity) {
+        this.socialSecurity = socialSecurity;
+    }
+
+    public Integer getMergeMoney() {
+        return mergeMoney;
+    }
+
+    public void setMergeMoney(Integer mergeMoney) {
+        this.mergeMoney = mergeMoney;
     }
 }

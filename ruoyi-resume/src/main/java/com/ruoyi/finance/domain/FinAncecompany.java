@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 添加合作公司对象 fin_ancecompany
  * 
  * @author ych
- * @date 2021-02-02
+ * @date 2021-04-01
  */
 public class FinAncecompany extends BaseEntity
 {

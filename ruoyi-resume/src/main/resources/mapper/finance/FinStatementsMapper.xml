@@ -226,13 +226,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from fin_statements a LEFT JOIN
         per_customerinfo b on a.customer_tel=b.customer_tel
         LEFT JOIN  mar_customerprojectpay c on b.customer_code=c.customer_code
-        <where>
+        where 1=1
             <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>
             <if test="party != null  and party != ''"> and a.party = #{party}</if>
             <if test="startTime != null "> and (a.start_time BETWEEN #{startTime} and #{endTime})</if>
             <if test="customerName != null  and customerName != ''"> and a.customer_name like concat('%', #{customerName}, '%')</if>
             <if test="status != null "> and status = #{status}</if>
-        </where>
+        GROUP BY a.id
     </select>
 
 

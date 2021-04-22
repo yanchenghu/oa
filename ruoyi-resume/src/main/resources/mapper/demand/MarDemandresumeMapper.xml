@@ -119,12 +119,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT c.customer_name as customerName ,c.customer_tel as customerTel, a.customer_code as customerCode,
         a.demand_id as demandId,b.follow_status as followStatus,
         DATE_FORMAT(b.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime from  mar_demandresume a LEFT JOIN
-            mar_demandresumefollow b on a.id=b.demandresume_id
-            LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
-        where
-          a.bind_people =#{AddPeople}
+        mar_demandresumefollow b on a.id=b.demandresume_id
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        where 1=1
+         and  a.bind_people =#{AddPeople}
          and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
           and b.follow_status=#{followStatus}
+          order by trackingtime desc
     </select>
     <select id="selectfirstMarbingBystatus"   resultType="int">
         SELECT COUNT(a.bind_people) as sd

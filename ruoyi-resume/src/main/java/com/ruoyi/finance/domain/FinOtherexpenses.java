@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 每月公司其他住处费用对象 fin_otherexpenses
  * 
  * @author ruoyi
- * @date 2021-02-02
+ * @date 2021-04-01
  */
 public class FinOtherexpenses extends BaseEntity
 {
@@ -22,31 +22,35 @@ public class FinOtherexpenses extends BaseEntity
 
     /** 房租 */
     @Excel(name = "房租")
-    private String rent;
+    private Integer rent;
 
     /** 水电 */
     @Excel(name = "水电")
-    private String hydropower;
+    private Integer hydropower;
 
     /** 物业 */
     @Excel(name = "物业")
-    private String property;
-
-    /** 材料费 */
-    @Excel(name = "材料费")
-    private String materiaCost;
+    private Integer property;
 
     /** 税费 */
     @Excel(name = "税费")
-    private String taxation;
+    private Integer taxation;
 
     /** 其他 */
     @Excel(name = "其他")
-    private String otherCost;
+    private Integer otherCost;
+
+    /** 社保 */
+    @Excel(name = "社保")
+    private Integer socialSecurity;
 
     /** 备注 */
     @Excel(name = "备注")
     private String remarks;
+
+    /** 合并支出 */
+    @Excel(name = "合并支出")
+    private Integer mergeMoney;
 
     /** 添加时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -66,59 +70,59 @@ public class FinOtherexpenses extends BaseEntity
     {
         return id;
     }
-    public void setRent(String rent) 
+    public void setRent(Integer rent) 
     {
         this.rent = rent;
     }
 
-    public String getRent() 
+    public Integer getRent() 
     {
         return rent;
     }
-    public void setHydropower(String hydropower) 
+    public void setHydropower(Integer hydropower) 
     {
         this.hydropower = hydropower;
     }
 
-    public String getHydropower() 
+    public Integer getHydropower() 
     {
         return hydropower;
     }
-    public void setProperty(String property) 
+    public void setProperty(Integer property) 
     {
         this.property = property;
     }
 
-    public String getProperty() 
+    public Integer getProperty() 
     {
         return property;
     }
-    public void setMateriaCost(String materiaCost) 
-    {
-        this.materiaCost = materiaCost;
-    }
-
-    public String getMateriaCost() 
-    {
-        return materiaCost;
-    }
-    public void setTaxation(String taxation) 
+    public void setTaxation(Integer taxation) 
     {
         this.taxation = taxation;
     }
 
-    public String getTaxation() 
+    public Integer getTaxation() 
     {
         return taxation;
     }
-    public void setOtherCost(String otherCost) 
+    public void setOtherCost(Integer otherCost) 
     {
         this.otherCost = otherCost;
     }
 
-    public String getOtherCost() 
+    public Integer getOtherCost() 
     {
         return otherCost;
+    }
+    public void setSocialSecurity(Integer socialSecurity) 
+    {
+        this.socialSecurity = socialSecurity;
+    }
+
+    public Integer getSocialSecurity() 
+    {
+        return socialSecurity;
     }
     public void setRemarks(String remarks) 
     {
@@ -128,6 +132,15 @@ public class FinOtherexpenses extends BaseEntity
     public String getRemarks() 
     {
         return remarks;
+    }
+    public void setMergeMoney(Integer mergeMoney) 
+    {
+        this.mergeMoney = mergeMoney;
+    }
+
+    public Integer getMergeMoney() 
+    {
+        return mergeMoney;
     }
     public void setInsertTime(Date insertTime) 
     {
@@ -155,10 +168,11 @@ public class FinOtherexpenses extends BaseEntity
             .append("rent", getRent())
             .append("hydropower", getHydropower())
             .append("property", getProperty())
-            .append("materiaCost", getMateriaCost())
             .append("taxation", getTaxation())
             .append("otherCost", getOtherCost())
+            .append("socialSecurity", getSocialSecurity())
             .append("remarks", getRemarks())
+            .append("mergeMoney", getMergeMoney())
             .append("insertTime", getInsertTime())
             .append("updateTime", getUpdateTime())
             .append("isDelflag", getIsDelflag())

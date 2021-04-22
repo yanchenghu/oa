@@ -94,7 +94,7 @@ public class MarDemandBindingController extends BaseController {
         return getDataTable(list);
     }
     /**
-     *需求已绑定简历跟踪
+     * 商务处理已绑定简历 跟踪
      */
     @PostMapping(value = "/demandResumeTrack")
     public AjaxResult demandResumeTrack(MarDemandresumefollow marDemandresumefollow){

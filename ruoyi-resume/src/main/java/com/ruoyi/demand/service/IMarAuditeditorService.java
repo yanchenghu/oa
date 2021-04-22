@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.demand.domain.MarAuditeditor;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,5 +22,5 @@ public interface IMarAuditeditorService
 
     int insertMarAuditeditor(String zm, MultipartFile multipartFile, LoginUser loginUser);
 
-    List<Map> selQuerydemand(String corpCode);
+    AjaxResult selQuerydemand(String demandId);
 }

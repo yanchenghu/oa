@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectMarAuditedtorDemandList" parameterType="MarAuditedtorDemand" resultMap="MarAuditedtorDemandResult">
         <include refid="selectMarAuditedtorDemandVo"/>
-        <where>  
+        <where>
             <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
             <if test="auditedId != null "> and audited_id = #{auditedId}</if>
             <if test="addTime != null "> and add_time = #{addTime}</if>
@@ -64,9 +64,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-    <delete id="deleteMarAuditedtorDemandByAuditedId" parameterType="Integer">
-        delete from mar_auditedtor_demand where audited_id = #{auditedId}
+    <delete id="deleteMarAuditedtorDemandByAuditedId" parameterType="String">
+        delete from mar_auditedtor_demand where demand_id = #{demandId}
     </delete>
+
+    <select id="selectMarAuditedtorDemandByDemandId" parameterType="String" resultType="Integer">
+      select  audited_id from  mar_auditedtor_demand where demand_id=#{demandId}
+
+    </select>
+
 
     
 </mapper>

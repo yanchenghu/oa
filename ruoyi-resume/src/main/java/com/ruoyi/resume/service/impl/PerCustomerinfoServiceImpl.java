@@ -235,21 +235,21 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             if(!"[]".equals(work_experience)){
                 work_experienceListArr = JSON.parseArray(work_experience, GenWorkExperience.class);
             }
-            if(work_experienceListArr.size()<=0){
-                f.delete();
-                return AjaxResult.error("简历无工作经历");
-            }
+//            if(work_experienceListArr.size()<=0){
+//                f.delete();
+//                return AjaxResult.error("简历无工作经历");
+//            }
             //项目经验
             String  project_experience = analyticalResults.getJSONObject("parsing_result").getJSONArray("project_experience").toString(4);
             List<GenProjectExperience> project_experienceListArr = new ArrayList<GenProjectExperience>();
             if(!"[]".equals(project_experience)){
                 project_experienceListArr = JSON.parseArray(project_experience, GenProjectExperience.class);
             }
-            if(project_experienceListArr.size()<=0){
-                f.delete();
-                return AjaxResult.error("简历无项目经验");
-
-            }
+//            if(project_experienceListArr.size()<=0){
+//                f.delete();
+//                return AjaxResult.error("简历无项目经验");
+//
+//            }
             //基本信息解析
             JSONObject basic_info = analyticalResults.getJSONObject("parsing_result").getJSONObject("basic_info");
             String s = basic_info.getString("date_of_birth");

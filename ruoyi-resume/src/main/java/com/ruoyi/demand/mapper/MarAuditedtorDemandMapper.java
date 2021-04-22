@@ -23,7 +23,7 @@ public interface MarAuditedtorDemandMapper
      * 查询面试题绑定需求列表
      * 
      * @param marAuditedtorDemand 面试题绑定需求
-     * @return 面试题绑定需求集合
+     * @return 需求面试题绑定集合
      */
     public List<MarAuditedtorDemand> selectMarAuditedtorDemandList(MarAuditedtorDemand marAuditedtorDemand);
 
@@ -59,5 +59,9 @@ public interface MarAuditedtorDemandMapper
      */
     public int deleteMarAuditedtorDemandByIds(Integer[] demandTopics);
 
-    int deleteMarAuditedtorDemandByAuditedId(Integer auditedId);
+    int deleteMarAuditedtorDemandByAuditedId(String demandId);
+
+    Integer selectMarAuditedtorDemandByDemandId(String demandId);
+
+
 }
