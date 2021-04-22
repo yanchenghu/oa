@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.MarCompanyChangerecordMapper">
+    
+    <resultMap type="MarCompanyChangerecord" id="MarCompanyChangerecordResult">
+        <result property="id"    column="id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="changeType"    column="change_type"    />
+        <result property="changeContent"    column="change_content"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarCompanyChangerecordVo">
+        select id, corp_code, change_type, change_content, add_time from mar_company_changerecord
+    </sql>
+
+    <select id="selectMarCompanyChangerecordList" parameterType="MarCompanyChangerecord" resultMap="MarCompanyChangerecordResult">
+        <include refid="selectMarCompanyChangerecordVo"/>
+        <where>  
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="changeType != null "> and change_type = #{changeType}</if>
+            <if test="changeContent != null  and changeContent != ''"> and change_content = #{changeContent}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarCompanyChangerecordById" parameterType="Integer" resultMap="MarCompanyChangerecordResult">
+        <include refid="selectMarCompanyChangerecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarCompanyChangerecord" parameterType="MarCompanyChangerecord" useGeneratedKeys="true" keyProperty="id">
+        insert into mar_company_changerecord
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null and corpCode != ''">corp_code,</if>
+            <if test="changeType != null">change_type,</if>
+            <if test="changeContent != null">change_content,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="corpCode != null and corpCode != ''">#{corpCode},</if>
+            <if test="changeType != null">#{changeType},</if>
+            <if test="changeContent != null">#{changeContent},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarCompanyChangerecord" parameterType="MarCompanyChangerecord">
+        update mar_company_changerecord
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null and corpCode != ''">corp_code = #{corpCode},</if>
+            <if test="changeType != null">change_type = #{changeType},</if>
+            <if test="changeContent != null">change_content = #{changeContent},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarCompanyChangerecordById" parameterType="Integer">
+        delete from mar_company_changerecord where id = #{id}
+    </delete>
+
+    <delete id="deleteMarCompanyChangerecordByIds" parameterType="String">
+        delete from mar_company_changerecord where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

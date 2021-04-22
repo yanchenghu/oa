@@ -1,6 +1,7 @@
 package com.ruoyi.customer.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.customer.domain.MarCompany;
@@ -73,4 +74,8 @@ public interface MarCompanyMapper
     List<MarCompany> selectMarCompanyContact(MarCompany marCompany);
 
     List<MarCompany> selectMarContractList(MarContract marContract);
+
+    List<MarCompany> selcheckingcompany(MarCompany marCompany);
+
+    Map getAllBoos();
 }

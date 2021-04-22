@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.customer.mapper.MarCompanyContactsMapper">
+    
+    <resultMap type="MarCompanyContacts" id="MarCompanyContactsResult">
+        <result property="id"    column="id"    />
+        <result property="corpCode"    column="corp_code"    />
+        <result property="contactPeople"    column="contact_people"    />
+        <result property="contactPosition"    column="contact_position"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="transformingPeople"    column="transforming_people"    />
+        <result property="bz"    column="bz"    />
+    </resultMap>
+
+    <sql id="selectMarCompanyContactsVo">
+        select id, corp_code, contact_people, contact_position, contact_phone, add_time, transforming_people, bz from mar_company_contacts
+    </sql>
+
+    <select id="selectMarCompanyContactsList" parameterType="MarCompanyContacts" resultMap="MarCompanyContactsResult">
+        <include refid="selectMarCompanyContactsVo"/>
+        <where>  
+            <if test="corpCode != null  and corpCode != ''"> and corp_code = #{corpCode}</if>
+            <if test="contactPeople != null  and contactPeople != ''"> and contact_people = #{contactPeople}</if>
+            <if test="contactPosition != null  and contactPosition != ''"> and contact_position = #{contactPosition}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="transformingPeople != null  and transformingPeople != ''"> and transforming_people = #{transformingPeople}</if>
+            <if test="bz != null  and bz != ''"> and bz = #{bz}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarCompanyContactsById" parameterType="Integer" resultMap="MarCompanyContactsResult">
+        <include refid="selectMarCompanyContactsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarCompanyContacts" parameterType="MarCompanyContacts">
+        insert into mar_company_contacts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="corpCode != null and corpCode != ''">corp_code,</if>
+            <if test="contactPeople != null">contact_people,</if>
+            <if test="contactPosition != null">contact_position,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="transformingPeople != null">transforming_people,</if>
+            <if test="bz != null">bz,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="corpCode != null and corpCode != ''">#{corpCode},</if>
+            <if test="contactPeople != null">#{contactPeople},</if>
+            <if test="contactPosition != null">#{contactPosition},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="transformingPeople != null">#{transformingPeople},</if>
+            <if test="bz != null">#{bz},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarCompanyContacts" parameterType="MarCompanyContacts">
+        update mar_company_contacts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpCode != null and corpCode != ''">corp_code = #{corpCode},</if>
+            <if test="contactPeople != null">contact_people = #{contactPeople},</if>
+            <if test="contactPosition != null">contact_position = #{contactPosition},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="transformingPeople != null">transforming_people = #{transformingPeople},</if>
+            <if test="bz != null">bz = #{bz},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarCompanyContactsById" parameterType="Integer">
+        delete from mar_company_contacts where id = #{id}
+    </delete>
+
+    <delete id="deleteMarCompanyContactsByIds" parameterType="String">
+        delete from mar_company_contacts where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

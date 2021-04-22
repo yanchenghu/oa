@@ -292,6 +292,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			a.state=0 and operationuser=#{userName}
 		 GROUP BY demand_id ORDER BY sd desc,b.bind_time asc
 	</select>
+    <select id="selectdemandCooperationCompany"  parameterType="String" resultMap="MarDemandResult">
+     select c.corp_code,c.transforming_people as operationuser,c.corp_name as project_name from
+    (SELECT corp_code from mar_demand a
+    where a.state=0 GROUP BY corp_code)b LEFT JOIN mar_company c on c.corp_code=b.corp_code
+	where c.transforming_people=#{userName}
+    </select>
 
 
 

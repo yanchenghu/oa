@@ -189,5 +189,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addTime != null "> and add_time = #{addTime}</if>
         </where>
     </select>
-    
+
+    <select id="selcheckingcompany" parameterType="MarCompany" resultMap="MarCompanyResult">
+    SELECT * from mar_company where corp_name=#{corpName} and corp_code!=#{corpCode}
+    </select>
+
+
+    <!--查询所有在职的boos-->
+    <select id="getAllBoos"  resultType="map">
+        SELECT a.nick_name ,a.user_name,a.dinguserid from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        where c.role_key='boss' and a.`status`=0 and a.del_flag !=2 limit 1
+    </select>
+
 </mapper>

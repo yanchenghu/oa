@@ -3,6 +3,7 @@ package com.ruoyi.demand.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.demand.domain.BasicInfo;
 import com.ruoyi.demand.domain.MarDemand;
 import com.ruoyi.demand.domain.MarEntryInfo;
@@ -85,4 +86,6 @@ public interface MarDemandMapper
     List<MarDemand> selectmarDWorLitList(Map map);
 
     List<MarDemand> selectThreeLit(Map map);
+
+    List<MarDemand> selectdemandCooperationCompany(String userName);
 }

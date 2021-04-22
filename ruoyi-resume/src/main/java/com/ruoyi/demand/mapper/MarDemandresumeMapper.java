@@ -87,4 +87,10 @@ public interface MarDemandresumeMapper
     int selectlitoutNum(Map map);
 
     List<Map> sellistOutbyuserName(Map map);
+
+    List<MarDemandresume> selectByDemandIdBinTime(MarDemandresume marDemandresume);
+
+    List selectMarDemandresumebyDemand(String demandId);
+
+    List<MarDemandresume> selectByDemandNewfollowtime(MarDemandresume marDemandresume);
 }

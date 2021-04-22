@@ -45,7 +45,7 @@ public interface IMarCompanyService
      * @param marCompany 合作公司
      * @return 结果
      */
-    public AjaxResult updateMarCompany(MarCompany marCompany, LoginUser loginUser);
+    public AjaxResult updateMarCompany(MarCompany marCompany, LoginUser loginUser) throws Exception;
 
     /**
      * 批量删除合作公司
@@ -79,4 +79,8 @@ public interface IMarCompanyService
      * @return
      */
     List<MarCompany> selectMarCompanyAlllistcom();
+    /**
+     * 修改合作公司名称查重
+     */
+    String selcheckingcompany(String corpCode, String corpName);
 }

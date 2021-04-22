@@ -139,6 +139,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selBinMardandPeople"  parameterType="map"  resultType="map">
     SELECT a.project_name as projectName,d.customer_name as customerName,
+    a.demand_id as demandId,
     DATE_FORMAT(c.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime
     from mar_demand a
     LEFT JOIN mar_demandresume b on a.demand_id=b.demand_id
@@ -187,9 +188,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where  b.operationuser=#{userName}
         and  DATE_FORMAT( a.outof_projecttime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
     </select>
+    <select id="selectByDemandIdBinTime"  parameterType="MarDemandresume"  resultMap="MarDemandresumeResult">
+     select id, demand_id, customer_code, bind_time, bind_people,
+     download_status, newfollowtime, trackz_peoname, resume_enclosurepath
+     from mar_demandresume a
+     where a.bind_time &lt;#{bindTime}
+     <if test="demandId != null">and a.demand_id = #{demandId}</if>
 
+    </select>
+    <select id="selectMarDemandresumebyDemand"  parameterType="String"  resultMap="MarDemandresumeResult">
+    SELECT
+        a.id,a.demand_id,a.customer_code,a.bind_people,b.follow_status as download_status
+    FROM
+        mar_demandresume a
+    LEFT JOIN mar_demandresumefollow b ON a.id = b.demandresume_id and a.newfollowtime=b.trackingtime
+    where a.demand_id=#{demandId} and b.follow_status in (1,3,5)
+    </select>
 
-
-
+    <select id="selectByDemandNewfollowtime"   parameterType="MarDemandresume"  resultMap="MarDemandresumeResult">
+        SELECT
+            a.id,a.demand_id,a.customer_code,a.newfollowtime,b.follow_status as download_status
+        FROM
+            mar_demandresume a
+        LEFT JOIN mar_demandresumefollow b ON a.id = b.demandresume_id and a.newfollowtime=b.trackingtime
+        where a.newfollowtime &lt;#{newfollowtime} and b.follow_status in (1,3,5)
+    </select>
 
 </mapper>
