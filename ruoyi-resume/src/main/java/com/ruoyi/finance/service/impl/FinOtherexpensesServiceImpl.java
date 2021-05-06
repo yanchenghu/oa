@@ -61,7 +61,7 @@ public class FinOtherexpensesServiceImpl implements IFinOtherexpensesService
         if(i>0){
              return AjaxResult.error("当月信息已经存在，不用在添加了，请去修改");
         }
-        finOtherexpenses.setInsertTime(new Date());
+
         int i1 = finOtherexpensesMapper.insertFinOtherexpenses(finOtherexpenses);
         if(i1>0){
             return AjaxResult.success();

@@ -3,6 +3,7 @@ package com.ruoyi.demand.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.demand.domain.MarWaitingentry;
 
 /**
@@ -68,5 +69,7 @@ public interface MarWaitingentryMapper
      */
     int updateMarWaitingentryby(MarWaitingentry marWaiting);
 
-    List<Map> getMarWaitingentr();
+    List<Map> getMarWaitingentr(String username);
+
+    int deleteMarWaitingentryByDemandandCode(MarDemandresume marDemandresume);
 }

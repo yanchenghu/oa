@@ -13,6 +13,7 @@ import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.domain.PerRobcustomer;
 import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
 import com.ruoyi.resume.mapper.PerRobcustomerMapper;
+import com.ruoyi.statistic.domain.BeInterviewed;
 import com.ruoyi.statistic.service.IHomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -168,7 +169,7 @@ public class IHomePageServiceImpl implements IHomePageService {
         }else if(followStatus==3){
             //获取简历通过
             map.put("followStatus",3);
-            List<Map> resumeadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
+            List<BeInterviewed> resumeadopt=marDemandresumeMapper.selectMarDemandbyBeInterviewed(map);
             return AjaxResult.success(resumeadopt);
         }else if(followStatus==4){
             //获取简历面试通过
@@ -193,10 +194,8 @@ public class IHomePageServiceImpl implements IHomePageService {
     public AjaxResult businessData(LoginUser loginUser) {
         //录入需求
         MarDemand marDemand=new MarDemand();
-        marDemand.setState(0);
         marDemand.setOperationuser(loginUser.getUsername());
         List<MarDemand> litmarD= marDemandMapper.selectMarDemandList(marDemand);
-
 
         Map map=new HashMap();
         map.put("userName",loginUser.getUsername());
@@ -269,11 +268,10 @@ public class IHomePageServiceImpl implements IHomePageService {
             map.put("followStatus",1);
             List<Map> litmap=marDemandresumeMapper.selBinMardandPeople(map);
             return AjaxResult.success(litmap);
-
         }else if(followStatus==3){
             //简历通过
             map.put("followStatus",3);
-            List<Map> litinfo=marDemandresumeMapper.selBinMardandPeople(map);
+            List<BeInterviewed> litinfo=marDemandresumeMapper.selBinCode(map);
             return AjaxResult.success(litinfo);
         }else if(followStatus==5){
             //面试通过

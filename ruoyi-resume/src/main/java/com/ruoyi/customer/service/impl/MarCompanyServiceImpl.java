@@ -326,4 +326,16 @@ public class MarCompanyServiceImpl implements IMarCompanyService
         }
 
     }
+
+    @Override
+    public String getcompanyName(String companyName) {
+        if(StringUtils.isEmpty(companyName)){
+            return "请输入公司名称";
+        }
+        MarCompany mar = marCompanyMapper.selectMarCompanyByName(companyName);
+        if(mar!=null){
+            return "当前公司已存在";
+        }
+        return "当前公司不存在";
+    }
 }

@@ -126,4 +126,10 @@ public interface IMarDemandService
     void demandCooperationCompany() throws Exception;
 
     void itemsIncluded();
+
+    List<MarDemand> getAllMarDemandList(MarDemand marDemand);
+    /*
+     *获取需求绑定上限
+     */
+    AjaxResult bindingUpper(String demandId);
 }

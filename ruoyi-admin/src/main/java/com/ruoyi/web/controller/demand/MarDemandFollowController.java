@@ -164,7 +164,15 @@ public class MarDemandFollowController extends BaseController
 
 
 
+    /**
+     * 获取需求详细信息
+     */
 
+    @PostMapping(value = "/bindingUpper")
+    public AjaxResult bindingUpper( String demandId)
+    {
+        return marDemandService.bindingUpper(demandId);
+    }
 
 
 

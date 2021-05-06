@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.analysis.mapper.ProjectPersonnelMapper">
+
+    <resultMap type="ProjectPersonnel" id="ProjectPersonnelResult">
+        <result property="currentDate"    column="current_date"  />
+        <result property="corpName"    column="corp_name"  />
+        <result property="corpCode"    column="corp_code"  />
+        <result property="thismonthNum"    column="thismonth_num"  />
+        <result property="lastmonthNum"    column="lastmonth_num"  />
+        <result property="lastyearmonthNum"    column="lastyearmonth_num"  />
+        <result property="collectionCycle"    column="collection_cycle"  />
+    </resultMap>
+    <select id="getAllCorpName"  parameterType="ProjectPersonnel"  resultMap="ProjectPersonnelResult">
+    SELECT a.corp_code,b.corp_name,payback_period as collection_cycle from
+    (SELECT corp_code,COUNT(id)as dsa  from mar_customerprojectpay a where   outof_projecttime is null
+    GROUP BY corp_code ORDER BY dsa desc) a LEFT JOIN mar_company b on a.corp_code=b.corp_code
+
+    </select>
+
+    <select id="getAcurrentDateList"  parameterType="ProjectPersonnel"  resultMap="ProjectPersonnelResult">
+        SELECT corp_code,COUNT(corp_code) as thismonth_num  from  mar_customerprojectpay  where   syqstart_time &lt;#{currentDate} and
+        (outof_projecttime &gt; #{currentDate} or outof_projecttime is null)
+        GROUP BY corp_code
+    </select>
+
+
+</mapper>

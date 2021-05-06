@@ -83,4 +83,6 @@ public interface IMarCompanyService
      * 修改合作公司名称查重
      */
     String selcheckingcompany(String corpCode, String corpName);
+
+    String getcompanyName(String companyName);
 }

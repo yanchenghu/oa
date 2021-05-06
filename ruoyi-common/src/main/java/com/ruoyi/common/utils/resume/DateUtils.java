@@ -394,7 +394,7 @@ public class DateUtils {
 
 	public static void main(String[] args) throws ParseException {
 //		Date nMonthlastDate = getNMonthlastDate(new Date(), 8);
-		Date nMonthlasde = getDayBefore( new Date(),7);
+		Date nMonthlasde = getNMonthlastDate( 1);
 //		Date nMonthdde = getNMonthfirstDateforDate( 9,new Date());
 //
 ////		System.out.println(formatY_M_D2String(nMonthlastDate,FORMAT_Y_M));

@@ -13,6 +13,7 @@ import com.ruoyi.customer.domain.MarCompanyContacts;
 import com.ruoyi.customer.domain.MarContract;
 import com.ruoyi.customer.service.IMarCompanyContactsService;
 import com.ruoyi.customer.service.IMarContractService;
+import com.ruoyi.customer.service.IYxdemandService;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class MarCompanyController extends BaseController
     private TokenService tokenService;
     @Autowired
     private IMarCompanyContactsService marCompanyContactsService;
+    @Autowired
+    private IYxdemandService yxdemandService;
 
     /**
      * 查询合作公司列表
@@ -83,6 +86,18 @@ public class MarCompanyController extends BaseController
         marCompany.setCorpCode(SerialNumber.createSerial("hzgs", 6));
         return marCompanyService.insertMarCompany(marCompany,loginUser);
     }
+    /**
+     * 新增合作公司
+     */
+    /**
+     * 根据公司名字获取营销录入公司
+     */
+    @PostMapping(value = "/companyName")
+    public String getcompanyName(@RequestParam(value = "companyName", defaultValue = "") String companyName)
+    {
+        return marCompanyService.getcompanyName(companyName);
+    }
+
 
 
     /**

@@ -27,11 +27,11 @@ import java.util.List;
 
 public class DingUtil {
     //上海梓钦
-    public static final Long agent_id = 262622998L;
-    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=ding5urinhfhisf4kxdx&appsecret=6vXcaU9xfohvTz9dMbM8KKCUfxSSoRD46fOW9KpvFdKlZXuxFhjcdJcdRngthLB1";//获取高预美token
-     //携硕
-//    public static final Long agent_id = 1165985525L;
-//    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=dingjklmyatz1ebot6gx&appsecret=L9pdn1m-LIbsZBwoOgn6ZigG_KooRZYN63hyClywVyJUtWMKx0BaX0uNGXwNB51T";//获取携硕token
+//    public static final Long agent_id = 262622998L;
+//    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=ding5urinhfhisf4kxdx&appsecret=6vXcaU9xfohvTz9dMbM8KKCUfxSSoRD46fOW9KpvFdKlZXuxFhjcdJcdRngthLB1";//获取高预美token
+//     //携硕
+    public static final Long agent_id = 1165985525L;
+    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=dingjklmyatz1ebot6gx&appsecret=L9pdn1m-LIbsZBwoOgn6ZigG_KooRZYN63hyClywVyJUtWMKx0BaX0uNGXwNB51T";//获取携硕token
 
     public static final String processCode = "PROC-DBDE589B-8CC6-44EA-B7A5-B3A90D47B4FB";//通知类审批编号
     public static final String appkey = "ding5urinhfhisf4kxdx";

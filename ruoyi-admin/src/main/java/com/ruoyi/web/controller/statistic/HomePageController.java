@@ -85,7 +85,7 @@ public class HomePageController extends BaseController {
     }
 
     /**
-     * 预留接口 行政、老板、
+     * 预留接口 行政、
      */
     @GetMapping(value = "/reservedisplay")
     public AjaxResult reservedisplay()
