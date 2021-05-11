@@ -398,16 +398,14 @@ public class YxdemandServiceImpl implements IYxdemandService
     }
 
     @Override
-    public AjaxResult workresultlist(LoginUser loginUser) {
+    public AjaxResult workresultlist(String usercode) {
         Map<String,Object> map = new HashMap<String,Object>();
         Date dat1 = workDay.getBeforeWorkDay(new Date(),1);
         Date dat2 = workDay.getBeforeWorkDay(new Date(),2);
         map.put("date1", dat1);
         map.put("date2", dat2);
-        map.put("usercode", loginUser.getUsername());
-
+        map.put("usercode", usercode);
         List<ConOperationrecords>  ListCon=conOperationrecordsMapper.selectConOperatBymap(map);
-
         return AjaxResult.success(ListCon);
     }
 

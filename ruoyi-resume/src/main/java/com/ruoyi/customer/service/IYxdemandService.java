@@ -120,7 +120,7 @@ public interface IYxdemandService
      */
     String yxdemByName(String companyName);
 
-    AjaxResult workresultlist(LoginUser loginUser);
+    AjaxResult workresultlist(String usercode);
 
     AjaxResult newIntention(Yxdemand yxdemand, LoginUser loginUser);
 

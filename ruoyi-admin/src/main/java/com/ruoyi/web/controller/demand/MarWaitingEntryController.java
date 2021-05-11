@@ -3,6 +3,9 @@ package com.ruoyi.web.controller.demand;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.ServletUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +37,8 @@ public class MarWaitingEntryController extends BaseController {
 
     @Autowired
     private IMarWaitingentryService marWaitingentryService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询待入项列表
@@ -43,7 +48,9 @@ public class MarWaitingEntryController extends BaseController {
     public TableDataInfo list(MarWaitingentry marWaitingentry)
     {
         startPage();
-        List<Map> list = marWaitingentryService.getMarWaitingentr(marWaitingentry);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String username = loginUser.getUsername();
+        List<Map> list = marWaitingentryService.getMarWaitingentr(username);
         return getDataTable(list);
     }
 

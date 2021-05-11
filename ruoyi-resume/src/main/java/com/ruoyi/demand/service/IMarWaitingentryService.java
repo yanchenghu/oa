@@ -21,7 +21,7 @@ public interface IMarWaitingentryService
      * @param marWaitingentry 待入项
      * @return 待入项集合
      */
-    public List<Map> getMarWaitingentr(MarWaitingentry marWaitingentry);
+    public List<Map> getMarWaitingentr(String username);
 
 
 }

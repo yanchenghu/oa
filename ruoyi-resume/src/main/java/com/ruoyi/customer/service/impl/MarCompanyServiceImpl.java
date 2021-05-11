@@ -3,20 +3,21 @@ package com.ruoyi.customer.service.impl;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.customer.domain.MarContract;
-import com.ruoyi.customer.domain.MarContractfollow;
-import com.ruoyi.customer.domain.Yxdemand;
-import com.ruoyi.customer.mapper.MarContractMapper;
-import com.ruoyi.customer.mapper.MarContractfollowMapper;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.resume.DingUtil;
+import com.ruoyi.conn.domain.ConDingtoken;
+import com.ruoyi.conn.mapper.ConDingtokenMapper;
+import com.ruoyi.customer.domain.*;
+import com.ruoyi.customer.mapper.*;
 import com.ruoyi.demand.domain.MarAuditeditor;
 import com.ruoyi.demand.mapper.MarAuditeditorMapper;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.customer.mapper.MarCompanyMapper;
-import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.service.IMarCompanyService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,12 @@ public class MarCompanyServiceImpl implements IMarCompanyService
     private MarContractMapper marContractMapper;
     @Autowired
     private MarAuditeditorMapper marAuditeditorMapper;
+    @Autowired
+    private MarCompanyContactsMapper marCompanyContactsMapper;
+    @Autowired
+    private ConDingtokenMapper conDingtokenMapper;
+    @Autowired
+    private MarCompanyChangerecordMapper marCompanyChangerecordMapper;
 
     /**
      * 查询合作公司
@@ -61,11 +68,18 @@ public class MarCompanyServiceImpl implements IMarCompanyService
         marAuditeditor.setCorpCode(corpCode);
         List<MarAuditeditor> listAuditeditors = marAuditeditorMapper.selectMarAuditeditorList(marAuditeditor);
 
+        //联系人
+        MarCompanyContacts marCompanyContacts=new MarCompanyContacts();
+        marCompanyContacts.setCorpCode(corpCode);
+        List<MarCompanyContacts> listMarCompanyC=marCompanyContactsMapper.selectMarCompanyContactsList(marCompanyContacts);
+
+
         HashMap hashmap = new HashMap();
         hashmap.put("marContracts",marContracts);
         hashmap.put("marCompany",marCompany);
         hashmap.put("mar",mar);
         hashmap.put("listAuditeditors",listAuditeditors);
+        hashmap.put("listMarCompanyC",listMarCompanyC);
         return AjaxResult.success("hashmap",hashmap);
     }
 
@@ -101,6 +115,7 @@ public class MarCompanyServiceImpl implements IMarCompanyService
 
         marCompany.setEntryPeople(loginUser.getUser().getNickName());
         marCompany.setTransformingPeople(loginUser.getUsername());
+        marCompany.setAddTime(new Date());
         marCompanyMapper.insertMarCompany(marCompany);
         MarContractfollow marContractfollow = new MarContractfollow();
         marContractfollow.setNickName(loginUser.getUser().getNickName());
@@ -121,14 +136,39 @@ public class MarCompanyServiceImpl implements IMarCompanyService
      */
     @Override
     @Transactional
-    public AjaxResult updateMarCompany(MarCompany marCompany,LoginUser loginUser)
-    {
-        MarCompany maw = marCompanyMapper.selectMarCompanyByName(marCompany.getCorpName());
-        if(!marCompany.getCorpCode().equals(maw.getCorpCode())){
-            return AjaxResult.error("当前公司已存在");
+    public AjaxResult updateMarCompany(MarCompany marCompany,LoginUser loginUser) throws Exception {
+       
+        ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
+        if(cotoken==null){
+            JSONObject jsonToken =  DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+            cotoken.setToken(jsonToken.getString("access_token"));
+        }
+        String DingId="01195548941584";
+        Map map=marCompanyMapper.getAllBoos();
+        if(map!=null){
+            DingId= (String) map.get("dinguserid");
+        }
+        MarCompany mar = marCompanyMapper.selectMarCompanyById(marCompany.getCorpCode());
+        String corpName = mar.getCorpName();
+        String contactPhone = mar.getContactPhone();
+        MarCompanyChangerecord marCompanyChangerecord=new MarCompanyChangerecord();
+        marCompanyChangerecord.setCorpCode(marCompany.getCorpCode());
+        marCompanyChangerecord.setAddTime(new Date());
+        if(!marCompany.getCorpName().equals(corpName)){
+            marCompanyChangerecord.setChangeType(1);
+            marCompanyChangerecord.setChangeContent("将："+corpName+"，名称改为："+marCompany.getCorpName());
+            marCompanyChangerecordMapper.insertMarCompanyChangerecord(marCompanyChangerecord);
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+DingId,
+                    "您好，系统监测到"+loginUser.getUser().getNickName()+"将："+corpName+"，名称改为："+marCompany.getCorpName());
         }
 
-        MarCompany mar = marCompanyMapper.selectMarCompanyById(marCompany.getCorpCode());
+        if(!marCompany.getContactPhone().equals(contactPhone)){
+            marCompanyChangerecord.setChangeType(2);
+            marCompanyChangerecord.setChangeContent("将："+corpName+"的电话，"+contactPhone+"改为："+marCompany.getContactPhone());
+            marCompanyChangerecordMapper.insertMarCompanyChangerecord(marCompanyChangerecord);
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+DingId,
+                    "您好，系统监测到"+loginUser.getUser().getNickName()+"将："+corpName+"的电话，"+contactPhone+"改为："+marCompany.getContactPhone());
+        }
         Integer a = mar.getCompanySituation();
         Integer b = mar.getCustomerLevel();
         Integer c = mar.getPaybackPeriod();
@@ -259,5 +299,43 @@ public class MarCompanyServiceImpl implements IMarCompanyService
         MarCompany marCompany=new MarCompany();
         return marCompanyMapper.selectMarCompanyList(marCompany);
 
+    }
+
+    @Override
+    public String selcheckingcompany(String corpCode, String corpName) {
+        if(StringUtils.isEmpty(corpCode)||StringUtils.isEmpty(corpName)){
+            return "系统错误，请联系管理员";
+        }
+        MarCompany marCompany1 = marCompanyMapper.selectMarCompanyById(corpCode);
+        if(marCompany1!=null){
+            String sads=marCompany1.getCorpName();
+            if(corpName.equals(sads)){
+                return "修改名称与原名称相同";
+            }
+
+        }
+
+        MarCompany marCompany=new MarCompany();
+        marCompany.setCorpCode(corpCode);
+        marCompany.setCorpName(corpName);
+        List<MarCompany> lisy=marCompanyMapper.selcheckingcompany(marCompany);
+        if(lisy.size()>0){
+            return "当前公司名称已存在";
+        }else{
+            return "当前公司名称可以修改";
+        }
+
+    }
+
+    @Override
+    public String getcompanyName(String companyName) {
+        if(StringUtils.isEmpty(companyName)){
+            return "请输入公司名称";
+        }
+        MarCompany mar = marCompanyMapper.selectMarCompanyByName(companyName);
+        if(mar!=null){
+            return "当前公司已存在";
+        }
+        return "当前公司不存在";
     }
 }

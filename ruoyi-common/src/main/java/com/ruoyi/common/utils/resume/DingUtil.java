@@ -26,11 +26,18 @@ import java.util.Date;
 import java.util.List;
 
 public class DingUtil {
-    public static final Long agent_id = 262622998L;
+    //上海梓钦
+//    public static final Long agent_id = 262622998L;
+//    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=ding5urinhfhisf4kxdx&appsecret=6vXcaU9xfohvTz9dMbM8KKCUfxSSoRD46fOW9KpvFdKlZXuxFhjcdJcdRngthLB1";//获取高预美token
+//     //携硕
+    public static final Long agent_id = 1165985525L;
+    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=dingjklmyatz1ebot6gx&appsecret=L9pdn1m-LIbsZBwoOgn6ZigG_KooRZYN63hyClywVyJUtWMKx0BaX0uNGXwNB51T";//获取携硕token
+
     public static final String processCode = "PROC-DBDE589B-8CC6-44EA-B7A5-B3A90D47B4FB";//通知类审批编号
     public static final String appkey = "ding5urinhfhisf4kxdx";
     public static final String appsecret = "6vXcaU9xfohvTz9dMbM8KKCUfxSSoRD46fOW9KpvFdKlZXuxFhjcdJcdRngthLB1";
-    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=ding5urinhfhisf4kxdx&appsecret=6vXcaU9xfohvTz9dMbM8KKCUfxSSoRD46fOW9KpvFdKlZXuxFhjcdJcdRngthLB1";//获取token
+//    public static final String appkey = "ding5urinhfhisf4kxdx";
+//    public static final String appsecret = "6vXcaU9xfohvTz9dMbM8KKCUfxSSoRD46fOW9KpvFdKlZXuxFhjcdJcdRngthLB1";
     public static final String sendMessage_URL = "https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2";//发送消息
     public static final String sendApprove_URL = "https://oapi.dingtalk.com/topapi/processinstance/create";//发送审批
     public static final String receivedApprove_URL = "https://oapi.dingtalk.com/topapi/processinstance/get";//接收审批
@@ -38,12 +45,17 @@ public class DingUtil {
     public static final String department_URL = "https://oapi.dingtalk.com/department/list?access_token=17ee691aa8ac3b77ae333a2a7251593e";//查询部门
     public static final String division_URL = "https://oapi.dingtalk.com/department/list_ids?access_token=4d71a70f6c033b72a2fa5c2cda9ebd9f&id=27041167";//查询子部门
 
-    public static void main(String[] args) throws Exception {
-        String url = "https://oapi.dingtalk.com/attendance/listRecord";
-        String token = "ae6813bd0af13a01b929a559a2cdd8b8";
-        details(url,token,"2019-11-20 00:00:00","2019-11-26 12:00:00");
-    }
+//    public static void main(String[] args) throws Exception {
+//        String url = "https://oapi.dingtalk.com/attendance/listRecord";
+//        String token = "2d926a821b3d30e18b280b4036175c47";
+//        details(url,token,"2019-11-20 00:00:00","2019-11-26 12:00:00");
+//    }
 
+//    public static void main(String[] args) throws Exception {
+//        String token = "2d926a821b3d30e18b280b4036175c47";
+//        DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+token+"&agent_id="+DingUtil.agent_id+"&userid_list="+"181621295120840346",
+//                "调试完成，接口关闭");
+//    }
     //打卡详情
     public static JSONObject details(String url,String token,String date1,String date2) throws Exception {
         DingTalkClient client = new DefaultDingTalkClient(url);

@@ -11,25 +11,21 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 内部人员工资对象 fin_insidesalary
  * 
  * @author ych
- * @date 2021-01-29
+ * @date 2021-04-22
  */
 public class FinInsidesalary extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 内部人员工资id */
-    private Long id;
+    private Integer id;
 
     /** 姓名 */
     @Excel(name = "姓名")
     private String name;
 
-    /** 请假天数 */
-    @Excel(name = "请假天数")
-    private String leaveDate;
-
-    /** 实际工资 */
-    @Excel(name = "实际工资")
+    /** 基本工资 */
+    @Excel(name = "基本工资")
     private String realAttence;
 
     /** 实际出勤 */
@@ -40,12 +36,12 @@ public class FinInsidesalary extends BaseEntity
     @Excel(name = "法定出勤")
     private String statutoryAttendance;
 
-    /** 入项实际工资 */
-    @Excel(name = "入项实际工资")
+    /** 应发工资 */
+    @Excel(name = "应发工资")
     private String actualIncome;
 
-    /** 税金 */
-    @Excel(name = "税金")
+    /** 绩效 */
+    @Excel(name = "绩效")
     private String taxes;
 
     /** 全勤奖 */
@@ -82,12 +78,12 @@ public class FinInsidesalary extends BaseEntity
     @Excel(name = "添加人")
     private String addPeople;
 
-    public void setId(Long id) 
+    public void setId(Integer id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId() 
     {
         return id;
     }
@@ -99,15 +95,6 @@ public class FinInsidesalary extends BaseEntity
     public String getName() 
     {
         return name;
-    }
-    public void setLeaveDate(String leaveDate) 
-    {
-        this.leaveDate = leaveDate;
-    }
-
-    public String getLeaveDate() 
-    {
-        return leaveDate;
     }
     public void setRealAttence(String realAttence) 
     {
@@ -232,7 +219,6 @@ public class FinInsidesalary extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("name", getName())
-            .append("leaveDate", getLeaveDate())
             .append("realAttence", getRealAttence())
             .append("actualAttendance", getActualAttendance())
             .append("statutoryAttendance", getStatutoryAttendance())

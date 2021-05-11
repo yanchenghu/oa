@@ -45,6 +45,9 @@ public class MarDemandresumefollow extends BaseEntity
     @Excel(name = "备注")
     private String remark1;
 
+
+
+
     public Integer getId() {
         return id;
     }

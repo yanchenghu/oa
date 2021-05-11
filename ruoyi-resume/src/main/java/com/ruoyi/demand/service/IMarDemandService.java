@@ -116,4 +116,20 @@ public interface IMarDemandService
      *批量重置简历绑定状态
      */
     AjaxResult batchResumeStatus(String zm, LoginUser loginUser);
+    /*
+     *需求关闭 每五天查询一次
+     */
+    void timingDemandClosure();
+
+    void bindingResume();
+
+    void demandCooperationCompany() throws Exception;
+
+    void itemsIncluded();
+
+    List<MarDemand> getAllMarDemandList(MarDemand marDemand);
+    /*
+     *获取需求绑定上限
+     */
+    AjaxResult bindingUpper(String demandId);
 }

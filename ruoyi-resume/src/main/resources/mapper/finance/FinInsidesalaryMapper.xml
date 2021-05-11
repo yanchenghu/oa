@@ -3,11 +3,11 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.finance.mapper.FinInsidesalaryMapper">
-    
+
+
     <resultMap type="FinInsidesalary" id="FinInsidesalaryResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
-        <result property="leaveDate"    column="leave_date"    />
         <result property="realAttence"    column="real_attence"    />
         <result property="actualAttendance"    column="actual_attendance"    />
         <result property="statutoryAttendance"    column="statutory_attendance"    />
@@ -24,14 +24,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectFinInsidesalaryVo">
-        select id, name, leave_date, real_attence, actual_attendance, statutory_attendance, actual_income, taxes, total_management, real_salary, insurance, commission, side_months, excel_path, add_date, add_people from fin_insidesalary
+        select id, name, real_attence, actual_attendance, statutory_attendance, actual_income, taxes, total_management, real_salary, insurance, commission, side_months, excel_path, add_date, add_people from fin_insidesalary
     </sql>
 
     <select id="selectFinInsidesalaryList" parameterType="FinInsidesalary" resultMap="FinInsidesalaryResult">
         <include refid="selectFinInsidesalaryVo"/>
-        <where>  
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="leaveDate != null  and leaveDate != ''"> and leave_date = #{leaveDate}</if>
             <if test="realAttence != null  and realAttence != ''"> and real_attence = #{realAttence}</if>
             <if test="actualAttendance != null  and actualAttendance != ''"> and actual_attendance = #{actualAttendance}</if>
             <if test="statutoryAttendance != null  and statutoryAttendance != ''"> and statutory_attendance = #{statutoryAttendance}</if>
@@ -47,17 +46,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addPeople != null  and addPeople != ''"> and add_people = #{addPeople}</if>
         </where>
     </select>
-    
-    <select id="selectFinInsidesalaryById" parameterType="Long" resultMap="FinInsidesalaryResult">
+
+    <select id="selectFinInsidesalaryById" parameterType="Integer" resultMap="FinInsidesalaryResult">
         <include refid="selectFinInsidesalaryVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertFinInsidesalary" parameterType="FinInsidesalary" useGeneratedKeys="true" keyProperty="id">
         insert into fin_insidesalary
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
-            <if test="leaveDate != null">leave_date,</if>
             <if test="realAttence != null">real_attence,</if>
             <if test="actualAttendance != null">actual_attendance,</if>
             <if test="statutoryAttendance != null">statutory_attendance,</if>
@@ -71,10 +69,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="excelPath != null">excel_path,</if>
             <if test="addDate != null">add_date,</if>
             <if test="addPeople != null">add_people,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
-            <if test="leaveDate != null">#{leaveDate},</if>
             <if test="realAttence != null">#{realAttence},</if>
             <if test="actualAttendance != null">#{actualAttendance},</if>
             <if test="statutoryAttendance != null">#{statutoryAttendance},</if>
@@ -88,14 +85,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="excelPath != null">#{excelPath},</if>
             <if test="addDate != null">#{addDate},</if>
             <if test="addPeople != null">#{addPeople},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateFinInsidesalary" parameterType="FinInsidesalary">
         update fin_insidesalary
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
-            <if test="leaveDate != null">leave_date = #{leaveDate},</if>
             <if test="realAttence != null">real_attence = #{realAttence},</if>
             <if test="actualAttendance != null">actual_attendance = #{actualAttendance},</if>
             <if test="statutoryAttendance != null">statutory_attendance = #{statutoryAttendance},</if>
@@ -113,12 +109,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteFinInsidesalaryById" parameterType="Long">
+    <delete id="deleteFinInsidesalaryById" parameterType="Integer">
         delete from fin_insidesalary where id = #{id}
     </delete>
 
     <delete id="deleteFinInsidesalaryByIds" parameterType="String">
-        delete from fin_insidesalary where id in 
+        delete from fin_insidesalary where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -128,10 +124,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertFinInsidesalarylist" parameterType="java.util.List" >
         insert into fin_insidesalary
         (name,
-        leave_date,
         real_attence,
-        actual_attendance,
         statutory_attendance,
+        actual_attendance,
         actual_income,
         taxes,
         total_management,
@@ -145,10 +140,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         values
         <foreach collection="list" item="proinfo"  index="index" separator=",">
             (#{proinfo.name},
-            #{proinfo.leaveDate},
             #{proinfo.realAttence},
-            #{proinfo.actualAttendance},
             #{proinfo.statutoryAttendance},
+            #{proinfo.actualAttendance},
             #{proinfo.actualIncome},
             #{proinfo.taxes},
             #{proinfo.totalManagement},

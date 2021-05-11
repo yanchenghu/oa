@@ -23,8 +23,11 @@ public class MarWaitingentryServiceImpl implements IMarWaitingentryService
 
 
     @Override
-    public List<Map> getMarWaitingentr(MarWaitingentry marWaitingentry) {
-        return marWaitingentryMapper.getMarWaitingentr();
+    public List<Map> getMarWaitingentr(String username) {
+        if("wlg2020".equals(username)){
+            username="";
+        }
+        return marWaitingentryMapper.getMarWaitingentr(username);
 
 
     }

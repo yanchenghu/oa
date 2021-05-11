@@ -10,6 +10,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.common.utils.resume.DingDingJiQi;
 import com.ruoyi.common.utils.resume.DingUtil;
 import com.ruoyi.common.utils.resume.SerialNumber;
@@ -17,10 +18,17 @@ import com.ruoyi.conn.domain.ConDingtoken;
 import com.ruoyi.conn.domain.ConOperationrecords;
 import com.ruoyi.conn.mapper.ConDingtokenMapper;
 import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
+import com.ruoyi.customer.domain.MarCompany;
+import com.ruoyi.customer.domain.MarContract;
+import com.ruoyi.customer.mapper.MarCompanyMapper;
+import com.ruoyi.customer.mapper.MarContractMapper;
+import com.ruoyi.customer.mapper.YxdemandMapper;
 import com.ruoyi.demand.domain.*;
 import com.ruoyi.demand.mapper.*;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.tool.WorkDay;
 import com.taobao.api.ApiException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +44,11 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2020-11-27
  */
 @Service
-public class MarDemandServiceImpl implements IMarDemandService 
+public class MarDemandServiceImpl implements IMarDemandService
 {
     @Autowired
     private MarDemandMapper marDemandMapper;
+
     @Autowired
     private MarDemandresumeMapper marDemandresumeMapper;
     @Autowired
@@ -58,6 +67,16 @@ public class MarDemandServiceImpl implements IMarDemandService
 
     @Autowired
     private MarWaitingentryMapper marWaitingentryMapper;
+    @Autowired
+    private WorkDay workDay;
+    @Autowired
+    private MarContractMapper marContractMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
+    @Autowired
+    private YxdemandMapper yxdemandMapper;
+    @Autowired
+    private  MarWaitinginterviewMapper marWaitinginterviewMapper;
 
     /**
      * 查询需求
@@ -86,9 +105,8 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Override
     public List<MarDemand> selectMarDemandList(MarDemand marDemand, LoginUser loginUser)
     {
-        if(!loginUser.getUsername().equals("wlg2020")){
-            marDemand.setOperationuser(loginUser.getUsername());
-        }
+
+        marDemand.setOperationuser(loginUser.getUsername());
         List<MarDemand>  list=marDemandMapper.selectMarDemandList(marDemand);
         for (MarDemand marDe:list){
         //查询当前需求绑定了多少简历
@@ -448,7 +466,7 @@ public class MarDemandServiceImpl implements IMarDemandService
      */
     @Override
     @Transactional
-    public AjaxResult demandResumeTrack(MarDemandresumefollow marDemandresumefollow, LoginUser loginUser) {
+    public AjaxResult demandResumeTrack(MarDemandresumefollow marDemandresumefollow, LoginUser loginUser)  {
 
           if(StringUtils.isEmpty(marDemandresumefollow.getDemandresumeId())){
             return AjaxResult.error("id为空,不可跟踪，请联系管理员");
@@ -458,8 +476,41 @@ public class MarDemandServiceImpl implements IMarDemandService
           marDemandres.setId(marDemandresumefollow.getDemandresumeId());
           marDemandres.setNewfollowtime(date);
           int a=marDemandresumeMapper.updateMarDemandresume(marDemandres);
-          //添加待入项信息
-          if(marDemandresumefollow.getFollowStatus()==5){
+        if(marDemandresumefollow.getFollowStatus()==3) {
+
+         //添加待面试信息并且钉钉提醒
+         MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(marDemandresumefollow.getDemandresumeId());
+         MarWaitinginterview  marWaitingi=new MarWaitinginterview();
+         marWaitingi.setNickName(marDemandresume.getTrackzPeoname());
+         marWaitingi.setUserName(marDemandresume.getBindPeople());
+         marWaitingi.setCustomerCode(marDemandresume.getCustomerCode());
+         marWaitingi.setDemandId(marDemandresume.getDemandId());
+         marWaitingi.setBeginTime(DateUtils.strToTime(marDemandresumefollow.getBeginTime(),DateUtils.FORMAT_Y_M_D_H_M_S)        );
+         marWaitingi.setEndTime(DateUtils.strToTime(marDemandresumefollow.getEndTime(),DateUtils.FORMAT_Y_M_D_H_M_S));
+         marWaitingi.setInsertTime(new Date());
+         marWaitinginterviewMapper.insertMarWaitinginterview(marWaitingi);
+        ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
+        if(cotoken==null){
+            JSONObject jsonToken = null;
+            try {
+                jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                cotoken.setToken(jsonToken.getString("access_token"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        SysUser sysUser = sysUserMapper.selectUserByUserName(marDemandresume.getBindPeople());
+        String dinguserid = sysUser.getDinguserid();//用户钉钉
+        MarDemand marDemand = marDemandMapper.selectMarDemandById(marDemandresume.getDemandId());
+        PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(marDemandresume.getCustomerCode());
+        try {
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
+                    "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，请及时沟通选定面试时间，并在填入OA平台");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        }else if(marDemandresumefollow.getFollowStatus()==5){ //添加待入项信息
               MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(marDemandresumefollow.getDemandresumeId());
               MarWaitingentry  marWaiting=new MarWaitingentry();
               marWaiting.setDemandId(marDemandresume.getDemandId());
@@ -565,6 +616,8 @@ public class MarDemandServiceImpl implements IMarDemandService
         Integer type=JSON.parseObject(zm).getInteger("type");
         String followDetail=JSON.parseObject(zm).getString("followDetail");
         Date stayTime= JSON.parseObject(zm).getDate("trackingtime");
+
+
         if(type==null){
             return AjaxResult.error("传入类型为空");
         }
@@ -579,21 +632,51 @@ public class MarDemandServiceImpl implements IMarDemandService
             marDemandres.setNewfollowtime(date);
             int a=marDemandresumeMapper.updateMarDemandresume(marDemandres);
 
-            //添加待入项信息
-            if(type==5){
+            if(type==3) {
+                Date beginTime= JSON.parseObject(zm).getDate("beginTime");
+                Date endTime= JSON.parseObject(zm).getDate("endTime");
+                //添加待面试信息并且钉钉提醒
+                MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(Id);
+                MarWaitinginterview  marWaitingi=new MarWaitinginterview();
+                marWaitingi.setNickName(marDemandresume.getTrackzPeoname());
+                marWaitingi.setUserName(marDemandresume.getBindPeople());
+                marWaitingi.setCustomerCode(marDemandresume.getCustomerCode());
+                marWaitingi.setDemandId(marDemandresume.getDemandId());
+                marWaitingi.setBeginTime(beginTime);
+                marWaitingi.setEndTime(endTime);
+                marWaitingi.setInsertTime(new Date());
+                marWaitinginterviewMapper.insertMarWaitinginterview(marWaitingi);
+                ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
+                if(cotoken==null){
+                    JSONObject jsonToken = null;
+                    try {
+                        jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                        cotoken.setToken(jsonToken.getString("access_token"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                SysUser sysUser = sysUserMapper.selectUserByUserName(marDemandresume.getBindPeople());
+                String dinguserid = sysUser.getDinguserid();//用户钉钉
+                MarDemand marDemand = marDemandMapper.selectMarDemandById(marDemandresume.getDemandId());
+                PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(marDemandresume.getCustomerCode());
+                try {
+                    DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
+                            "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，请及时沟通选定面试时间，并在填入OA平台");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else if(type==5){//添加待入项信息
                 MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(Id);
                 MarWaitingentry  marWaiting=new MarWaitingentry();
                 marWaiting.setDemandId(marDemandresume.getDemandId());
                 marWaiting.setCustomerCode(marDemandresume.getCustomerCode());
-                List<MarWaitingentry> marWaitingentries = marWaitingentryMapper.selectMarWaitingentryList(marWaiting);
                 marWaiting.setInterviewTime(date);
                 marWaiting.setStayTime(stayTime);
                 marWaiting.setNickName(marDemandresume.getTrackzPeoname());
-                if(marWaitingentries.size()>0){
-                    marWaitingentryMapper.updateMarWaitingentryby(marWaiting);
-                }else{
-                    marWaitingentryMapper.insertMarWaitingentry(marWaiting);
-                }
+                marWaitingentryMapper.insertMarWaitingentry(marWaiting);
+
             }
             if(a==1){
                 MarDemandresumefollow marDemandresumefollow=new MarDemandresumefollow();
@@ -617,8 +700,18 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Transactional
     public AjaxResult batchResumeStatus(String zm, LoginUser loginUser) {
         List<String> listDemand = JSON.parseArray(JSON.parseObject(zm).getString("list"), String.class);
+        if(listDemand.size()>0){
+            String s = listDemand.get(0);
+            MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(s);
+            MarDemand marDemand = marDemandMapper.selectMarDemandById(marDemandresume.getDemandId());
+            if(marDemand.getState()!=0){
+                return AjaxResult.error("当前需求已经关闭，请开启后在进行重置");
+            }
+        }
+
         Date date=new Date();
         for (String Id:listDemand){
+            //删除跟踪状态
             marDemandresumefollowMapper.deleteMarDemandresumefollowByDemand_id(Id);
             MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(Id);
             marDemandresume.setNewfollowtime(date);
@@ -629,8 +722,174 @@ public class MarDemandServiceImpl implements IMarDemandService
             marDemandresumefoll.setFollowStatus(1);
             marDemandresumefoll.setTrackingPeople(marDemandresume.getBindPeople());
             marDemandresumefollowMapper.insertMarDemandresumefollow(marDemandresumefoll);
+            //删除待入项信息，和待面试信息
+            marWaitingentryMapper.deleteMarWaitingentryByDemandandCode(marDemandresume);
+            marWaitinginterviewMapper.deleteMarWaitingeinterviewByDemandandCode(marDemandresume);
         }
         return AjaxResult.success("重置简历绑定状态成功");
+    }
+
+    @Override
+    @Transactional
+    public void timingDemandClosure() {
+        //查询所有开发的需求
+        MarDemand marDemand=new MarDemand();
+        marDemand.setState(0);
+        List<MarDemand> listm=marDemandMapper.selectMarDemandList(marDemand);
+        for(int i=listm.size()-1;i>0;i--){
+
+            MarDemand demand = listm.get(i);
+
+            String demandId = demand.getDemandId();
+
+            MarDemandresume marDemandresume=new MarDemandresume();
+            marDemandresume.setDemandId(demandId);
+            marDemandresume.setBindTime(workDay.getBeforeWorkDay(new Date(),7));
+            List<MarDemandresume> list=marDemandresumeMapper.selectByDemandIdBinTime(marDemandresume);
+            if(list.size()>0){
+                List<MarDemandresume>  li=marDemandresumeMapper.selectMarDemandresumebyDemand(demandId);
+                 for(MarDemandresume marDemandres:li){
+                     MarDemandresume marDeman=new MarDemandresume();
+                     Integer downloadStatus = marDemandres.getDownloadStatus();
+                     Date date=new Date();
+                     marDeman.setNewfollowtime(date);
+                     marDeman.setId(marDemandres.getId());
+                     MarDemandresumefollow marDemandresumefollow=new MarDemandresumefollow();
+                     marDemandresumefollow.setDemandresumeId(marDemandres.getId());
+                     marDemandresumefollow.setTrackingtime(date);
+                     marDemandresumefollow.setTrackingPeople(marDemandres.getBindPeople());
+                     if(downloadStatus==1){
+                         marDemandresumefollow.setFollowStatus(4);
+                     }else if(downloadStatus==3){
+                         marDemandresumefollow.setFollowStatus(6);
+                     }else if(downloadStatus==5){
+                         marDemandresumefollow.setFollowStatus(8);
+                         marDemandresumefollow.setFollowDetail("需求关闭，系统默认当前人未入项");
+                     }
+                     marDemandresumefollowMapper.insertMarDemandresumefollow(marDemandresumefollow);
+                     marDemandresumeMapper.updateMarDemandresume(marDeman);
+                 }
+                MarDemand dsad=new MarDemand();
+                dsad.setDemandId(demandId);
+                dsad.setState(1);
+                dsad.setCloseDate(new Date());
+                marDemandMapper.updateMarDemand(dsad);
+            }
+        }
+    }
+
+    @Override
+    public void bindingResume() {
+        MarDemandresume marDemandresume=new MarDemandresume();
+        marDemandresume.setNewfollowtime(workDay.getBeforeWorkDay(new Date(),5));
+        List<MarDemandresume>  li=marDemandresumeMapper.selectByDemandNewfollowtime(marDemandresume);
+        for(MarDemandresume marDemandres:li){
+            Integer downloadStatus = marDemandres.getDownloadStatus();
+            Date date=new Date();
+            marDemandres.setNewfollowtime(date);
+            MarDemandresumefollow marDemandresumefollow=new MarDemandresumefollow();
+            marDemandresumefollow.setDemandresumeId(marDemandres.getId());
+            marDemandresumefollow.setTrackingtime(date);
+            marDemandresumefollow.setTrackingPeople(marDemandres.getBindPeople());
+            if(downloadStatus==1){
+                marDemandresumefollow.setFollowStatus(4);
+            }else if(downloadStatus==3){
+                marDemandresumefollow.setFollowStatus(6);
+            }else if(downloadStatus==5){
+                marDemandresumefollow.setFollowStatus(8);
+                marDemandresumefollow.setFollowDetail("需求关闭，系统默认当前人未入项");
+            }
+            marDemandresumefollowMapper.insertMarDemandresumefollow(marDemandresumefollow);
+            marDemandresumeMapper.updateMarDemandresume(marDemandres);
+        }
+    }
+    //查询所有开放需求的公司监测有没有合同没有，提醒录入合同
+    @Override
+    public void demandCooperationCompany() throws Exception {
+
+        List<Map> allBusiness = yxdemandMapper.getAllBusiness();
+        for (Map map:allBusiness) {
+            String userName = (String) map.get("user_name");
+            String dsadas="";
+            List<MarDemand> listm = marDemandMapper.selectdemandCooperationCompany(userName);
+            for (MarDemand marDemand : listm) {
+                String corpCode = marDemand.getCorpCode();
+                String project_name = marDemand.getProjectName();//用户id
+                MarContract marContract=new MarContract();
+                marContract.setCorpCode(corpCode);
+                List<MarContract> marContracts = marContractMapper.selectMarContractList(marContract);
+                if(marContracts.size()==0){
+                    dsadas+=project_name+",";
+                }
+            }
+            SysUser sysUser = sysUserMapper.selectUserByUserName(userName);
+            String dinguserid = sysUser.getDinguserid();//用户钉钉
+            ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
+            if(StringUtils.isNotEmpty(dsadas)){
+                if(cotoken==null){
+                    JSONObject jsonToken =  DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                    cotoken.setToken(jsonToken.getString("access_token"));
+                }
+                try {
+//                    System.out.println("系统监控到您的这些合作公司："+dsadas+"，还没有合同，请及时录入");
+                    DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
+                            "您好，系统监控到您的这些合作公司："+dsadas+"，还没有合同，请及时录入");
+                } catch (ApiException e) {
+                }
+            }
+
+        }
+
+
+    }
+    // 待入项定时器处理
+    @Override
+    public void itemsIncluded() {
+
+
+
+
+    }
+
+    @Override
+    public List<MarDemand> getAllMarDemandList(MarDemand marDemand) {
+        List<MarDemand>  list=marDemandMapper.selectMarDemandList(marDemand);
+        for (MarDemand marDe:list){
+            //查询当前需求绑定了多少简历
+            MarDemandresume marDema=new MarDemandresume();
+            marDema.setDemandId(marDe.getDemandId());
+            List<MarDemandresume>  li= marDemandresumeMapper.selectMarDemandresumeList(marDema);
+            if(li.size()>0){
+                System.out.println(123);
+            }
+            marDe.setIfLook(li.size());
+            //查询当前需求面试通过多少
+            marDema.setDownloadStatus(5);
+            List<MarDemandresume>  lifoll=marDemandresumefollowMapper.selectMarDemandList(marDema);
+            marDe.setChsiFlag(lifoll.size());
+            //查询当前需求入项
+            marDema.setDownloadStatus(7);
+            List<MarDemandresume>  lif=marDemandresumefollowMapper.selectMarDemandList(marDema);
+            marDe.setCoopnature(lif.size());
+        }
+        return list;
+    }
+
+    @Override
+    public AjaxResult bindingUpper(String demandId) {
+         if(StringUtils.isEmpty(demandId)){
+             return AjaxResult.error("需求Id为空，请联系管理员");
+         }
+        MarDemand marDemand = marDemandMapper.selectMarDemandById(demandId);
+        Integer targetNumber = marDemand.getTargetNumber();
+        MarDemandresume marDemandresume=new MarDemandresume();
+        marDemandresume.setDemandId(demandId);
+        List<MarDemandresume> marDemandresumes = marDemandresumeMapper.selectMarDemandresumeList(marDemandresume);
+        if(marDemandresumes.size()>=targetNumber){
+            return AjaxResult.error("当前需求绑定，已达到目标人数，不可绑定");
+        }
+        return AjaxResult.success("当前需求绑定，未达到目标人数，可绑定");
+
     }
 
 

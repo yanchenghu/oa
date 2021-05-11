@@ -109,20 +109,25 @@ public class FinInsidesalaryServiceImpl implements IFinInsidesalaryService
                 return AjaxResult.error("上传失败,文件中有姓名为空，请核对后重新上传！");
             }
             finInside.setSideMonths(months);
+            if (arr.get(9) != null && !arr.get(9).equals("")) {
+                finInside.setRealSalary(arr.get(9));
+            } else {
+                return AjaxResult.error("上传失败"+arr.get(0)+"的实发工资为空！");
+            }
             List<FinInsidesalary> finExpatriries = finInsidesalaryMapper.selectFinInsidesalaryList(finInside);
             if(finExpatriries.size() != 0) {
                 return AjaxResult.error("当前人"+arr.get(0)+"的当月的的结算单已经上传");
             }
 
             if (arr.get(1) != null && !arr.get(1).equals("")) {
-                finInside.setLeaveDate(arr.get(1));
+                finInside.setRealAttence(arr.get(1));
             } else {
-                return AjaxResult.error("上传失败"+arr.get(0)+"的请假天数为空！");
+                return AjaxResult.error("上传失败"+arr.get(0)+"的基本工资为空！");
             }
             if (arr.get(2) != null && !arr.get(2).equals("")) {
-                finInside.setRealAttence(arr.get(2));
+                finInside.setStatutoryAttendance(arr.get(2));
             } else {
-                return AjaxResult.error("上传失败"+arr.get(0)+"的实际工资为空！");
+                return AjaxResult.error("上传失败"+arr.get(0)+"的法定出勤为空！");
             }
             if (arr.get(3) != null && !arr.get(3).equals("")) {
                 finInside.setActualAttendance(arr.get(3));
@@ -130,40 +135,31 @@ public class FinInsidesalaryServiceImpl implements IFinInsidesalaryService
                 return AjaxResult.error("上传失败"+arr.get(0)+"的实际出勤/天为空！");
             }
             if (arr.get(4) != null && !arr.get(4).equals("")) {
-                finInside.setStatutoryAttendance(arr.get(4));
+                finInside.setActualIncome(arr.get(4));
             } else {
-                return AjaxResult.error("上传失败"+arr.get(0)+"的法定出勤为空！");
+                return AjaxResult.error("上传失败"+arr.get(0)+"的应发工资为空！");
             }
             if (arr.get(5) != null && !arr.get(5).equals("")) {
-                finInside.setActualIncome(arr.get(5));
+                finInside.setTaxes(arr.get(5));
             } else {
-                return AjaxResult.error("上传失败"+arr.get(0)+"的入项实际工资为空！");
+                return AjaxResult.error("上传失败"+arr.get(0)+"的绩效为空！");
             }
             if (arr.get(6) != null && !arr.get(6).equals("")) {
-                finInside.setTaxes(arr.get(6));
-            } else {
-                return AjaxResult.error("上传失败"+arr.get(0)+"的税金为空！");
-            }
-            if (arr.get(7) != null && !arr.get(7).equals("")) {
-                finInside.setTotalManagement(arr.get(7));
+                finInside.setTotalManagement(arr.get(6));
             } else {
                 return AjaxResult.error("上传失败"+arr.get(0)+"的全勤奖为空！");
             }
-            if (arr.get(8) != null && !arr.get(8).equals("")) {
-                finInside.setInsurance(arr.get(8));
+            if (arr.get(7) != null && !arr.get(7).equals("")) {
+                finInside.setInsurance(arr.get(7));
             } else {
                 return AjaxResult.error("上传失败"+arr.get(0)+"的保险为空！");
             }
-            if (arr.get(9) != null && !arr.get(9).equals("")) {
-                finInside.setCommission(arr.get(9));
+            if (arr.get(8) != null && !arr.get(8).equals("")) {
+                finInside.setCommission(arr.get(8));
             } else {
-                return AjaxResult.error("上传失败"+arr.get(0)+"的提成为空！");
+                return AjaxResult.error("上传失败"+arr.get(0)+"的提成/其他为空！");
             }
-            if (arr.get(10) != null && !arr.get(10).equals("")) {
-                finInside.setRealSalary(arr.get(10));
-            } else {
-                return AjaxResult.error("上传失败"+arr.get(0)+"的实发工资为空！");
-            }
+
 
             listFinExpat.add(finInside);
         }

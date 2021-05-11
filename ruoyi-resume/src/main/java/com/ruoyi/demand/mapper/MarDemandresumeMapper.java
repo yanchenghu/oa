@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.demand.domain.MarDemandresume;
+import com.ruoyi.statistic.domain.BeInterviewed;
 
 /**
  * 需求绑定简历Mapper接口
@@ -87,4 +88,15 @@ public interface MarDemandresumeMapper
     int selectlitoutNum(Map map);
 
     List<Map> sellistOutbyuserName(Map map);
+
+    List<MarDemandresume> selectByDemandIdBinTime(MarDemandresume marDemandresume);
+
+    List selectMarDemandresumebyDemand(String demandId);
+
+    List<MarDemandresume> selectByDemandNewfollowtime(MarDemandresume marDemandresume);
+
+
+    List<BeInterviewed> selBinCode(Map map);
+
+    List<BeInterviewed> selectMarDemandbyBeInterviewed(Map map);
 }
