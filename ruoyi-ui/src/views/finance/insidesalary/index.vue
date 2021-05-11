@@ -40,12 +40,11 @@
       <el-table-column label="姓名"  prop="name" />
       <el-table-column label="月份"  prop="sideMonths" >
       </el-table-column>
-      <el-table-column label="请假天数"  prop="leaveDate" />
-      <el-table-column label="实际工资"  prop="realAttence" />
-      <el-table-column label="实际出勤"  prop="actualAttendance" />
+      <el-table-column label="基本工资"  prop="realAttence" />
       <el-table-column label="法定出勤"  prop="statutoryAttendance" />
-      <el-table-column label="入项实际工资"  prop="actualIncome" />
-      <el-table-column label="税金"  prop="taxes" />
+       <el-table-column label="实际出勤"  prop="actualAttendance" />
+      <el-table-column label="应发工资"  prop="actualIncome" />
+      <el-table-column label="绩效"  prop="taxes" />
       <el-table-column label="全勤"  prop="totalManagement" />
       <el-table-column label="保险"  prop="insurance" />
       <el-table-column label="提成/其他"  prop="commission" />

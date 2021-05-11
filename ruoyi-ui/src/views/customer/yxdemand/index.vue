@@ -34,7 +34,7 @@
         </el-select>
       </el-form-item>
       <el-form-item  prop="robPeopleId">
-        <el-select v-model="queryParams.robPeopleId" placeholder="请选择人员" clearable size="small" @change="getList">
+        <el-select v-model="queryParams.robPeopleId" placeholder="请选择人员"  size="small" @change="getList">
           <el-option
             v-for="dict in businesslist"
             :key="dict.user_name"

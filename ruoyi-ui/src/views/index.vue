@@ -9,7 +9,6 @@
         <line-chart v-else :data-list="datalist"  @handleSetLineChartData="handleSetLineChartData"/>
       </el-row>
       <mytrack :open="open" :title="title" :form="form" @getlist="getList"></mytrack>
-
       <el-row :gutter="32">
         <el-col :xs="24" :sm="12" :lg="8" v-for="data,i in datalist.listMarEntry" :key="i">
           <div class="chart-wrapper">

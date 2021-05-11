@@ -339,7 +339,7 @@
          </el-form-item>
          <el-form-item label="线索状态" prop="isFollowSubmit">
            <el-radio-group v-model.trim="form.isFollowSubmit">
-              <el-radio v-for="dict in isFollowSubmitOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
+              <el-radio v-for="dict,index in isFollowSubmitOptions" :key="dict.dictValue" :disabled="index==4" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
             </el-radio-group>
          </el-form-item>
          <el-form-item label="联系情况" prop="contactInformation">

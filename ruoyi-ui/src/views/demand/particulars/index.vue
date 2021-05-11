@@ -10,24 +10,25 @@
               <td><span class="name">岗位需求</span>{{professionIdopFormat(form)}}</td>
               <td><span class="name">技术级别</span>{{form.demandYears==1?"中级":"高级"}}</td>
               <td><span class="name">需求人数</span>{{form.demandNumber}}</td>
-              <td><span class="name">薪资范围</span>{{form.minSalary}}-{{form.maxSalary}}</td>
+              <td><span class="name">目标人数</span>{{form.targetNumber}}</td>
             </tr>
             <tr>
+              <td><span class="name">薪资范围</span>{{form.minSalary}}-{{form.maxSalary}}</td>
               <td><span class="name">经验要求</span>{{form.directWorklife}}年</td>
               <td><span class="name">学历要求</span>{{customerFormat(form)}}</td>
               <td><span class="name">语言要求</span>{{form.langue == 0?"无":form.langue==2?"日语":"英语"}}</td>
               <td><span class="name">需求图片</span><el-button @click="see(3)" type="text" :disabled="!form.demandPic">点击预览</el-button></td>
-              <td><span class="name">简历模板</span><el-button v-if="form.tempId" type="text" @click="see(templateFormat(templist,form.tempId)[1],1)">{{templateFormat(templist,form.tempId)[0]}}</el-button><span v-else>无</span></td>
             </tr>
             <tr>
               <td v-if="ident==8"><span class="name" >客户级别</span>{{customerleveFormat(form)}}</td>
               <td><span class="name">工作地点</span>{{intentionareaFormat(form)}}</td>
               <td><span class="name">面试官</span>{{form.interviewer}}</td>
               <td><span class="name">面试地点</span>{{form.specificLocation}}</td>
-              <td><span class="name">发布时间</span>{{form.addTime}}</td>
+               <td><span class="name">简历模板</span><el-button v-if="form.tempId" type="text" @click="see(templateFormat(templist,form.tempId)[1],1)">{{templateFormat(templist,form.tempId)[0]}}</el-button><span v-else>无</span></td>
             </tr>
             <tr >
-              <td colspan="5"><span class="name">详细地址</span>{{form.address}}</td>
+              <td><span class="name">发布时间</span>{{form.addTime}}</td>
+              <td colspan="4"><span class="name">详细地址</span>{{form.address}}</td>
             </tr>
             <!-- <span><span class="name">详细地址</span>{{form.address}}</span> -->
           </table>
@@ -205,7 +206,7 @@
             </el-radio-group>
             <p></p>
 
-            <div v-if="followstart==4||followstart==6||followstart==8||followstart==5">
+            <div v-if="followstart==4||followstart==6||followstart==8||followstart==5||followstart==3">
                 <el-form label-width="100px" :model="qqq" style="width: 65%;" ref="ruxing" >
                   <el-form-item
                     v-if="followstart==5"
@@ -213,14 +214,29 @@
                     prop="stayTime"
                     label="预入项日期">
                     <el-date-picker
+                        v-if="followstart==5"
                         v-model="qqq.stayTime"
                         type="date"
+                        size="small"
                         :picker-options="pickerOptions2"
                         :clearable="false"
                         format="yyyy 年 MM 月 dd 日"
                         value-format="yyyy-MM-dd"
                         placeholder="选择日期">
                     </el-date-picker>
+                  </el-form-item>
+                  <el-form-item v-else-if="followstart==3" :rules="[{ required: true, message: '面试时间不能为空', trigger: 'change' },]" prop="value1" label="面试时间段">
+                    <el-date-picker
+                    style="width: 360px;"
+                      v-model="qqq.value1"
+                      type="datetimerange"
+                      size="small"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      :clearable="false"
+                      range-separator="至"
+                      start-placeholder="开始日期"
+                      end-placeholder="结束日期">
+                     </el-date-picker>
                   </el-form-item>
                   <el-form-item v-else-if="followstart==8"
                     :rules="[{ required: true, message: '请输入原因', trigger: 'blur' },]"
@@ -276,7 +292,7 @@
           <el-dialog :title="title" :visible.sync="open3" width="70%">
            <iframe
               :src="src"
-              style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
+              style="overflow: auto; position: absolute; top: 45px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
             ></iframe>
           </el-dialog>
           <!-- 绑定 -->
@@ -353,6 +369,9 @@
 
 <script>
   import {gettemplist,template,getFollow,submitstart,addFollow,delFollow,getInputInformation,entryPersonnel,submitstarts,chongzhizhuang} from '@/api/demand/praticulars'
+  import {
+    findmubiao
+  } from "@/api/demand/binding";
   import {debounce,checkImg} from "@/utils/ruoyi.js"
   import index from "../../components/particulars/index"
   export default {
@@ -412,6 +431,7 @@
         qqq:{
           textarea1:"",
           stayTime:"",
+          qqq:[],
         },
         opens:false,
         titles:"",
@@ -500,6 +520,7 @@
       this.getDicts("bus_customer_leve").then(response => {
         this.customerleve = response.data;
       });
+      if(this.$route.query.name){this.customerName = this.$route.query.name}
       this.getlist()
     },
     mounted(){
@@ -657,6 +678,9 @@
           this.qqq={
             textarea1 :"",
             stayTime:"",
+            qqq:[],
+            beginTime:"",
+            endTime:"",
           }
           this.resetForm("ruxing")
           }
@@ -673,6 +697,7 @@
         this.qqq={
           textarea1 :"",
           stayTime:"",
+          qqq:[],
         }
         this.resetForm("ruxing")
         if(ind==1){
@@ -700,12 +725,19 @@
       },
       // 提交
       submit(){
+        var {beginTime,endTime} = ""
+        if(this.followstart==3){
+          beginTime = this.qqq.value1[0]
+          endTime = this.qqq.value1[1]
+        }
         let form =new FormData()
         let zm ={
           list:this.tempID,
           type:this.followstart,
           followDetail:this.qqq.textarea1,
           trackingtime:this.qqq.stayTime,
+          beginTime:beginTime,
+          endTime:endTime,
         }
         form.append("followStatus",this.followstart)
         form.append("demandresumeId",this.tempID)
@@ -727,8 +759,10 @@
           })
         }else{
           let that = this
-          if(this.followstart==8||this.followstart==5){
+          if(this.followstart==8||this.followstart==5||this.followstart==3){
             form.append("trackingtime",this.qqq.stayTime)
+            form.append("beginTime ",beginTime)
+            form.append("endTime",endTime)
             this.$refs["ruxing"].validate((valid) => {
                 if(valid){
                   this.$confirm('确认"'+that.title+'"结果为"'+ that.list[that.followstart] + '"吗?', "警告", {
@@ -805,15 +839,19 @@
       },
       // 绑定
       handleUpdate(row){
-        this.bangding.templist2=[]
-        let form = new FormData()
-        form.append("demandId",this.$route.query.row)
-        addFollow(form).then(res=>{
-          this.bangding.forms=res.data
-          this.bangding.templist2=res.data
-          this.bangding.id=this.$route.query.row
-          this.bangding.open2 = true;
-        })
+          let form = new FormData()
+          form.append("demandId",this.$route.query.row)
+          findmubiao(form).then(res=>{
+            if(res.code==200){
+              this.bangding.templist2=[]
+              addFollow(form).then(res=>{
+                this.bangding.forms=res.data
+                this.bangding.templist2=res.data
+                this.bangding.id=this.$route.query.row
+                this.bangding.open2 = true;
+              })
+            }
+          })
       },
       // 预览
       preview(adinw,ind){
@@ -822,7 +860,7 @@
          if(adinw.resumePath){
            srcs = process.env.VUE_APP_BASE_API+adinw.resumePath
            this.open3 = true
-           this.title = "预览简历原件"
+           this.title = ""
          }else{
            this.msgError(adinw.customerName+"暂无简历原件请上传")
          }
@@ -830,7 +868,7 @@
          if(adinw.resumeEnclosurepath){
            srcs = process.env.VUE_APP_BASE_API+adinw.resumeEnclosurepath
            this.open3 = true
-           this.title = "预览简历附件"
+           this.title = ""
          }else{
           this.msgError(adinw.customerName+"暂无简历附件请上传")
          }

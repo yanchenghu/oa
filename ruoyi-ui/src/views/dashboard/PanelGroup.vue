@@ -205,11 +205,66 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog style="text-align: center;"  :title="title2" :visible.sync="open"  width="500px">
+      <el-radio-group   v-model="caozuos">
+          <el-radio :label="1">面试</el-radio>
+          <el-radio :label="2">拒绝面试</el-radio>
+      </el-radio-group>
+      <p></p>
+      <el-form label-width="110px" :model="form" style="width: 65%;" ref="ruxing" >
+        <el-form-item
+        v-if="caozuos==1"
+          :rules="[{ required: true, message: '日期不能为空', trigger: 'change' },]"
+          prop="interviewTime"
+          label="具体面试日期">
+          <el-date-picker
+              v-model="form.interviewTime"
+              type="datetime"
+              size="small"
+              :clearable="false"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item
+          v-if="caozuos==2"
+          :rules="[{ required: true, message: '原因不能为空', trigger: 'change' },]"
+          prop="interviewTime"
+          label="拒绝面试原因">
+          <el-input
+            type="textarea"
+            autosize
+            placeholder="请输入原因"
+            v-model="form.textarea1">
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="open=false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
     <el-dialog v-if="title=='人员出项'" :title="title" :visible.sync="dialogTableVisible"  width="500px">
       <el-table :data="gridData" v-loading="loading">
         <el-table-column property="customer_name" label="姓名" ></el-table-column>
         <el-table-column property="outof_projecttime" label="离项时间" ></el-table-column>
         <el-table-column property="quit_proreason" label="离项原因" :formatter="professionIdopFormat"></el-table-column>
+      </el-table>
+    </el-dialog>
+    <el-dialog v-else-if="title=='简历通过'" :title="title" :visible.sync="dialogTableVisible"  width="900px">
+      <el-table :data="gridData" v-loading="loading">
+        <el-table-column property="customerName" label="姓名" width="80"></el-table-column>
+        <el-table-column property="customerTel" label="电话" width="120"></el-table-column>
+        <el-table-column property="beginTime" label="面试开始时间"></el-table-column>
+        <el-table-column property="endTime" label="面试结束时间"></el-table-column>
+        <el-table-column property="interviewTime" label="具体面试时间"></el-table-column>
+        <el-table-column label="操作" v-if="dataList.numb==2||dataList.numb==3">
+          <template slot-scope="scope">
+            <el-button type="text" size="medium" :disabled="scope.row.interviewTime!==null" @click="addmianshi(scope.row)">
+              添加面试时间
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-dialog>
     <el-dialog v-else :title="title" :visible.sync="dialogTableVisible"  width="500px">
@@ -223,7 +278,7 @@
         <el-input v-model="searchmsg" placeholder="请输入" clearable size="small" @keyup.enter.native="search" style="width: 170px;margin-right: 10px;"/>
       <el-button type="cyan" icon="el-icon-search" size="mini" @click="search">查询</el-button>
       </div>
-      
+
 
       <el-table :data="gridData" v-if="dataList.numb==1" v-loading="loading">
         <el-table-column v-if="title!=='录入需求'" property="customerName" label="姓名" width="80">
@@ -243,11 +298,12 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { getmsg, getbusmsg} from "@/api/index.js"
+import { getmsg, getbusmsg,put} from "@/api/index.js"
 
 export default {
   data(){
     return{
+      caozuos:1,
       loading:false,
       gridData:[],
       gridDatas:[],
@@ -255,9 +311,14 @@ export default {
       title:"",
       customerleve:[],
       searchmsg:"",
+      form:{},
+      open:false,
+      title2:"",
+      times:{}
     }
   },
   created() {
+    // this.download("https://image.baidu.com/search/albumsdetail?tn=albumsdetail&word=%E5%9F%8E%E5%B8%82%E5%BB%BA%E7%AD%91%E6%91%84%E5%BD%B1%E4%B8%93%E9%A2%98&fr=searchindex_album%20&album_tab=%E5%BB%BA%E7%AD%91&album_id=7&rn=30")
     this.getDicts("outof_project_cause").then(response => {
       this.customerleve = response.data;
     });
@@ -272,6 +333,39 @@ export default {
     CountTo
   },
   methods: {
+    addmianshi(row){
+      this.times = {
+         sta:row.beginTime.split(" ")[0],
+         sta1:row.beginTime.split(" ")[1],
+         end:row.endTime.split(" ")[0],
+         end1:row.endTime.split(" ")[1],
+      }
+      this.form = {
+        customerCode:row.customerCode,
+        demandId:row.demandId,
+        interviewTime:"",
+        customerName:row.customerName
+      }
+      this.open = true
+      this.title2 = "添加具体面试时间"
+      this.caozuos=1
+    },
+    submit(){
+      this.$refs["ruxing"].validate((valid) => {
+          if(valid){
+            if(this.caozuos==1){
+                put(this.form).then(res=>{
+                this.msgSuccess("添加成功")
+                this.open = false
+                this.dialogTableVisible = false
+              })
+            }else{
+
+            }
+
+          }
+        })
+    },
     search(){
       let that = this
       that.loading=true
@@ -280,7 +374,6 @@ export default {
           that.gridData=that.gridDatas
           that.loading=false
         },1000)
-        console.log(that.gridDatas)
       }else{
         clearInterval(that.timer)
         that.timer=setTimeout(function(){
@@ -294,7 +387,7 @@ export default {
     },
 
     tiaozhuan(list){
-      this.$router.push({path:'/follow/particulars',query:{row:list.demandId,ident:8}})
+      this.$router.push({path:'/follow/particulars',query:{row:list.demandId,ident:8,name:list.customerName}})
     },
     professionIdopFormat(row, column) {
       return this.selectDictLabel(this.customerleve, row.quit_proreason);},

@@ -5,16 +5,6 @@
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
 
-        <!-- <el-form-item label="公司名称" prop="corpCode">
-          <el-select filterable  v-model="queryParams.corpCode"  placeholder="请选择" size="small" clearable  @change="handleQuery">
-            <el-option
-                v-for="dict in corpnamelists"
-                :key="dict.corpCode"
-                :label="dict.corpName"
-                :value="dict.corpCode"
-              />
-            </el-select>
-        </el-form-item> -->
         <el-form-item label="技术方向" prop="technologyDirection">
           <el-select v-model="queryParams.technologyDirection" clearable placeholder="请选择" filterable size="small" @change="handleQuery">
             <el-option
@@ -41,16 +31,22 @@
               />
           </el-select>
         </el-form-item>
-       <!-- <el-form-item label="客户级别" prop="importantLevel">
-          <el-select  v-model="queryParams.importantLevel"  size="small" @change="handleQuery">
+        <el-form-item label="人员列表" prop="robPeopleId">
+          <el-select v-model="queryParams.operationuser" placeholder="请选择人员"  size="small" @change="handleQuery">
             <el-option
-                v-for="dict,index in customerleve"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="parseInt(dict.dictValue)"
-              />
-            </el-select>
-        </el-form-item> -->
+              v-for="dict in businesslist"
+              :key="dict.user_name"
+              :label="dict.nick_name"
+              :value="dict.user_name"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="需求状态" prop="state">
+          <el-select  v-model="queryParams.state"  size="small" @change="handleQuery">
+            <el-option label="启用中" :value="0" />
+            <el-option label="禁用中" :value="1"/>
+          </el-select>
+        </el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery" style="margin:3px 10px 0 -10px">查询</el-button>
     </el-form>
 
@@ -101,13 +97,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <div>
-            <el-button  type="text" @click="handleUpdate(scope.row)"><svg-icon icon-class="bangding" class="icons"/>绑定</el-button>
-          </div>
-          <div>
             <el-button  type="text" @click="see(scope.row)" v-hasPermi="['demand:follow:query']"><svg-icon icon-class="eye-open" class="icons"/>查看</el-button>
-          </div>
-          <div>
-            <el-button type="text" v-hasPermi="['demand:follow:postInterview']" @click="uplodmian(scope.row)">上传面试题</el-button>
           </div>
         </template>
       </el-table-column>
@@ -115,50 +105,6 @@
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
     <index :bangding="bangding"></index>
 
-
-    <el-dialog title="上传面试题" :visible.sync="open"  width="500px" append-to-body>
-      <el-form :model="form" label-width="80px"   ref="form" style="width: 400px;">
-        <el-form-item label="需求名称">
-           <span>{{form.projectName}}</span>
-        </el-form-item>
-        <el-form-item label="选择文件">
-           <el-upload
-             action="#"
-             list-type="picture-card"
-             :auto-upload="false"
-             ref="file"
-             :limit="1"
-             :on-change="handleRemov"
-             :on-exceed="handleExceed"
-             >
-             <!-- <div slot="tip" class="el-upload__tip">仅支持上传jpg/png文件</div> -->
-               <i slot="default" class="el-icon-plus"></i>
-               <div slot="file" slot-scope="{file}">
-                 <img
-                   class="el-upload-list__item-thumbnail"
-                   :src="file.url" alt=""
-                 >
-                 <span class="el-upload-list__item-actions">
-                   <span
-                     v-if="!disabled"
-                     class="el-upload-list__item-delete"
-                     @click="handleRemove(file)"
-                   >
-                     <i class="el-icon-delete"></i>
-                   </span>
-                 </span>
-               </div>
-           </el-upload>
-        </el-form-item>
-        <el-form-item label="备注" prop="topicBz">
-           <el-input v-model="form.topicBz" size="medium"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm2">确定</el-button>
-        <el-button @click="open=false">取 消</el-button>
-      </div>
-    </el-dialog>
     <el-dialog :title="title" :visible.sync="open3" width="70%">
       <el-button type="primary" @click="dowloc">下載面试题</el-button>
      <iframe
@@ -175,18 +121,20 @@
 
 <script>
   import {
-    listFollow,
     getFollow,
     delFollow,
     addFollow,
+    updateFollow,
+    exportFollow,
     template,
     postInterview,
-    ispostInterview,
-    findmubiao
+    ispostInterview
   } from "@/api/demand/binding";
   import {
-    corpNames
+    corpNames,
+    listFollows
   } from "@/api/demand/follow";
+  import { allBusiness,}from "@/api/customer/business";
 import { treeselect } from "@/api/system/dept";
 import {checkImg} from "@/utils/ruoyi.js"
 import index from "../../components/particulars/index"
@@ -237,6 +185,7 @@ import index from "../../components/particulars/index"
           demandLevel: null,
           education: null,
           demandNumber: null,
+          operationuser:null,
         },
         // 表单参数
         form: {},
@@ -247,10 +196,11 @@ import index from "../../components/particulars/index"
         title:"",
         src:"",
         dialogImageUrl:"",
+        businesslist:[],
       };
     },
     created() {
-      this.getList();
+      this.getbus();
       // this.getCorpName()
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
@@ -270,7 +220,13 @@ import index from "../../components/particulars/index"
       });
     },
     methods: {
-
+      getbus(){
+        allBusiness().then(response => {
+          this.businesslist = response.data
+          this.queryParams.operationuser = this.businesslist[0].user_name
+          this.getList();
+        });
+      },
       uplodmian(row){
         this.form = {
           corpCode:null,
@@ -361,7 +317,7 @@ import index from "../../components/particulars/index"
       /** 查询需求列表 */
       getList() {
         this.loading = true;
-        listFollow(this.queryParams).then(response => {
+        listFollows(this.queryParams).then(response => {
           this.followList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -373,18 +329,14 @@ import index from "../../components/particulars/index"
       },
       // 绑定
       handleUpdate(row){
+        this.bangding.templist2=[]
         let form = new FormData()
         form.append("demandId",row.demandId)
-        findmubiao(form).then(res=>{
-          if(res.code==200){
-            this.bangding.templist2=[]
-            addFollow(form).then(res=>{
-              this.bangding.forms=res.data
-              this.bangding.templist2=res.data
-              this.bangding.id=row.demandId
-              this.bangding.open2 = true;
-            })
-          }
+        addFollow(form).then(res=>{
+          this.bangding.forms=res.data
+          this.bangding.templist2=res.data
+          this.bangding.id=row.demandId
+          this.bangding.open2 = true;
         })
       },
       // 取消按钮

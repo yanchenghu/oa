@@ -17,6 +17,14 @@ export function template() {
     method: 'get',
   })
 }
+export function listdatas(query) {
+  return request({
+    url: '/demand/waitinginterview/list',
+    method: 'get',
+    params:query
+  })
+}
+
 // 查询公司名称
 export function corpName() {
   return request({
@@ -43,6 +51,13 @@ export function treeselect() {
 export function listFollow(query) {
   return request({
     url: '/demand/follow/list',
+    method: 'get',
+    params: query
+  })
+}
+export function listFollows(query) {
+  return request({
+    url: '/demand/alldemand/list',
     method: 'get',
     params: query
   })

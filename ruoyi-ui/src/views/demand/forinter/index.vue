@@ -1,17 +1,22 @@
 <template>
     <div class="app-container">
-      <span style="font-weight: 400; font-size: 25px;">待入项列表</span>
+      <span style="font-weight: 400; font-size: 25px;">待面试列表</span>
       <p></p>
-      <p style="float: right;font-size: 14px;"><span class="biaozhu h"><span class="dian a" ></span>未入项</span> <span class="biaozhu"><span class="dian b" ></span>待入项</span> <span class="biaozhu l"><span class="dian c" ></span>已入项</span></p>
+      <p style="float: right;font-size: 14px;"><span class="biaozhu h"><span class="dian a" ></span>未通过</span> <span class="biaozhu"><span class="dian b" ></span>待面试</span> <span class="biaozhu l"><span class="dian c" ></span>已通过</span></p>
       <el-table v-loading="loading" :data="dataList" :row-class-name="tableRowClassName">
         <el-table-column label="序号" type="index" width="50"/>
-        <el-table-column label="姓名"  prop="customer_name"/>
+        <el-table-column label="姓名"  prop="customer_name">
+          <template slot-scope="scope">
+            <el-button type="text" size="medium" @click="tiaozhuan(scope.row)">{{scope.row.customer_name}}</el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="公司名称"  prop="corp_name"/>
         <el-table-column label="项目名称"  prop="project_name"/>
-        <el-table-column label="面试时间"  prop="interview_time"/>
+        <el-table-column label="面试开始时间"  prop="begin_time"/>
+        <el-table-column label="面试结束时间"  prop="end_time"/>
+        <el-table-column label="确认面试时间"  prop="interview_time"/>
         <el-table-column label="人事"  prop="nick_name"/>
-        <el-table-column label="预计入项"  prop="stay_time"/>
-        <el-table-column label="未入项原因"  prop="follow_detail"/>
+        <el-table-column label="未通过原因"  prop="follow_detail"/>
       </el-table>
       <pagination
         v-show="total>0"
@@ -25,7 +30,7 @@
 
 <script>
   import {
-   listdata
+   listdatas
   } from "@/api/demand/follow";
   export default{
     name:"waitingentry",
@@ -46,21 +51,23 @@
     methods:{
       getList(){
         this.loading = true
-        listdata(this.queryParams).then(res=>{
+        listdatas(this.queryParams).then(res=>{
           this.dataList = res.rows
           this.total = res.total
           this.loading = false
         })
       },
       tableRowClassName({row, rowIndex}) {
-            if (row.follow_status === 8) {
+            if (row.follow_status === 6) {
               return 'warning-row';
-            } else if (row.follow_status === 7) {
+            } else if (row.follow_status === 5||row.follow_status>6) {
               return 'success-row';
             }
             return '';
       },
-      
+      tiaozhuan(row){
+        this.$router.push({path:"/follow/particulars",query:{ident:8,name:row.customer_name,row:row.demand_id}})
+      },
     }
   }
 </script>

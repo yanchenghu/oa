@@ -16,6 +16,13 @@ export function corpName() {
     method: 'get',
   })
 }
+export function findmubiao(data) {
+  return request({
+    url: '/demand/follow/bindingUpper',
+    method: 'post',
+    data:data,
+  })
+}
 // 查询部门下拉树结构
 export function treeselect() {
   return request({

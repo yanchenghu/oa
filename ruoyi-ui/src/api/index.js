@@ -50,3 +50,10 @@ export function getbusinessData(data) {
     method: 'get',
   })
 }
+export function put(data) {
+  return request({
+    url: '/demand/waitinginterview',
+    method: 'put',
+    data:data
+  })
+}

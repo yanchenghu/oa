@@ -144,7 +144,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="公司名称" prop="corpName">
           <el-input v-model.trim="form.corpName" placeholder="请输入公司名称" @blur="findname(form.corpName)" class="indd"/>
-          &nbsp;<span v-if="msg=='该客户不存在'" style="color: green;line-height: 40px;position: absolute;"> <i class="el-icon-success"></i></span>
+          &nbsp;<span v-if="msg=='当前公司不存在'" style="color: green;line-height: 40px;position: absolute;"> <i class="el-icon-success"></i></span>
         </el-form-item>
         <el-form-item label="联系人" prop="contactPeople">
           <el-input v-model.trim="form.contactPeople" placeholder="请输入联系人" class="indd"/>
@@ -440,9 +440,8 @@
 </template>
 
 <script>
-import { listCompanys, getCompany,  addCompany, updateCompany,contractCompany,addcontract,addcontracts,find} from "@/api/customer/company";
+import { listCompanys, getCompany,  addCompany, updateCompany,contractCompany,addcontract,addcontracts,find,findnames} from "@/api/customer/company";
 import {debounce,checkImg} from "@/utils/ruoyi.js"
-import { findnames}from "@/api/customer/business";
 export default {
   name: "Company",
   data() {
@@ -458,7 +457,7 @@ export default {
           callback(new Error("公司名称包含公司两字"));
           this.msg="该客户"
         }else{
-          if (this.msg!=="该客户不存在") {
+          if (this.msg!=="当前公司不存在") {
             callback(new Error(this.msg));
           }else{
             callback()

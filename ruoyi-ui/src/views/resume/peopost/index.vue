@@ -108,7 +108,7 @@
 
  <!-- 筛选列表 -->
     </el-row>
-       <el-dialog  :visible.sync="open" width="70%"  >
+       <el-dialog title="预览" :visible.sync="open" width="70%"  >
        <iframe
           :src="src"
           style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%;border: none;"></iframe>
@@ -307,7 +307,7 @@
      // 预览
      handleUpdate(adinw){
        let srcs = process.env.VUE_APP_BASE_API+adinw.resumePath
-       this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://localhost${srcs}`
+       this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
        this.open=true
      },
      // 抢占

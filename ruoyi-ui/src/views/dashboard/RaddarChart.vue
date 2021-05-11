@@ -23,6 +23,7 @@ require('echarts/theme/macarons') // echarts theme
  import {
     delFollow,
     addFollow,
+    findmubiao
   } from "@/api/demand/binding";
   import index from "../components/particulars/index"
 const animationDuration = 3000
@@ -61,14 +62,18 @@ export default {
       },
       // 绑定
       handleUpdate(row){
-        this.bangding.templist2=[]
         let form = new FormData()
         form.append("demandId",row.demandId)
-        addFollow(form).then(res=>{
-          this.bangding.forms=res.data
-          this.bangding.templist2=res.data
-          this.bangding.id=row.demandId
-          this.bangding.open2 = true;
+        findmubiao(form).then(res=>{
+          if(res.code==200){
+            this.bangding.templist2=[]
+            addFollow(form).then(res=>{
+              this.bangding.forms=res.data
+              this.bangding.templist2=res.data
+              this.bangding.id=row.demandId
+              this.bangding.open2 = true;
+            })
+          }
         })
       },
       getList(){

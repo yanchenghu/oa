@@ -38,6 +38,13 @@ export function find(data) {
     data: data
   })
 }
+export function findnames(data) {
+  return request({
+    url: '/customer/company/companyName',
+    method: 'post',
+    data: data
+  })
+}
 // 新增合作公司
 export function addcontract(data) {
   return request({

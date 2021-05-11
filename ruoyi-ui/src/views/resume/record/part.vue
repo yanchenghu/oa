@@ -13,7 +13,7 @@
             </div>
             <div class="top-right">
               <div class="top-top">
-                <span v-if="perro.addPeople===name">{{perCustomerinfo.customerName}}</span>
+                <span v-if="perro.addPeople===name || checkPermis">{{perCustomerinfo.customerName}}</span>
                 <span v-else>
                 <span >{{perCustomerinfo.customerName.substring(0,1)+ new Array(perCustomerinfo.customerName.length).join('*')}}</span>
                 </span>
@@ -70,7 +70,7 @@
               </div>
             </div>
           </div>
-          <el-tabs v-model="activeName" v-if="perro.addPeople == name">
+          <el-tabs v-model="activeName" v-if="perro.addPeople == name ||checkPermis">
               <el-tab-pane label="标准简历" name="second">
                  <span><svg-icon icon-class="jiaoyu" class-name="card-panel-icon" /></span><span class="tit">教育经历</span>
                  <ul style="list-style: none;" class="font">
@@ -173,9 +173,9 @@
           </el-row>
         </div>
         <div style="display: flex;justify-content: space-between;">
-          <div class="caozuo" v-show="!button[3].disabled" @click="buttoncli(3)"> <svg-icon icon-class="xiazai" class-name="el-col icon-but" /><br><span class="zhanyou font">下载简历</span> </div>
+          <div class="caozuo" v-show="!button[3].disabled ||checkPermis" @click="buttoncli(3)"> <svg-icon icon-class="xiazai" class-name="el-col icon-but" /><br><span class="zhanyou font">下载简历</span> </div>
           <div class="caozuo" @click="buttoncli(4)" v-show="!button[4].disabled"> <svg-icon icon-class="gengxin" class-name="el-col icon-but" /><br><span class="zhanyou font">更新简历</span> </div>
-          <div class="caozuo" @click="buttoncli(2)" v-show="!button[2].disabled"> <svg-icon icon-class="preview" class-name="el-col icon-but" /><br><span class="zhanyou font">预览简历</span></div>
+          <div class="caozuo" @click="buttoncli(2)" v-show="!button[2].disabled ||checkPermis"> <svg-icon icon-class="preview" class-name="el-col icon-but" /><br><span class="zhanyou font">预览简历</span></div>
         </div>
       </div>
       <el-dialog  :visible.sync="open2" width="70%">
@@ -198,6 +198,7 @@
   import{genzongbut}from'@/api/resume/mytrckresume.js'
   import store from "@/store";
   import {debounce,} from "@/utils/ruoyi.js"
+  import {checkPermi} from "@/utils/permission.js"
   import mytrack from "../../components/resume/mytrack.vue"
   export default{
     name:"part",
@@ -212,6 +213,7 @@
         },
         name:store.getters.name,
         sex:store.getters.sex,
+        checkPermis:null,
         // 简历预览
         open2:false,
         // 入项信息
@@ -290,6 +292,9 @@
       }
     },
     created(){
+      if(checkPermi(["resume:record:allquery"])){
+        this.checkPermis = true
+      }
       // 获取学历字典
       this.getDicts("per_customerinfo_education").then(response => {
         this.customerSpecialitiesoptions = response.data;

@@ -24,7 +24,7 @@
         </el-pagination>
     </el-col>
     <el-col style="background-color: #fff;padding: 10px;width:calc( 100% - 200px);">
-       <el-form style="padding-bottom: 25px;" ref="queryForm" :model="fromdata" label-width="80px" :inline="true">
+       <el-form style="padding-bottom: 25px;" ref="queryForm" :model="fromdata" label-width="80px" :inline="true"> 
          <el-form-item  prop="customerName">
            <el-input
              v-model="fromdata.customerName"
@@ -188,7 +188,7 @@
     },
     created() {
       this.getxuqiulist()
-      this.getList()
+      this.getLit()
     },
     methods: {
       input:debounce(function(){this.inpu()},500),

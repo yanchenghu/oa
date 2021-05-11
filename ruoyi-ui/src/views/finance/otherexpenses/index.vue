@@ -31,10 +31,8 @@
       <el-table-column label="社保费"  prop="socialSecurity" />
       <el-table-column label="税费"  prop="taxation" />
       <el-table-column label="其他"  prop="otherCost" />
-      <el-table-column label="总费用" >
-        <template slot-scope="scope">
-          {{zong(scope.row.rent,scope.row.hydropower,scope.row.property,scope.row.socialSecurity,scope.row.taxation,scope.row.otherCost,)}}
-        </template>
+      <el-table-column label="总费用" prop="mergeMoney">
+        
       </el-table-column>
       <el-table-column label="备注"  prop="remarks" />
       <el-table-column label="添加时间">
@@ -84,7 +82,7 @@
         <el-form-item label="备注" prop="remarks">
           <el-input type="textarea" v-model="form.remarks" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="总费用" prop="remarks">
+        <el-form-item label="总费用">
           {{zong(form.rent,form.hydropower,form.property,form.socialSecurity,form.taxation,form.otherCost)}}
         </el-form-item>
         <el-form-item label="费用日期" prop="insertTime">
@@ -158,7 +156,7 @@ export default {
       },
       // 表单参数
       form: {
-        
+
       },
       // 表单校验
       rules: {
@@ -264,6 +262,7 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
+        this.form.mergeMoney = this.zong(this.form.rent,this.form.hydropower,this.form.property,this.form.socialSecurity,this.form.taxation,this.form.otherCost)
         if (valid) {
           if (this.form.id != null) {
             updateOtherexpenses(this.form).then(response => {

@@ -176,13 +176,14 @@
           </el-table-column>
           <el-table-column  label="姓名"width="70" >
             <template slot-scope="scope">
-                <span >{{scope.row.customer_name.substring(0,1)+ new Array(scope.row.customer_name.length).join('*')}}</span>
+                <span v-if="checkPermi(['resume:record:allquery'])">{{scope.row.customer_name}}</span>
+                <span v-else>{{scope.row.customer_name.substring(0,1)+ new Array(scope.row.customer_name.length).join('*')}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="customer_tel" label="电话">
             <template slot-scope="scope">
-              <!-- <span v-if="name===scope.row.">{{scope.row.customer_tel.replace(reg,"$1****$2")}}</span> -->
-              <span>{{scope.row.customer_tel.replace(reg,"$1****$2")}}</span>
+              <span v-if="checkPermi(['resume:record:allquery'])">{{scope.row.customer_tel}}</span>
+              <span v-else>{{scope.row.customer_tel.replace(reg,"$1****$2")}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="customer_birth" label="出生日期">
@@ -231,6 +232,7 @@
     handInsert
   } from "@/api/resume/record/customerinfo";
   import {debounce,} from "@/utils/ruoyi.js"
+
   export default {
     name: "Record",
     data() {
