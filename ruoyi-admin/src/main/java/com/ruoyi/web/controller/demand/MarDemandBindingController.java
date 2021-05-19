@@ -1,5 +1,7 @@
 package com.ruoyi.web.controller.demand;
 
+
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -7,10 +9,14 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
+
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.demand.domain.MarDemandresumefollow;
+
 import com.ruoyi.demand.service.IMarDemandService;
+import com.ruoyi.demand.service.IMarDemandresumeService;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.resume.service.IPerCustomerinfoService;
 import com.ruoyi.system.service.ISysUserService;
@@ -41,6 +47,8 @@ public class MarDemandBindingController extends BaseController {
     private IPerCustomerinfoService perCustomerinfoService;
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private IMarDemandresumeService marDemandresumeService;
     /**
      * 需求绑定表的查询
      */
@@ -85,6 +93,13 @@ public class MarDemandBindingController extends BaseController {
     }
 
     /**
+     * 查询简历有没有毕业时间，或者薪资
+     */
+    @PostMapping(value = "/queryResumeSalary")
+    public String queryresumesalary(String customerCode){
+        return marDemandService.queryresumesalary(customerCode);
+    }
+    /**
      *需求已绑定简历列表
      */
     @PostMapping(value = "/demandDetailsList")
@@ -101,6 +116,14 @@ public class MarDemandBindingController extends BaseController {
 
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return marDemandService.demandResumeTrack(marDemandresumefollow,loginUser);
+    }
+    /**
+     * 商务处理简历为一推荐
+     */
+    @PostMapping(value = "/updateMarDemandresume")
+    public AjaxResult edit(@RequestBody MarDemandresume marDemandresume)
+    {
+        return toAjax(marDemandresumeService.updateMarDemandresume(marDemandresume));
     }
     /**
      *获取入项信息的基本
@@ -146,6 +169,24 @@ public class MarDemandBindingController extends BaseController {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return marDemandService.batchResumeStatus(zm,loginUser);
     }
+
+    /**
+     * 人事处理简历面试不通过，不入项
+     */
+
+    @PostMapping(value = "/noInterviewEntry")
+    public AjaxResult noInterviewEntry(String demandId,String customerCode,Integer type,String followDetail) {
+        return marDemandService.noInterviewEntry(demandId,customerCode,type,followDetail);
+    }
+
+//    /**
+//     * 人事处理简历面试不通过，不入项
+//     */
+//
+//    @PostMapping(value = "/noInterviewEntry")
+//    public AjaxResult noInterviewEntry(String demandId,String customerCode,Integer type,String followDetail) {
+//        return marDemandService.noInterviewEntry(demandId,customerCode,type,followDetail);
+//    }
 
 
 

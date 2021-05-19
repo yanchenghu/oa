@@ -39,6 +39,10 @@ public class PerCustomerinfo extends BaseEntity
     /** 毕业院校 */
     private String customerUniversity;
 
+    /** 毕业时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "毕业时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date customerUniversityTime;
     /** 专业 */
     @Excel(name = "专业")
     private String customerSpecialities;
@@ -115,7 +119,19 @@ public class PerCustomerinfo extends BaseEntity
     /** 简历方向 : 1:国内 2:对日 */
     private Integer resumeDirection;
 
-    public void setCustomerCode(String customerCode) 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Date getCustomerUniversityTime() {
+        return customerUniversityTime;
+    }
+
+    public void setCustomerUniversityTime(Date customerUniversityTime) {
+        this.customerUniversityTime = customerUniversityTime;
+    }
+
+    public void setCustomerCode(String customerCode)
     {
         this.customerCode = customerCode;
     }

@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bindTime"    column="bind_time"    />
         <result property="bindPeople"    column="bind_people"    />
         <result property="downloadStatus"    column="download_status"    />
+        <result property="isRecommend"    column="is_recommend"    />
         <result property="newfollowtime"    column="newfollowtime"    />
         <result property="trackzPeoname"    column="trackz_peoname"    />
         <result property="resumeEnclosurepath"    column="resume_enclosurepath"    />
@@ -26,10 +27,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="customerTel"    column="customer_tel"    />
         <result property="beginTime"    column="begin_time"    />
         <result property="endTime"    column="end_time"    />
+        <result property="followStatus"    column="follow_status"    />
+    </resultMap>
+    <resultMap type="ItemsIncluded" id="ItemsIncludedResult">
+        <result property="projectName"    column="project_name"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="customerTel"    column="customer_tel"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="followStatus"    column="follow_status"    />
     </resultMap>
 
     <sql id="selectMarDemandresumeVo">
-        select id, demand_id, customer_code, bind_time, bind_people, download_status, newfollowtime, trackz_peoname, resume_enclosurepath from mar_demandresume
+        select id, demand_id, customer_code, bind_time, bind_people, download_status,is_recommend, newfollowtime, trackz_peoname, resume_enclosurepath from mar_demandresume
     </sql>
 
     <select id="selectMarDemandresumeList" parameterType="MarDemandresume" resultMap="MarDemandresumeResult">
@@ -59,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bindTime != null">bind_time,</if>
             <if test="bindPeople != null">bind_people,</if>
             <if test="downloadStatus != null">download_status,</if>
+            <if test="isRecommend != null">is_recommend,</if>
             <if test="newfollowtime != null">newfollowtime,</if>
             <if test="trackzPeoname != null">trackz_peoname,</if>
             <if test="resumeEnclosurepath != null">resume_enclosurepath,</if>
@@ -70,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bindTime != null">#{bindTime},</if>
             <if test="bindPeople != null">#{bindPeople},</if>
             <if test="downloadStatus != null">#{downloadStatus},</if>
+            <if test="isRecommend != null">#{isRecommend},</if>
             <if test="newfollowtime != null">#{newfollowtime},</if>
             <if test="trackzPeoname != null">#{trackzPeoname},</if>
             <if test="resumeEnclosurepath != null">#{resumeEnclosurepath},</if>
@@ -84,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bindTime != null">bind_time = #{bindTime},</if>
             <if test="bindPeople != null">bind_people = #{bindPeople},</if>
             <if test="downloadStatus != null">download_status = #{downloadStatus},</if>
+            <if test="isRecommend != null">is_recommend=#{isRecommend},</if>
             <if test="newfollowtime != null">newfollowtime = #{newfollowtime},</if>
             <if test="trackzPeoname != null">trackz_peoname = #{trackzPeoname},</if>
             <if test="resumeEnclosurepath != null">resume_enclosurepath = #{resumeEnclosurepath},</if>
@@ -101,6 +114,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+
+
+    <select id="selectMarDemandresumeUpperBydemandId" parameterType="String" resultMap="MarDemandresumeResult">
+       select a.id, a.demand_id, a.customer_code, a.bind_time, a.bind_people, a.download_status, a.newfollowtime, a.trackz_peoname, a.resume_enclosurepath
+      from mar_demandresume a   LEFT JOIN
+      mar_demandresumefollow b on a.id=b.demandresume_id and a.newfollowtime= b.trackingtime
+      where b.follow_status not in (4,6,8) and  demand_id = #{demandId}
+    </select>
+
 
     <select id="selectMarDemandresumeByCodeID"  parameterType="Map"  resultType="map">
          SELECT
@@ -149,6 +172,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         DATE_FORMAT(f.end_time, '%Y-%m-%d %H:%i:%s') as end_time,
         g.project_name
         from  mar_demandresume a LEFT JOIN
+        mar_demandresumefollow b on a.id=b.demandresume_id and a.newfollowtime= b.trackingtime
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        LEFT JOIN mar_waitinginterview f on a.demand_id=f.demand_id and a.customer_code=f.customer_code
+        LEFT JOIN mar_demand g on a.demand_id=g.demand_id
+        where 1=1
+         and  a.bind_people =#{AddPeople}
+         and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+         and (b.follow_status &gt;=3 and b.follow_status!=4)
+         order by trackingtime desc
+    </select>
+
+
+    <select id="selectMarDemandresumeItemsIncluded"  parameterType="map"  resultMap="ItemsIncludedResult">
+     SELECT c.customer_name,c.customer_tel , a.customer_code ,
+        a.demand_id ,b.follow_status,
+        g.project_name
+        from  mar_demandresume a LEFT JOIN
+        mar_demandresumefollow b on a.id=b.demandresume_id and a.newfollowtime= b.trackingtime
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        LEFT JOIN mar_demand g on a.demand_id=g.demand_id
+        where 1=1
+         and  a.bind_people =#{AddPeople}
+         and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+         and (b.follow_status &gt;=5 and b.follow_status!=6)
+         order by trackingtime desc
+    </select>
+
+    <select id="selectMarDemanderviewed"  parameterType="map"  resultMap="BeInterviewedResult">
+      SELECT c.customer_name,c.customer_tel , a.customer_code ,
+        a.demand_id ,b.follow_status,
+        DATE_FORMAT(b.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime,
+        DATE_FORMAT(f.interview_time, '%Y-%m-%d %H:%i:%s') as interview_time,
+        DATE_FORMAT(f.begin_time, '%Y-%m-%d %H:%i:%s') as begin_time,
+        DATE_FORMAT(f.end_time, '%Y-%m-%d %H:%i:%s') as end_time,
+        g.project_name
+        from  mar_demandresume a LEFT JOIN
         mar_demandresumefollow b on a.id=b.demandresume_id
         LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
         LEFT JOIN mar_waitinginterview f on a.demand_id=f.demand_id and a.customer_code=f.customer_code
@@ -159,8 +218,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          and b.follow_status=#{followStatus}
          order by trackingtime desc
     </select>
-
-
 
     <select id="selectfirstMarbingBystatus"   resultType="int">
         SELECT COUNT(a.bind_people) as sd
@@ -263,6 +320,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             mar_demandresume a
         LEFT JOIN mar_demandresumefollow b ON a.id = b.demandresume_id and a.newfollowtime=b.trackingtime
         where a.newfollowtime &lt;#{newfollowtime} and b.follow_status in (1,3,5)
+    </select>
+
+
+
+    <select id="SelectStatusBydemandIdcustomerCode"  parameterType="MarDemandresume"  resultMap="MarDemandresumeResult">
+    SELECT
+        a.id,a.demand_id,a.customer_code,a.bind_people,b.follow_status as download_status
+    FROM
+        mar_demandresume a
+    LEFT JOIN mar_demandresumefollow b ON a.id = b.demandresume_id and a.newfollowtime=b.trackingtime
+    where a.demand_id=#{demandId} and a.customer_code =#{customerCode}
     </select>
 
 </mapper>

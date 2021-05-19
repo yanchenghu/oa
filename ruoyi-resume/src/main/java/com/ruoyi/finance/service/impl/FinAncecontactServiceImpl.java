@@ -132,7 +132,7 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
             finAncecompany.setAddTime(nowdate);
             finAncecompanyMapper.updateFinAncecompany(finAncecompany);
         }else {
-            return AjaxResult.error("操作异常，请联系管理员");
+            return AjaxResult.error("操作异常，只能修改当前月");
         }
         finAncecontact.setAddTime(nowdate);
         finAncecontactMapper.insertFinAncecontact(finAncecontact);

@@ -134,4 +134,16 @@ public class YxdemandController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         return yxdemandService.newIntention(yxdemand,loginUser);
     }
+
+
+
+    /**
+     * 移交线索
+     */
+    @PostMapping(value = "/transferedit")
+    public AjaxResult transferedit(@RequestBody Yxdemand yxdemand)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return yxdemandService.transferedit(yxdemand,loginUser);
+    }
 }

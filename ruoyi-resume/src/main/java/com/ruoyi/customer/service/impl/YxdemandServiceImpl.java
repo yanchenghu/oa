@@ -1,12 +1,16 @@
 package com.ruoyi.customer.service.impl;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.resume.DateUtils;
+import com.ruoyi.common.utils.resume.DingUtil;
 import com.ruoyi.common.utils.resume.SerialNumber;
+import com.ruoyi.conn.domain.ConDingtoken;
 import com.ruoyi.conn.domain.ConOperationrecords;
+import com.ruoyi.conn.mapper.ConDingtokenMapper;
 import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
 import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.domain.Yxcontact;
@@ -17,14 +21,19 @@ import com.ruoyi.customer.mapper.YxcontactMapper;
 import com.ruoyi.customer.mapper.YxdemandMapper;
 import com.ruoyi.customer.mapper.YxrobMapper;
 import com.ruoyi.customer.service.IYxdemandService;
+import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.domain.PerRobcustomer;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.tool.WorkDay;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.validation.constraints.Size;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -51,13 +60,17 @@ public class YxdemandServiceImpl implements IYxdemandService
     @Autowired
     private MarCompanyMapper marCompanyMapper;
 
-
-
     @Autowired
     private YxrobMapper yxrobMapper;
     @Autowired
     private ConOperationrecordsMapper conOperationrecordsMapper;
+    @Autowired
+    private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
+    @Autowired
+    private ConDingtokenMapper conDingtokenMapper;
 
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
 
 
@@ -447,6 +460,62 @@ public class YxdemandServiceImpl implements IYxdemandService
     public List<Map> getAllBusiness() {
         return yxdemandMapper.getAllBusiness();
 
+    }
+
+    @Override
+    public AjaxResult rankinglist(LoginUser loginUser) {
+
+        //本月入项排行榜
+        List<Map> RankingEntry=marCustomerprojectpayMapper.getRankingEntry();
+        //本月面试排行榜
+        List<Map> InterviewEntry=marCustomerprojectpayMapper.getInterviewEntry();   //获取分配给我的项目
+        Map maps=new HashMap();
+
+        maps.put("RankingEntry",RankingEntry);
+        maps.put("InterviewEntry",InterviewEntry);
+
+        return AjaxResult.success(maps);
+    }
+
+    @Override
+    public AjaxResult transferedit(Yxdemand yxdemand, LoginUser loginUser) {
+        String nickName = loginUser.getUser().getNickName();
+        String robPeopleId = yxdemand.getRobPeopleId();
+        Integer entryId = yxdemand.getEntryId();
+        if (entryId==null){
+            return AjaxResult.error("传入Id为空,移交错误");
+        }
+        Yxdemand emand1 = yxdemandMapper.selectYxdemandById(entryId);
+        if (StringUtils.isEmpty(robPeopleId)){
+            return AjaxResult.error("传入移交人Id为空,移交错误");
+        }
+        ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
+        if(cotoken==null){
+            JSONObject jsonToken = null;
+            try {
+                jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                cotoken.setToken(jsonToken.getString("access_token"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        SysUser sysUser = sysUserMapper.selectUserByUserName(robPeopleId);
+        String dinguserid = sysUser.getDinguserid();//用户钉钉
+ 
+        try {
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
+                    nickName+"将 "+emand1.getCompanyName()+" 客户线索，移交到你的账号，你及时跟进");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        yxdemand.setRobPeople(sysUser.getNickName());
+        yxdemand.setRobTime(new Date());
+        int i = yxdemandMapper.updateYxdemand(yxdemand);
+        if(i==1){
+            return AjaxResult.success("移交成功");
+        }
+        return AjaxResult.error("移交错误");
     }
 
 

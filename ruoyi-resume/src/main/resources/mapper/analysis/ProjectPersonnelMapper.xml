@@ -21,8 +21,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getAcurrentDateList"  parameterType="ProjectPersonnel"  resultMap="ProjectPersonnelResult">
-        SELECT corp_code,COUNT(corp_code) as thismonth_num  from  mar_customerprojectpay  where   syqstart_time &lt;#{currentDate} and
-        (outof_projecttime &gt; #{currentDate} or outof_projecttime is null)
+        SELECT corp_code,COUNT(corp_code) as thismonth_num  from  mar_customerprojectpay  where
+         DATE_FORMAT(syqstart_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{currentDate},'%Y-%m-%d') and
+        (DATE_FORMAT(outof_projecttime,'%Y-%m-%d') &gt;=DATE_FORMAT(#{currentDate},'%Y-%m-%d')  or outof_projecttime is null)
         GROUP BY corp_code
     </select>
 

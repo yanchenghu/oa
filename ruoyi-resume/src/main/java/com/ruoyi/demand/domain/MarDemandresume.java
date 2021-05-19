@@ -54,7 +54,20 @@ public class MarDemandresume extends BaseEntity
     @Excel(name = "简历附件地址")
     private String resumeEnclosurepath;
 
-    public void setId(String id) 
+    /** 是否推荐*/
+    @Excel(name = "是否推荐", readConverterExp = "0=为推荐,B=-已推荐")
+    private Integer isRecommend;
+
+
+    public Integer getIsRecommend() {
+        return isRecommend;
+    }
+
+    public void setIsRecommend(Integer isRecommend) {
+        this.isRecommend = isRecommend;
+    }
+
+    public void setId(String id)
     {
         this.id = id;
     }

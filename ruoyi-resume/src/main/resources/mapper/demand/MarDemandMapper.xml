@@ -279,19 +279,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectmarDWorLitList" parameterType="Map" resultMap="MarDemandResult">
-        select a.demand_id, a.corp_code,a.project_name,b.corp_name as address ,a.add_time from mar_demand a
-        LEFT JOIN mar_company b on a.corp_code=b.corp_code
-        where a.state=0 and a.operationuser=#{userName}
-		 order by a.add_time desc
-
+    select a.demand_id, a.corp_code,a.project_name,b.corp_name as address ,a.target_number,a.add_time, c.nus as demand_number,a.important_level  from mar_demand a
+    LEFT JOIN mar_company b on a.corp_code=b.corp_code
+	LEFT JOIN (SELECT f.demand_id,COUNT(f.id) as nus from mar_demandresume f  LEFT JOIN mar_demandresumefollow g
+    on f.id=g.demandresume_id and f.newfollowtime=g.trackingtime
+     LEFT JOIN mar_demand h on f.demand_id=h.demand_id
+    where h.state=0 and  g.follow_status not in (4,6,8)
+    GROUP BY f.demand_id
+	) c on a.demand_id=c.demand_id
+    where a.state=0 and a.operationuser=#{userName}
+     order by a.add_time desc
     </select>
-    <select id="selectThreeLit" parameterType="Map" resultMap="MarDemandResult">
-     SELECT COUNT(b.id)as sd,a.* from mar_demand a
-		 LEFT JOIN mar_demandresume b on a.demand_id = b.demand_id
-			where
-			a.state=0 and operationuser=#{userName}
-		 GROUP BY demand_id ORDER BY sd desc,b.bind_time asc
-	</select>
+
     <select id="selectdemandCooperationCompany"  parameterType="String" resultMap="MarDemandResult">
      select c.corp_code,c.transforming_people as operationuser,c.corp_name as project_name from
     (SELECT corp_code from mar_demand a

@@ -85,7 +85,7 @@ public interface MarDemandMapper
 
     List<MarDemand> selectmarDWorLitList(Map map);
 
-    List<MarDemand> selectThreeLit(Map map);
+
 
     List<MarDemand> selectdemandCooperationCompany(String userName);
 }

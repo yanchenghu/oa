@@ -73,9 +73,6 @@ public class MarWaitinginterviewController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody MarWaitinginterview marWaitinginterview)
     {
-
-
-
         return toAjax(marWaitinginterviewService.updateMarWaitinginterview(marWaitinginterview));
     }
 

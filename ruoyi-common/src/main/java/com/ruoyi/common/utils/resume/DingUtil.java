@@ -19,13 +19,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class DingUtil {
+
     //上海梓钦
 //    public static final Long agent_id = 262622998L;
 //    public static final String TOKEN_URL = "https://oapi.dingtalk.com/gettoken?appkey=ding5urinhfhisf4kxdx&appsecret=6vXcaU9xfohvTz9dMbM8KKCUfxSSoRD46fOW9KpvFdKlZXuxFhjcdJcdRngthLB1";//获取高预美token

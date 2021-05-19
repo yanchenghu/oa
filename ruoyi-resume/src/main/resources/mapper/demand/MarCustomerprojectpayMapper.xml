@@ -293,7 +293,7 @@
 		LEFT JOIN mar_demandresume b on a.demandresume_id=b.id
      where
 	 DATE_FORMAT( trackingtime, '%Y%m' )= DATE_FORMAT( CURDATE( ) , '%Y%m' )
-	 and follow_status in (5,6,7,8)
+	 and follow_status in (5,7,8)
    GROUP BY b.bind_people)c
 	LEFT JOIN sys_user d ON c.bind_people = d.user_name
 	ORDER BY c.peonum desc

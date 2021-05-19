@@ -8,6 +8,7 @@ import java.util.List;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.finance.domain.Expatriates;
 import com.ruoyi.tool.ExcelRead;
@@ -105,6 +106,9 @@ public class FinExpatriatesalaryServiceImpl implements IFinExpatriatesalaryServi
         List<FinExpatriatesalary> listFinExpat=new ArrayList<>();
         for(ArrayList<String> arr:list) {
             FinExpatriatesalary finExpatriate=new FinExpatriatesalary();
+
+
+
             if (arr.get(0) != null && !arr.get(0).equals("")) {
                 finExpatriate.setCustomerName(arr.get(0));//每一行的第一个单元格
             } else {
@@ -152,11 +156,26 @@ public class FinExpatriatesalaryServiceImpl implements IFinExpatriatesalaryServi
                     return AjaxResult.error("上传失败"+arr.get(0)+"未入项，请核对消息！");
                 }
                 finExpatriate.setCustomerCode(dsf.getCustomerCode());
-
             } else {
                 return AjaxResult.error("上传失败"+arr.get(0)+"的电话为空！");
             }
+
             listFinExpat.add(finExpatriate);
+        }
+        String abc="";
+        FinExpatriatesalary finExp=new FinExpatriatesalary();
+        for (FinExpatriatesalary finExpatriatesala:listFinExpat){
+            finExp.setMonths(months);
+            finExp.setCustomerTel(finExpatriatesala.getCustomerTel());
+            finExp.setCustomerName(finExpatriatesala.getCustomerName());
+            List<FinExpatriatesalary> finExpatriatesalaries = finExpatriatesalaryMapper.selectFinExpatriatesalaryList(finExp);
+            if(finExpatriatesalaries.size()>0){
+                FinExpatriatesalary finExpatri = finExpatriatesalaries.get(0);
+                abc+=finExpatri.getCustomerName()+",";
+            }
+        }
+        if(StringUtils.isNotEmpty(abc)){
+            return AjaxResult.error(abc+"当月数据已存在，请去除整理后重新上传");
         }
         String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
           for (FinExpatriatesalary finExpatriatesala:listFinExpat){
@@ -167,7 +186,7 @@ public class FinExpatriatesalaryServiceImpl implements IFinExpatriatesalaryServi
           }
 
         int a =finExpatriatesalaryMapper.insertFinExpatriatesalarylist(listFinExpat);
-        if (a > 1) {
+        if (a >= 1) {
             return AjaxResult.success("上传成功");
         }
         return AjaxResult.error("上传失败");

@@ -16,6 +16,15 @@ public class BeInterviewed {
     private String  interviewTime;
     private String  beginTime;
     private String  endTime;
+    private Integer followStatus;
+
+    public Integer getFollowStatus() {
+        return followStatus;
+    }
+
+    public void setFollowStatus(Integer followStatus) {
+        this.followStatus = followStatus;
+    }
 
     public String getBeginTime() {
         return beginTime;
