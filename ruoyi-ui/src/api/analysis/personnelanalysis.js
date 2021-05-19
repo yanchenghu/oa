@@ -18,6 +18,12 @@ export function listdata(query) {
   })
 }
 
+export function getbusinessData() {
+  return request({
+    url: '/work/statistic/rankinglist',
+    method: 'get',
+  })
+}
 export function yuangonglist() {
   return request({
     url: '/analysis/personneldata/userlist',

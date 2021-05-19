@@ -418,8 +418,8 @@
          if(this.perCustomerinfo.resumePath==""||this.perCustomerinfo.resumePath==null){
            this.msgError("该简历暂无原版")
          }else{
-           let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
-           window.open(srcs, '_blank');
+		   this.downloads(this.perCustomerinfo.resumePath)
+           
          }
         }else if(val==4){
           // 更新简历信息

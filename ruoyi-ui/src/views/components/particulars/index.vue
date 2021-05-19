@@ -1,16 +1,21 @@
 <template>
   <div>
-      <el-dialog title="绑定" :visible.sync="bangding.open2" width="500px" append-to-body>
+      <el-dialog title="绑定" :visible.sync="bangding.open2" width="500px" append-to-body >
         <el-input v-model="searchmsg" placeholder="请输入" clearable size="small" @keyup.enter.native="search" style="width: 170px;margin-right: 10px;"/>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="search">查询</el-button>
         <p></p>
-        <el-radio-group v-model="corpnamelist" v-loading="bangding.loading2">
-             <el-radio v-for="city in bangding.templist2" :label="city.customer_code" :key="city.customer_code" style="width:155px;margin-bottom: 10px;">{{city.customer_name}}-{{city.customer_tel}}</el-radio>
-        </el-radio-group>
+        <div style="height: 300px; overflow: auto;">
+          <el-radio-group v-model="corpnamelist" v-loading="bangding.loading2">
+               <el-radio v-for="city in bangding.templist2" :label="city.customer_code" :key="city.customer_code" style="width:155px;margin-bottom: 10px;">{{city.customer_name}}-{{city.customer_tel}}</el-radio>
+          </el-radio-group>
+        </div>
+
+
         <div v-show="bangding.templist2.length==0 && bangding.forms.length!==0" style="text-align: center;
         ">暂无该简历信息</div>
         <div v-show="bangding.templist2.length==0 && bangding.forms.length==0" style="text-align: center; ">暂无简历信息,先去抢占几份去吧</div>
-        <div slot="footer" class="dialog-footer">
+
+        <div slot="footer" class="dialog-footer" >
           <el-button type="primary" @click="submitForm">确定</el-button>
           <el-button @click="bangding.open2=false">取 消</el-button>
         </div>
@@ -45,6 +50,7 @@
 <script>
   import {
     delFollow,
+    queryResumeSalary
   } from "@/api/demand/binding";
   import { debounce } from "@/utils/ruoyi"
   export default {
@@ -97,11 +103,28 @@
           if(this.corpnamelist==null){
             this.msgError("请选择简历")
           }else{
-            if(this.$refs.file!==undefined){
-              this.upoplodad()
-            }
-            this.titles = "上传附件"
-            this.opens = true
+            let form= new FormData()
+            form.append("customerCode",this.corpnamelist)
+            queryResumeSalary(form).then(res=>{
+              if(res=="可以绑定"){
+                if(this.$refs.file!==undefined){
+                  this.upoplodad()
+                }
+                this.titles = "上传附件"
+                this.opens = true
+              }else{
+                let that = this
+                this.$confirm('该简历与需求不符"'+ res+'"是否去修改', "警告", {
+                  confirmButtonText: "去修改",
+                  cancelButtonText: "取消",
+                  type: "warning"
+                }).then(function(){
+                    that.$router.push({path:"/record/manually",query:{customerCode:that.corpnamelist}});
+                }).then(() => {
+                  this.bangding.open2=false
+                }).catch(()=>{})
+              }
+            })
           }
         },
         submitForms:debounce(function(){this.submitFor()}),
@@ -121,6 +144,7 @@
               }else{
                 form.append("resumeEnclosurepath",this.$refs.file.uploadFiles[0].raw)
                 delFollow(form).then(res=>{
+
                   this.msgSuccess("绑定成功")
                   this.opens=false
                   this.bangding.open2=false

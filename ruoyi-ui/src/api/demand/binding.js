@@ -23,6 +23,13 @@ export function findmubiao(data) {
     data:data,
   })
 }
+export function queryResumeSalary(data) {
+  return request({
+    url: '/demand/binding/queryResumeSalary',
+    method: 'post',
+    data:data,
+  })
+}
 // 查询部门下拉树结构
 export function treeselect() {
   return request({

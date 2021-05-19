@@ -18,7 +18,7 @@ import './assets/icons' // icon
 import './permission' // permission control
 import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
-import { friendlyDate,  worktime, parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree, } from "@/utils/ruoyi";
+import { friendlyDate,  worktime, parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, download, handleTree,downloads } from "@/utils/ruoyi";
 import {checkPermi} from "@/utils/permission.js"
 import Pagination from "@/components/Pagination";
 //自定义表格工具扩展
@@ -35,6 +35,7 @@ Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
+Vue.prototype.downloads = downloads
 Vue.prototype.handleTree = handleTree
 Vue.prototype.checkPermi = checkPermi
 Vue.prototype.msgSuccess = function (msg) {

@@ -57,3 +57,10 @@ export function put(data) {
     data:data
   })
 }
+export function noInterviewEntry(data) {
+  return request({
+    url: '/demand/binding/noInterviewEntry',
+    method: 'post',
+    data:data
+  })
+}

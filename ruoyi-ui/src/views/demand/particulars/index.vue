@@ -85,12 +85,17 @@
           <p></p>
           <el-table v-loading="loading" border :data="templists"  @selection-change="handleSelectionChange">
             <el-table-column type="selection" key="1"/>
-            <el-table-column label="姓名" align="left" prop="customerName" key="2"/>
+            <el-table-column label="姓名" align="left" prop="customerName" key="2" width="70"/>
             <el-table-column label="电话" align="left" prop="customerTel" key="3"/>
-            <el-table-column label="期望薪资" align="left" prop="expectationSalary" key="9">
+            <el-table-column label="期望薪资" align="left" prop="expectationSalary" width="60" key="9">
               <template slot-scope="scope">
                 <span v-if="scope.row.expectationSalary">{{scope.row.expectationSalary }}</span>
                 <span v-else>未知</span>
+               </template>
+            </el-table-column>
+            <el-table-column label="毕业时间" align="left" prop="customerUniversityTime" key="11">
+               <template slot-scope="scope">
+                <span >{{scope.row.customerUniversityTime?scope.row.customerUniversityTime:"未知"}}</span>
                </template>
             </el-table-column>
             <el-table-column label="学历/工作经验" align="left" prop="expectationSalary" key="10">
@@ -98,13 +103,13 @@
                 <span >{{scope.row.education?customerFormat(scope.row):"未知"}}/{{scope.row.workYear?scope.row.workYear+"年":"未知"}}</span>
                </template>
             </el-table-column>
-            <el-table-column label="绑定人" align="left" prop="trackzPeoname" key="4"/>
+            <el-table-column label="绑定人" width="60" align="left" prop="trackzPeoname" key="4"/>
             <el-table-column label="绑定时间" align="left" key="5">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.bindTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                </template>
             </el-table-column>
-            <el-table-column label="简历状态" align="left" width="500" key="6" >
+            <el-table-column label="简历状态" align="left" width="400" key="6" >
               <template slot-scope="scope" >
 
                 <el-steps
@@ -147,6 +152,11 @@
                   <el-step title="未入项" v-if="scope.row.followStatus==8"></el-step>
                 </el-steps>
                 </div>
+              </template>
+            </el-table-column>
+            <el-table-column v-if="ident==8" label="推荐状态" align="left" key="12">
+              <template slot-scope="scope">
+                <el-button :disabled="scope.row.isRecommend==1" type="primary" size="mini" @click="tuijian(scope.row)">{{scope.row.isRecommend==0?"推荐":"已推荐"}}</el-button>
               </template>
             </el-table-column>
             <el-table-column label="跟踪时间" align="left" key="7">
@@ -238,6 +248,7 @@
                       end-placeholder="结束日期">
                      </el-date-picker>
                   </el-form-item>
+
                   <el-form-item v-else-if="followstart==8"
                     :rules="[{ required: true, message: '请输入原因', trigger: 'blur' },]"
                     prop="textarea1"
@@ -256,6 +267,25 @@
                       placeholder="请输入原因"
                       v-model="qqq.textarea1">
                     </el-input>
+                  </el-form-item>
+                  <el-form-item v-if="followstart==3" :rules="[{ required: true, message: '面试方式不能为空', trigger: 'change' },]" prop="remark1" label="面试方式">
+                    <el-select v-model="qqq.remark1"  size="small">
+                      <el-option
+                          key="视频面试"
+                          label="视频面试"
+                          value="视频面试"
+                        />
+                      <el-option
+                          key="电话面试"
+                          label="电话面试"
+                          value="电话面试"
+                        />
+                      <el-option
+                          key="现场面试"
+                          label="现场面试"
+                          value="现场面试"
+                         />
+                    </el-select>
                   </el-form-item>
                   <el-form-item label="协助人" v-if="followstart==8">
                       <el-input v-model="qqq.entryAssistant" placeholder="请输入协助人"  size="small" />
@@ -368,14 +398,14 @@
 </template>
 
 <script>
-  import {gettemplist,template,getFollow,submitstart,addFollow,delFollow,getInputInformation,entryPersonnel,submitstarts,chongzhizhuang} from '@/api/demand/praticulars'
+  import {gettemplist,template,getFollow,submitstart,addFollow,delFollow,getInputInformation,entryPersonnel,submitstarts,chongzhizhuang,resource,updateMarDemandresume} from '@/api/demand/praticulars'
   import {
     findmubiao
   } from "@/api/demand/binding";
   import {debounce,checkImg} from "@/utils/ruoyi.js"
   import index from "../../components/particulars/index"
   export default {
-    name:'particulars',
+    name:'Particulars',
     components:{
       index
     },
@@ -432,6 +462,7 @@
           textarea1:"",
           stayTime:"",
           qqq:[],
+          remark1:"",
         },
         opens:false,
         titles:"",
@@ -527,7 +558,12 @@
       this.gettemplate()
     },
     methods:{
-
+      tuijian(row){
+        updateMarDemandresume({id:row.id,isRecommend:1}).then(res=>{
+          this.msgSuccess("推荐成功")
+          this.getlist()
+        })
+      },
       // 重置简历状态
       chongzhi(){
         let array = []
@@ -681,6 +717,7 @@
             qqq:[],
             beginTime:"",
             endTime:"",
+            remark1:"现场面试",
           }
           this.resetForm("ruxing")
           }
@@ -698,6 +735,7 @@
           textarea1 :"",
           stayTime:"",
           qqq:[],
+          remark1:"现场面试",
         }
         this.resetForm("ruxing")
         if(ind==1){
@@ -738,6 +776,7 @@
           trackingtime:this.qqq.stayTime,
           beginTime:beginTime,
           endTime:endTime,
+          remark1:this.qqq.remark1,
         }
         form.append("followStatus",this.followstart)
         form.append("demandresumeId",this.tempID)
@@ -760,6 +799,7 @@
         }else{
           let that = this
           if(this.followstart==8||this.followstart==5||this.followstart==3){
+            form.append("remark1",this.qqq.remark1)
             form.append("trackingtime",this.qqq.stayTime)
             form.append("beginTime ",beginTime)
             form.append("endTime",endTime)
@@ -833,7 +873,6 @@
                 this.open=false
               }).catch(()=>{})
             }
-
           }
         });
       },
@@ -889,17 +928,17 @@
       },
 
       dow(adinw,ind){
+        // const baseURL = process.env.VUE_APP_BASE_API
+        // window.location.href = baseURL + "/common/download/resource?name=" + encodeURI(adinw.resumeEnclosurepath)
         if(ind == 1){
           if(adinw.resumePath){
-            let srcs = process.env.VUE_APP_BASE_API+adinw.resumePath
-            window.open(srcs, '_blank');
+			this.downloads(adinw.resumePath)
           }else{
             this.msgError(adinw.customerName+"暂无简历原件请上传")
           }
         }else{
           if(adinw.resumeEnclosurepath){
-            let srcs = process.env.VUE_APP_BASE_API+adinw.resumeEnclosurepath
-            window.open(srcs, '_blank');
+			this.downloads(adinw.resumeEnclosurepath)
           }else{
            this.msgError(adinw.customerName+"暂无简历附件请上传")
           }

@@ -159,8 +159,8 @@ export default {
     // 下载简历
     download(val){
       if(val.templateFile!==null){
-        let srcs = process.env.VUE_APP_BASE_API+val.templateFile
-        window.open(srcs, '_blank');
+        
+		this.downloads(val.templateFile)
       }else{
         this.msgError("该简历暂无原版")
       }

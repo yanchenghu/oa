@@ -63,7 +63,14 @@
                 :value="parseInt(dict.dictValue)" />
             </el-select>
           </el-form-item>
-
+          <el-form-item label="毕业时间" prop="customerUniversityTime"  style="width: 299px;">
+            <el-date-picker type="date"
+            v-model="perCustomerinfo.customerUniversityTime"
+            size="small"
+            style="width: 199px;"
+            value-format="yyyy-MM-dd">
+            </el-date-picker>
+          </el-form-item>
           <el-form-item label="技术方向" prop="professionId" >
             <el-select v-model='perCustomerinfo.professionId' filterable placeholder="" size="small">
               <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
@@ -85,7 +92,7 @@
         </el-form>
         </div>
         </div>
-        <span><svg-icon icon-class="jiaoyu" class-name="card-panel-icon" /></span><span class="tit">教育经历</span><i v-show="input3" class="el-icon-edit-outline i"  @click="adds(3)"></i>
+        <span id="xue"><svg-icon icon-class="jiaoyu" class-name="card-panel-icon" /></span><span class="tit">教育经历</span><i v-show="input3" class="el-icon-edit-outline i"  @click="adds(3)"></i>
         <p></p>
         <el-form v-show="!input3" ref="form" :model="perEduc" label-width="80px" style="width: 400px; margin-left: 10px;">
           <el-form-item label="学校名称" prop="schoolName">
@@ -114,7 +121,7 @@
            :key="i"
            style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0; ">
            <div style="position: absolute; right: 60px;"><el-button type="text" @click="delete3(work)"><i class="el-icon-delete" ></i>删除</el-button>
-             <el-button type="text" @click="updata3(work)"><i class="el-icon-edit"></i>修改</el-button></div>
+             <el-button type="text" @click="updata3(work)"><i class="el-icon-edit"></i> 修改</el-button></div>
             <p style="font-weight: 700;"><span>学校名称：</span>&nbsp<span class="miaoshu">{{work.schoolName}}</span></p>
             <p ><span class="xiaotu">学<span style="display: inline-block; width: 32px;"></span>历：</span>&nbsp<span class="miaoshu">{{work.degree}}</span></p>
             <p><span class="xiaotu">专<span style="display: inline-block; width: 32px;"></span>业：</span>&nbsp<span class="miaoshu">{{work.major}}</span></p>
@@ -126,7 +133,7 @@
 
           </li>
         </ul>
-        <span><svg-icon icon-class="work" class-name="card-panel-icon" /></span><span class="tit">工作经历</span><i v-show="input" class="el-icon-edit-outline i"  @click="adds(1)"></i>
+        <span id="gong"><svg-icon icon-class="work" class-name="card-panel-icon" /></span><span class="tit">工作经历</span><i v-show="input" class="el-icon-edit-outline i"  @click="adds(1)"></i>
         <p></p>
         <el-form v-show="!input" ref="form" :model="work_experienceList" label-width="80px" style="width: 400px; margin-left: 10px;">
           <el-form-item label="公司名称" prop="companyName">
@@ -167,7 +174,7 @@
 
           </li>
         </ul>
-        <span><svg-icon icon-class="xiangmu" class-name="card-panel-icon" /></span><span class="tit">项目经厉</span>
+        <span id="xiang"><svg-icon icon-class="xiangmu" class-name="card-panel-icon" /></span><span class="tit">项目经厉</span>
         <i v-show="input2" class="el-icon-edit-outline i"  @click="adds(2)"></i>
         <br/>
         <el-form v-show="!input2" ref="form" :model="project_exper" label-width="80px" style="width: 400px;margin-left: 10px;">
@@ -194,7 +201,7 @@
         <ul style="list-style: none;padding-left: 1px;">
           <li v-for="project in project_experience" style="padding: 5px 0 5px 20px;margin: 10px 0 10px 0;">
             <div style="position: absolute; right: 60px;"><el-button type="text" @click="delete2(project)"><i class="el-icon-delete"></i>删除</el-button>
-              <el-button type="text" @click="updata2(project)"><a href="#tit2"><i class="el-icon-edit"></i>修改</a></el-button></div>
+              <el-button type="text" @click="updata2(project)"><i class="el-icon-edit"></i>修改</el-button></div>
             <p style="font-weight: 700;"><span>项目名称：</span>&nbsp<span>{{project.projectName}}</span></p>
             <p><span class="xiaotu">项目时间：</span>&nbsp
             <span class="miaoshu" v-if="project.quitprojectTime">{{project.joinprojectTime?project.joinprojectTime+" 至 "+project.quitprojectTime : "未知"+" 至 "+project.quitprojectTime}}</span>
@@ -611,26 +618,27 @@
         this.perEduc={}
       },
       updata2(project){
+        document.getElementById("xiang").scrollIntoView();
         this.button=2
         this.input2 = false
         this.project_exper=project
       },
       updata1(work){
+        document.getElementById("gong").scrollIntoView();
         this.button=2
         this.input = false
         this.work_experienceList=work
       },
       updata3(work){
+        document.getElementById("xue").scrollIntoView();
         this.button=2
         this.input3 = false
         this.perEduc=work
       },
-
-
-       splices(arr,data){
-         let i = arr.indexOf(data)
-         return arr.splice(i,1)
-       },
+      splices(arr,data){
+        let i = arr.indexOf(data)
+        return arr.splice(i,1)
+      },
       delete1(work){
         let that = this
         this.$confirm('是否删除这条教育经历', "警告", {

@@ -234,10 +234,13 @@
                       </el-button>
                     </el-form-item>
                     <el-form-item label="保密协议">
-                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(4)" v-if="!marCertificates1.confidentialityAgreement">
-                          点击上传
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined ||marCertificates1.confidentialityAgreement!==null " type="text" @click="upfile(4)" >
+                          上传1
                       </el-button>
-                      <el-button type="text" @click="seefile(4)" v-else>
+                      <el-button :disabled="yxdemandone.outofProjecttime!==undefined ||marCertificates1.confidentialityAgreementlo!==null " type="text" @click="upfile(5)" >
+                          上传2
+                      </el-button>
+                      <el-button type="text" @click="seefilea" :disabled="marCertificates1.confidentialityAgreementlo==null && marCertificates1.confidentialityAgreement==null">
                           点击预览
                       </el-button>
                     </el-form-item>
@@ -453,6 +456,44 @@
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
 
+    <el-dialog :visible.sync="dialogVisible2" width="600px" title="预览劳动合同">
+      <ul style="display: flex;flex-wrap: wrap; list-style: none;">
+        <li  class="li-li" v-if="marCertificates1.confidentialityAgreement">
+            <img  width="100%"  :src="srcs+marCertificates1.confidentialityAgreement">
+              <span class="imgs">
+                <span
+                 class="el-upload-list__item-preview"
+                  @click="filesee(marCertificates1.confidentialityAgreement)"
+                >
+                  <i class="el-icon-zoom-in"></i>
+                </span>
+                <span
+                  @click="filedow(marCertificates1.confidentialityAgreement)"
+                >
+                  <i class="el-icon-download"></i>
+                </span>
+                
+              </span>
+        </li>
+        <li  class="li-li" v-if="marCertificates1.confidentialityAgreementlo">
+            <img  width="100%"  :src="srcs+marCertificates1.confidentialityAgreementlo">
+              <span class="imgs">
+                <span
+                 class="el-upload-list__item-preview"
+                  @click="filesee(marCertificates1.confidentialityAgreementlo)"
+                >
+                  <i class="el-icon-zoom-in"></i>
+                </span>
+                <span
+                  @click="filedow(marCertificates1.confidentialityAgreementlo)"
+                >
+                  <i class="el-icon-download"></i>
+                </span>
+                
+              </span>
+        </li>
+      </ul>
+    </el-dialog>
     <el-dialog :visible.sync="dialogVisible1" width="600px" title="预览劳动合同">
       <ul style="display: flex;flex-wrap: wrap; list-style: none;">
         <li v-for="file,i in Listcontrr" :key="i" class="li-li" >
@@ -460,29 +501,24 @@
               <span class="imgs">
                 <span
                  class="el-upload-list__item-preview"
-                  @click="filesee(file)"
+                  @click="filesee(file.imgPath)"
                 >
                   <i class="el-icon-zoom-in"></i>
                 </span>
                 <span
-                  @click="filedow(file)"
+                  @click="filedow(file.imgPath)"
                 >
                   <i class="el-icon-download"></i>
                 </span>
                 <span
                 v-if="yxdemandone.outofProjecttime==undefined"
-                  @click="fileRemove(file)"
+                  @click="fileRemove(file.id)"
                 >
                   <i class="el-icon-delete"></i>
                 </span>
               </span>
         </li>
       </ul>
-
-      <div v-for="file,i in Listcontrr" :key="i" style="position: relative;width:148px;height: 148px;float: left;">
-
-
-      </div>
     </el-dialog>
     <!-- 添加或修改入项对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -648,6 +684,7 @@ export default {
       Listmarcustomerp:[],
       // 借用物品
       marBorrows:[],
+      dialogVisible2:false,
       // 证件照
       marCertificates1:{},
       // 入项基本信息
@@ -784,6 +821,9 @@ export default {
     professionIdopFormat(row, column) {
       return this.selectDictLabel(this.professionIdoptions, row.technologyDirection);
     },
+    seefilea(){
+      this.dialogVisible2 = true
+    },
     /** 查询入项列表 */
     getList() {
       if(this.value1==null){
@@ -884,8 +924,10 @@ export default {
           form.append("photo",3)
         }else if(this.title2=="上传学位证"){
           form.append("photo",4)
-        }else if(this.title2=="上传保密协议"){
+        }else if(this.title2=="上传保密协议1"){
           form.append("photo",5)
+        }else if(this.title2=="上传保密协议2"){
+          form.append("photo",7)
         }
         addEntry(form).then(res=>{
           this.open2 = false
@@ -987,7 +1029,11 @@ export default {
         this.title2 = "上传学位证"
       }else if(ind==4){
         // 上传保密协议
-        this.title2 = "上传保密协议"
+        this.title2 = "上传保密协议1"
+      }
+      else if(ind==5){
+        // 上传保密协议
+        this.title2 = "上传保密协议2"
       }
       this.open2 = true
     },
@@ -1012,16 +1058,12 @@ export default {
          // 预览学位证
          this.title2 = "预览学位证"
           this.dialogImageUrl = srcs+this.marCertificates1.academic
-       }else if(ind==4){
-         // 预览保密协议
-         this.title2 = "预览保密协议"
-          this.dialogImageUrl = srcs+this.marCertificates1.confidentialityAgreement
        }
        this.dialogVisible=true
     },
     filesee(file){
       this.title2 = "预览图片详情"
-       this.dialogImageUrl = this.srcs+file.imgPath
+       this.dialogImageUrl = this.srcs+file
       this.dialogVisible=true
     },
     fileRemove(file){
@@ -1030,16 +1072,16 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        deletehetong(file.id).then()
+        deletehetong(file).then()
       }).then(() => {
         this.handleUpdate(this.yxdemandone.id);
       }).catch();
     },
     filedow(row){
-        var url = this.srcs+row.imgPath;
+        var url = this.srcs+row;
         const a = document.createElement('a')
         a.href = url;
-        a.download = ""+row.imgPath.slice(row.imgPath.lastIndexOf('/')+1)
+        a.download = ""+row.slice(row.lastIndexOf('/')+1)
         a.click()
     },
 

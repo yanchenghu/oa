@@ -63,6 +63,16 @@
                       </el-form-item>
                     </el-col>
                     <el-col :span="12">
+                      <el-form-item label="毕业时间" prop="customerUniversityTime" >
+                        <el-date-picker type="date"
+                        v-model="perCustomerinfo.customerUniversityTime"
+                        size="small"
+                        style="width: 199px;"
+                        value-format="yyyy-MM-dd">
+                        </el-date-picker>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
                       <span class="bitian">*</span>
                       <el-form-item label="技术方向" prop="professionId">
                         <el-select v-model='perCustomerinfo.professionId' filterable  placeholder="" size="small">

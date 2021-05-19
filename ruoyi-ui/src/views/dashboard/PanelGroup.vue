@@ -206,14 +206,14 @@
       </el-col>
     </el-row>
     <el-dialog style="text-align: center;"  :title="title2" :visible.sync="open"  width="500px">
-      <el-radio-group   v-model="caozuos">
+      <el-radio-group v-if="title=='简历通过'"   v-model="caozuos">
           <el-radio :label="1">面试</el-radio>
-          <el-radio :label="2">拒绝面试</el-radio>
+          <el-radio :label="6">拒绝面试</el-radio>
       </el-radio-group>
       <p></p>
-      <el-form label-width="110px" :model="form" style="width: 65%;" ref="ruxing" >
+      <el-form label-width="120px" :model="form" style="width: 70%;" ref="ruxing" >
         <el-form-item
-        v-if="caozuos==1"
+          v-if="caozuos==1 && title=='简历通过'"
           :rules="[{ required: true, message: '日期不能为空', trigger: 'change' },]"
           prop="interviewTime"
           label="具体面试日期">
@@ -227,15 +227,15 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item
-          v-if="caozuos==2"
+          v-if="caozuos==6 || title=='面试通过'"
           :rules="[{ required: true, message: '原因不能为空', trigger: 'change' },]"
-          prop="interviewTime"
-          label="拒绝面试原因">
+          prop="followDetail"
+          :label="title=='简历通过'? '拒绝面试原因':'面试不通过原因'">
           <el-input
             type="textarea"
             autosize
             placeholder="请输入原因"
-            v-model="form.textarea1">
+            v-model="form.followDetail">
           </el-input>
         </el-form-item>
       </el-form>
@@ -244,14 +244,14 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog v-if="title=='人员出项'" :title="title" :visible.sync="dialogTableVisible"  width="500px">
+    <el-dialog :title="title" :visible.sync="dialogTableVisible2"  width="500px">
       <el-table :data="gridData" v-loading="loading">
         <el-table-column property="customer_name" label="姓名" ></el-table-column>
         <el-table-column property="outof_projecttime" label="离项时间" ></el-table-column>
         <el-table-column property="quit_proreason" label="离项原因" :formatter="professionIdopFormat"></el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog v-else-if="title=='简历通过'" :title="title" :visible.sync="dialogTableVisible"  width="900px">
+    <el-dialog  :title="title" :visible.sync="dialogTableVisible3"  width="900px">
       <el-table :data="gridData" v-loading="loading">
         <el-table-column property="customerName" label="姓名" width="80"></el-table-column>
         <el-table-column property="customerTel" label="电话" width="120"></el-table-column>
@@ -260,25 +260,39 @@
         <el-table-column property="interviewTime" label="具体面试时间"></el-table-column>
         <el-table-column label="操作" v-if="dataList.numb==2||dataList.numb==3">
           <template slot-scope="scope">
-            <el-button type="text" size="medium" :disabled="scope.row.interviewTime!==null" @click="addmianshi(scope.row)">
-              添加面试时间
+            <el-button type="text" size="medium" :disabled="scope.row.interviewTime!==null || scope.row.followStatus!==3" @click="addmianshi(scope.row)">
+              <span v-if="scope.row.followStatus==3">添加面试状态</span>
+              <span v-if="scope.row.followStatus==5">面试通过</span>
+              <span v-if="scope.row.followStatus==6">面试不通过</span>
+              <span v-if="scope.row.followStatus==7">已入项</span>
+              <span v-if="scope.row.followStatus==8">未入项</span>
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog v-else :title="title" :visible.sync="dialogTableVisible"  width="500px">
+    <el-dialog  :title="title" :visible.sync="dialogTableVisible"  width="500px">
       <el-table :data="gridData" v-if="dataList.numb==2||dataList.numb==3" v-loading="loading">
         <el-table-column property="customerName" label="姓名" ></el-table-column>
         <el-table-column property="customerTel" label="电话"  ></el-table-column>
         <el-table-column v-if="title=='录入'||title=='抢占'" property="addTime" label="录入时间"></el-table-column>
+        <el-table-column v-else-if="title=='面试通过'"  property="projectName" label="项目名称"></el-table-column>
         <el-table-column v-else  property="trackingtime" label="操作时间"></el-table-column>
+        <el-table-column label="操作" v-if="title=='面试通过'">
+          <template slot-scope="scope">
+            <el-button type="text" size="medium" :disabled="scope.row.followStatus!==5" @click="addmianshi(scope.row)">
+              <span v-if="scope.row.followStatus==5&&title=='面试通过'">修改面试状态</span>
+              <span v-if="scope.row.followStatus==7&&title=='面试通过'">已入项</span>
+              <span v-if="scope.row.followStatus==8&&title=='面试通过'">未入项</span>
+            </el-button>
+          </template>
+        </el-table-column>
       </el-table>
+
       <div v-if="title == '简历绑定'">
         <el-input v-model="searchmsg" placeholder="请输入" clearable size="small" @keyup.enter.native="search" style="width: 170px;margin-right: 10px;"/>
       <el-button type="cyan" icon="el-icon-search" size="mini" @click="search">查询</el-button>
       </div>
-
 
       <el-table :data="gridData" v-if="dataList.numb==1" v-loading="loading">
         <el-table-column v-if="title!=='录入需求'" property="customerName" label="姓名" width="80">
@@ -291,16 +305,16 @@
         <el-table-column v-else property="trackingtime" label="操作时间" ></el-table-column>
       </el-table>
     </el-dialog>
-
   </div>
 
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
-import { getmsg, getbusmsg,put} from "@/api/index.js"
+import { getmsg, getbusmsg,put,noInterviewEntry} from "@/api/index.js"
 
 export default {
+  name:"PanelGroup",
   data(){
     return{
       caozuos:1,
@@ -308,6 +322,8 @@ export default {
       gridData:[],
       gridDatas:[],
       dialogTableVisible:false,
+      dialogTableVisible2:false,
+      dialogTableVisible3:false,
       title:"",
       customerleve:[],
       searchmsg:"",
@@ -334,37 +350,51 @@ export default {
   },
   methods: {
     addmianshi(row){
-      this.times = {
-         sta:row.beginTime.split(" ")[0],
-         sta1:row.beginTime.split(" ")[1],
-         end:row.endTime.split(" ")[0],
-         end1:row.endTime.split(" ")[1],
-      }
+      // this.times = {
+      //    sta:row.beginTime.split(" ")[0],
+      //    sta1:row.beginTime.split(" ")[1],
+      //    end:row.endTime.split(" ")[0],
+      //    end1:row.endTime.split(" ")[1],
+      // }
       this.form = {
         customerCode:row.customerCode,
         demandId:row.demandId,
         interviewTime:"",
-        customerName:row.customerName
+        customerName:row.customerName,
+        followDetail:""
       }
       this.open = true
-      this.title2 = "添加具体面试时间"
+      this.title2 = "面试操作"
       this.caozuos=1
     },
     submit(){
       this.$refs["ruxing"].validate((valid) => {
           if(valid){
+            if(this.title=="面试通过"){this.caozuos=8}
             if(this.caozuos==1){
                 put(this.form).then(res=>{
                 this.msgSuccess("添加成功")
                 this.open = false
-                this.dialogTableVisible = false
+                this.dialogTableVisible3 = false
               })
             }else{
-
+              this.butongg()
             }
-
           }
         })
+    },
+    butongg(){
+      let form = new FormData()
+      form.append("demandId",this.form.demandId)
+      form.append("customerCode",this.form.customerCode)
+      form.append("type",this.caozuos)
+      form.append("followDetail",this.form.followDetail)
+      noInterviewEntry(form).then(res=>{
+        this.msgSuccess("修改成功")
+        this.open = false
+        this.dialogTableVisible3 = false
+        this.dialogTableVisible = false
+      })
     },
     search(){
       let that = this
@@ -399,21 +429,27 @@ export default {
       this.loading=true
       getmsg(form).then(res=>{
         this.gridData = res.data
-        this.dialogTableVisible = true
+
         this.loading = false
       })
       if(type==0){
         this.title = "录入"
+        this.dialogTableVisible = true
       }else if(type == 1){
         this.title = "抢占"
+        this.dialogTableVisible = true
       }else if(type == 2){
         this.title = "绑定"
+        this.dialogTableVisible = true
       }else if(type == 3){
         this.title = "简历通过"
+        this.dialogTableVisible3 = true
       }else if(type == 4){
         this.title = "面试通过"
+        this.dialogTableVisible = true
       }else if(type == 5){
         this.title = "入项"
+        this.dialogTableVisible = true
       }
     },
     handleSetLineChartDatas(type) {
@@ -423,21 +459,26 @@ export default {
       getbusmsg(form).then(res=>{
         this.gridData = res.data
         this.gridDatas = res.data
-        this.dialogTableVisible = true
         this.loading=false
       })
       if(type==0){
         this.title = "录入需求"
+        this.dialogTableVisible = true
       }else if(type == 1){
         this.title = "简历绑定"
+        this.dialogTableVisible = true
       }else if(type == 3){
         this.title = "简历通过"
+        this.dialogTableVisible = true
       }else if(type == 5){
         this.title = "面试通过"
+        this.dialogTableVisible = true
       }else if(type == 7){
         this.title = "人员入项"
+        this.dialogTableVisible = true
       }else if(type == 8){
         this.title = "人员出项"
+        this.dialogTableVisible2 = true
       }
     },
 

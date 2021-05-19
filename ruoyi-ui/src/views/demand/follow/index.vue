@@ -71,7 +71,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" border :data="followList" >
+    <el-table v-loading="loading" border :data="followList" :row-class-name="tableRowClassName">
       <el-table-column label="公司名称" align="left" prop="operationuser">
         <template slot-scope="scope">
           {{scope.row.operationuser}}
@@ -96,9 +96,12 @@
         </template>
       </el-table-column>
       <el-table-column label="客户级别" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
-      <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat" width="55"/>
-      <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
-      <el-table-column label="具体要求"  width="480">
+      <el-table-column label="学历/年限" align="left" width="70">
+        <template slot-scope="scope">
+          <span>{{customerFormat(scope.row)}}/{{scope.row.directWorklife}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="具体要求"  width="450">
       <template slot-scope="scope">
           <p v-html='scope.row.specificrequiRement'></p>
       </template>
@@ -109,8 +112,8 @@
           <span>{{intentionareaFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="录入人姓名"  width="60" align="left" prop="operUsername" />
+      <el-table-column label="详细地址"  width="60" align="left" prop="address" />
+      <el-table-column label="录入人姓名"  width="50" align="left" prop="operUsername" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
           <p>
@@ -122,9 +125,9 @@
           <p>
             <el-switch v-hasPermi="['demand:follow:edit']" v-model="scope.row.state" :active-value="0" :inactive-value="1"  @change="handleStatusChange(scope.row)"></el-switch>
           </p>
-          <!-- <p v-if='scope.row.state==1'>
+          <p >
             <el-button type="text"  @click="handleUpdate(scope.row,2)">复制</el-button>
-          </p> -->
+          </p>
         </template>
       </el-table-column>
     </el-table>
@@ -234,7 +237,7 @@
               />
           </el-select>
         </el-form-item>
-        <el-form-item label="详细地址" prop="tempName">
+        <el-form-item label="详细地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入" size="small"/>
         </el-form-item>
         <el-form-item label="简历模板" prop="tempId">
@@ -616,6 +619,12 @@ import {getCompany} from "@/api/customer/company";
           this.deptOptions = response.data;
         });
       },
+      tableRowClassName({row, rowIndex}) {
+            if (row.importantLevel === 0) {
+              return 'warning-row';
+            }
+            return '';
+      },
       // 表单重置
       reset() {
         this.msg=null,
@@ -767,6 +776,7 @@ import {getCompany} from "@/api/customer/company";
           if(ind==1){
             this.title = "修改需求";
           }else{
+            this.form.state = 0
             this.title = "复制需求";
           }
         });
@@ -899,6 +909,9 @@ import {getCompany} from "@/api/customer/company";
   }
   .form >>>.el-input {
     width: 150px;
+  }
+  >>>.warning-row{
+    color: red;
   }
   >>>.el-form-item__content{
     width: 199px;

@@ -293,6 +293,7 @@ export default {
     },
     downl(){
       let srcs = "http://115.159.35.233:8090/profile/avatar/system/%E5%A4%96%E6%B4%BE%E5%91%98%E5%B7%A5%E5%BD%95%E5%85%A5%E7%B3%BB%E7%BB%9F%E6%A8%A1%E6%9D%BF.xls"
+	  // this.downloads(srcs)
       window.open(srcs, '_blank');
     },
     /** 删除按钮操作 */

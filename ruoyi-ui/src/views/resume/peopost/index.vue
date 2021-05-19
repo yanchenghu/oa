@@ -48,33 +48,43 @@
              <el-option v-for="dict in intentionareaOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
            </el-select>
          </el-form-item>
-
+         <el-form-item label="录入人" prop="opertCode" v-hasPermi="['resume:record:allquery']">
+           <el-select  filterable  v-model="fromdata.opertCode"  placeholder="请选择员工" size="small"  @change="change">
+             <el-option
+                v-for="dict in userlist"
+                :key="dict.userName"
+                :label="dict.nickName"
+                :value="dict.userName"
+              />
+           </el-select>
+        </el-form-item>
          <el-button  type="primary" size="small" @click="resetQuery">重置</el-button>
          <el-button  type="primary" size="small" @click="next">换一批</el-button>
        </el-form>
        <!-- 数据表格 -->
        <el-table   :data="msgtaba" v-loading="loading">
          <el-table-column type="selection"  width="55" />
-         <el-table-column prop="customerName" label="姓名" width="100">
+         <el-table-column prop="customerName" label="姓名">
            <template slot-scope="scope">
              <el-button  type="text"  @click="handlesee(scope.row)" >{{scope.row.customerName}}</el-button>
            </template>
          </el-table-column>
          <el-table-column prop="customerTel" label="电话" width="110" >
            <template slot-scope="scope">
-             <span>{{scope.row.customerTel.replace(reg,"$1****$2")}}</span>
+             <span v-if="checkPermi(['resume:record:allquery'])">{{scope.row.customerTel}}</span>
+             <span v-else>{{scope.row.customerTel.replace(reg,"$1****$2")}}</span>
            </template>
          </el-table-column>
-         <el-table-column prop="customerBirth" label="出生日期" width="100" >
+         <el-table-column prop="customerBirth" label="出生日期"  >
          </el-table-column>
-         <el-table-column prop="professionId" label="技术方向"  width="100" :formatter="professionIdopFormat">
+         <el-table-column prop="professionId" label="技术方向"   :formatter="professionIdopFormat">
          </el-table-column>
          <el-table-column prop="workYear" label="工作年限"  width="80">
            <template slot-scope="scope">
              {{scope.row.workYear}}年
            </template>
          </el-table-column>
-         <el-table-column prop="education" label="学历"  width="100" :formatter="customerFormat"/>
+         <el-table-column prop="education" label="学历"  width="80" :formatter="customerFormat"/>
 
          <el-table-column prop="customerUniversity" label="毕业院校" />
 
@@ -86,6 +96,7 @@
              <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d}') }}</span>
            </template>
          </el-table-column>
+         <el-table-column prop="opertName"  label="录入人" />
          <el-table-column label="操作"  class-name="small-padding fixed-width" width="180">
            <template slot-scope="scope">
                    <el-button type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
@@ -131,6 +142,8 @@
     getFollow,
   } from "@/api/resume/peopost/peopost";
   import {debounce} from "@/utils/ruoyi.js"
+  import {checkPermi} from "@/utils/permission.js"
+  import {yuangonglist} from "@/api/analysis/personnelanalysis.js"
   export default {
     name: "Record",
 
@@ -155,6 +168,7 @@
           professionId: null,
           education: null,
           nood:null,
+          opertCode:null,
         },
         // 表格数据
         msgtaba: [],
@@ -167,6 +181,7 @@
         loading: true,
         // 选中数组
         ids: [],
+         userlist:[],
         src:"",
         // 非单个禁用
         single: true,
@@ -224,9 +239,15 @@
       this.getDicts("per_customerinfo_intentionarea").then(response => {
         this.intentionareaOptions = response.data;
       });
+      this.getuserlist()
       this.getxuqiulist()
     },
     methods: {
+      getuserlist(){
+        yuangonglist().then(res=>{
+          this.userlist = res.data
+        })
+      },
       // 技术方向
       professionIdopFormat(row, column) {
         return this.selectDictLabel(this.professionIdoptions, row.professionId);

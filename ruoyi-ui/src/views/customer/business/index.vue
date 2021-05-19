@@ -154,7 +154,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button :disabled="yxdemandone.isFollowSubmit!==3" type="primary" @click="onSubmit">转化为合作用户</el-button>
+                <el-button :disabled="yxdemandone.isFollowSubmit!==3" type="primary" size="small" @click="onSubmit">转化为合作用户</el-button>
+                <el-button :disabled="yxdemandone.isFollowSubmit==4" size="small" type="primary" @click="yijiao" >移交</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -352,11 +353,26 @@
          <el-button @click="cancel">取 消</el-button>
        </div>
      </el-dialog>
+     <el-dialog title="选择移交对象" :visible.sync="open4" width="400px" style="text-align: center;">
+        <el-select v-model="yxdemandone.robPeopleId" ref="selec" size="small">
+          <el-option
+            v-for="dict in username"
+            :key="dict.user_name"
+            :label="dict.nick_name"
+            :value="dict.user_name"
+          />
+        </el-select>
+        <p></p>
+        <div>
+          <el-button   @click="open4=!open4">取消</el-button>
+          <el-button  type="primary" @click="changess">确定</el-button>
+        </div>
+     </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getYxdemand,listbusiness,addYxdemand,see,exportYxdemand,release,findnames}from "@/api/customer/business";
+  import { getYxdemand,listbusiness,addYxdemand,see,exportYxdemand,release,findnames,transferedit,allBusiness}from "@/api/customer/business";
   import {debounce} from "@/utils/ruoyi.js"
 export default {
   name: "Yxdemand",
@@ -507,6 +523,7 @@ export default {
       putmsgs:[],
       // 发布按钮
       put:false,
+      open4:false,
       username:[],
       timer:-1,
       yxdemandone2:{},
@@ -522,9 +539,6 @@ export default {
     });
     this.getDicts("yxdemand_entry_days").then(response => {
       this.entryDaysOptions = response.data;
-    });
-    this.getDicts("sys_user_name").then(response => {
-      this.username = response.data;
     });
     this.getDicts("bus_customer_leve").then(response => {
       this.customerleve = response.data;
@@ -559,6 +573,19 @@ export default {
     // 下拉框选中加载
     change(){
         this.getList()
+    },
+    changess(){
+      transferedit(this.yxdemandone).then(res=>{
+        this.msgSuccess("转换成功")
+        this.open4 = false
+        this.drawer = false
+      })
+    },
+    yijiao(){
+      allBusiness().then(response => {
+        this.open4=true
+        this.username = response.data;
+      });
     },
     changes(value){
       see(this.yxdemandone).then(res=>{

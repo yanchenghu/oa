@@ -29,6 +29,7 @@ require('echarts/theme/macarons') // echarts theme
 const animationDuration = 3000
 
 export default {
+  name:"RaddarChart",
   props: {
     data: {
       type: Object,

@@ -14,6 +14,13 @@ export function alllist(query) {
     params: query
   })
 }
+export function transferedit(data) {
+  return request({
+    url: '/customer/yxdemand/transferedit',
+    method: 'post',
+    data: data
+  })
+}
 
 // 查询营销录入公司列表
 export function listbusiness(query) {

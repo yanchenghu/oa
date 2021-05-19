@@ -106,14 +106,15 @@
     <index :bangding="bangding"></index>
 
     <el-dialog :title="title" :visible.sync="open3" width="70%">
-      <el-button type="primary" @click="dowloc">下載面试题</el-button>
+      <el-button type="primary" @click="dowloc">下载面试题</el-button>
      <iframe
         :src="src"
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
+	
     <el-dialog :visible.sync="dialogVisible" width="500px" :title="title">
-      <el-button type="primary" @click="dowloc" >下載面试题</el-button>
+      <el-button type="primary" @click="dowloc" >下载面试题</el-button>
       <img width="100%" :src="src" alt="">
     </el-dialog>
   </div>
@@ -372,10 +373,10 @@ import index from "../../components/particulars/index"
           this.title = "面试题图片"
           this.src = srcs+file
         }
-        this.dialogImageUrl = srcs+file
+        this.dialogImageUrl = file
       },
       dowloc(){
-        window.open(this.dialogImageUrl, '_blank');
+        this.downloads(this.dialogImageUrl)
       }
     }
   };

@@ -58,10 +58,10 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="resetQuery"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" border :data="followList" >
+    <el-table v-loading="loading" border :data="followList" :row-class-name="tableRowClassName">
       <el-table-column label="需求名称" align="left" prop="projectName" >
         <template slot-scope="scope">
-          <span>{{scope.row.projectName}}</span>
+          <span >{{scope.row.projectName}}</span>
            <div>
               <el-button :disabled="!scope.row.bz" type="text" v-hasPermi="['demand:follow:postInterview']" @click="handsee(scope.row.bz)">面试题</el-button>
            </div>
@@ -82,9 +82,11 @@
           <div>已提交简历数:{{scope.row.ifLook}}</div>
         </template>
       </el-table-column>
-
-      <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat" width="55"/>
-      <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
+      <el-table-column label="学历/年限" align="left" width="70">
+        <template slot-scope="scope">
+          <span>{{customerFormat(scope.row)}}/{{scope.row.directWorklife}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="具体要求" align="left" width="500">
       <template slot-scope="scope">
           <p v-html='scope.row.specificrequiRement'></p>
@@ -96,7 +98,7 @@
           <span>{{intentionareaFormat(scope.row)}}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="详细地址"  width="60" align="left" prop="address" />
       <el-table-column label="录入人姓名" align="left" prop="operUsername" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
@@ -191,7 +193,7 @@ import { treeselect } from "@/api/system/dept";
 import {checkImg} from "@/utils/ruoyi.js"
 import index from "../../components/particulars/index"
   export default {
-    name: "Follow",
+    name: "Binding",
     components:{
       index
     },
@@ -357,7 +359,12 @@ import index from "../../components/particulars/index"
       customerFormat(row, column) {
         return this.selectDictLabel(this.customerSpecialitiesoptions, row.education);
       },
-
+      tableRowClassName({row, rowIndex}) {
+            if (row.importantLevel === 0) {
+              return 'warning-row';
+            }
+            return '';
+      },
       /** 查询需求列表 */
       getList() {
         this.loading = true;
@@ -420,10 +427,10 @@ import index from "../../components/particulars/index"
           this.title = "面试题图片"
           this.src = srcs+file
         }
-        this.dialogImageUrl = srcs+file
+        this.dialogImageUrl = file
       },
       dowloc(){
-        window.open(this.dialogImageUrl, '_blank');
+        this.downloads(this.dialogImageUrl)
       }
     }
   };
@@ -435,7 +442,11 @@ import index from "../../components/particulars/index"
     overflow: auto;
   }
   .form{
+    
     width: 100%;
+  }
+  >>>.warning-row{
+    color: red;
   }
   .form >>>.el-form-item__content {
     width: 170px;

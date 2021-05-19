@@ -8,11 +8,27 @@ export function gettemplist(data) {
     data: data
   })
 }
+
+export function updateMarDemandresume(data) {
+  return request({
+    url: '/demand/binding/updateMarDemandresume',
+    method: 'post',
+    data:data
+  })
+}
 // 查询简历模板
 export function template(data) {
   return request({
     url: '/resume/template/templaList/',
     method: 'get',
+  })
+}
+
+export function resource(data) {
+  return request({
+    url: '/common/download/resource',
+    method: 'get',
+    params:data,
   })
 }
 
