@@ -10,6 +10,7 @@
         <result property="customerTel"    column="customer_tel"    />
         <result property="customerBirth"    column="customer_birth"    />
         <result property="customerUniversity"    column="customer_university"    />
+        <result property="customerUniversityTime"    column="customer_university_time"    />
         <result property="customerSpecialities"    column="customer_specialities"    />
         <result property="entryTime"    column="entry_time"    />
         <result property="workYear"    column="work_year"    />
@@ -34,7 +35,7 @@
     </resultMap>
 
     <sql id="selectPerCustomerinfoVo">
-        select customer_code, customer_name, customer_sex, customer_tel, customer_birth, customer_university, customer_specialities, entry_time, work_year, resume_source, resume_id, resume_path, relationship_zq, email, add_time, update_time, opert_code, opert_name, expectation_salary, profession_id, intention_area, education, entry_times, join_status, sign_people, chsi_flag, resume_direction from per_customerinfo
+        select customer_code, customer_name, customer_sex, customer_tel, customer_birth, customer_university,customer_university_time, customer_specialities, entry_time, work_year, resume_source, resume_id, resume_path, relationship_zq, email, add_time, update_time, opert_code, opert_name, expectation_salary, profession_id, intention_area, education, entry_times, join_status, sign_people, chsi_flag, resume_direction from per_customerinfo
     </sql>
 
     <select id="selectPerCustomerinfoList" parameterType="PerCustomerinfo" resultMap="PerCustomerinfoResult">
@@ -68,6 +69,7 @@
             <if test="customerTel != null and customerTel != ''">customer_tel,</if>
             <if test="customerBirth != null">customer_birth,</if>
             <if test="customerUniversity != null">customer_university,</if>
+            <if test="customerUniversityTime != null">customer_university_time,</if>
             <if test="customerSpecialities != null">customer_specialities,</if>
             <if test="entryTime != null">entry_time,</if>
             <if test="workYear != null">work_year,</if>
@@ -97,6 +99,7 @@
             <if test="customerTel != null and customerTel != ''">#{customerTel},</if>
             <if test="customerBirth != null">#{customerBirth},</if>
             <if test="customerUniversity != null">#{customerUniversity},</if>
+            <if test="customerUniversityTime != null">#{customerUniversityTime},</if>
             <if test="customerSpecialities != null">#{customerSpecialities},</if>
             <if test="entryTime != null">#{entryTime},</if>
             <if test="workYear != null">#{workYear},</if>
@@ -129,6 +132,7 @@
             <if test="customerTel != null and customerTel != ''">customer_tel = #{customerTel},</if>
             <if test="customerBirth != null">customer_birth = #{customerBirth},</if>
             <if test="customerUniversity != null">customer_university = #{customerUniversity},</if>
+            <if test="customerUniversityTime != null">customer_university_time= #{customerUniversityTime},</if>
             <if test="customerSpecialities != null">customer_specialities = #{customerSpecialities},</if>
             <if test="entryTime != null">entry_time = #{entryTime},</if>
             <if test="workYear != null">work_year = #{workYear},</if>
@@ -254,7 +258,8 @@
         DATE_FORMAT(a.customer_birth,'%Y-%m-%d') as customerBirth  ,a.profession_id as professionId,
         a.work_year as workYear,a.education,a.customer_university as customerUniversity,
         a.expectation_salary as expectationSalary,a.intention_area as intentionArea,
-        DATE_FORMAT(a.add_time,'%Y-%m-%d') as addTime,a.resume_path as resumePath,b.add_name as addName
+        DATE_FORMAT(a.add_time,'%Y-%m-%d') as addTime,a.resume_path as resumePath,b.add_name as addName,
+        a.opert_name as opertName
         FROM
         per_customerinfo a LEFT JOIN
         per_robcustomer b on a.customer_tel=b.customer_tel and b.Status=0
@@ -264,6 +269,7 @@
         <if test="workYear != null  and workYear != ''"> and a.work_year = #{workYear}</if>
         <if test="education != null "> and a.education = #{education}</if>
         <if test="intentionArea != null  and intentionArea != ''"> and a.intention_area = #{intentionArea}</if>
+        <if test="opertCode != null  and opertCode != ''"> and a.opert_code = #{opertCode}</if>
         ORDER BY addTime desc
     </select>
 

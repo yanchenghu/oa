@@ -108,7 +108,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     LEFT JOIN mar_demand d on a.demand_id=d.demand_id
     LEFT JOIN mar_company f on d.corp_code=f.corp_code
     where  1=1
-    <if test="username != null and username != ''"> d.operationuser = #{username}</if>
+    <if test="username != null and username != ''"> and d.operationuser = #{username}</if>
+    and ((DATE_FORMAT(a.interview_time,'%Y%m')=DATE_FORMAT(NOW(),'%Y%m') or  DATE_FORMAT(a.interview_time,'%Y%m')=DATE_FORMAT(date_add(now(),interval-1 month),'%Y%m') )
+    or (DATE_FORMAT(a.stay_time,'%Y%m')=DATE_FORMAT(NOW(),'%Y%m') or  DATE_FORMAT(a.stay_time,'%Y%m')=DATE_FORMAT(date_add(now(),interval-1 month),'%Y%m')))
     ORDER BY a.stay_time desc
     </select>
 

@@ -1,7 +1,12 @@
 package com.ruoyi.web.controller.common;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.core.text.Convert;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,11 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.config.ServerConfig;
 
+import java.io.*;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 /**
  * 通用请求处理
  * 
@@ -26,6 +36,8 @@ import com.ruoyi.framework.config.ServerConfig;
 public class CommonController
 {
     private static final Logger log = LoggerFactory.getLogger(CommonController.class);
+    private static final int  BUFFER_SIZE = 10 * 1024;
+
 
     @Autowired
     private ServerConfig serverConfig;
@@ -105,5 +117,54 @@ public class CommonController
         response.setHeader("Content-Disposition",
                 "attachment;fileName=" + FileUtils.setFileDownloadHeader(request, downloadName));
         FileUtils.writeBytes(downloadPath, response.getOutputStream());
+    }
+
+
+
+    /**
+     *批量简历下载,生成zip
+     */
+    @GetMapping(value = "/common/download/batchDownload")
+    public void batchDownload(String custels,HttpServletRequest request, HttpServletResponse response,OutputStream out) throws IOException {
+        byte[] buf = new byte[BUFFER_SIZE];
+        String[] tableNames = Convert.toStrArray(custels);
+        // 本地资源路径
+        String localPath = RuoYiConfig.getProfile();
+        ZipOutputStream zos = new ZipOutputStream(out) ;
+
+        for(String name:tableNames){
+            // 数据库资源地址
+            String downloadPath = localPath + StringUtils.substringAfter(name, Constants.RESOURCE_PREFIX);
+            // 下载名称
+            String downloadName = StringUtils.substringAfterLast(downloadPath, "/");
+            File file=new File(downloadName);
+            zos.putNextEntry(new ZipEntry(file.getName()));
+            int len;
+            FileInputStream in = new FileInputStream(file);
+            while ((len = in.read(buf)) != -1){
+                zos.write(buf, 0, len);
+            }
+            zos.closeEntry();
+            in.close();
+        }
+        if (zos != null) {
+            zos.close();
+        }
+
+    }
+
+
+    /**
+     * 生成zip文件
+     */
+    private void genCode(HttpServletResponse response, byte[] data) throws IOException
+    {
+        response.reset();
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        response.setHeader("Content-Disposition", "attachment; filename=\"ruoyi.zip\"");
+        response.addHeader("Content-Length", "" + data.length);
+        response.setContentType("application/octet-stream; charset=UTF-8");
+        IOUtils.write(data, response.getOutputStream());
     }
 }

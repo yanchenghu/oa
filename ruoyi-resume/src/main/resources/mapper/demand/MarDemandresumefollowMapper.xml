@@ -114,6 +114,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              b.download_status as downloadStatus,
             d.expectation_salary as expectationSalary,
             d.education as education,
+            DATE_FORMAT(d.customer_university_time,'%Y-%m-%d') as customerUniversityTime,
+            b.is_recommend as isRecommend,
             d.work_year as workYear
         FROM
          mar_demandresume b

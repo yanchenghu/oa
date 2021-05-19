@@ -49,5 +49,11 @@ public class WorkStatisticController extends BaseController {
         return yxdemandService.workresultlist(usercode);
     }
 
+    @GetMapping(value = "/rankinglist")
+    public AjaxResult ranking(){
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return yxdemandService.rankinglist(loginUser);
+    }
+
 
 }

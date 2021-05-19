@@ -88,6 +88,7 @@ public class MarWaitinginterviewServiceImpl implements IMarWaitinginterviewServi
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return marWaitinginterviewMapper.updateMarWaitinginByDemandCode(marWaitinginterview);
     }
 

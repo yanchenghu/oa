@@ -339,21 +339,16 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
                     cp.setQuitprojectTime(sdf.parse(arr.getEnd_time_year()+'-'+arr.getEnd_time_month()+"-01"));
                 }
                 if(!arr.getDescription().equals("")){
-                    String zhi="";
+
                     String dsfsa="";
                     String description= arr.getDescription();
                     if(description.contains("\n")){
                         String dsada=  StringUtils.substringAfter(description, "\n");
                         if(dsada.contains("\n")){
-                            zhi = StringUtils.substringBefore(dsada, "\n");
                             dsfsa=StringUtils.substringAfter(dsada, "\n");
                         }
                     }
-                    if(zhi.length()>21){
-                        cp.setProjectName(zhi.substring(0,20));
-                    }else{
-                        cp.setProjectName(zhi);
-                    }
+
                     cp.setDuty(dsfsa);
                 }
                 cp.setCustomerCode(perCustomerinfo.getCustomerCode());

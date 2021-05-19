@@ -132,4 +132,12 @@ public interface IMarDemandService
      *获取需求绑定上限
      */
     AjaxResult bindingUpper(String demandId);
+
+
+    /**
+     * 人事处理简历面试不通过，不入项
+     */
+    AjaxResult noInterviewEntry(String demandId, String customerCode,Integer type,String followDetail);
+
+    String queryresumesalary(String customerCode);
 }

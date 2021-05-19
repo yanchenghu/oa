@@ -152,6 +152,8 @@ public class MarServicepayServiceImpl implements IMarServicepayService
             marCertificates.setConfidentialityAgreement(avatar);
         }else if(photo==6){
             marCertificates.setServiceContract(avatar);
+        }else if(photo==7){
+            marCertificates.setConfidentialityAgreementlo(avatar);
         }
        if(id==null){
            MarCustomerprojectpay marCustomerprojectpay = marCustomerprojectpayMapper.selectMarCustomerprojectpayById(marcusId);

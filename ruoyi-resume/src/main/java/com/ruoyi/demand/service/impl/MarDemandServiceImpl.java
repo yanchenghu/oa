@@ -18,9 +18,7 @@ import com.ruoyi.conn.domain.ConDingtoken;
 import com.ruoyi.conn.domain.ConOperationrecords;
 import com.ruoyi.conn.mapper.ConDingtokenMapper;
 import com.ruoyi.conn.mapper.ConOperationrecordsMapper;
-import com.ruoyi.customer.domain.MarCompany;
 import com.ruoyi.customer.domain.MarContract;
-import com.ruoyi.customer.mapper.MarCompanyMapper;
 import com.ruoyi.customer.mapper.MarContractMapper;
 import com.ruoyi.customer.mapper.YxdemandMapper;
 import com.ruoyi.demand.domain.*;
@@ -112,10 +110,8 @@ public class MarDemandServiceImpl implements IMarDemandService
         //查询当前需求绑定了多少简历
         MarDemandresume marDema=new MarDemandresume();
         marDema.setDemandId(marDe.getDemandId());
-        List<MarDemandresume>  li= marDemandresumeMapper.selectMarDemandresumeList(marDema);
-        if(li.size()>0){
-            System.out.println(123);
-        }
+        String  DemandId= marDe.getDemandId();
+        List<MarDemandresume>  li=marDemandresumeMapper.selectMarDemandresumeUpperBydemandId(DemandId);
         marDe.setIfLook(li.size());
         //查询当前需求面试通过多少
         marDema.setDownloadStatus(5);
@@ -364,8 +360,8 @@ public class MarDemandServiceImpl implements IMarDemandService
         for (MarDemand marDe:list){
             MarDemandresume marDema=new MarDemandresume();
             //查询当前需求绑定了多少简历
-            marDema.setDemandId(marDe.getDemandId());
-            List<MarDemandresume>  li= marDemandresumeMapper.selectMarDemandresumeList(marDema);
+            String  DemandId= marDe.getDemandId();
+            List<MarDemandresume>  li=marDemandresumeMapper.selectMarDemandresumeUpperBydemandId(DemandId);
             marDe.setIfLook(li.size());
             //查询当前需求面试通过多少
             marDema.setDownloadStatus(5);
@@ -387,6 +383,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         String customerCode = JSON.parseObject(zm).getString("customerCode");
         String demandId = JSON.parseObject(zm).getString("demandId");
 
+
         Map map=new HashMap();
         map.put("demandId",demandId);
 
@@ -395,6 +392,14 @@ public class MarDemandServiceImpl implements IMarDemandService
         }
         //查询是否有简历附件
         PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
+        Date customerUniversityTime = perCustomerinfo.getCustomerUniversityTime();
+        if(customerUniversityTime==null){
+            return  AjaxResult.error(perCustomerinfo.getCustomerName()+"的毕业时间为空，绑定失败");
+        }
+        String expectationSalary = perCustomerinfo.getExpectationSalary();
+        if(StringUtils.isEmpty(expectationSalary)){
+           return  AjaxResult.error(perCustomerinfo.getCustomerName()+"的期望薪资为空，绑定失败");
+        }
 
         //查重
         map.put("customerCode",customerCode);
@@ -505,7 +510,11 @@ public class MarDemandServiceImpl implements IMarDemandService
         PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(marDemandresume.getCustomerCode());
         try {
             DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
-                    "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，请及时沟通选定面试时间，并在填入OA平台");
+                    "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+marDemandresumefollow.getRemark1()+"，请及时沟通选定具体面试时间，面试时间范围为："+marDemandresumefollow.getBeginTime()+"至"+
+                            marDemandresumefollow.getEndTime()+"并填入OA平台");
+
+       System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+marDemandresumefollow.getRemark1()+"，请及时沟通选定具体面试时间，面试时间范围为："+marDemandresumefollow.getBeginTime()+"至"+
+              marDemandresumefollow.getEndTime()+"并填入OA平台");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -519,6 +528,7 @@ public class MarDemandServiceImpl implements IMarDemandService
               marWaiting.setInterviewTime(date);
               marWaiting.setStayTime(marDemandresumefollow.getTrackingtime());
               marWaiting.setNickName(marDemandresume.getTrackzPeoname());
+              marWaiting.setInsertTime(new Date());
               if(marWaitingentries.size()>0){
                   marWaitingentryMapper.updateMarWaitingentryby(marWaiting);
               }else{
@@ -615,6 +625,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         List<String> listDemand = JSON.parseArray(JSON.parseObject(zm).getString("list"), String.class);
         Integer type=JSON.parseObject(zm).getInteger("type");
         String followDetail=JSON.parseObject(zm).getString("followDetail");
+        String Remark1=JSON.parseObject(zm).getString("remark1");
         Date stayTime= JSON.parseObject(zm).getDate("trackingtime");
 
 
@@ -661,9 +672,13 @@ public class MarDemandServiceImpl implements IMarDemandService
                 MarDemand marDemand = marDemandMapper.selectMarDemandById(marDemandresume.getDemandId());
                 PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(marDemandresume.getCustomerCode());
                 try {
-                    DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
-                            "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，请及时沟通选定面试时间，并在填入OA平台");
 
+
+                    DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
+                            "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+Remark1+"，请及时沟通选定具体面试时间，面试时间范围为："+DateUtils.formatY_M_D2String(beginTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"至"+
+                                    DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台");
+                    System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+Remark1+"，请及时沟通选定具体面试时间，面试时间范围为："+DateUtils.formatY_M_D2String(beginTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"至"+
+                            DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -675,6 +690,7 @@ public class MarDemandServiceImpl implements IMarDemandService
                 marWaiting.setInterviewTime(date);
                 marWaiting.setStayTime(stayTime);
                 marWaiting.setNickName(marDemandresume.getTrackzPeoname());
+                marWaiting.setInsertTime(new Date());
                 marWaitingentryMapper.insertMarWaitingentry(marWaiting);
 
             }
@@ -882,14 +898,95 @@ public class MarDemandServiceImpl implements IMarDemandService
          }
         MarDemand marDemand = marDemandMapper.selectMarDemandById(demandId);
         Integer targetNumber = marDemand.getTargetNumber();
-        MarDemandresume marDemandresume=new MarDemandresume();
-        marDemandresume.setDemandId(demandId);
-        List<MarDemandresume> marDemandresumes = marDemandresumeMapper.selectMarDemandresumeList(marDemandresume);
+        List<MarDemandresume> marDemandresumes = marDemandresumeMapper.selectMarDemandresumeUpperBydemandId(demandId);
         if(marDemandresumes.size()>=targetNumber){
             return AjaxResult.error("当前需求绑定，已达到目标人数，不可绑定");
         }
         return AjaxResult.success("当前需求绑定，未达到目标人数，可绑定");
 
+    }
+    /**
+     * 人事处理简历面试不通过，不入项
+     */
+    @Override
+    public AjaxResult noInterviewEntry(String demandId, String customerCode,Integer followStatus,String followDetail) {
+         if(StringUtils.isEmpty(demandId)){
+             return AjaxResult.error("需求ID为空，请联系管理员");
+         }
+        if(StringUtils.isEmpty(customerCode)){
+            return AjaxResult.error("简历ID为空，请联系管理员");
+        }
+        if(followStatus==null){
+            return AjaxResult.error("状态为空，请联系管理员");
+        }
+
+        MarDemandresume marDemandresume=new MarDemandresume();
+        marDemandresume.setDemandId(demandId);
+        marDemandresume.setCustomerCode(customerCode);
+        MarDemandresume marDemandresumes = marDemandresumeMapper.SelectStatusBydemandIdcustomerCode(marDemandresume);
+        if(marDemandresumes==null){
+            return AjaxResult.error("查不到当前人的绑定信息");
+        }
+        Integer downloadStatus = marDemandresumes.getDownloadStatus();
+        Date date=new Date();
+        if(followStatus==6){
+            if(downloadStatus!=3){
+                return AjaxResult.error("当前人的状态已更改，请刷新后重置");
+            } else{
+            marDemandresumes.setNewfollowtime(date);
+            marDemandresumes.setDownloadStatus(null);
+            marDemandresumeMapper.updateMarDemandresume(marDemandresumes);
+            MarDemandresumefollow marDemandresumefollow=new MarDemandresumefollow();
+            marDemandresumefollow.setTrackingPeople(marDemandresumes.getBindPeople());
+            marDemandresumefollow.setDemandresumeId(marDemandresumes.getId());
+            marDemandresumefollow.setTrackingtime(date);
+            marDemandresumefollow.setFollowStatus(followStatus);
+            marDemandresumefollow.setFollowDetail(followDetail);
+            marDemandresumefollowMapper.insertMarDemandresumefollow(marDemandresumefollow);
+            return AjaxResult.success("当前人的简历状态，改为面试失败成功");
+            }
+        }else if(followStatus==8){
+            if(downloadStatus!=5){
+                return AjaxResult.error("当前人的状态已更改，请刷新后重置");
+            } else{
+                marDemandresumes.setNewfollowtime(date);
+                marDemandresumes.setDownloadStatus(null);
+                marDemandresumeMapper.updateMarDemandresume(marDemandresumes);
+                MarDemandresumefollow marDemandresumefollow=new MarDemandresumefollow();
+                marDemandresumefollow.setTrackingPeople(marDemandresumes.getBindPeople());
+                marDemandresumefollow.setDemandresumeId(marDemandresumes.getId());
+                marDemandresumefollow.setTrackingtime(date);
+                marDemandresumefollow.setFollowStatus(followStatus);
+                marDemandresumefollow.setFollowDetail(followDetail);
+                marDemandresumefollowMapper.insertMarDemandresumefollow(marDemandresumefollow);
+                return AjaxResult.success("当前人的简历状态，改为不入项成功");
+            }
+        }else{
+            return AjaxResult.success("当前人的简历状态不符合要求，请刷新后重置");
+        }
+
+
+    }
+
+    @Override
+    public String queryresumesalary(String customerCode) {
+        //查询是否有简历附件
+        PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
+        Date customerUniversityTime = perCustomerinfo.getCustomerUniversityTime();
+        String expectationSalary = perCustomerinfo.getExpectationSalary();
+        if(customerUniversityTime==null){
+            if(StringUtils.isEmpty(expectationSalary)){
+                return  perCustomerinfo.getCustomerName()+"的期望薪资、毕业时间为空，绑定失败";
+            }
+            return  perCustomerinfo.getCustomerName()+"的毕业时间为空，绑定失败";
+        }
+        if(StringUtils.isEmpty(expectationSalary)){
+            if(customerUniversityTime==null){
+                return  perCustomerinfo.getCustomerName()+"的期望薪资、毕业时间为空，绑定失败";
+            }
+            return  perCustomerinfo.getCustomerName()+"的期望薪资为空，绑定失败";
+        }
+        return "可以绑定";
     }
 
 

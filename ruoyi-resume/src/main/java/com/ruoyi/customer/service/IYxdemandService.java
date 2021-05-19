@@ -128,4 +128,8 @@ public interface IYxdemandService
 
     List<Map>  getAllBusiness();
 
+
+    AjaxResult rankinglist(LoginUser loginUser);
+
+    AjaxResult transferedit(Yxdemand yxdemand, LoginUser loginUser);
 }

@@ -41,8 +41,11 @@ public class MarCertificates extends BaseEntity
     private String academic;
 
     /** 保密协议 */
-    @Excel(name = "保密协议")
+    @Excel(name = "保密协议1")
     private String confidentialityAgreement;
+    /** 保密协议 */
+    @Excel(name = "保密协议2")
+    private String confidentialityAgreementlo;
 
     /** 毕业证 */
     @Excel(name = "毕业证")
@@ -57,7 +60,16 @@ public class MarCertificates extends BaseEntity
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date addTime;
 
-    public void setId(Integer id) 
+
+    public String getConfidentialityAgreementlo() {
+        return confidentialityAgreementlo;
+    }
+
+    public void setConfidentialityAgreementlo(String confidentialityAgreementlo) {
+        this.confidentialityAgreementlo = confidentialityAgreementlo;
+    }
+
+    public void setId(Integer id)
     {
         this.id = id;
     }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.statistic.domain.BeInterviewed;
+import com.ruoyi.statistic.domain.ItemsIncluded;
 
 /**
  * 需求绑定简历Mapper接口
@@ -99,4 +100,10 @@ public interface MarDemandresumeMapper
     List<BeInterviewed> selBinCode(Map map);
 
     List<BeInterviewed> selectMarDemandbyBeInterviewed(Map map);
+
+    MarDemandresume SelectStatusBydemandIdcustomerCode(MarDemandresume marDemandresume);
+
+    List<ItemsIncluded> selectMarDemandresumeItemsIncluded(Map map);
+
+    List<MarDemandresume> selectMarDemandresumeUpperBydemandId(String demandId);
 }

@@ -39,10 +39,8 @@ public class MarCompanyController extends BaseController
 {
     @Autowired
     private IMarCompanyService marCompanyService;
-
     @Autowired
     private IMarContractService marContractService;
-
     @Autowired
     private TokenService tokenService;
     @Autowired
