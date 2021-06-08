@@ -106,7 +106,7 @@
  import receiptsBur from "../../components/incomeexpenditure/receiptsBur.vue"
  import CountTo from 'vue-count-to'
   export default {
-    name:"incomeexpenditure",
+    name:"Incomeexpenditure",
     props:["biaoshi"],
     data(){
       return{

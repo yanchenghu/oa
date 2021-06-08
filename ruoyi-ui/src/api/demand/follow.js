@@ -17,6 +17,7 @@ export function template() {
     method: 'get',
   })
 }
+
 export function listdatas(query) {
   return request({
     url: '/demand/waitinginterview/list',

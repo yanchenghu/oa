@@ -123,7 +123,7 @@
   import xiangqing from "../../components/management/xiangqing"
   import CountTo from 'vue-count-to'
   export default {
-    name:"management",
+    name:"Management",
     props: ["biaoshi"],
     data(){
       return{

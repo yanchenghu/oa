@@ -134,7 +134,7 @@
         <el-form-item label="应回款金额" prop="actualMoney">
           <el-input v-model="form.actualMoney" placeholder="请输入应回款" />
         </el-form-item>
-        <el-form-item label="已回款金额" >
+        <el-form-item label="已回款金额" prop="receivedPayment">
           <el-input v-model="form.receivedPayment" placeholder="请输入已回款金额" />
         </el-form-item>
         <el-form-item label="上个月工资">

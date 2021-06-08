@@ -179,7 +179,6 @@ export default {
 <style  scoped>
 .dashboard-editor-container {
   padding: 32px;
-  
   position: relative;
 }
  .paim{

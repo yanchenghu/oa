@@ -139,7 +139,7 @@
   import personTop from "../../components/personnelmobility/personTop.vue"
   import CountTo from 'vue-count-to'
   export default {
-    name:"management",
+    name:"Personnelmobility",
     props:["biaoshi"],
     data(){
       return{

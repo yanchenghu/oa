@@ -96,7 +96,7 @@
                     <p style="color: #999999;font-size: 12px;"> {{list.addTime}}</p>
                   </div>
                   <div style="position: absolute;right: 10px; height: 20px;">
-                      <el-button style="width:130px ;" type="warning" @click="tiaozhuan2(list)">目标{{list.targetNumber?list.targetNumber:0}}/绑定{{list.demandNumber?list.demandNumber:0}}</el-button>
+                      <el-button style="width:130px ;" type="warning" @click="tiaozhuan2(list)">目标{{list.targetNumber?list.targetNumber:0}}/绑定{{list.ifLook?list.ifLook:0}}</el-button>
                   </div>
                 </li>
             </el-col>

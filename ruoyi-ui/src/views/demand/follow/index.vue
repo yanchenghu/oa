@@ -699,7 +699,7 @@ import {getCompany} from "@/api/customer/company";
       },
       /** 新增按钮操作 */
       handleAdd() {
-       this.reset();
+        this.reset();
         this.getcorpName()
         this.gettemplate()
         this.form.list= this.DetSelect(this.deptOptions)

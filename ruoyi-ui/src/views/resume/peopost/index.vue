@@ -208,7 +208,7 @@
         // 查询参数
         queryParams: {
           pageNum: 1,
-          pageSize: 10,
+          pageSize: 14,
           projectName:null,
         },
         // 表单校验

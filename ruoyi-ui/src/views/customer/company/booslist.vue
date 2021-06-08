@@ -192,7 +192,7 @@
                </div>
             </el-tab-pane>
             <el-tab-pane label="合同">
-
+              <el-button type="primary" @click="handAdd">新建合同</el-button>
               <p></p>
               <el-table v-loading="loadings" :data="contractlist">
                 <el-table-column label="甲方" align="left" prop="firstParty" width="160"/>
@@ -274,6 +274,47 @@
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
+    <el-dialog :title="title" :visible.sync="opens" width="550px" append-to-body>
+      <el-form ref="forms" :model="forms" :rules="rules" label-width="120px">
+        <el-form-item label="上传合同附件">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            action="#"
+            :limit="1"
+            :on-change="handleRemove"
+            :auto-upload="false"
+            :before-remove="upoplodad"
+            >
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="甲方" prop="firstParty">
+          <el-input v-model.trim="forms.firstParty" placeholder="请输入甲方公司" />
+        </el-form-item>
+        <el-form-item label="乙方" prop="party">
+          <el-input v-model.trim="forms.party" placeholder="请输入乙方公司" />
+        </el-form-item>
+        <el-form-item label="合同开始日期" prop="startTime">
+          <el-date-picker v-model.trim="forms.startTime" type="date" placeholder="请选择合同开始日期" :picker-options="pickerOptions1" value-format="yyyy-MM-dd" style="width:190px">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="合同结束日期" prop="endTime">
+          <el-date-picker v-model.trim="forms.endTime" type="date" placeholder="请选择合同结束日期"  :picker-options="pickerOptions4" value-format="yyyy-MM-dd" style="width:190px">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="客户签约人" prop="clientSigner">
+          <el-input v-model.trim="forms.clientSigner" placeholder="请输入客户签约" />
+        </el-form-item>
+        <el-form-item label="公司签约人" prop="companySigner">
+          <el-input v-model.trim="forms.companySigner" placeholder="请输入公司签约人" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm2">确 定</el-button>
+        <el-button @click="cancel2">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -326,13 +367,50 @@ export default {
       // 表单参数
       form: {},
       forms:{},
-
+      opens:false,
       companySituationOptions:[],
       customerleve:[],
       companyperiod:[],
       // 单个数据
       yxdemandone:{},
       putmsgs:[],
+      rules: {
+        cooperationTime: [{
+          required: true,
+          message: "合作日期不能为空",
+          trigger: ["blur", ]
+        }, ],
+        firstParty: [{
+          required: true,
+          message: "甲方公司不能为空",
+          trigger: ["blur", ]
+        }, ],
+        party: [{
+          required: true,
+          message: "乙方公司不能为空",
+          trigger: ["blur", ]
+        }, ],
+        startTime: [{
+          required: true,
+          message: "合作开始日期不能为空",
+          trigger: ["blur", ]
+        }, ],
+        endTime: [{
+          required: true,
+          message: "合作结束日期不能为空",
+          trigger: ["blur", ]
+        }, ],
+        clientSigner: [{
+          required: true,
+          message: "合作结束日期不能为空",
+          trigger: ["blur", ]
+        }, ],
+        companySigner: [{
+          required: true,
+          message: "合作结束日期不能为空",
+          trigger: ["blur", ]
+        }, ],
+      },
     };
   },
   created() {
@@ -366,6 +444,45 @@ export default {
     dra(){
        this.getList()
     },
+    submitForm2(){
+      if(this.forms.contractPreview){
+        this.$refs["forms"].validate(valid => {
+          let formData = new FormData()
+          formData.append("corpCode",this.yxdemandone.corpCode)
+          formData.append("contractPreview",this.forms.contractPreview)
+          formData.append("firstParty",this.forms.firstParty)
+          formData.append("party",this.forms.party)
+          formData.append("startTime",this.forms.startTime)
+          formData.append("endTime",this.forms.endTime)
+          formData.append("clientSigner",this.forms.clientSigner)
+          formData.append("companySigner",this.forms.companySigner)
+          if (valid) {
+            addCompany(formData).then(response => {
+              this.msgSuccess("新增成功");
+              this.opens = false;
+              this.get();
+              this.upoplodad()
+              this.getone(this.yxdemandone)
+            });
+          }
+        });
+      }else{
+        this.msgError("请选择文件")
+      }
+    
+    },
+    cancel2() {
+      this.opens = false;
+      this.reset();
+      this.upoplodad()
+    },
+    upoplodad(){
+      this.$refs.upload.clearFiles()
+      this.forms.contractPreview=null
+    },
+    handleRemove(value){
+      this.forms.contractPreview=value.raw;
+    },
     /** 查询合作公司列表 */
     getList() {
       this.loading = true;
@@ -392,6 +509,23 @@ export default {
         this.yxdemandone=res.data.data.marCompany
         this.putmsgs = res.data.data.mar
       })
+    },
+    reset() {
+      this.forms = {
+        party:null,
+        firstParty:null,
+        startTime:null,
+        endTime:null,
+        clientSigner:null,
+        companySigner:null,
+      };
+      this.resetForm("forms");
+    },
+    handAdd(){
+      this.reset();
+      this.opens = true;
+      this.title = "新建合同";
+      this.forms.firstParty = this.yxdemandone.corpName
     },
     // 更多
     more(value){

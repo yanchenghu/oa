@@ -16,6 +16,12 @@ export function updateMarDemandresume(data) {
     data:data
   })
 }
+export function dowloads(params) {
+  return request({
+    url: '/common/download/batchDownload?custels='+params,
+    method: 'get',
+  })
+}
 // 查询简历模板
 export function template(data) {
   return request({

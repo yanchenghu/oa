@@ -8,7 +8,7 @@
             <tr>
               <td><span class="name">需求名称</span>{{form.projectName}}</td>
               <td><span class="name">岗位需求</span>{{professionIdopFormat(form)}}</td>
-              <td><span class="name">技术级别</span>{{form.demandYears==1?"中级":"高级"}}</td>
+              <td><span class="name">技术级别</span>{{form.demandYears==1?"中级":form.demandYears==0?"初级":"高级"}}</td>
               <td><span class="name">需求人数</span>{{form.demandNumber}}</td>
               <td><span class="name">目标人数</span>{{form.targetNumber}}</td>
             </tr>
@@ -57,22 +57,22 @@
                 :disabled="multiple"
                 style="float: right;"
             >批量操作</el-button>
-            <!-- <el-button
+            <el-button
                 v-if="ident==8"
                 type="primary"
                 size="mini"
-                @click="downloadlist"
+                @click="downloadlist(remlist)"
                 :disabled="multiple"
                 style="float: right;"
-              >批量下载简历</el-button> -->
-              <!-- <el-button
+              >批量下载原件</el-button>
+              <el-button
                   v-if="ident==8"
                   type="primary"
                   size="mini"
-                  @click="downloadlist(2)"
+                  @click="downloadlist(remlists)"
                   :disabled="multiple"
                   style="float: right;"
-                >批量下载附件</el-button> -->
+                >批量下载附件</el-button>
             <el-button
                 v-if="ident==8"
                 type="danger"
@@ -86,7 +86,12 @@
           <el-table v-loading="loading" border :data="templists"  @selection-change="handleSelectionChange">
             <el-table-column type="selection" key="1"/>
             <el-table-column label="姓名" align="left" prop="customerName" key="2" width="70"/>
-            <el-table-column label="电话" align="left" prop="customerTel" key="3"/>
+            <el-table-column label="电话" align="left" prop="customerTel" key="3">
+              <template slot-scope="scope">
+                <span v-if="ident==8">{{scope.row.customerTel}}</span>
+                <span v-else>{{scope.row.customerTel.replace(/^(\d{3})\d{4}(\d{4})$/,"$1****$2")}}</span>
+              </template>
+           </el-table-column>
             <el-table-column label="期望薪资" align="left" prop="expectationSalary" width="60" key="9">
               <template slot-scope="scope">
                 <span v-if="scope.row.expectationSalary">{{scope.row.expectationSalary }}</span>
@@ -307,17 +312,6 @@
                 <el-button type="primary" @click="submitqq">确 定</el-button>
               </span>
           </el-dialog>
-
-          <el-dialog style="text-align: center;" title="批量下载" :visible.sync="caozuo2" width="500px">
-               <el-radio-group v-model="caozuos">
-                   <el-radio :label="1">批量下载原件</el-radio>
-                   <el-radio :label="2">批量下载附件</el-radio>
-               </el-radio-group>
-               <span slot="footer" class="dialog-footer">
-                 <el-button @click="caozuo2=false">取 消</el-button>
-                 <el-button type="primary" @click="submitq">确 定</el-button>
-               </span>
-           </el-dialog>
           <!-- 简历预览 -->
           <el-dialog :title="title" :visible.sync="open3" width="70%">
            <iframe
@@ -351,10 +345,10 @@
                   </el-col>
                 </el-form-item>
               <el-form-item label="结算周期" prop="settledCycle">
-                 <el-select v-model="comform.settledCycle" placeholder="请选择结算周期" clearable size="small" :change="change">
+                 <el-select v-model="comform.settledCycle" placeholder="请选择结算周期" clearable size="small" @change="$forceUpdate()">
                    <el-option
                        v-for="dict in companyperiod"
-                       :key="dict.dictValue"
+                       :value-key="dict.dictValue"
                        :label="dict.dictLabel"
                        :value="parseInt(dict.dictValue)"
                      />
@@ -398,12 +392,13 @@
 </template>
 
 <script>
-  import {gettemplist,template,getFollow,submitstart,addFollow,delFollow,getInputInformation,entryPersonnel,submitstarts,chongzhizhuang,resource,updateMarDemandresume} from '@/api/demand/praticulars'
+  import {gettemplist,template,getFollow,submitstart,addFollow,delFollow,getInputInformation,entryPersonnel,submitstarts,chongzhizhuang,resource,updateMarDemandresume,dowloads} from '@/api/demand/praticulars'
   import {
     findmubiao
   } from "@/api/demand/binding";
   import {debounce,checkImg} from "@/utils/ruoyi.js"
   import index from "../../components/particulars/index"
+  import {downLoad} from "@/utils/zipdownload.js"
   export default {
     name:'Particulars',
     components:{
@@ -494,6 +489,7 @@
           forms: [],
           id:"",
         },
+        remlist:[],
         // 简历模板
         templist:[],
         title2:"",
@@ -793,8 +789,13 @@
           this.resetForm("comform")
           getInputInformation(form).then(res=>{
             this.comform=res.data
+            console.log(this.comform)
             this.open4=true
-            this.comform.settledCycle = res.data.paybackPeriod
+            if(res.data.paybackPeriod){
+              this.comform.settledCycle = res.data.paybackPeriod
+            }else{
+              this.comform.settledCycle = null
+            }
           })
         }else{
           let that = this
@@ -925,20 +926,21 @@
       handleSelectionChange(selection){
         this.ids = selection
         this.multiple = !selection.length
+        this.remlist = selection.map(item=>item.resumePath)
+        this.remlists = selection.map(item=>item.resumeEnclosurepath)
       },
-
       dow(adinw,ind){
         // const baseURL = process.env.VUE_APP_BASE_API
         // window.location.href = baseURL + "/common/download/resource?name=" + encodeURI(adinw.resumeEnclosurepath)
         if(ind == 1){
           if(adinw.resumePath){
-			this.downloads(adinw.resumePath)
+			     this.downloads(adinw.resumePath)
           }else{
             this.msgError(adinw.customerName+"暂无简历原件请上传")
           }
         }else{
           if(adinw.resumeEnclosurepath){
-			this.downloads(adinw.resumeEnclosurepath)
+			    this.downloads(adinw.resumeEnclosurepath)
           }else{
            this.msgError(adinw.customerName+"暂无简历附件请上传")
           }
@@ -952,15 +954,12 @@
             that.dow(item,that.caozuos)
           },1500*i)
           i+=1
-
         })
         this.caozuo2 = false
       },
-      downloadlist(){
-        this.caozuo2 = true
-        this.caozuos = 1
+      downloadlist(nub){
+        downLoad("/demand/follow/batchDownload?custels="+nub)
       },
-
       see(file,ind){
         this.dialogImageUrl = ""
         let srcs = process.env.VUE_APP_BASE_API

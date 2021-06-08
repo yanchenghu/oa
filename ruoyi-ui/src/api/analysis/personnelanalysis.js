@@ -9,6 +9,13 @@ export function listmingxi(query) {
   })
 }
 
+export function listbusinessllist(query) {
+  return request({
+    url: '/analysis/businessdata/businessllist',
+    method: 'get',
+    params: query
+  })
+}
 // 查询每日详细
 export function listdata(query) {
   return request({

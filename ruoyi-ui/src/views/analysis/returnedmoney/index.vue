@@ -160,7 +160,7 @@
 <script>
 import { listReturnedmoney, getReturnedmoney,getExpenditurelist, delReturnedmoney,getaccumulatedlist ,getsamemonthlist,  exportReturnedmoney } from "@/api/analysis/returnedmoney";
 export default {
-  name: "returnedmoney",
+  name: "Returnedmoney",
   data() {
     return {
       pickerOptions3:{

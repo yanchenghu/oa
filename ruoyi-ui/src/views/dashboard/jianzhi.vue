@@ -3,20 +3,19 @@
     <el-col class="col col-ri">
       <div style="height: 100%;background: #fff; width: 101%;border-radius: 2px;">
         <div class="div-a "><span>
-            跟踪人员
+            我的需求
           </span></div>
         <ul class="cont-ul">
           <div style="height: 600px; overflow: auto; width: 100%; margin-left: -35px;">
-            <el-col :xs="24" :sm="12" :lg="8" v-for="list,index in dataList.ListperRob" :key="index">
-                <li>
-                  <router-link :to="{path:'/record/particulars',query:{customerCode:list.resumeId}}"><el-avatar style="background-color: #0081FF;"> {{list.customerName}} </el-avatar></router-link>
+            <el-col :xs="24" :sm="24" :lg="12" v-for="list,index in dataList.list" :key="index">
+                <li style="margin-top: 5px;">
+                  <el-avatar style="background-color: #0081FF;"> {{list.projectName.slice(2,4)}} </el-avatar>
                   <div class="ul-div">
-                    <span>{{list.customerName}} </span>
-                    <span> {{list.customerTel}}</span>
-                    <p>{{list.addTime}} - {{list.editTime}}</p>
+                    <span :style="{color:list.importantLevel==0?'red':''}">{{list.projectName.slice(0,10)}}</span>
+                    <p style="color: #999999;font-size: 12px;"> {{list.addTime}}</p>
                   </div>
-                  <div style=" position: absolute;right: 20px;">
-                    <el-button type="warning" @click="handleSetLineChartData(list)" >跟踪</el-button>
+                  <div style="position: absolute;right: 10px; height: 20px;">
+                      <el-button style="width:130px ;" type="warning" @click="tiaozhuan2(list)">目标{{list.targetNumber?list.targetNumber:0}}/绑定{{list.demandNumber?list.demandNumber:0}}</el-button>
                   </div>
                 </li>
             </el-col>
@@ -49,8 +48,8 @@ export default {
 
   },
   methods: {
-    handleSetLineChartData(type){
-      this.$emit("handleSetLineChartData",type)
+    tiaozhuan(list){
+      this.$router.push({path:'/follow/particulars',query:{row:list.demandId,ident:8}})
     },
     
   }

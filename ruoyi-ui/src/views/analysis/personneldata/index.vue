@@ -65,7 +65,7 @@
         <termpro-fit :chartData="ruxianglist" ></termpro-fit>
       </div>
       <div class="chart-wrapper">
-        <el-table v-if="radio2=='chengyuan'" border :data="customerleve" key="1">
+        <el-table v-if="radio2=='chengyuan'" border :data="customerleve" key="1" show-summary :summary-method="getSummaries">
           <el-table-column label="姓名"  prop="nickName" />
           <el-table-column label="录入"  prop="inputNum"/>
           <el-table-column label="跟踪"  prop="trackNum"/>
@@ -92,7 +92,7 @@
           </el-table-column>
         </el-table>
 
-        <el-table v-else  :data="customerleve" key="2" border>
+        <el-table v-else  :data="customerleve" key="2" border show-summary  :summary-method="getSummaries">
           <el-table-column label="日期"  prop="addTime">
             <template slot-scope="scope">
               <span>{{scope.row.addTime.split('T')[0]}}</span>
@@ -114,7 +114,7 @@
   import termproFit from '../../components/personnelanalysis/termproFit.vue'
   import {listmingxi,listdata ,yuangonglist} from "@/api/analysis/personnelanalysis.js"
   export default {
-    name: 'personnelanalysis',
+    name: 'Personnelanalysis',
     components: {
       statisticalWork,
       termproFit
@@ -190,6 +190,40 @@
       this.getList()
     },
     methods: {
+      getSummaries(param) {
+        const { columns, data } = param
+        const len = columns.length
+        const sums = []
+        let values = []
+        columns.forEach((column, index) => {
+        //如果是第一列，则最后一行展示为“总计”两个字
+          if (index === 0) {
+            sums[index] = '总计'
+            //如果是最后一列，索引为列数-1，则显示计算总和
+          }if(column.property === "samemonthCollection"){
+          values = data.map(item => Number(item.serviceNum-item.costNum))
+
+          }  else {
+            values = data.map(item => Number(item[column.property]))
+          }
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            if(column.property === "samemonthCollection"){
+             sums[index] = sums[index].toFixed(2)
+            }
+          }
+
+
+        })
+        return sums
+      },
       resers(){
         this.InputList={
           expectedData:[],

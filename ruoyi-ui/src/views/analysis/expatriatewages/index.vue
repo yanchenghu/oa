@@ -123,7 +123,7 @@
   } from "@/api/analysis/expatriatewages";
   import {debounce} from "@/utils/ruoyi.js"
   export default {
-    name: "expatriatewages",
+    name: "Expatriatewages",
     data() {
       return {
         pickerOptions3:{

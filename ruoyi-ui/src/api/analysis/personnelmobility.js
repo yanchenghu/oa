@@ -8,3 +8,4 @@ export function listmanagement(query) {
     params: query
   })
 }
+

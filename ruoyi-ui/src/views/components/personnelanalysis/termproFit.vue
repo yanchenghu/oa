@@ -105,7 +105,7 @@
                   {
                       name: '总利润',
                       type: 'bar',
-                      barWidth: '20px',
+                      barWidth: '10px',
                       itemStyle:{
                         color:"#0081ff",
                         borderType:'dotted',
@@ -116,7 +116,14 @@
                       backgroundStyle: {
                           color: '#ebeef5'
                       },
-                  }
+                  },
+                  {
+                      type: 'line',
+                      itemStyle:{
+                        color:"red",
+                      },
+                      data: actualData,
+                  },
               ]
         })
       },

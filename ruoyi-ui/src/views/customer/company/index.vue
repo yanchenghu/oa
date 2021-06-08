@@ -105,6 +105,7 @@
             class="upload-demo"
             ref="upload"
             action="#"
+            accept=".docx,.doc,.pdf"
             :limit="1"
             :on-change="handleRemove"
             :auto-upload="false"
@@ -719,7 +720,7 @@ export default {
     },
     changess(){
       updateCompany(this.yxdemandone).then(res=>{
-        this.msgSuccess("转换成功")
+        this.msgSuccess("移交成功")
         this.open4 = false
          this.drawer = false
       })

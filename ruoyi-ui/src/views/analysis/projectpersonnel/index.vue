@@ -98,7 +98,7 @@
 <script>
   import { listReturnedmoney,getaccumulatedlist} from "@/api/analysis/projectpersonnel";
   export default {
-    name:"projectpersonnel",
+    name:"Projectpersonnel",
     data(){
       return{
         pickerOptions3:{
