@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.analysis.mapper.BusinessDataMapper">
+
+    <resultMap type="BusinessData" id="BusinessDataResult">
+        <result property="userName"    column="user_name"  />
+        <result property="nickName"    column="nick_name"  />
+        <result property="startTime"    column="start_time"  />
+        <result property="endTime"    column="end_time"  />
+        <result property="inputNum"    column="input_num"  />
+        <result property="bindingNum"    column="binding_num"  />
+        <result property="interviewPassedNum"    column="interview_passed_num"  />
+        <result property="entryPersonnelNum"    column="entry_personnel_num"  />
+
+    </resultMap>
+
+
+
+
+    <select id="getinputdemandList" parameterType="BusinessData" resultType="map">
+     SELECT a.nick_name as  opertName,IFNULL(d.inputdataNum,0) as inputdataNum from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN (SELECT w.operationuser ,count(w.demand_id) as inputdataNum from mar_demand w
+        where 1=1
+         and w.add_time between #{startTime} and #{endTime}
+       GROUP BY w.operationuser) d on a.user_name=d.operationuser
+       where c.role_key='business' and a.`status`=0 and a.del_flag !=2
+    </select>
+
+    <select id="getbindingResumeList" parameterType="BusinessData" resultType="map">
+          SELECT a.nick_name as  opertName,IFNULL(d.inputdataNum,0) as bindingresume from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN (SELECT x.operationuser ,count(w.id) as inputdataNum from mar_demandresume w LEFT JOIN mar_demand x on w.demand_id=x.demand_id
+        where 1=1
+        and w.bind_time between #{startTime} and #{endTime}
+        GROUP BY x.operationuser) d on a.user_name=d.operationuser
+        where c.role_key='business' and a.`status`=0 and a.del_flag !=2
+    </select>
+
+    <select id="getinterviewPassedList" parameterType="BusinessData" resultType="map">
+     SELECT a.nick_name as  opertName,IFNULL(d.inputdataNum,0) as interviewsNumber from sys_user a
+        LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+        LEFT JOIN sys_role c on b.role_id=c.role_id
+        LEFT JOIN (   SELECT
+	  y.operationuser,COUNT(x.id) as inputdataNum
+		from
+    mar_demandresume w
+    LEFT JOIN mar_demandresumefollow x on w.id=x.demandresume_id
+		LEFT JOIN mar_demand y on w.demand_id=y.demand_id
+   where
+     x.follow_status=#{followStatus}
+    and x.trackingtime between #{startTime} and #{endTime}
+    GROUP BY y.operationuser) d on a.user_name=d.operationuser
+    where c.role_key='business' and a.`status`=0 and a.del_flag !=2
+    </select>
+
+
+
+    <select id="getAllBusinessData"  resultMap="BusinessDataResult">
+     SELECT a.nick_name ,a.user_name  from sys_user a
+            LEFT JOIN  sys_user_role b on a.user_id=b.user_id
+            LEFT JOIN sys_role c on b.role_id=c.role_id
+        where c.role_key='business' and a.`status`=0 and a.del_flag !=2
+    </select>
+
+
+
+
+
+
+
+
+</mapper>

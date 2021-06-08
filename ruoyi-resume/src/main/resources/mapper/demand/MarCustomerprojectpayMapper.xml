@@ -264,7 +264,7 @@
                     </if>
                 </when>
             </choose>
-        order by a.syqstart_time
+        order by a.syqstart_time desc
     </select>
     <select id="selectMarCustomePerinfoById"  parameterType="String"  resultType="map">
     SELECT a.id,b.customer_name as customerName,b.customer_tel as customerTel,a.corp_name as corpName,
@@ -288,13 +288,15 @@
         LIMIT 10
     </select>
     <select id="getInterviewEntry"    resultType="map">
-       SELECT c.bind_people,d.avatar,d.nick_name,d.sex,c.peonum from
-            (SELECT b.bind_people,COUNT(b.bind_people) as peonum from mar_demandresumefollow a
-		LEFT JOIN mar_demandresume b on a.demandresume_id=b.id
-     where
+      SELECT c.bind_people,d.avatar,d.nick_name,d.sex,c.peonum from
+	(
+	 SELECT  a.bind_people,COUNT(b.id) as peonum from   mar_demandresume a
+	 LEFT JOIN mar_demandresumefollow b on  b.demandresume_id=a.id and b.trackingtime=a.newfollowtime
+	 where
 	 DATE_FORMAT( trackingtime, '%Y%m' )= DATE_FORMAT( CURDATE( ) , '%Y%m' )
 	 and follow_status in (5,7,8)
-   GROUP BY b.bind_people)c
+   GROUP BY a.bind_people
+  )c
 	LEFT JOIN sys_user d ON c.bind_people = d.user_name
 	ORDER BY c.peonum desc
 	LIMIT 10

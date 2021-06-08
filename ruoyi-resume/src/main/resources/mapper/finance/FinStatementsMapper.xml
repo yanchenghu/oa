@@ -57,8 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         a.over_pay,a.reason,c.service_pay as over_time
         from fin_statements a LEFT JOIN
         per_customerinfo b on a.customer_tel=b.customer_tel
-        LEFT JOIN  mar_customerprojectpay c on b.customer_code=c.customer_code
-        <where>
+        LEFT JOIN (SELECT customer_code,service_pay from mar_customerprojectpay GROUP BY customer_code) c on b.customer_code=c.customer_code        <where>
             <if test="corpCode != null  and corpCode != ''"> and a.corp_code = #{corpCode}</if>
             <if test="party != null  and party != ''"> and a.party = #{party}</if>
             <if test="startTime != null "> and (a.start_time BETWEEN #{startTime} and #{endTime})</if>

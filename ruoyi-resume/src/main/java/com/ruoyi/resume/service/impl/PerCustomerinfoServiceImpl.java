@@ -265,6 +265,8 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
             perCustomerinfo.setCustomerCode(SerialNumber.createSerial("cstm", 5));//个人编号生成
             if(!basic_info.getString("name").equals("")){
                 perCustomerinfo.setCustomerName(basic_info.getString("name"));//姓名
+            }else{
+                perCustomerinfo.setCustomerName("某求职者");//姓名
             }
 
             if(!basic_info.getString("num_work_experience").equals("")){

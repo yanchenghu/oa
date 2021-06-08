@@ -210,7 +210,7 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         // 目前在项 查询当前在项人数 、当月净成本、 当月净服务费 、 、当月净利润     净利润率
         Map nowItem=marCustomerprojectpayMapper.inItemNowCount();
 
-
+        Integer settledCycle = marCustomerprojectpay.getSettledCycle();
 
         Map map=new HashMap();
         map.put("startTime",marCustomerprojectpay.getStartTime());
@@ -239,15 +239,18 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
             digreSalary+=salary;
             digreServicepay+=service_pay;
         }
-
-        nowItem.put("sumServicePay",entryServicePay-digreServicepay);
-        nowItem.put("sumSalary",entrySalary-digreSalary);
+        if(settledCycle==null){
+            nowItem.put("sumServicePay",entryServicePay-digreServicepay);
+            nowItem.put("sumSalary",entrySalary-digreSalary);
+        }else{
+            nowItem.put("sumServicePay",entryServicePay);
+            nowItem.put("sumSalary",entrySalary);
+        }
         Map digression=new HashMap();
         digression.put("digreCost",digreSalary);
         digression.put("digreService",digreServicepay);
         digression.put("digreprofit",(digreServicepay-digreSalary));
         digression.put("digrePeopleNum",a);
-
         Map maps=new HashMap();
         maps.put("totalItem",totalItem);
         maps.put("nowItem",nowItem);
