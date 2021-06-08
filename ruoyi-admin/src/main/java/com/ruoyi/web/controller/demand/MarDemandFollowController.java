@@ -1,10 +1,18 @@
 package com.ruoyi.web.controller.demand;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.ServletUtils;
 
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.resume.downloadFile;
 import com.ruoyi.demand.domain.MarTopic;
 import com.ruoyi.demand.service.IMarTopicService;
 import com.ruoyi.framework.web.service.TokenService;
@@ -20,6 +28,8 @@ import com.ruoyi.demand.service.IMarDemandService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 需求跟踪Controller
@@ -167,12 +177,39 @@ public class MarDemandFollowController extends BaseController
     /**
      * 获取需求详细信息
      */
-
     @PostMapping(value = "/bindingUpper")
     public AjaxResult bindingUpper( String demandId)
     {
         return marDemandService.bindingUpper(demandId);
     }
+    /**
+     *批量简历下载,生成zip
+     * @auth ych
+     */
+    @GetMapping(value = "/batchDownload")
+    public void batchDownloads(String custels, HttpServletResponse response) throws IOException {
+        String[] tableNames = Convert.toStrArray(custels);
+        List<File> userList = new ArrayList<>();
+        for(String file :tableNames){
+            String localPath = RuoYiConfig.getProfile();
+            String downloadPath = localPath + StringUtils.substringAfter(file, Constants.RESOURCE_PREFIX);
+            File fi=new File(downloadPath);
+            if(fi.exists()){
+                userList.add(fi);
+            }
+        }
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=resume.zip");
+        downloadFile.toZip(userList,  response.getOutputStream());
+    }
+
+
+
+
+
+
+
+
 
 
 

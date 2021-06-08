@@ -136,11 +136,15 @@ public class MarDemandServiceImpl implements IMarDemandService
     public AjaxResult insertMarDemand(String zm, MultipartFile demandPic, LoginUser loginUser)
     {
         String fsafsa="";
-        try {
-            fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), demandPic);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(demandPic!=null){
+            try {
+                fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), demandPic);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+
 
         List<Integer> liStr = JSON.parseArray(JSON.parseObject(zm).getString("list"), Integer.class);
         MarDemand marDemand = JSON.parseObject(JSON.parseObject(zm).getString("marDemand"), MarDemand.class);

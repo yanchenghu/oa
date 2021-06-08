@@ -84,11 +84,23 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
             int x = new Double(finAncecontact.getManMonth()).intValue();
             Date collectionTime = finAncecontact.getCollectionTime();
             Date collectionTime1 = finAncecontact1.getCollectionTime();
+            String remarks = finAncecontact.getRemarks();
+            if(StringUtils.isEmpty(remarks)){
+                remarks="1";
+            }
+            String remarks2 = finAncecontact1.getRemarks();
+            if(StringUtils.isEmpty(remarks2)){
+                remarks2="1";
+            }
             if( i==x  &&
-            finAncecontact.getActualMonth().equals(finAncecontact1.getActualMonth())   && fmt.format(collectionTime).equals(fmt.format(collectionTime1))
-            && finAncecontact.getActualMoney().equals(finAncecontact1.getActualMoney()) && finAncecontact.getReceivedPayment().equals(finAncecontact1.getReceivedPayment())
-            && finAncecontact.getCollectionStatus()==finAncecontact1.getCollectionStatus()  && finAncecontact.getRemarks().equals(finAncecontact1.getRemarks())
-            && finAncecontact.getLastmonthWages().equals(finAncecontact1.getLastmonthWages()) && finAncecontact.getContactSituation().equals(finAncecontact1.getContactSituation())){
+            finAncecontact.getActualMonth().equals(finAncecontact1.getActualMonth())
+            && fmt.format(collectionTime).equals(fmt.format(collectionTime1))
+            && finAncecontact.getActualMoney().equals(finAncecontact1.getActualMoney())
+            && finAncecontact.getReceivedPayment().equals(finAncecontact1.getReceivedPayment())
+            && finAncecontact.getCollectionStatus()==finAncecontact1.getCollectionStatus()
+            && remarks.equals(remarks2)
+            && finAncecontact.getLastmonthWages().equals(finAncecontact1.getLastmonthWages())
+            && finAncecontact.getContactSituation().equals(finAncecontact1.getContactSituation())){
              return AjaxResult.success("修改成功");
             }
             String receivedPayment = finAncecontact.getReceivedPayment();

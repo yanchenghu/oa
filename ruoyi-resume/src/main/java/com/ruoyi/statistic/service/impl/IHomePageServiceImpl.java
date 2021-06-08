@@ -94,7 +94,6 @@ public class IHomePageServiceImpl implements IHomePageService {
             List<MarDemandresume>  li=marDemandresumeMapper.selectMarDemandresumeUpperBydemandId(DemandId);
             marDe.setIfLook(li.size());
         }
-
         List<MarEntryInfo> listMarEntry= marDemandMapper.selectMarDemanddsaList(mapss);
         mapss.put("bindPeople",loginUser.getUsername());
         for(int i=listMarEntry.size()-1;i>=0;i--) {
