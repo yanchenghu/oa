@@ -30,18 +30,23 @@ public class BusinessDataServiceImpl implements IBusinessDataService {
         //商务录入需求
         List<Map>  inputdemand=businessDataMapper.getinputdemandList(businessData);
         //绑定简历的
-        List<Map>  bindingresume=businessDataMapper.getbindingResumeList(businessData);
+        List<Map>  bindingresume=businessDataMapper.getbindingResumeListes(businessData);
+        //简历通过的？？
+        businessData.setFollowStatus(3);
+        List<Map>  resumepassedList=businessDataMapper.getinterviewPassedListes(businessData);
         //面试通过的
         businessData.setFollowStatus(5);
-        List<Map>  interviewpassed=businessDataMapper.getinterviewPassedList(businessData);
+        List<Map>  interviewpassed=businessDataMapper.getinterviewPassedListes(businessData);
         //入项
         businessData.setFollowStatus(7);
-        List<Map>  EntryList=businessDataMapper.getinterviewPassedList(businessData);
+        List<Map>  EntryList=businessDataMapper.getinterviewPassedListes(businessData);
+        //出项人数？？
+        List<Map>  OutList=businessDataMapper.getOutPeoList(businessData);
 
         List<BusinessData> allBusiness = businessDataMapper.getAllBusinessData();
         for(BusinessData busine:allBusiness){
             String nickName = busine.getNickName();
-
+            //录入需求
             for (Map mp:inputdemand){
                 if( mp.get("opertName")!=null){
                     String   opertName = (String) mp.get("opertName");
@@ -52,6 +57,9 @@ public class BusinessDataServiceImpl implements IBusinessDataService {
                     }
                 }
             }
+
+
+            //绑定简历
             for (Map mp:bindingresume){
                 if( mp.get("opertName")!=null){
                     String   opertName = (String) mp.get("opertName");
@@ -62,6 +70,18 @@ public class BusinessDataServiceImpl implements IBusinessDataService {
                     }
                 }
             }
+            //简历通过
+            for (Map mp:resumepassedList){
+                if( mp.get("opertName")!=null){
+                    String   opertName = (String) mp.get("opertName");
+                    if(nickName.equals(opertName)){
+                        if( mp.get("interviewsNumber")!=null){
+                            busine.setResumePassed((Long) mp.get("interviewsNumber"));
+                        }
+                    }
+                }
+            }
+            //面试通过
             for (Map mp:interviewpassed){
                 if( mp.get("opertName")!=null){
                     String   opertName = (String) mp.get("opertName");
@@ -72,6 +92,7 @@ public class BusinessDataServiceImpl implements IBusinessDataService {
                     }
                 }
             }
+            //入项
             for (Map mp:EntryList){
                 if( mp.get("opertName")!=null){
                     String   opertName = (String) mp.get("opertName");
@@ -82,8 +103,25 @@ public class BusinessDataServiceImpl implements IBusinessDataService {
                     }
                 }
             }
+            //出项
+            for (Map mp:OutList){
+                if( mp.get("opertName")!=null){
+                    String   opertName = (String) mp.get("opertName");
+                    if(nickName.equals(opertName)){
+                        if( mp.get("outpeo")!=null){
+                            busine.setOutPersonnelNum((Long) mp.get("outpeo"));
+                        }
+                    }
+                }
+            }
 
-
+        }
+        long a=0;
+        for(BusinessData busine:allBusiness){
+            Long outPersonnelNum = busine.getOutPersonnelNum();
+            if(outPersonnelNum==null){
+                busine.setOutPersonnelNum(a) ;
+            }
         }
 
         return AjaxResult.success(allBusiness);

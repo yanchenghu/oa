@@ -14,9 +14,13 @@ public interface BusinessDataMapper {
 
     List<Map> getinputdemandList(BusinessData businessData);
 
-    List<Map> getbindingResumeList(BusinessData businessData);
 
-    List<Map> getinterviewPassedList(BusinessData businessData);
+
+    List<Map> getbindingResumeListes(BusinessData businessData);
+
+    List<Map> getinterviewPassedListes(BusinessData businessData);
 
     List<BusinessData> getAllBusinessData();
+
+    List<Map> getOutPeoList(BusinessData businessData);
 }

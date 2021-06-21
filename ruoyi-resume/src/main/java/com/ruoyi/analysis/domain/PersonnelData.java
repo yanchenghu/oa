@@ -17,9 +17,11 @@ public class PersonnelData {
     private String corpCode;
     /*员工姓名*/
     private String nickName;
-
     /*员工编码*/
     private String userName;
+    /*员工组名*/
+    private long deptId;
+
 
     public String getNickName() {
         return nickName;
@@ -59,5 +61,14 @@ public class PersonnelData {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+
+    public long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(long deptId) {
+        this.deptId = deptId;
     }
 }

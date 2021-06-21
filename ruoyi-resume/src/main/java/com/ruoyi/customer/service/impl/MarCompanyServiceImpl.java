@@ -14,7 +14,9 @@ import com.ruoyi.conn.mapper.ConDingtokenMapper;
 import com.ruoyi.customer.domain.*;
 import com.ruoyi.customer.mapper.*;
 import com.ruoyi.demand.domain.MarAuditeditor;
+import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.mapper.MarAuditeditorMapper;
+import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,9 @@ public class MarCompanyServiceImpl implements IMarCompanyService
     private ConDingtokenMapper conDingtokenMapper;
     @Autowired
     private MarCompanyChangerecordMapper marCompanyChangerecordMapper;
+
+    @Autowired
+    private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
 
     /**
      * 查询合作公司
@@ -158,6 +163,13 @@ public class MarCompanyServiceImpl implements IMarCompanyService
             marCompanyChangerecord.setChangeType(1);
             marCompanyChangerecord.setChangeContent("将："+corpName+"，名称改为："+marCompany.getCorpName());
             marCompanyChangerecordMapper.insertMarCompanyChangerecord(marCompanyChangerecord);
+
+            MarCustomerprojectpay marCustomerprojectpay=new MarCustomerprojectpay();
+            marCustomerprojectpay.setCorpCode(mar.getCorpCode());
+            marCustomerprojectpay.setCorpName(marCompany.getCorpName());
+            marCustomerprojectpayMapper.updateMarCustomerprtpaybyCorp(marCustomerprojectpay);
+
+
             DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+DingId,
                     "您好，系统监测到"+loginUser.getUser().getNickName()+"将："+corpName+"，名称改为："+marCompany.getCorpName());
         }

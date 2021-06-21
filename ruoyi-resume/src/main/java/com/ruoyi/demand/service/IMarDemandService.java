@@ -140,4 +140,6 @@ public interface IMarDemandService
     AjaxResult noInterviewEntry(String demandId, String customerCode,Integer type,String followDetail);
 
     String queryresumesalary(String customerCode);
+
+    List<MarDemand> selectaccordingDemand(MarDemand marDemand);
 }

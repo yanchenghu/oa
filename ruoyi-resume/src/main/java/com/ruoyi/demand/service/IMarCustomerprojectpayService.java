@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.demand.domain.*;
 
 
@@ -70,7 +71,7 @@ public interface IMarCustomerprojectpayService
     /**
      * 人员入项信息列表
      */
-    List<MarCustomePerinfo> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay);
+    List<MarCustomePerinfo> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay, LoginUser loginUser);
     /**
      * 人员入项配置信息
      */
@@ -80,11 +81,11 @@ public interface IMarCustomerprojectpayService
     /**
      * 人员流动信息列表
      */
-    List<PersonnelEssentialinfor> selectpersonnelTurnoverList(MarCustomerprojectpay marCustomerprojectpay);
+    List<PersonnelEssentialinfor> selectpersonnelTurnoverList(MarCustomerprojectpay marCustomerprojectpay,LoginUser loginUser);
     /*入项人员信息*/
-    Map entryDetail(MarCustomerprojectpay marCustomerprojectpay) ;
+    Map entryDetail(MarCustomerprojectpay marCustomerprojectpay,LoginUser loginUser) ;
 
-    List<Map> outItemlist(MarCustomerprojectpay marCustomerprojectpay);
+    List<Map> outItemlist(MarCustomerprojectpay marCustomerprojectpay,LoginUser loginUser);
     /**
      * 检查人员借用物品是否有归还
      */

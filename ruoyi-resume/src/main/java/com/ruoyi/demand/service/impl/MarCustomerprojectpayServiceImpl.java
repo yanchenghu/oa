@@ -3,12 +3,12 @@ package com.ruoyi.demand.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.resume.DateUtils;
@@ -130,9 +130,19 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
      * 人员入项信息列表
      */
     @Override
-    public List<MarCustomePerinfo> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay) {
-
+    public List<MarCustomePerinfo> selectentrylistList(MarCustomerprojectpay marCustomerprojectpay, LoginUser loginUser) {
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        List<String> rol=new ArrayList<>();
+        for (SysRole sysRo:roles){
+            rol.add(sysRo.getRoleKey());
+        }
+        //老板 boss，总商务权限 businessextra ，财务finance ,行政 administration
+        if(rol.contains("Boss") || rol.contains("businessextra")|| rol.contains("finance")  || rol.contains("administration")|| rol.contains("admin")){
+            return marCustomerprojectpayMapper.selectentrylistList(marCustomerprojectpay);
+        }
+        marCustomerprojectpay.setEntryAssistant(loginUser.getUsername());
         return marCustomerprojectpayMapper.selectentrylistList(marCustomerprojectpay);
+
     }
     /**
      * 人员入项配置信息
@@ -189,12 +199,25 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
      */
 
     @Override
-    public List<PersonnelEssentialinfor> selectpersonnelTurnoverList(MarCustomerprojectpay marCustomerprojectpay) {
+    public List<PersonnelEssentialinfor> selectpersonnelTurnoverList(MarCustomerprojectpay marCustomerprojectpay,LoginUser loginUser) {
+
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        List<String> rol=new ArrayList<>();
+        for (SysRole sysRo:roles){
+            rol.add(sysRo.getRoleKey());
+        }
         Map map=new HashMap();
         map.put("startTime",marCustomerprojectpay.getStartTime());
         map.put("endTime",marCustomerprojectpay.getEndTime());
         map.put("status",marCustomerprojectpay.getSettledCycle());
-        List<PersonnelEssentialinfor>  list=marCustomerprojectpayMapper.selectpersonnelTurnoverList(map);
+        List<PersonnelEssentialinfor>  list=new ArrayList<>();
+        //老板 boss，总商务权限 businessextra ，财务finance ,行政 administration
+        if(rol.contains("Boss") || rol.contains("businessextra")|| rol.contains("finance")  || rol.contains("administration")|| rol.contains("admin")){
+            list=marCustomerprojectpayMapper.selectpersonnelTurnoverList(map);
+        }else{
+             map.put("operationuser",loginUser.getUsername());
+             list=marCustomerprojectpayMapper.selectpersonnelTurnoverList(map);
+        }
         BigDecimal b1 = new BigDecimal("100");
         for(PersonnelEssentialinfor personnelEsse:list){
             BigDecimal salary = personnelEsse.getSalary();
@@ -206,10 +229,14 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
     }
     /*入项人员信息*/
     @Override
-    public Map entryDetail(MarCustomerprojectpay marCustomerprojectpay) {
+    public Map entryDetail(MarCustomerprojectpay marCustomerprojectpay,LoginUser loginUser) {
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        List<String> rol=new ArrayList<>();
+        for (SysRole sysRo:roles){
+            rol.add(sysRo.getRoleKey());
+        }
         // 目前在项 查询当前在项人数 、当月净成本、 当月净服务费 、 、当月净利润     净利润率
         Map nowItem=marCustomerprojectpayMapper.inItemNowCount();
-
         Integer settledCycle = marCustomerprojectpay.getSettledCycle();
 
         Map map=new HashMap();
@@ -217,25 +244,28 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         map.put("endTime",marCustomerprojectpay.getEndTime());
         map.put("status",marCustomerprojectpay.getSettledCycle());
         // 总成本   服务    总利润   总利润率
-        Map totalItem=marCustomerprojectpayMapper.entryPeopleCount(map);
+        Map totalItem=new HashMap();
+        //出项
+        List<Map>  digressilist =new ArrayList<>();
+        //老板 boss，总商务权限 businessextra ，财务finance ,行政 administration
+        if(rol.contains("Boss") || rol.contains("businessextra")|| rol.contains("finance")  || rol.contains("administration")|| rol.contains("admin")){
+             totalItem=marCustomerprojectpayMapper.entryPeopleCount(map);
+             digressilist =marCustomerprojectpayMapper.outItemlist(map);
+        }else{
+            map.put("operationuser",loginUser.getUsername());
+            totalItem=marCustomerprojectpayMapper.entryPeopleCount(map);
+            digressilist =marCustomerprojectpayMapper.outItemlist(map);
+        }
         double   entryServicePay= (double )totalItem.get("entryServicePay");
         double   entrySalary= (double )totalItem.get("entrySalary");
-        //出项
-        List<Map>  digressilist =marCustomerprojectpayMapper.outItemlist(map);
+
         int a=digressilist.size();
         double digreSalary = 0.0;
         double digreServicepay=0.0;
         for (Map map1:digressilist){
              double   salary= (double ) map1.get("salary");
              double   service_pay= (double ) map1.get("service_pay");
-//             Date outof_projecttime = (Date) map1.get("outof_projecttime");
-//             Date syqstart_time = (Date) map1.get("syqstart_time");
-//            int monthsOfAge = 0;
-//            try {
-//                monthsOfAge = DateUtils.getMonthsOfAge(syqstart_time, outof_projecttime);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
+
             digreSalary+=salary;
             digreServicepay+=service_pay;
         }
@@ -259,12 +289,21 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
     }
 
     @Override
-    public List<Map> outItemlist(MarCustomerprojectpay marCustomerprojectpay) {
+    public List<Map> outItemlist(MarCustomerprojectpay marCustomerprojectpay,LoginUser loginUser) {
         Map map=new HashMap();
         map.put("startTime",marCustomerprojectpay.getStartTime());
         map.put("endTime",marCustomerprojectpay.getEndTime());
-        return marCustomerprojectpayMapper.outItemlist(map);
-
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        List<String> rol=new ArrayList<>();
+        for (SysRole sysRo:roles){
+            rol.add(sysRo.getRoleKey());
+        }
+        if(rol.contains("Boss") || rol.contains("businessextra")|| rol.contains("finance")  || rol.contains("administration")|| rol.contains("admin")){
+            return marCustomerprojectpayMapper.outItemlist(map);
+        }else{
+            map.put("operationuser",loginUser.getUsername());
+            return  marCustomerprojectpayMapper.outItemlist(map);
+        }
     }
     /**
      * 检查人员借用物品是否有归还

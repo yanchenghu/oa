@@ -3,6 +3,7 @@ package com.ruoyi.analysis.service;
 import com.ruoyi.analysis.domain.PersonnelData;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
 public interface IPersonnelDataService {
 
 
-    AjaxResult personnellist(PersonnelData personnelData);
+    AjaxResult personnellist(PersonnelData personnelData, LoginUser loginUser);
 
     AjaxResult everydaylist(PersonnelData personnelData);
 

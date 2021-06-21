@@ -11,14 +11,13 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.demand.domain.MarCertificates;
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
+import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.demand.domain.MarServicepay;
-import com.ruoyi.demand.mapper.MarCertificatesMapper;
-import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
+import com.ruoyi.demand.mapper.*;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.demand.mapper.MarServicepayMapper;
 import com.ruoyi.demand.service.IMarServicepayService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +33,8 @@ public class MarServicepayServiceImpl implements IMarServicepayService
 {
     @Autowired
     private MarServicepayMapper marServicepayMapper;
+    @Autowired
+    private MarDemandresumeMapper marDemandresumeMapper;
 
     @Autowired
     private MarCustomerprojectpayMapper marCustomerprojectpayMapper;
@@ -41,6 +42,9 @@ public class MarServicepayServiceImpl implements IMarServicepayService
     private MarCertificatesMapper marCertificatesMapper;
     @Autowired
     private PerCustomerinfoMapper perCustomerinfoMapper;
+
+    @Autowired
+    private MarDemandresumefollowMapper marDemandresumefollowMapper;
 
 
 
@@ -187,5 +191,46 @@ public class MarServicepayServiceImpl implements IMarServicepayService
             return  AjaxResult.success("出项成功") ;
         }
         return  AjaxResult.error("出项失败") ;
+    }
+
+    @Override
+    public AjaxResult accessItems(MarCustomerprojectpay marCustomerprojectpay) {
+
+        MarCustomerprojectpay marCustom=new  MarCustomerprojectpay();
+        if(StringUtils.isNotEmpty( marCustomerprojectpay.getId())){
+            marCustom= marCustomerprojectpayMapper.selectMarCustomerprojectpayById(marCustomerprojectpay.getId());
+            if(marCustom.getDemandId().equals(marCustomerprojectpay.getDemandId())){
+                return AjaxResult.error("转入转出为同一个需求，请核实后重新操作");
+            }
+            MarDemandresume marDemandresume=new MarDemandresume();
+            //查看当前人是否绑郭该需求，如果绑定过删除(特殊情况当前人在那个项目也入项目)
+            marDemandresume.setDemandId(marCustomerprojectpay.getDemandId());
+            marDemandresume.setCustomerCode(marCustom.getCustomerCode());
+            List<MarDemandresume> marDemes = marDemandresumeMapper.selectMarDemandresumeList(marDemandresume);
+            if(marDemes.size()>0){
+                MarDemandresume marDemaume1 = marDemes.get(0);
+                MarDemandresume marDemandresume1 = marDemandresumeMapper.SelectStatusBydemandIdcustomerCode(marDemaume1);
+                if (marDemandresume1.getDownloadStatus()==7){
+                    return AjaxResult.error("当前人已经入过该项目，不能重复入项");
+                }else{
+                    marDemandresumeMapper.deleteMarDemandresumeById(marDemandresume1.getId());
+                }
+            }
+
+            marDemandresume.setDemandId(marCustom.getDemandId());
+            List<MarDemandresume> marDemandresumes = marDemandresumeMapper.selectMarDemandresumeList(marDemandresume);
+            if(marDemandresumes.size()>0){
+                MarDemandresume marDeme1 = marDemandresumes.get(0);
+                marDeme1.setDemandId(marCustomerprojectpay.getDemandId());
+                marDemandresumeMapper.updateMarDemandresume(marDeme1);
+                marCustomerprojectpayMapper.updateMarCustomerprojectpay(marCustomerprojectpay);
+
+            }else{
+                return AjaxResult.error("该简历未按照正常流程绑定，请联系管理员后在操作");
+
+            }
+
+        }
+        return AjaxResult.success("转出入成功");
     }
 }

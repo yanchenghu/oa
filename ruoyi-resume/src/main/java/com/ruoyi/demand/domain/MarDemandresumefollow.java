@@ -46,6 +46,10 @@ public class MarDemandresumefollow extends BaseEntity
     private String remark1;
 
 
+    /** 注意事项 */
+    private String beCareful;
+
+
 
 
     public Integer getId() {
@@ -110,7 +114,13 @@ public class MarDemandresumefollow extends BaseEntity
     {
         return remark1;
     }
+    public String getBeCareful() {
+        return beCareful;
+    }
 
+    public void setBeCareful(String beCareful) {
+        this.beCareful = beCareful;
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -123,4 +133,6 @@ public class MarDemandresumefollow extends BaseEntity
             .append("remark1", getRemark1())
             .toString();
     }
+
+
 }

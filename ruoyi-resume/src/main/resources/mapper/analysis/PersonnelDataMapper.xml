@@ -32,6 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and w.add_time between #{startTime} and #{endTime}
        GROUP BY w.opert_code) d on a.user_name=d.opert_code
        where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+       <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
+
 
     </select>
     <select id="getTrackList" parameterType="PersonnelData" resultType="map">
@@ -43,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and w.contact_time between #{startTime} and #{endTime}
     GROUP BY w.contact_usercode) d on a.user_name=d.contact_usercode
     where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+     <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
 
     </select>
     <select id="getBindingList" parameterType="PersonnelData" resultType="map">
@@ -54,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          and w.bind_time between #{startTime} and #{endTime}
         GROUP BY w.bind_people) d on a.user_name=d.bind_people
         where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+        <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
 
     </select>
 
@@ -67,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     and  q.trackingtime between #{startTime} and #{endTime}
     GROUP BY w.bind_people) d on a.user_name=d.bind_people
     where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+     <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
 
     </select>
     <select id="getInterviewPassedList" parameterType="PersonnelData" resultType="map">
@@ -79,6 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and  q.trackingtime between #{startTime} and #{endTime}
         GROUP BY w.bind_people) d on a.user_name=d.bind_people
         where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+        <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
 
     </select>
     <select id="getEntryPersonnelList" parameterType="PersonnelData" resultType="map">
@@ -91,6 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	and  q.trackingtime between #{startTime} and #{endTime}
 	GROUP BY w.bind_people) d on a.user_name=d.bind_people
 	where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+    <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
 
     </select>
 
@@ -108,15 +115,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       and  syqstart_time between #{startTime} and #{endTime}
     GROUP BY opercode) d on a.user_name=d.opercode
         where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+        <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
 
     </select>
 
-    <select id="getDataDetailsList"  resultMap="PersonnelDataDetailsResult">
+    <select id="getDataDetailsList"   parameterType="PersonnelData" resultMap="PersonnelDataDetailsResult">
     SELECT a.nick_name  from sys_user a
     LEFT JOIN  sys_user_role b on a.user_id=b.user_id
     LEFT JOIN sys_role c on b.role_id=c.role_id
-
     where c.role_key='personnel' and a.`status`=0 and a.del_flag !=2
+   <if test="deptId != null  and deptId != ''"> and a.dept_id=#{deptId}</if>
 
 
     </select>

@@ -20,10 +20,16 @@ public class BusinessData {
     private Long inputNum;
     //绑定
     private Long bindingNum;
+    //简历通过
+    private Long resumePassed;
+
     //面试通过
     private Long interviewPassedNum;
     //入项
     private Long entryPersonnelNum;
+
+   //出项
+    private Long outPersonnelNum;
 
 
     public Integer getFollowStatus() {
@@ -97,4 +103,23 @@ public class BusinessData {
     public void setEntryPersonnelNum(Long entryPersonnelNum) {
         this.entryPersonnelNum = entryPersonnelNum;
     }
+
+    public Long getOutPersonnelNum() {
+        return outPersonnelNum;
+    }
+
+    public void setOutPersonnelNum(Long outPersonnelNum) {
+        this.outPersonnelNum = outPersonnelNum;
+    }
+
+    public Long getResumePassed() {
+        return resumePassed;
+    }
+
+    public void setResumePassed(Long resumePassed) {
+        this.resumePassed = resumePassed;
+    }
+
+
+
 }

@@ -1,8 +1,10 @@
 package com.ruoyi.web.controller.personentry;
 
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.entrycontract.service.MarEntrycontractService;
 import com.ruoyi.common.core.controller.BaseController;
@@ -44,7 +46,8 @@ public class PerentryController extends BaseController {
 
     @Autowired
     private IMarServicepayService marServicepayService;
-
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private MarEntrycontractService marEntryContractService;
@@ -57,7 +60,8 @@ public class PerentryController extends BaseController {
     public TableDataInfo entrylist(MarCustomerprojectpay MarCustomerprojectpay)
     {
         startPage();
-        List<MarCustomePerinfo> list = marCustomerprojectpayService.selectentrylistList(MarCustomerprojectpay);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        List<MarCustomePerinfo> list = marCustomerprojectpayService.selectentrylistList(MarCustomerprojectpay,loginUser);
         return getDataTable(list);
     }
 
@@ -143,6 +147,15 @@ public class PerentryController extends BaseController {
         return marServicepayService.personnelItems(marCustomerprojectpay) ;
     }
 
+
+
+    /**
+     * 人员转出转入项
+     */
+    @PostMapping(value = "/accessItems")
+    public AjaxResult accessItems(@RequestBody MarCustomerprojectpay marCustomerprojectpay){
+        return marServicepayService.accessItems(marCustomerprojectpay) ;
+    }
 
 
     /**
