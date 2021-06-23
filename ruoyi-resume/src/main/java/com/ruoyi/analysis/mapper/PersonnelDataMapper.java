@@ -30,7 +30,7 @@ public interface PersonnelDataMapper {
     List<Map> getInputProfitList(PersonnelData personnelData);
 
     //
-    List<PersonnelDataDetails> getDataDetailsList();
+    List<PersonnelDataDetails> getDataDetailsList(PersonnelData personnelData);
 
     List<Map> getInputdataLists(PersonnelData personnelData);
 

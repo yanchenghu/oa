@@ -7,6 +7,8 @@ import com.ruoyi.analysis.mapper.PersonnelDataMapper;
 import com.ruoyi.analysis.service.IPersonnelDataService;
 import com.ruoyi.common.core.domain.AjaxResult;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.resume.DateUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,14 @@ public class PersonnelDataServiceImpl implements IPersonnelDataService {
     @Autowired
     private PersonnelDataMapper personnelDataMapper;
     @Override
-    public AjaxResult personnellist(PersonnelData personnelData) {
+    public AjaxResult personnellist(PersonnelData personnelData, LoginUser loginUser) {
+
+        //判断是否有人事组长的权限
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        boolean personnelteamleader = roles.stream().anyMatch(e -> e.getRoleKey().equals("personnelteamleader"));
+        if(personnelteamleader){
+            personnelData.setDeptId(loginUser.getUser().getDeptId());
+        }
         Map map=new HashMap();
         List<Map> InputList= personnelDataMapper.getInputdataList(personnelData);
         List<Map> trackList= personnelDataMapper.getTrackList(personnelData);
@@ -35,9 +44,10 @@ public class PersonnelDataServiceImpl implements IPersonnelDataService {
         List<Map> resumePassedList= personnelDataMapper.getResumePassedList(personnelData);
         List<Map> interviewPassedList= personnelDataMapper.getInterviewPassedList(personnelData);
         List<Map> entryPersonnelList= personnelDataMapper.getEntryPersonnelList(personnelData);
+
         List<Map> inputProfitList= personnelDataMapper.getInputProfitList(personnelData);
         //  数据详情
-        List<PersonnelDataDetails> dataDetailsList= personnelDataMapper.getDataDetailsList();
+        List<PersonnelDataDetails> dataDetailsList= personnelDataMapper.getDataDetailsList(personnelData);
 
         for (PersonnelDataDetails personnelDataDetails:dataDetailsList){
             String nickName = personnelDataDetails.getNickName();
@@ -110,16 +120,16 @@ public class PersonnelDataServiceImpl implements IPersonnelDataService {
                 }
             }
 
-
         }
-
+        if(!personnelteamleader){
+            map.put("inputProfitList",inputProfitList);
+        }
         map.put("InputList",InputList);
         map.put("trackList",trackList);
         map.put("bindingList",bindingList);
         map.put("resumePassedList",resumePassedList);
         map.put("interviewPassedList",interviewPassedList);
         map.put("entryPersonnelList",entryPersonnelList);
-        map.put("inputProfitList",inputProfitList);
         map.put("dataDetailsList",dataDetailsList);
         return AjaxResult.success(map);
     }

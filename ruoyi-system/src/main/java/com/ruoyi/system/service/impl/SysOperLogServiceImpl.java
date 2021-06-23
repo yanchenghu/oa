@@ -26,6 +26,11 @@ public class SysOperLogServiceImpl implements ISysOperLogService
     @Override
     public void insertOperlog(SysOperLog operLog)
     {
+        String jsonResult = operLog.getJsonResult();
+        if(jsonResult.length()>2000){
+            String substring = jsonResult.substring(0, 1999);
+            operLog.setJsonResult(substring);
+        }
         operLogMapper.insertOperlog(operLog);
     }
 

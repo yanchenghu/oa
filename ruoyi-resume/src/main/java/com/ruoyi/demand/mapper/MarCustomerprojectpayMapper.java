@@ -99,4 +99,5 @@ public interface MarCustomerprojectpayMapper
 
     List<Entry> selectentrylistLists(MarCustomerprojectpay marCustomerprojectpay);
 
+    void updateMarCustomerprtpaybyCorp(MarCustomerprojectpay marCustomerprojectpay);
 }

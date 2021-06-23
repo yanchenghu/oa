@@ -3,8 +3,10 @@ package com.ruoyi.web.controller.personentry;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.demand.domain.ExportItemList;
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
@@ -12,6 +14,7 @@ import com.ruoyi.demand.domain.PersonnelEssentialinfor;
 
 import com.ruoyi.demand.domain.PersonnelEssentialinforExcel;
 import com.ruoyi.demand.service.IMarCustomerprojectpayService;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +39,8 @@ public class PerflowController extends BaseController {
 
     @Autowired
     private IMarCustomerprojectpayService marCustomerprojectpayService;
-
+    @Autowired
+    private TokenService tokenService;
     /**
      * 人员流动信息列表
      */
@@ -45,13 +49,16 @@ public class PerflowController extends BaseController {
     public TableDataInfo personnelTurnoverList(MarCustomerprojectpay marCustomerprojectpay)
     {
         startPage();
-        List<PersonnelEssentialinfor> list = marCustomerprojectpayService.selectpersonnelTurnoverList(marCustomerprojectpay);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        List<PersonnelEssentialinfor> list = marCustomerprojectpayService.selectpersonnelTurnoverList(marCustomerprojectpay,loginUser);
         return getDataTable(list);
     }
     /*入项人员信息*/
     @GetMapping("/entryDetail")
     public Map entryDetail(MarCustomerprojectpay marCustomerprojectpay)  {
-        return marCustomerprojectpayService.entryDetail(marCustomerprojectpay);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+
+        return marCustomerprojectpayService.entryDetail(marCustomerprojectpay,loginUser);
     }
 
     /**
@@ -62,7 +69,8 @@ public class PerflowController extends BaseController {
     public TableDataInfo outItemlist(MarCustomerprojectpay marCustomerprojectpay)
     {
         startPage();
-        List<Map> list = marCustomerprojectpayService.outItemlist(marCustomerprojectpay);
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        List<Map> list = marCustomerprojectpayService.outItemlist(marCustomerprojectpay,loginUser);
         return getDataTable(list);
     }
 
@@ -74,8 +82,9 @@ public class PerflowController extends BaseController {
     @GetMapping("/export")
     public AjaxResult export(MarCustomerprojectpay marCustomerprojectpay)
     {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         List<PersonnelEssentialinforExcel> listFile = new ArrayList<>();
-        List<PersonnelEssentialinfor> list = marCustomerprojectpayService.selectpersonnelTurnoverList(marCustomerprojectpay);
+        List<PersonnelEssentialinfor> list = marCustomerprojectpayService.selectpersonnelTurnoverList(marCustomerprojectpay,loginUser);
 
         if(list != null && list.size()>0){
             for(PersonnelEssentialinfor p : list){

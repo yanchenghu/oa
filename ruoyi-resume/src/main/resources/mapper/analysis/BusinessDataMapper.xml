@@ -11,6 +11,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="endTime"    column="end_time"  />
         <result property="inputNum"    column="input_num"  />
         <result property="bindingNum"    column="binding_num"  />
+        <result property="resumePassed"    column="resume_passed"  />
+        <result property="outPersonnelNum"    column="outPersonnel_num"  />
         <result property="interviewPassedNum"    column="interview_passed_num"  />
         <result property="entryPersonnelNum"    column="entry_personnel_num"  />
 
@@ -30,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        where c.role_key='business' and a.`status`=0 and a.del_flag !=2
     </select>
 
-    <select id="getbindingResumeList" parameterType="BusinessData" resultType="map">
+    <select id="getbindingResumeListes" parameterType="BusinessData" resultType="map">
           SELECT a.nick_name as  opertName,IFNULL(d.inputdataNum,0) as bindingresume from sys_user a
         LEFT JOIN  sys_user_role b on a.user_id=b.user_id
         LEFT JOIN sys_role c on b.role_id=c.role_id
@@ -41,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where c.role_key='business' and a.`status`=0 and a.del_flag !=2
     </select>
 
-    <select id="getinterviewPassedList" parameterType="BusinessData" resultType="map">
+    <select id="getinterviewPassedListes" parameterType="BusinessData" resultType="map">
      SELECT a.nick_name as  opertName,IFNULL(d.inputdataNum,0) as interviewsNumber from sys_user a
         LEFT JOIN  sys_user_role b on a.user_id=b.user_id
         LEFT JOIN sys_role c on b.role_id=c.role_id
@@ -68,7 +70,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
+    <select id="getOutPeoList" parameterType="BusinessData" resultType="map">
+        SELECT  IFNULL(COUNT(a.customer_code) ,0) as outpeo, f.nick_name as opertName  from  mar_customerprojectpay a
+        LEFT JOIN mar_demand h on a.demand_id=h.demand_id
+        LEFT JOIN  sys_user f on h.operationuser=f.user_name
+        where 1=1
+        and   a.outof_projecttime is not null
+        and a.outof_projecttime between #{startTime} and #{endTime}
+        GROUP BY h.operationuser
 
+    </select>
 
 
 

@@ -209,9 +209,10 @@
     </select>
     <select id="selectByDepartBus"  parameterType="Yxdemand"  resultMap="YxdemandResult">
         <include refid="selectYxdemandVo"/>
-        <where>
+        where
+        1=1
         <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
-        </where>
+--         and is_follow_submit !=4
     </select>
     <!--查询所有在职的商务-->
     <select id="getAllBusiness"  resultType="map">
@@ -228,6 +229,7 @@
      select entry_id,company_name,rob_people_id,business_id,update_date from yxdemand
       where
      ISNULL(rob_people_id)=0 and LENGTH(trim(rob_people_id))&gt;0
+      and  is_follow_submit !=4
   </select>
 
 

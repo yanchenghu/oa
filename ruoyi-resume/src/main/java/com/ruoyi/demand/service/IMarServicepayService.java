@@ -72,4 +72,9 @@ public interface IMarServicepayService
      * 人员出项
      */
     AjaxResult personnelItems(MarCustomerprojectpay marCustomerprojectpay);
+
+    /**
+     * 人员转出转入项
+     */
+    AjaxResult accessItems(MarCustomerprojectpay marCustomerprojectpay);
 }

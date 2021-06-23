@@ -31,6 +31,9 @@
     <resultMap  type="MarCustomePerinfo" id="MarCusPerInfo">
         <result property="customerName" column="customer_name" />
         <result property="customerTel" column="customer_tel" />
+        <result property="operUsername" column="oper_username" />
+        <result property="nickName" column="nick_name" />
+        <result property="settledCycle" column="settled_cycle" />
         <result property="technologyDirection" column="technology_direction" />
         <result  property="marCustomerprojectpay.id" column="id"/>
         <result  property="marCustomerprojectpay.corpName" column="corp_name"/>
@@ -63,6 +66,7 @@
         <result property="joinStatus" column="join_status" />
         <result property="entryAssistant" column="entry_assistant" />
         <result property="outofProjecttime" column="outof_projecttime" />
+        <result property="operUsername" column="oper_username" />
     </resultMap>
 
     <resultMap  type="ExportItemList" id="ExportItemListinfo">
@@ -239,12 +243,15 @@
 
     <select id="selectentrylistList"  parameterType="MarCustomerprojectpay"  resultMap="MarCusPerInfo">
         SELECT a.id,b.customer_name,b.customer_tel,a.corp_name,a.project_name,a.syqstart_time,
-        a.syq_endtime,a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt,c.technology_direction
+        a.syq_endtime,a.outof_projecttime,a.service_pay,a.salary,a.soc_secopt,c.technology_direction,
+        c.oper_username,d.nick_name,a.settled_cycle
         from mar_customerprojectpay a
         LEFT JOIN per_customerinfo b on a.customer_code=b.customer_code
         LEFT JOIN       mar_demand    c on a.demand_id=c.demand_id
+        LEFT JOIN  sys_user d on a.opercode=d.user_name
         where 1=1
-            <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
+        <if test="entryAssistant != null  and entryAssistant != ''"> and c.operationuser =#{entryAssistant}</if>
+        <if test="customerCode != null  and customerCode != ''"> and b.customer_name like concat('%', #{customerCode}, '%')</if>
             <if test="corpName != null  and corpName != ''"> and corp_name like concat('%', #{corpName}, '%')</if>
             <choose>
                 <when test="settledCycle == 1">
@@ -307,7 +314,7 @@
     <select id="selectpersonnelTurnoverList"    parameterType="map" resultMap="PersonnelEssentialinfor">
         SELECT g.dept_name,f.nick_name,d.customer_name,d.join_status,d.customer_tel,a.salary,a.service_pay,(a.service_pay-a.salary) as profit,
         a.syqstart_time,a.syq_endtime,a.oper_time,b.corp_name,c.address as entry_address,
-        c.technology_direction,a.soc_secopt,a.entry_assistant, a.outof_projecttime from  mar_customerprojectpay a
+        c.technology_direction,a.soc_secopt,a.entry_assistant, a.outof_projecttime,c.oper_username from  mar_customerprojectpay a
         LEFT JOIN mar_company b on a.corp_code=b.corp_code
         LEFT JOIN mar_demand c on a.demand_id=c.demand_id
         LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
@@ -316,6 +323,7 @@
         WHERE 1=1
         and a.syqstart_time between #{startTime} and #{endTime}
         <if test="status != null">and a.outof_projecttime is null</if>
+        <if test="operationuser != null">and c.operationuser=#{operationuser}</if>
         ORDER BY g.dept_name,f.nick_name
     </select>
     <select id="inItemNowCount"    resultType="map">
@@ -328,9 +336,11 @@
         )as c
     </select>
     <select id="entryPeopleCount"    parameterType="map"  resultType="map">
-        SELECT COUNT(id) as entryNum, IFNULL(SUM(service_pay),0)  as entryServicePay, IFNULL(SUM(salary),0)as  entrySalary from  mar_customerprojectpay a
+        SELECT COUNT(a.id) as entryNum, IFNULL(SUM(a.service_pay),0)  as entryServicePay, IFNULL(SUM(salary),0)as  entrySalary from  mar_customerprojectpay a
+        left join  mar_demand b on a.demand_id=b.demand_id
         where
         a.syqstart_time between #{startTime} and #{endTime}
+        <if test="operationuser != null">and b.operationuser=#{operationuser}</if>
         <if test="status != null">and a.outof_projecttime is null</if>
     </select>
 
@@ -340,12 +350,14 @@
        a.salary,a.service_pay, (a.service_pay-a.salary) as profit,
        a.syqstart_time,a.outof_projecttime,g.borrow_sth,d.customer_tel   from  mar_customerprojectpay a
          LEFT JOIN mar_company b on a.corp_code=b.corp_code
+         LEFT JOIN mar_demand h on a.demand_id=h.operationuser
          LEFT JOIN per_customerinfo d on a.customer_code=d.customer_code
          LEFT JOIN  sys_user f on a.opercode=f.user_name
          LEFT JOIN (SELECT * from mar_borrow where is_return=2 GROUP BY marcus_id) g on a.id=g.marcus_id
         where 1=1
         and   a.outof_projecttime is not null
         and a.outof_projecttime between #{startTime} and #{endTime}
+        <if test="operationuser != null  and operationuser != ''"> and h.operationuser =#{operationuser}</if>
         order by b.corp_name,a.outof_projecttime
     </select>
 
@@ -401,7 +413,13 @@
         order by a.syqstart_time asc
     </select>
 
-
+    <update id="updateMarCustomerprtpaybyCorp" parameterType="MarCustomerprojectpay">
+        update mar_customerprojectpay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="corpName != null">corp_name = #{corpName},</if>
+        </trim>
+        where corp_code = #{corpCode}
+    </update>
 
 
 

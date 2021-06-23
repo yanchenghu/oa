@@ -513,12 +513,17 @@ public class MarDemandServiceImpl implements IMarDemandService
         MarDemand marDemand = marDemandMapper.selectMarDemandById(marDemandresume.getDemandId());
         PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(marDemandresume.getCustomerCode());
         try {
+            String beCareful = marDemandresumefollow.getBeCareful();
+            if(StringUtils.isEmpty(beCareful)){
+                beCareful="无";
+            }
+
             DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
                     "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+marDemandresumefollow.getRemark1()+"，请及时沟通选定具体面试时间，面试时间范围为："+marDemandresumefollow.getBeginTime()+"至"+
-                            marDemandresumefollow.getEndTime()+"并填入OA平台");
+                            marDemandresumefollow.getEndTime()+"并填入OA平台，注意事项："+beCareful);
 
        System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+marDemandresumefollow.getRemark1()+"，请及时沟通选定具体面试时间，面试时间范围为："+marDemandresumefollow.getBeginTime()+"至"+
-              marDemandresumefollow.getEndTime()+"并填入OA平台");
+              marDemandresumefollow.getEndTime()+"并填入OA平台，注意事项："+beCareful);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -630,6 +635,7 @@ public class MarDemandServiceImpl implements IMarDemandService
         Integer type=JSON.parseObject(zm).getInteger("type");
         String followDetail=JSON.parseObject(zm).getString("followDetail");
         String Remark1=JSON.parseObject(zm).getString("remark1");
+        String beCareful=JSON.parseObject(zm).getString("beCareful");
         Date stayTime= JSON.parseObject(zm).getDate("trackingtime");
 
 
@@ -676,13 +682,15 @@ public class MarDemandServiceImpl implements IMarDemandService
                 MarDemand marDemand = marDemandMapper.selectMarDemandById(marDemandresume.getDemandId());
                 PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(marDemandresume.getCustomerCode());
                 try {
-
+                    if(StringUtils.isEmpty(beCareful)){
+                        beCareful="无";
+                    }
 
                     DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
                             "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+Remark1+"，请及时沟通选定具体面试时间，面试时间范围为："+DateUtils.formatY_M_D2String(beginTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"至"+
-                                    DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台");
+                                    DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台,注意事项："+beCareful);
                     System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+Remark1+"，请及时沟通选定具体面试时间，面试时间范围为："+DateUtils.formatY_M_D2String(beginTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"至"+
-                            DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台");
+                            DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台,注意事项："+beCareful);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -879,9 +887,6 @@ public class MarDemandServiceImpl implements IMarDemandService
             MarDemandresume marDema=new MarDemandresume();
             marDema.setDemandId(marDe.getDemandId());
             List<MarDemandresume>  li= marDemandresumeMapper.selectMarDemandresumeList(marDema);
-            if(li.size()>0){
-                System.out.println(123);
-            }
             marDe.setIfLook(li.size());
             //查询当前需求面试通过多少
             marDema.setDownloadStatus(5);
@@ -991,6 +996,11 @@ public class MarDemandServiceImpl implements IMarDemandService
             return  perCustomerinfo.getCustomerName()+"的期望薪资为空，绑定失败";
         }
         return "可以绑定";
+    }
+
+    @Override
+    public List<MarDemand> selectaccordingDemand(MarDemand marDemand) {
+        return marDemandMapper.selectMarDemandList(marDemand);
     }
 
 

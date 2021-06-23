@@ -14,6 +14,8 @@ import com.ruoyi.customer.domain.MarContract;
 import com.ruoyi.customer.service.IMarCompanyContactsService;
 import com.ruoyi.customer.service.IMarContractService;
 import com.ruoyi.customer.service.IYxdemandService;
+import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.service.IMarDemandService;
 import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,8 @@ public class MarCompanyController extends BaseController
     private IMarCompanyContactsService marCompanyContactsService;
     @Autowired
     private IYxdemandService yxdemandService;
+    @Autowired
+    private IMarDemandService marDemandService;
 
     /**
      * 查询合作公司列表
@@ -211,6 +215,21 @@ public class MarCompanyController extends BaseController
         return toAjax(marCompanyContactsService.deleteMarCompanyContactsById(id));
     }
 
+
+
+    /**
+     * 根据公司名称获取所有的需求
+     */
+
+    @Log(title = "根据公司名称获取所有的需求")
+    @PostMapping("accordingDemand")
+    public List<MarDemand> accordingDemand(@RequestBody MarCompany marCompany)
+    {
+        MarDemand marDemand=new MarDemand();
+        marDemand.setCorpCode(marCompany.getCorpCode());
+        List<MarDemand> list = marDemandService.selectaccordingDemand(marDemand);
+        return list;
+    }
 
 
 

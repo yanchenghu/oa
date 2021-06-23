@@ -77,6 +77,10 @@ public class PersonnelEssentialinfor {
     /** 入项协助人 */
     @Excel(name = "出项时间")
     private String outofProjecttime;
+    /** 商务 */
+    @Excel(name = "商务")
+    private String operUsername;
+
 
 
     public String getOutofProjecttime() {
@@ -206,5 +210,13 @@ public class PersonnelEssentialinfor {
 
     public void setEntryAssistant(String entryAssistant) {
         this.entryAssistant = entryAssistant;
+    }
+
+    public String getOperUsername() {
+        return operUsername;
+    }
+
+    public void setOperUsername(String operUsername) {
+        this.operUsername = operUsername;
     }
 }
