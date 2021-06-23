@@ -1,7 +1,7 @@
 <template>
   <div>
       <el-dialog title="绑定" :visible.sync="bangding.open2" width="500px" append-to-body >
-        <el-input v-model="searchmsg" placeholder="请输入" clearable size="small" @keyup.enter.native="search" style="width: 170px;margin-right: 10px;"/>
+        <el-input v-model="searchmsg" placeholder="请输入姓名或电话" clearable size="small" @keyup.enter.native="search" style="width: 170px;margin-right: 10px;"/>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="search">查询</el-button>
         <p></p>
         <div style="height: 300px; overflow: auto;">
@@ -144,7 +144,6 @@
               }else{
                 form.append("resumeEnclosurepath",this.$refs.file.uploadFiles[0].raw)
                 delFollow(form).then(res=>{
-
                   this.msgSuccess("绑定成功")
                   this.opens=false
                   this.bangding.open2=false

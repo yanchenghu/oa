@@ -30,12 +30,22 @@
         </el-col>
         <el-col :xs="24" :sm="12" >
             <div class="chart-wrapper">
-              <statistical-work :title="list[2]" :chart-data="entryPersonnelList"></statistical-work>
+              <statistical-work :title="list[2]" :chart-data="resumePassed"></statistical-work>
             </div>
         </el-col>
         <el-col :xs="24" :sm="12" >
             <div class="chart-wrapper">
-              <statistical-work :title="list[3]" :chart-data="interviewPassedList"></statistical-work>
+              <statistical-work :title="list[3]" :chart-data="entryPersonnelList"></statistical-work>
+            </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" >
+            <div class="chart-wrapper">
+              <statistical-work :title="list[4]" :chart-data="interviewPassedList"></statistical-work>
+            </div>
+        </el-col>
+        <el-col :xs="24" :sm="12" >
+            <div class="chart-wrapper">
+              <statistical-work :title="list[5]" :chart-data="outPersonnelNum"></statistical-work>
             </div>
         </el-col>
       </el-row>
@@ -45,8 +55,10 @@
           <el-table-column label="姓名"  prop="nickName" />
           <el-table-column label="录入的需求"  prop="inputNum"/>
           <el-table-column label="绑定的简历"  prop="bindingNum"/>
+          <el-table-column label="简历通过"  prop="resumePassed"/>
           <el-table-column label="面试通过"  prop="interviewPassedNum"/>
           <el-table-column label="入项"  prop="entryPersonnelNum"/>
+          <el-table-column label="出现"  prop="outPersonnelNum"/>
         </el-table>
       </div>
    </div>
@@ -91,7 +103,7 @@
           endTime:null,
           userName:null,
         },
-        list:["录入的需求","绑定简历","面试通过","入项",],
+        list:["录入的需求","绑定简历","简历通过", "面试通过","入项","出项"],
         value1:null,
         chartDatas:[],
         InputList:{
@@ -110,6 +122,14 @@
           expectedData:[],
           actualData:[],
         },
+        resumePassed:{
+          expectedData:[],
+          actualData:[],
+        },
+        outPersonnelNum:{
+          expectedData:[],
+          actualData:[],
+        }
       }
     },
     created() {
@@ -147,16 +167,24 @@
         this.InputList={
           expectedData:[],
           actualData:[],
-        },
+        }
         this.bindingList={
           expectedData:[],
           actualData:[],
-        },
+        }
         this.entryPersonnelList={
           expectedData:[],
           actualData:[],
-        },
+        }
         this.interviewPassedList={
+          expectedData:[],
+          actualData:[],
+        }
+        this.resumePassed={
+          expectedData:[],
+          actualData:[],
+        }
+        this.outPersonnelNum={
           expectedData:[],
           actualData:[],
         }
@@ -196,6 +224,10 @@
               this.entryPersonnelList.actualData.push(item.interviewPassedNum)
               this.interviewPassedList.expectedData.push(item.nickName)
               this.interviewPassedList.actualData.push(item.entryPersonnelNum)
+              this.resumePassed.expectedData.push(item.nickName)
+              this.resumePassed.actualData.push(item.resumePassed)
+              this.outPersonnelNum.expectedData.push(item.nickName)
+              this.outPersonnelNum.actualData.push(item.outPersonnelNum)
             })
           })
       },

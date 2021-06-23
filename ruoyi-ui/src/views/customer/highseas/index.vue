@@ -84,7 +84,7 @@
           <span  >
             <el-button
             size="small"
-                v-if="scope.row.robPeopleId==null || scope.row.robPeopleId==''"
+                v-if="scope.row.robPeopleId=='' && scope.row.isFollowSubmit!==4"
                 type="text"
                 @click="handleClick(scope.row)"
               ><svg-icon icon-class="button"/>抢占</el-button>

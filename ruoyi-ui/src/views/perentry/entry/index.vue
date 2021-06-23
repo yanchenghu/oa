@@ -66,13 +66,26 @@
         </template>
       </el-table-column>
       <el-table-column label="电话"  prop="customerTel" />
-
+      <el-table-column label="商务">
+        <template slot-scope="scope">
+          <span>{{scope.row.operUsername}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="人事">
+        <template slot-scope="scope">
+          <span>{{scope.row.nickName}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="入职公司"  >
         <template slot-scope="scope">
           <span>{{scope.row.marCustomerprojectpay.corpName}}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="项目名称"  >
+        <template slot-scope="scope">
+          <span>{{scope.row.marCustomerprojectpay.projectName}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="入职时间"  prop="syqstartTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.marCustomerprojectpay.syqstartTime, '{y}-{m}-{d}') }}</span>
@@ -81,6 +94,11 @@
       <el-table-column label="技术方向">
         <template slot-scope="scope">
           <span>{{ professionIdopFormat(scope.row)}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="回款周期">
+        <template slot-scope="scope">
+          <span>{{ companyperiodFormat(scope.row)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="出项时间" >
@@ -166,6 +184,16 @@
               出项
             </el-button>
           </el-form-item>
+          <el-form-item style="margin-left: 40px;">
+            <el-button
+              v-if="!yxdemandone.outofProjecttime"
+              type="primary"
+              @click="handleqq"
+              size="medium"
+            >
+              转出转入项
+            </el-button>
+          </el-form-item>
          </el-form>
       </div>
       <div>
@@ -199,7 +227,7 @@
                     </el-form-item>
                  </el-form>
                  <el-form label-position="left" label-width="90px" :model="yxdemandone">
-                   <b>外包公司信息</b>
+                   <b>证件信息</b>
                    <p></p>
                     <el-form-item label="身份证正面">
                       <el-button :disabled="yxdemandone.outofProjecttime!==undefined" type="text" @click="upfile(0)" v-if="!marCertificates1.idcardPositive">
@@ -472,7 +500,7 @@
                 >
                   <i class="el-icon-download"></i>
                 </span>
-                
+
               </span>
         </li>
         <li  class="li-li" v-if="marCertificates1.confidentialityAgreementlo">
@@ -489,7 +517,7 @@
                 >
                   <i class="el-icon-download"></i>
                 </span>
-                
+
               </span>
         </li>
       </ul>
@@ -572,6 +600,39 @@
         <el-button @click="open3=false">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 出入项 -->
+    <el-dialog :title="title3" :visible.sync="open6" width="500px">
+      <el-form ref="form6" :model="form6" :rules="rules" class="form" label-width="100px" :validate-on-rule-change="false">
+        <el-form-item label="公司名称" prop="corpCode">
+          <el-select v-model="form6.corpCode" placeholder="请选择" filterable size="small" @change="change" ref="corpName">
+            <el-option
+                v-for="dict,index in corpnamelist"
+                :key="dict.corpCode"
+                :label="dict.corpName"
+                :value="dict.corpCode"
+              />
+            </el-select>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="需求名称" prop="demandId">
+          <el-select v-model="form6.demandId" placeholder="请选择" filterable size="small" ref="projectName">
+            <el-option
+                v-for="dict,index in xuqiumingc"
+                :key="dict.demandId"
+                :label="dict.projectName"
+                :value="dict.demandId"
+              />
+            </el-select>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm6">确 定</el-button>
+        <el-button @click="open6=false">取 消</el-button>
+      </div>
+    </el-dialog>
     <!-- 新建借用记录 -->
     <el-dialog :title="title4" :visible.sync="open4" width="500px" >
       <el-form ref="form4" :rules="rules" :model="form4" label-width="110px" class="form" :validate-on-rule-change="false">
@@ -635,7 +696,10 @@
 </template>
 
 <script>
-import {getwupin,addPhoto, listEntry, getEntry, delEntry, addEntry, updateEntry,deletehetong, exportEntry, addgongzi,addfuwufei,putwupin} from "@/api/perentry/entry";
+import {getwupin,addPhoto, listEntry, getEntry, delEntry, addEntry, updateEntry,deletehetong, exportEntry, addgongzi,addfuwufei,putwupin,accordingDemand,accessItems} from "@/api/perentry/entry";
+import {
+    corpName,
+  } from "@/api/demand/follow";
 import { getToken } from "@/utils/auth";
 import {debounce} from "@/utils/ruoyi.js"
 export default {
@@ -663,7 +727,9 @@ export default {
       },
       // 调整工资
       title5:"",
+      open6:false,
       form5:{},
+      form6:{},
       open5:false,
       // 借用记录
       title4:"",
@@ -735,8 +801,20 @@ export default {
       // 表单参数
       form: {},
       form3:{},
+      corpnamelist:[],
+      xuqiumingc:[],
       // 表单校验
       rules: {
+        corpCode: [{
+          required: true,
+          message: "公司名称不能为空",
+          trigger: ["blur", "change"]
+        }, ],
+        demandId: [{
+          required: true,
+          message: "需求名称不能为空",
+          trigger: ["blur", "change"]
+        }, ],
         borrowTime: [{
           required: true,
           message: "借用时间不能为空",
@@ -796,6 +874,7 @@ export default {
       },
       open3:false,
       title3:"",
+      companyperiod:[],
     };
   },
   watch:{
@@ -816,10 +895,42 @@ export default {
     this.getDicts("outof_project_cause").then(response => {
       this.customerleve = response.data;
     });
+    this.getDicts("mar_company_period").then(response => {
+      this.companyperiod = response.data;
+    });
   },
   methods: {
+    handleqq(){
+      this.open6 = true
+      this.reset()
+      corpName().then(res=>{
+        this.corpnamelist=res
+      });
+    },
+    change(item){
+        accordingDemand({corpCode:item}).then(res=>{
+          this.xuqiumingc = res
+        })
+    },
+    submitForm6(){
+      this.form6.id = this.yxdemandone.id
+      this.form6.corpName = this.$refs.corpName.selectedLabel
+      this.form6.projectName = this.$refs.projectName.selectedLabel
+      this.$refs["form6"].validate(valid=>{
+        if(valid){
+          accessItems(this.form6).then(response => {
+            this.msgSuccess("操作成功");
+            this.open6 = false;
+            this.handleUpdate(this.yxdemandone.id)
+          });
+        }
+      })
+    },
     professionIdopFormat(row, column) {
       return this.selectDictLabel(this.professionIdoptions, row.technologyDirection);
+    },
+    companyperiodFormat(row, column) {
+      return this.selectDictLabel(this.companyperiod, row.settledCycle);
     },
     seefilea(){
       this.dialogVisible2 = true
@@ -1208,10 +1319,20 @@ export default {
         outofProjecttime: null,
         quitRemark: null,
       };
+      this.form6 = {
+        customerCode:null,
+        corpCode:null,
+        corpName:null,
+        demandId:null,
+        projectName:null,
+      }
+      this.corpnamelist = []
+      this.xuqiumingc = []
       this.resetForm("form");
       this.resetForm("form3");
       this.resetForm("form4");
       this.resetForm("form5");
+      this.resetForm("form6");
      },
 
     /** 导出按钮操作 */

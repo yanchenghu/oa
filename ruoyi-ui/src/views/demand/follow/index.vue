@@ -250,12 +250,12 @@
               />
           </el-select>
         </el-form-item>
-        <el-form-item label="面试官" prop="interviewer">
-          <el-input v-model="form.interviewer" placeholder="请输入面试官" size="small"/>
+        <el-form-item label="面试方式" prop="interviewer">
+          <el-input v-model="form.interviewer" placeholder="请输入面试方式" size="small"/>
         </el-form-item>
-        <el-form-item label="联系方式" prop="contactPhone">
+        <!-- <el-form-item label="联系方式" prop="contactPhone">
           <el-input v-model="form.contactPhone" placeholder="请输入面试官联系方式" size="small"/>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="面试地点" prop="specificLocation">
           <el-input v-model="form.specificLocation" placeholder="请输入面试地点" size="small"/>
         </el-form-item>
@@ -534,7 +534,7 @@ import {getCompany} from "@/api/customer/company";
           list: [{
             required: true,
             type:"array",
-            validator: checklist,
+            message: "下包商不能为空",
             trigger: ["blur", "change"]
           }, ],
           specificrequiRement: [{
@@ -702,7 +702,7 @@ import {getCompany} from "@/api/customer/company";
         this.reset();
         this.getcorpName()
         this.gettemplate()
-        this.form.list= this.DetSelect(this.deptOptions)
+        // this.form.list= this.DetSelect(this.deptOptions)
         this.open = true;
         this.title = "添加需求";
       },

@@ -55,7 +55,7 @@
         <template slot-scope="scope">
           <el-button
             type="text"
-            @click="more(scope.row)"
+            @click="xuqiu(scope.row)"
           >{{scope.row.corpName}}</el-button>
         </template>
       </el-table-column>
@@ -91,7 +91,15 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
+    <el-dialog title="我的需求" :visible.sync="open5" width="550px" append-to-body>
+      <p style="font-size: 18px;">{{title}}</p>
+      <el-row>
+        <el-col :span="12" v-for="item,i in xuqiumingc" :key="i">
+           <el-button type="text" @click="tiaozhuan(item)">{{item.projectName}}</el-button>
+           <p></p>
+        </el-col>
+      </el-row>
+    </el-dialog>
 
     <!-- 抽屉 -->
     <el-drawer
@@ -170,29 +178,19 @@
                       <el-input  v-model.trim="yxdemandone.qq" ></el-input>
                     </el-form-item>
                  </el-form>
-                 <el-form label-position="left" label-width="100px" :model="yxdemandone" :disabled="yxdemandone.isAccept==1">
-                   <b>外包公司信息</b>
+                 <div>
                    <p></p>
-                    <el-form-item label="面试名义公司">
-                      <el-input  v-model.trim="yxdemandone.interviewCompany" ></el-input>
-                    </el-form-item>
-                    <el-form-item label="面试官">
-                      <el-input  v-model.trim="yxdemandone.interviewer" ></el-input>
-                    </el-form-item>
-                    <el-form-item label="面试职位">
-                      <el-input v-model.trim="yxdemandone.interviewerPosition" ></el-input>
-                    </el-form-item>
-                    <el-form-item label="面试地点">
-                      <el-input  v-model.trim="yxdemandone.interviewAddress" ></el-input>
-                    </el-form-item>
-                    <el-form-item label="最终甲方">
-                      <el-input  v-model.trim="yxdemandone.finalParty" ></el-input>
-                    </el-form-item>
-                 </el-form>
+                   <el-table  :data="listlianxi">
+                     <el-table-column label="姓名" align="left" prop="contactPeople" />
+                     <el-table-column label="职位" align="left" prop="contactPosition" />
+                     <el-table-column label="电话" align="left" prop="contactPhone" />
+                     <el-table-column label="备注" align="left" prop="bz" />
+                   </el-table>
+                 </div>
                </div>
             </el-tab-pane>
             <el-tab-pane label="合同">
-              <el-button type="primary" @click="handAdd">新建合同</el-button>
+
               <p></p>
               <el-table v-loading="loadings" :data="contractlist">
                 <el-table-column label="甲方" align="left" prop="firstParty" width="160"/>
@@ -228,7 +226,6 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-
             <el-tab-pane label="联系记录">
               <div style="padding-left:2%; float: left;width: 60%;">
                 <div class="msg">
@@ -243,7 +240,7 @@
                   <span class="sp">{{yxdemandone.entryPeople}}</span>
                 </el-form-item>
                 <el-form-item label="备注">
-                  <el-input size="mini" v-model.trim="yxdemandone.remark"  style="width:200px;"></el-input>
+                <span class="sp">{{yxdemandone.remark}}</span>
                 </el-form-item>
                 </el-form>
               </div>
@@ -263,6 +260,25 @@
                 </ul>
               </div>
               </el-tab-pane>
+              <el-tab-pane label="面试题">
+                  <el-table style="width: 50%;"  :data="listAuditeditor">
+                    <el-table-column label="面试题名称" align="left" prop="auditedName" />
+                    <el-table-column label="面试题添加日期" align="left" prop="addTime" >
+                      <template slot-scope="scope">
+                        <span>{{ parseTime(scope.row.addTime, '{y}-{m}-{d}') }}</span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="面试题预览" align="left" class-name="small-padding fixed-width" >
+                      <template slot-scope="scope">
+                        <el-button
+                          size="small"
+                          type="text"
+                          @click="handsee(scope.row.auditedPath)"
+                        >预览面试题</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+              </el-tab-pane>
           </el-tabs>
        </div>
       </div>
@@ -274,63 +290,29 @@
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="opens" width="550px" append-to-body>
-      <el-form ref="forms" :model="forms" :rules="rules" label-width="120px">
-        <el-form-item label="上传合同附件">
-          <el-upload
-            class="upload-demo"
-            ref="upload"
-            action="#"
-            :limit="1"
-            :on-change="handleRemove"
-            :auto-upload="false"
-            :before-remove="upoplodad"
-            >
-            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="甲方" prop="firstParty">
-          <el-input v-model.trim="forms.firstParty" placeholder="请输入甲方公司" />
-        </el-form-item>
-        <el-form-item label="乙方" prop="party">
-          <el-input v-model.trim="forms.party" placeholder="请输入乙方公司" />
-        </el-form-item>
-        <el-form-item label="合同开始日期" prop="startTime">
-          <el-date-picker v-model.trim="forms.startTime" type="date" placeholder="请选择合同开始日期" :picker-options="pickerOptions1" value-format="yyyy-MM-dd" style="width:190px">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="合同结束日期" prop="endTime">
-          <el-date-picker v-model.trim="forms.endTime" type="date" placeholder="请选择合同结束日期"  :picker-options="pickerOptions4" value-format="yyyy-MM-dd" style="width:190px">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="客户签约人" prop="clientSigner">
-          <el-input v-model.trim="forms.clientSigner" placeholder="请输入客户签约" />
-        </el-form-item>
-        <el-form-item label="公司签约人" prop="companySigner">
-          <el-input v-model.trim="forms.companySigner" placeholder="请输入公司签约人" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm2">确 定</el-button>
-        <el-button @click="cancel2">取 消</el-button>
-      </div>
+    <el-dialog :visible.sync="dialogVisible" width="500px" :title="title">
+
+      <img width="100%" :src="src" alt="">
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { listCompany, getCompany,   updateCompany,contractCompany,} from "@/api/customer/company";
-import {debounce} from "@/utils/ruoyi.js"
+import {accordingDemand} from "@/api/perentry/entry";
+import {debounce,checkImg} from "@/utils/ruoyi.js"
 export default {
   name: "Company",
   data() {
     return {
       open3:false,
+      open5:false,
       activeName:"popmsg",
       // 抽屉
       drawer:false,
       // 遮罩层
       loading: true,
+      listAuditeditor:[],
       loadings: false,
       // 选中数组
       ids: [],
@@ -349,10 +331,13 @@ export default {
       companyList: [],
       // 合同列表
       contractlist:[],
+      listlianxi:[],
+      dialogVisible:false,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      dialogImageUrl:"",
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -367,50 +352,14 @@ export default {
       // 表单参数
       form: {},
       forms:{},
-      opens:false,
+
       companySituationOptions:[],
       customerleve:[],
       companyperiod:[],
       // 单个数据
       yxdemandone:{},
       putmsgs:[],
-      rules: {
-        cooperationTime: [{
-          required: true,
-          message: "合作日期不能为空",
-          trigger: ["blur", ]
-        }, ],
-        firstParty: [{
-          required: true,
-          message: "甲方公司不能为空",
-          trigger: ["blur", ]
-        }, ],
-        party: [{
-          required: true,
-          message: "乙方公司不能为空",
-          trigger: ["blur", ]
-        }, ],
-        startTime: [{
-          required: true,
-          message: "合作开始日期不能为空",
-          trigger: ["blur", ]
-        }, ],
-        endTime: [{
-          required: true,
-          message: "合作结束日期不能为空",
-          trigger: ["blur", ]
-        }, ],
-        clientSigner: [{
-          required: true,
-          message: "合作结束日期不能为空",
-          trigger: ["blur", ]
-        }, ],
-        companySigner: [{
-          required: true,
-          message: "合作结束日期不能为空",
-          trigger: ["blur", ]
-        }, ],
-      },
+      xuqiumingc:[],
     };
   },
   created() {
@@ -426,6 +375,37 @@ export default {
     });
   },
   methods: {
+    tiaozhuan(row){
+      this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:2}})
+    },
+    xuqiu(row){
+      accordingDemand({corpCode:row.corpCode}).then(res=>{
+        this.xuqiumingc = res
+        this.open5 = true
+        this.title = row.corpName
+      })
+    },
+    handsee(file,ind){
+        this.src = ""
+        this.dialogImageUrl = ""
+        let srcs = process.env.VUE_APP_BASE_API
+        if(checkImg(file)){
+          ind = 2
+        }else{
+          ind = 1
+        }
+        if(ind==1){
+          this.open3 = true
+          this.title = '面试题'
+          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+file}`
+        }else if(ind==2){
+          this.dialogVisible=true
+          this.title = "面试题图片"
+          this.src = srcs+file
+        }
+        this.dialogImageUrl = srcs+file
+      },
+
     // 公司性质
     companySituationFormat(row, column) {
       return this.selectDictLabel(this.companySituationOptions, row.companySituation);
@@ -443,45 +423,6 @@ export default {
     },
     dra(){
        this.getList()
-    },
-    submitForm2(){
-      if(this.forms.contractPreview){
-        this.$refs["forms"].validate(valid => {
-          let formData = new FormData()
-          formData.append("corpCode",this.yxdemandone.corpCode)
-          formData.append("contractPreview",this.forms.contractPreview)
-          formData.append("firstParty",this.forms.firstParty)
-          formData.append("party",this.forms.party)
-          formData.append("startTime",this.forms.startTime)
-          formData.append("endTime",this.forms.endTime)
-          formData.append("clientSigner",this.forms.clientSigner)
-          formData.append("companySigner",this.forms.companySigner)
-          if (valid) {
-            addCompany(formData).then(response => {
-              this.msgSuccess("新增成功");
-              this.opens = false;
-              this.get();
-              this.upoplodad()
-              this.getone(this.yxdemandone)
-            });
-          }
-        });
-      }else{
-        this.msgError("请选择文件")
-      }
-    
-    },
-    cancel2() {
-      this.opens = false;
-      this.reset();
-      this.upoplodad()
-    },
-    upoplodad(){
-      this.$refs.upload.clearFiles()
-      this.forms.contractPreview=null
-    },
-    handleRemove(value){
-      this.forms.contractPreview=value.raw;
     },
     /** 查询合作公司列表 */
     getList() {
@@ -507,25 +448,10 @@ export default {
       getCompany(value.corpCode).then(res=>{
         this.drawer = true
         this.yxdemandone=res.data.data.marCompany
+        this.listlianxi = res.data.data.listMarCompanyC
         this.putmsgs = res.data.data.mar
+        this.listAuditeditor=res.data.data.listAuditeditors
       })
-    },
-    reset() {
-      this.forms = {
-        party:null,
-        firstParty:null,
-        startTime:null,
-        endTime:null,
-        clientSigner:null,
-        companySigner:null,
-      };
-      this.resetForm("forms");
-    },
-    handAdd(){
-      this.reset();
-      this.opens = true;
-      this.title = "新建合同";
-      this.forms.firstParty = this.yxdemandone.corpName
     },
     // 更多
     more(value){

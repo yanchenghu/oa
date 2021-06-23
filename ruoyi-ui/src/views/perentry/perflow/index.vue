@@ -110,6 +110,7 @@
             <span>{{scope.row.socSecopt==1?'交':"未交"}}</span>
           </template>
       </el-table-column>
+      <el-table-column label="商务" prop="operUsername" :key="13"/>
       <el-table-column label="联系方式" prop="customerTel" :key="11">
 
       </el-table-column>

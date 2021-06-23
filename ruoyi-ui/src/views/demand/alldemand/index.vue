@@ -224,7 +224,7 @@ import index from "../../components/particulars/index"
       getbus(){
         allBusiness().then(response => {
           this.businesslist = response.data
-          this.queryParams.operationuser = this.businesslist[0].user_name
+          
           this.getList();
         });
       },

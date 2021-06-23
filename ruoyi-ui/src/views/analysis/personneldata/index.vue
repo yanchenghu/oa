@@ -1,10 +1,10 @@
 <template>
    <div class="dashboard-editor-container">
       <div style="margin-bottom: 35px;">
-        <el-radio-group style="margin-right: 20px;margin-bottom: 2px;" v-model="radio2" size="medium" @change="getList">
+        <!-- <el-radio-group style="margin-right: 20px;margin-bottom: 2px;" v-model="radio2" size="medium" @change="getList">
           <el-radio-button label="chengyuan" >成员对比</el-radio-button>
           <el-radio-button label="meiri" >每日详细数据</el-radio-button>
-        </el-radio-group>
+        </el-radio-group> -->
         <el-date-picker
           style="margin-right: 20px;margin-top: 10px;margin-bottom: 10px; "
           v-model="value1"
@@ -20,13 +20,22 @@
           @change="getList">
         </el-date-picker>
         &nbsp;
-        <el-select v-if="this.radio2=='meiri'"  filterable  v-model="queryParams.userName"  placeholder="请选择员工" size="medium"  @change="getList">
-       <el-option
-            v-for="dict in userlist"
-            :key="dict.userName"
-            :label="dict.nickName"
-            :value="dict.userName"
-          />
+        <el-select v-if="radio2=='meiri'"  filterable  v-model="queryParams.userName"  placeholder="请选择员工" size="medium"  @change="getList">
+           <el-option
+                v-for="dict in userlist"
+                :key="dict.userName"
+                :label="dict.nickName"
+                :value="dict.userName"
+              />
+        </el-select>
+        <!-- v-if="!checkPermi(['analysis:personneldata:personnelteamleader'])" -->
+       <el-select  filterable v-if="!checkPermi(['analysis:personneldata:personnelteamleader'])"  v-model="queryParams.deptId"  placeholder="请选择分组" size="medium"  @change="getList">
+           <el-option
+                v-for="dict in grouplist"
+                :key="dict.dept_id"
+                :label="dict.dept_name"
+                :value="dict.dept_id"
+              />
         </el-select>
       </div>
       <el-row :gutter="15">
@@ -61,7 +70,7 @@
             </div>
         </el-col>
       </el-row>
-      <div class="chart-wrapper">
+      <div class="chart-wrapper" v-if="!checkPermi(['analysis:personneldata:personnelteamleader'])">
         <termpro-fit :chartData="ruxianglist" ></termpro-fit>
       </div>
       <div class="chart-wrapper">
@@ -85,7 +94,7 @@
             </template>
           </el-table-column>
           <el-table-column label="入项"  prop="entryPersonnelNum"/>
-          <el-table-column label="利润"  prop="samemonthCollection">
+          <el-table-column v-if="!checkPermi(['analysis:personneldata:personnelteamleader'])" label="利润"  prop="samemonthCollection">
             <template slot-scope="scope">
                   <span>{{(scope.row.serviceNum-scope.row.costNum).toFixed(2)}}</span>
               </template>
@@ -103,7 +112,7 @@
           <el-table-column label="绑定需求" prop="bindingNum" />
           <el-table-column label="简历通过"  prop="resumePassedNum" />
           <el-table-column label="面试通过"  prop="interviewPassedNum" />
-          <el-table-column label="入项"  prop="entryPersonnelNum" />
+          <el-table-column  label="入项"  prop="entryPersonnelNum" />
         </el-table>
       </div>
    </div>
@@ -112,7 +121,7 @@
 <script>
   import statisticalWork from '../../components/personnelanalysis/statisticalWork.vue'
   import termproFit from '../../components/personnelanalysis/termproFit.vue'
-  import {listmingxi,listdata ,yuangonglist} from "@/api/analysis/personnelanalysis.js"
+  import {listmingxi,listdata ,yuangonglist,Personnelgroup} from "@/api/analysis/personnelanalysis.js"
   export default {
     name: 'Personnelanalysis',
     components: {
@@ -149,6 +158,7 @@
           startTime:null,
           endTime:null,
           userName:null,
+          deptId:null,
         },
         list:["录入","跟踪","绑定","简历通过","面试通过","入项"],
         value1:null,
@@ -181,13 +191,16 @@
           expectedData:[],
           actualData:[],
         },
-
+        grouplist:[],
       }
     },
     created() {
       this.time()
       this.getuserlist()
       this.getList()
+      Personnelgroup().then(res=>{
+        this.grouplist = res.data
+      })
     },
     methods: {
       getSummaries(param) {

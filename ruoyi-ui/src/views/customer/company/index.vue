@@ -60,7 +60,7 @@
         <template slot-scope="scope">
           <el-button
             type="text"
-            @click="more(scope.row)"
+            @click="xuqiu(scope.row)"
           >{{scope.row.corpName}}</el-button>
         </template>
       </el-table-column>
@@ -96,7 +96,15 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
+     <el-dialog title="我的需求" :visible.sync="open5" width="550px" append-to-body>
+       <p style="font-size: 18px;">{{title}}</p>
+       <el-row>
+         <el-col :span="12" v-for="item,i in xuqiumingc" :key="i">
+            <el-button type="text" @click="tiaozhuan(item)">{{item.projectName}}</el-button>
+            <p></p>
+         </el-col>
+       </el-row>
+     </el-dialog>
     <!-- 新建合同 -->
     <el-dialog :title="title" :visible.sync="opens" width="550px" append-to-body>
       <el-form ref="forms" :model="forms" :rules="rules" label-width="120px">
@@ -319,25 +327,16 @@
                       <el-input  v-model.trim="yxdemandone.qq" @input="sees"></el-input>
                     </el-form-item>
                  </el-form>
-                 <el-form label-position="left" label-width="100px" :model="yxdemandone" :disabled="yxdemandone.isAccept==1">
-                   <b>外包公司信息</b>
+                 <div>
+                   <el-button type="primary" @click="handAdds">新建联系方式</el-button>
                    <p></p>
-                    <el-form-item label="面试名义公司">
-                      <el-input  v-model.trim="yxdemandone.interviewCompany" @input="sees"></el-input>
-                    </el-form-item>
-                    <el-form-item label="面试官">
-                      <el-input  v-model.trim="yxdemandone.interviewer" @input="sees"></el-input>
-                    </el-form-item>
-                    <el-form-item label="面试职位">
-                      <el-input v-model.trim="yxdemandone.interviewerPosition" @input="sees"></el-input>
-                    </el-form-item>
-                    <el-form-item label="面试地点">
-                      <el-input  v-model.trim="yxdemandone.interviewAddress" @input="sees"></el-input>
-                    </el-form-item>
-                    <el-form-item label="最终甲方">
-                      <el-input  v-model.trim="yxdemandone.finalParty" @input="sees"></el-input>
-                    </el-form-item>
-                 </el-form>
+                   <el-table  :data="listlianxi">
+                     <el-table-column label="姓名" align="left" prop="contactPeople" />
+                     <el-table-column label="职位" align="left" prop="contactPosition" />
+                     <el-table-column label="电话" align="left" prop="contactPhone" />
+                     <el-table-column label="备注" align="left" prop="bz" />
+                   </el-table>
+                 </div>
                </div>
             </el-tab-pane>
             <el-tab-pane label="合同">
@@ -375,16 +374,6 @@
                     >预览</el-button>
                   </template>
                 </el-table-column>
-              </el-table>
-            </el-tab-pane>
-            <el-tab-pane label="其他联系方式">
-              <el-button type="primary" @click="handAdds">新建联系方式</el-button>
-              <p></p>
-              <el-table  :data="listlianxi">
-                <el-table-column label="姓名" align="left" prop="contactPeople" />
-                <el-table-column label="职位" align="left" prop="contactPosition" />
-                <el-table-column label="电话" align="left" prop="contactPhone" />
-                <el-table-column label="备注" align="left" prop="bz" />
               </el-table>
             </el-tab-pane>
             <!-- <el-tab-pane label="联系记录">
@@ -460,6 +449,7 @@
 
 <script>
 import { listCompanys, getCompany,  addCompany, updateCompany,contractCompany,addcontract,addcontracts,find,findnames} from "@/api/customer/company";
+import {accordingDemand} from "@/api/perentry/entry";
 import { allBusiness,}from "@/api/customer/business";
 import {debounce,checkImg} from "@/utils/ruoyi.js"
 export default {
@@ -516,6 +506,7 @@ export default {
       open4:false,
       opens:false,
       open3:false,
+      open5:false,
       activeName:"popmsg",
       listAuditeditor:[],
       // 抽屉
@@ -642,6 +633,7 @@ export default {
       // 单个数据
       yxdemandone:{},
       putmsgs:[],
+      xuqiumingc:[],
     };
   },
   created() {
@@ -657,6 +649,16 @@ export default {
     });
   },
   methods: {
+    tiaozhuan(row){
+      this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:8}})
+    },
+    xuqiu(row){
+      accordingDemand({corpCode:row.corpCode}).then(res=>{
+        this.xuqiumingc = res
+        this.open5 = true
+        this.title = row.corpName
+      })
+    },
     yijiao(){
       allBusiness().then(response => {
         this.open4=true

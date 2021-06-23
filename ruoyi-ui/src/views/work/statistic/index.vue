@@ -122,6 +122,7 @@ export default {
       userName:null,
       biaoqian:"first",
       datalist:[],
+      avart:process.env.VUE_APP_BASE_API,
       avart1:[
         require('../../../assets/avat/avta2.png'),
         require('../../../assets/avat/头像 4.png'),

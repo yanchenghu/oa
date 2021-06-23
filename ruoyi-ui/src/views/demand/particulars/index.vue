@@ -22,7 +22,7 @@
             <tr>
               <td v-if="ident==8"><span class="name" >客户级别</span>{{customerleveFormat(form)}}</td>
               <td><span class="name">工作地点</span>{{intentionareaFormat(form)}}</td>
-              <td><span class="name">面试官</span>{{form.interviewer}}</td>
+              <td><span class="name">面试方式</span>{{form.interviewer}}</td>
               <td><span class="name">面试地点</span>{{form.specificLocation}}</td>
                <td><span class="name">简历模板</span><el-button v-if="form.tempId" type="text" @click="see(templateFormat(templist,form.tempId)[1],1)">{{templateFormat(templist,form.tempId)[0]}}</el-button><span v-else>无</span></td>
             </tr>
@@ -292,6 +292,9 @@
                          />
                     </el-select>
                   </el-form-item>
+                  <el-form-item label="注意事项" v-if="followstart==3">
+                      <el-input v-model="qqq.beCareful" placeholder="请输入注意事项"  size="small" />
+                  </el-form-item>
                   <el-form-item label="协助人" v-if="followstart==8">
                       <el-input v-model="qqq.entryAssistant" placeholder="请输入协助人"  size="small" />
                   </el-form-item>
@@ -458,6 +461,7 @@
           stayTime:"",
           qqq:[],
           remark1:"",
+          beCareful:"",
         },
         opens:false,
         titles:"",
@@ -714,6 +718,7 @@
             beginTime:"",
             endTime:"",
             remark1:"现场面试",
+            beCareful:""
           }
           this.resetForm("ruxing")
           }
@@ -732,6 +737,7 @@
           stayTime:"",
           qqq:[],
           remark1:"现场面试",
+          beCareful:"",
         }
         this.resetForm("ruxing")
         if(ind==1){
@@ -773,6 +779,7 @@
           beginTime:beginTime,
           endTime:endTime,
           remark1:this.qqq.remark1,
+          beCareful:this.qqq.beCareful
         }
         form.append("followStatus",this.followstart)
         form.append("demandresumeId",this.tempID)
@@ -801,6 +808,7 @@
           let that = this
           if(this.followstart==8||this.followstart==5||this.followstart==3){
             form.append("remark1",this.qqq.remark1)
+            form.append("beCareful",this.qqq.beCareful)
             form.append("trackingtime",this.qqq.stayTime)
             form.append("beginTime ",beginTime)
             form.append("endTime",endTime)

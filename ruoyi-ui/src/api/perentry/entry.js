@@ -16,6 +16,21 @@ export function deletehetong(id) {
     method: 'delete'
   })
 }
+export function accordingDemand(data) {
+  return request({
+    url: '/customer/company/accordingDemand',
+    method: 'post',
+    data:data
+  })
+}
+
+export function accessItems(data) {
+  return request({
+    url: '/perentry/entry/accessItems',
+    method: 'post',
+    data:data
+  })
+}
 
 // 查询入项详细
 export function getEntry(id) {

@@ -24,6 +24,12 @@ export function listdata(query) {
     params: query
   })
 }
+export function Personnelgroup() {
+  return request({
+    url: '/analysis/getallmethod/getPersonnelgroup',
+    method: 'get',
+  })
+}
 
 export function getbusinessData() {
   return request({
