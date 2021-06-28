@@ -479,7 +479,7 @@ export default {
           if (!value) {
            return callback(new Error('不能为空'))
           } else {
-            const reg = /^1[3|4|5|7|8|9][0-9]\d{8}$/
+            const reg = /^1[3|4|5|6|7|8|9][0-9]\d{8}$/
             const isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/
             if (reg.test(value)||isPhone.test(value)) {
               callback()

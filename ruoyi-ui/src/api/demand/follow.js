@@ -18,6 +18,27 @@ export function template() {
   })
 }
 
+export function deletes(id) {
+  return request({
+    url: '/demand/follow/deldemandAnalysis/'+id,
+    method: 'get',
+  })
+}
+export function addgang(data) {
+  return request({
+    url: '/demand/follow/addemandAnalysi',
+    method: 'post',
+    data: data
+  })
+}
+export function editMarDemandRequi(data) {
+  return request({
+    url: '/demand/follow/editMarDemandRequi',
+    method: 'post',
+    data: data
+  })
+}
+
 export function listdatas(query) {
   return request({
     url: '/demand/waitinginterview/list',

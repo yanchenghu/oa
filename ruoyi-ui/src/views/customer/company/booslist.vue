@@ -379,7 +379,7 @@ export default {
       this.$router.push({ path:'/follow/particulars',query:{row:row.demandId,ident:2}})
     },
     xuqiu(row){
-      accordingDemand({corpCode:row.corpCode}).then(res=>{
+      accordingDemand().then(res=>{
         this.xuqiumingc = res
         this.open5 = true
         this.title = row.corpName

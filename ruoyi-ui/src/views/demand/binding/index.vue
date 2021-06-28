@@ -87,10 +87,12 @@
           <span>{{customerFormat(scope.row)}}/{{scope.row.directWorklife}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="具体要求" align="left" width="500">
-      <template slot-scope="scope">
-          <p v-html='scope.row.specificrequiRement'></p>
-      </template>
+      <el-table-column label="岗位要求" width="250">
+        <template slot-scope="scope">
+            <div style="padding-left: 20px;" v-for="item,i in scope.row.marDemandRequirementList" :key="i">
+              <span class="bitian" v-if="item.isNecessary==1">★</span><span>{{item.sort}}、{{item.jobRequirements}}</span>
+            </div>
+        </template>
       </el-table-column>
       <el-table-column label="发布时间" align="left" prop="addTime"/>
       <el-table-column label="地址" align="left" prop="demandYears">
@@ -442,8 +444,14 @@ import index from "../../components/particulars/index"
     overflow: auto;
   }
   .form{
-    
     width: 100%;
+  }
+  .bitian{
+    margin-left: -13px;
+    position: relative;
+    color: red;
+    left: -5px;
+    font-size: 16px;
   }
   >>>.warning-row{
     color: red;

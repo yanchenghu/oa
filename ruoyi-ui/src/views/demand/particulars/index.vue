@@ -34,7 +34,11 @@
           </table>
           <div class="div">
             <div style=" width: 125px; color:#909399;">技术要求</div>
-              <div v-html='form.specificrequiRement'></div>
+            <div>
+              <div style="margin-bottom: 5px;" v-for="item,i in ganglist" :key="i">
+                <span v-if="item.isNecessary==1" class="bitian">*</span><span>{{item.sort}}、{{item.jobRequirements}}</span>
+              </div>
+            </div>
           </div>
           <div class="div">
             <div style="width: 70px; color:#909399;">特别备注</div><span>{{form.attention}}</span>
@@ -52,7 +56,7 @@
             <el-button
                 v-if="ident==8"
                 type="warning"
-                size="mini"
+                size="small"
                 @click="miaoshi"
                 :disabled="multiple"
                 style="float: right;"
@@ -60,7 +64,7 @@
             <el-button
                 v-if="ident==8"
                 type="primary"
-                size="mini"
+                size="small"
                 @click="downloadlist(remlist)"
                 :disabled="multiple"
                 style="float: right;"
@@ -68,7 +72,7 @@
               <el-button
                   v-if="ident==8"
                   type="primary"
-                  size="mini"
+                  size="small"
                   @click="downloadlist(remlists)"
                   :disabled="multiple"
                   style="float: right;"
@@ -76,7 +80,7 @@
             <el-button
                 v-if="ident==8"
                 type="danger"
-                size="mini"
+                size="small"
                 @click="chongzhi"
                 :disabled="multiple"
                 style="float: right;"
@@ -85,8 +89,8 @@
           <p></p>
           <el-table v-loading="loading" border :data="templists"  @selection-change="handleSelectionChange">
             <el-table-column type="selection" key="1"/>
-            <el-table-column label="姓名" align="left" prop="customerName" key="2" width="70"/>
-            <el-table-column label="电话" align="left" prop="customerTel" key="3">
+            <el-table-column label="姓名" align="left" prop="customerName" key="2" width="40"/>
+            <el-table-column label="电话" align="left" prop="customerTel" key="3" >
               <template slot-scope="scope">
                 <span v-if="ident==8">{{scope.row.customerTel}}</span>
                 <span v-else>{{scope.row.customerTel.replace(/^(\d{3})\d{4}(\d{4})$/,"$1****$2")}}</span>
@@ -108,13 +112,13 @@
                 <span >{{scope.row.education?customerFormat(scope.row):"未知"}}/{{scope.row.workYear?scope.row.workYear+"年":"未知"}}</span>
                </template>
             </el-table-column>
-            <el-table-column label="绑定人" width="60" align="left" prop="trackzPeoname" key="4"/>
+            <el-table-column label="绑定人" width="40" align="left" prop="trackzPeoname" key="4"/>
             <el-table-column label="绑定时间" align="left" key="5">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.bindTime, '{y}-{m}-{d} {h}:{i}') }}</span>
                </template>
             </el-table-column>
-            <el-table-column label="简历状态" align="left" width="400" key="6" >
+            <el-table-column label="简历状态" align="left" width="350" key="6" >
               <template slot-scope="scope" >
 
                 <el-steps
@@ -157,6 +161,11 @@
                   <el-step title="未入项" v-if="scope.row.followStatus==8"></el-step>
                 </el-steps>
                 </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="简历满足要求" align="left" key="13" width="90">
+              <template slot-scope="scope">
+                <el-tag style="margin: 0 5px 5px 0;" v-for="item,i in scope.row.postlist">{{item.sort}}</el-tag>
               </template>
             </el-table-column>
             <el-table-column v-if="ident==8" label="推荐状态" align="left" key="12">
@@ -505,6 +514,7 @@
         templists:[],
         // 选中数组
         ids:[],
+        ganglist:[],
         // 非多个禁用
         multiple:true,
         // 遮盖层
@@ -599,6 +609,7 @@
         // 获取基础信息
         getFollow(this.$route.query.row).then(res=>{
           this.form=res.data.marDeman
+          this.ganglist = res.data.marDemandRequirements
         });
         this.gettelist()
       },
@@ -1040,5 +1051,13 @@
     display: inline-block;
     width: 70px;
     color:#909399;
+  }
+  .bitian{
+    margin-left: -7px;
+    position: relative;
+    left: -7px;
+    color: red;
+    top: 7px;
+    font-size: 20px;
   }
 </style>

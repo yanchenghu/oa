@@ -10,7 +10,9 @@
         <el-table-column label="项目名称"  prop="project_name"/>
         <el-table-column label="面试时间"  prop="interview_time"/>
         <el-table-column label="人事"  prop="nick_name"/>
+        <el-table-column label="商务"  prop="bus_name"/>
         <el-table-column label="预计入项"  prop="stay_time"/>
+        <el-table-column label="入项时间"  prop="syqstart_time"/>
         <el-table-column label="未入项原因"  prop="follow_detail"/>
       </el-table>
       <pagination
@@ -60,7 +62,7 @@
             }
             return '';
       },
-      
+
     }
   }
 </script>

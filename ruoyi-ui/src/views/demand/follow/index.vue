@@ -101,10 +101,12 @@
           <span>{{customerFormat(scope.row)}}/{{scope.row.directWorklife}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="具体要求"  width="450">
-      <template slot-scope="scope">
-          <p v-html='scope.row.specificrequiRement'></p>
-      </template>
+      <el-table-column label="岗位要求" width="250">
+        <template slot-scope="scope">
+            <div style="padding-left: 20px;" v-for="item,i in scope.row.marDemandRequirementList" :key="i">
+              <span class="bitian" v-if="item.isNecessary==1">★</span><span>{{item.sort}}、{{item.jobRequirements}}</span>
+            </div>
+        </template>
       </el-table-column>
        <el-table-column label="发布时间" align="left" prop="addTime" />
       <el-table-column label="地址" align="left" prop="demandYears"  width="55">
@@ -168,7 +170,7 @@
           <el-input v-model.number="form.targetNumber" placeholder="请输入目标人数" size="small"/>
         </el-form-item>
         <el-form-item label="技术方向" prop="technologyDirection">
-          <el-select   v-model="form.technologyDirection" placeholder="请选择" size="small">
+          <el-select filterable  v-model="form.technologyDirection" placeholder="请选择" size="small">
             <el-option
                 v-for="dict in professionIdoptions"
                 :key="dict.dictValue"
@@ -318,8 +320,17 @@
         </el-form-item>
         </div>
         <div class="div">
-          <el-form-item label="岗位说明" prop="specificrequiRement" style="width:100%;">
-            <editor  v-model="form.specificrequiRement" :min-height="192"/>
+          <el-form-item label="岗位说明" prop="gangwei" style="width:100%;">
+            <el-input style="width: 50px;" v-model.number="number"></el-input> &nbsp;
+            <el-input style="width: 60%;margin-right: 20px;" v-model="form.specificrequiRemen" placeholder="请逐条输入岗位要求,回车键添加" @keyup.enter.native="addgangw"></el-input><el-button type="text" @click="addgangw">添加</el-button>
+            <div style="display: flex;" v-for="item,i in gangwei">
+              <div style="width: calc(60% + 55px);background: #f7f9fd;margin: 10px 20px 0 0;padding-left: 16px;">{{item.sort}}、{{item.jobRequirements}}</div>
+              <el-button type="text"  @click="Delete(i,item.id)">删除</el-button>
+            </div>
+            <div v-if="gangwei.length!==0">
+              必须满足
+              <el-checkbox style="margin-left: 20px;" :true-label="1" :false-label="0" v-for="item,i in gangwei" v-model="item.isNecessary" @change="xiugai(item)">{{item.sort}}</el-checkbox>
+            </div>
           </el-form-item>
         </div>
         <div class="div">
@@ -365,7 +376,10 @@
     corpName,
     changeUserStatus,
     findnames,
-    changeopenStatus
+    changeopenStatus,
+    deletes,
+    addgang,
+    editMarDemandRequi
   } from "@/api/demand/follow";
   import { getAuditeditor,addaudbindingdemand  } from "@/api/demand/auditeditor";
 import { treeselect } from "@/api/system/dept";
@@ -391,6 +405,13 @@ import {getCompany} from "@/api/customer/company";
           }, 1000);
          };
          var checklist = (rule, value, callback) => {
+           if (this.gangwei.length==0) {
+             callback(new Error('岗位需求不能为空'));
+           }else {
+              callback();
+           }
+           };
+         var checklists = (rule, value, callback) => {
           if (this.form.list.length==0) {
             return callback(new Error('需求名称不能为空'));
           }else {
@@ -403,6 +424,8 @@ import {getCompany} from "@/api/customer/company";
         disabled: false,
         // 公司列表
         corpnamelist:[],
+        number:1,
+        gangwei:[],
         // 简历模板列表
         templist:[],
         bangdlist:null,
@@ -537,10 +560,10 @@ import {getCompany} from "@/api/customer/company";
             message: "下包商不能为空",
             trigger: ["blur", "change"]
           }, ],
-          specificrequiRement: [{
+          gangwei: [{
             required: true,
-            message: "岗位说明不能为空",
-            trigger: ["blur", "change"]
+            validator: checklist,
+            trigger: "blur"
           }, ],
           importantLevel:[{
             required: true,
@@ -572,6 +595,63 @@ import {getCompany} from "@/api/customer/company";
       });
     },
     methods: {
+      numbers(){
+        var a = 0;
+        this.gangwei.forEach(item=>{if(item.sort==this.number){a=1}})
+        return a
+      },
+      Delete(i,id){
+        if(id){
+            deletes(id).then(res=>{
+              this.gangwei.splice(i,1)
+              this.msgSuccess("删除成功")
+            })
+        }else{
+          this.gangwei.splice(i,1)
+          this.msgSuccess("删除成功")
+        }
+      },
+      addgangw(){
+        if(this.numbers() == 1){
+          this.msgError("该序号已存在，请重新输入")
+        }else{
+          if(this.form.specificrequiRemen == null ||this.form.specificrequiRemen == ""){
+            this.msgError("需求不能为空")
+          }else{
+            if(this.number ==null || this.number =="" ||isNaN(this.number)){
+              this.msgError("序号有误")
+            }else{
+              var data = {
+              demandId:this.form.demandId,
+              sort:this.number,
+              jobRequirements:this.form.specificrequiRemen,
+              isNecessary:0,
+              }
+              // var form = new FormData()
+              // form.append("demandId",this.form.demandId)
+              // form.append("sort",this.number)
+              // form.append("jobRequirements",this.form.specificrequiRemen)
+              // form.append("isNecessary",0)
+              if(this.form.demandId){
+                addgang(data).then(res=>{
+                  this.msgSuccess("添加成功")
+                  getFollow(this.form.demandId).then(response => {
+                    this.gangwei = response.data.marDemandRequirements
+                    this.number+=1
+                    this.form.specificrequiRemen = null
+                    })
+                })
+              }else{
+                this.gangwei.splice(this.number-1, 0,data);
+                this.number+=1
+                this.form.specificrequiRemen = null
+              }
+
+            }
+
+          }
+        }
+      },
       pipei(balue){
         getCompany(balue).then(res=>{
           let data = res.data.data.marCompany
@@ -628,6 +708,8 @@ import {getCompany} from "@/api/customer/company";
       // 表单重置
       reset() {
         this.msg=null,
+        this.gangwei = []
+        this.number = 1
         this.form = {
           demandId:null,
           list:[],
@@ -639,7 +721,7 @@ import {getCompany} from "@/api/customer/company";
           demandLevel: null,
           education: null,
           demandNumber: null,
-          specificrequiRement: null,
+          specificrequiRemen: null,
           projectLocation: null,
           address: null,
           directWorklife: null,
@@ -756,14 +838,22 @@ import {getCompany} from "@/api/customer/company";
                 return returnArr;
               }
               return childrenEach(treeData, depth);
-            },
+      },
+
+      xiugai(row){
+        editMarDemandRequi(row).then(res=>{
+
+        })
+      },
       /** 修改按钮操作 */
       handleUpdate(row,ind) {
         this.reset();
         this.getcorpName()
         this.gettemplate()
         getFollow(row.demandId).then(response => {
+
           this.form = response.data.marDeman;
+          this.gangwei = response.data.marDemandRequirements
           if(this.form.demandPic){
             this.filelist=[{name:"",url:`${process.env.VUE_APP_BASE_API}${this.form.demandPic}`}]
           }
@@ -812,7 +902,8 @@ import {getCompany} from "@/api/customer/company";
         })
         let zm = {
             marDemand:this.form,
-            list:list
+            list:list,
+            marDemandRequirement:this.gangwei
         }
         zm = JSON.stringify(zm)
         let formData = new FormData()
@@ -896,6 +987,13 @@ import {getCompany} from "@/api/customer/company";
   };
 </script>
 <style scoped>
+  .bitian{
+    margin-left: -13px;
+    position: relative;
+    color: red;
+    left: -5px;
+    font-size: 16px;
+  }
   >>>.el-table__row td {
     vertical-align: top;
     max-height: 500px;

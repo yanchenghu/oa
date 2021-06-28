@@ -2,7 +2,7 @@
   <div>
       <el-carousel :interval="8000" arrow="nerver">
             <el-carousel-item v-for="item,i in swiperList" :key="i">
-               <h3 class="medium">喜报：恭喜 {{item.nick_name}} {{item.syqstart_time}}入项1人 ({{item.customer_name}} 入职 {{item.project_name}} 项目 )  </h3>
+               <h3 class="medium">喜报：恭喜 {{item.nick_name}} {{item.syqstart_time}}入项1人 ({{item.customer_name}} 入职 {{item.project_name}} )  </h3>
              </el-carousel-item>
       </el-carousel>
   </div>

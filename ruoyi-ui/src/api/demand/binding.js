@@ -23,6 +23,14 @@ export function findmubiao(data) {
     data:data,
   })
 }
+
+export function acquisitionList(id) {
+  return request({
+    url: '/demand/follow/acquisitionList/'+id,
+    method: 'get',
+  })
+}
+
 export function queryResumeSalary(data) {
   return request({
     url: '/demand/binding/queryResumeSalary',

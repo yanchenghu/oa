@@ -81,10 +81,12 @@
 
       <el-table-column label="学历要求" align="left" prop="education" :formatter="customerFormat" width="55"/>
       <el-table-column label="年限" align="left" prop="directWorklife" width="50"/>
-      <el-table-column label="具体要求" align="left" width="500">
-      <template slot-scope="scope">
-          <p v-html='scope.row.specificrequiRement'></p>
-      </template>
+      <el-table-column label="岗位要求" width="250">
+        <template slot-scope="scope">
+            <div style="padding-left: 20px;" v-for="item,i in scope.row.marDemandRequirementList" :key="i">
+              <span class="bitian" v-if="item.isNecessary==1">★</span><span>{{item.sort}}、{{item.jobRequirements}}</span>
+            </div>
+        </template>
       </el-table-column>
       <el-table-column label="发布时间" align="left" prop="addTime"/>
       <el-table-column label="地址" align="left" prop="demandYears">
@@ -112,7 +114,7 @@
         style="overflow: auto; position: absolute; top: 40px; right: 0; bottom: 0; left: 0; width: 100%; height:1000%; border: none;"
       ></iframe>
     </el-dialog>
-	
+
     <el-dialog :visible.sync="dialogVisible" width="500px" :title="title">
       <el-button type="primary" @click="dowloc" >下载面试题</el-button>
       <img width="100%" :src="src" alt="">
@@ -224,7 +226,7 @@ import index from "../../components/particulars/index"
       getbus(){
         allBusiness().then(response => {
           this.businesslist = response.data
-          
+
           this.getList();
         });
       },
@@ -401,5 +403,12 @@ import index from "../../components/particulars/index"
   }
   .div >>>.el-form-item__content{
     width: 80%;
+  }
+  .bitian{
+    margin-left: -13px;
+    position: relative;
+    color: red;
+    left: -5px;
+    font-size: 16px;
   }
 </style>
