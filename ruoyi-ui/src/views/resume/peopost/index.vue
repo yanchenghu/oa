@@ -102,8 +102,9 @@
                    <el-button type="text"  @click="handleUpdate(scope.row)" v-hasPermi="['resume:peopost:preview']">
                      <svg-icon icon-class="preview" style="font-size: 14px;"/>预览
                    </el-button>
-                   <el-button  type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button"  style="font-size: 14px;"/>抢占</el-button>
-
+                   <el-button
+                     v-if="scope.row.addName==null || scope.row.addName=='' "
+                    type="text"  @click="handleDelete(scope.row)" v-hasPermi="['resume:peopost:seize']"><svg-icon icon-class="button"  style="font-size: 14px;"/>抢占</el-button>
                    <el-button  type="text"  @click="handlesee(scope.row)" ><svg-icon icon-class="eye-open" style="font-size: 14px;"/>查看</el-button>
            </template>
          </el-table-column>
