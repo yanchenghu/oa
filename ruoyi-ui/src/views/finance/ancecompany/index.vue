@@ -53,7 +53,7 @@
       <el-table-column label="上个月工资"  prop="lastmonthWages" />
       <el-table-column label="当月营收" prop="dengyue">
         <template slot-scope="scope">
-          <span v-if="scope.row.actualMoney!==null">{{scope.row.actualMoney-scope.row.lastmonthWages}}</span>
+          <span v-if="scope.row.actualMoney!==null">{{(scope.row.actualMoney-scope.row.lastmonthWages).toFixed(2)}}</span>
         </template>
       </el-table-column>
       <el-table-column label="已回款金额"  prop="receivedPayment" />

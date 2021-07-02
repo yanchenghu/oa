@@ -841,9 +841,10 @@ import {getCompany} from "@/api/customer/company";
       },
 
       xiugai(row){
-        editMarDemandRequi(row).then(res=>{
-
-        })
+        if(row.id){
+          editMarDemandRequi(row).then(res=>{
+          })
+        }
       },
       /** 修改按钮操作 */
       handleUpdate(row,ind) {

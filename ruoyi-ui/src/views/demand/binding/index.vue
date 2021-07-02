@@ -94,6 +94,7 @@
             </div>
         </template>
       </el-table-column>
+      <el-table-column label="面试方式" align="left" prop="interviewer"/>
       <el-table-column label="发布时间" align="left" prop="addTime"/>
       <el-table-column label="地址" align="left" prop="demandYears">
         <template slot-scope="scope">

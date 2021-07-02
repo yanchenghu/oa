@@ -16,6 +16,15 @@ export function corpName() {
     method: 'get',
   })
 }
+
+export function getid(data) {
+  return request({
+    url: '/demand/binding/isResumeTemplate',
+    method: 'post',
+    data:data,
+  })
+}
+
 export function findmubiao(data) {
   return request({
     url: '/demand/follow/bindingUpper',
