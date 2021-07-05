@@ -65,94 +65,109 @@
             <el-form-item label="职位" prop="professionId" >
              <el-input  v-model="perCustomerinfo.professionId" size="small"   suffix-icon="xxx"/>
             </el-form-item>
+            <br>
+            <el-form-item class="qqq" label="自我评价" prop="selfEvaluation" >
+             <el-input  v-model="perCustomerinfo.selfEvaluation" size="small" type="textarea" autosize />
+            </el-form-item>
           </el-form>
         </div>
         <span><svg-icon icon-class="jiaoyu" class-name="card-panel-icon" /></span><span class="tit">专业技能</span><span style="color: red;font-size: 14px;">专业技能不能少于2条</span>
         <i  class="el-icon-circle-plus-outline i"  @click="adds(4)"></i>
         <div class="magen">
-            <el-form v-for="item,i in PerEnclosureSkills " :key="i" :model="item" label-width="80px" ref="forms1" label-position="right" :rules="rules">
-              <el-form-item label="技能描述" prop="skillsDescribe">
-                <el-input size="small" v-model="item.skillsDescribe" suffix-icon="xxx"></el-input>
+          <div v-for="item,i in PerEnclosureSkills" :key="i" style="display: flex;justify-content: space-between;">
+            <el-form style="width: 90%;"  :model="item" label-width="80px" ref="forms1" label-position="right"  :rules="rules">
+              <el-form-item class="qqq" label="技能描述" prop="skillsDescribe">
+                <el-input size="small" type="textarea" v-model="item.skillsDescribe" autosize></el-input>
               </el-form-item>
             </el-form>
+            <el-button style="height: 20px;"  type="text" @click="delete2(PerEnclosureSkills,item)"><i class="el-icon-delete"></i>删除</el-button>
+            </div>
         </div>
         <p></p>
         <br>
         <span id="gong"><svg-icon icon-class="work" class-name="card-panel-icon" /></span><span class="tit">工作经历</span><span style="color: red;font-size: 14px;">工作经历不能少于1条</span><i  class="el-icon-circle-plus-outline i"  @click="adds(1)"></i>
         <div class="magen">
-          <el-form v-for="item,i in PerEnclosureWork" :key="i" :model="item"  label-width="80px" :inline="true" ref="forms2" label-position="right" :rules="rules">
+          <div v-for="item,i in PerEnclosureWork" :key="i" style="display: flex;justify-content: space-between;">
+          <el-form  :model="item"  label-width="80px" :inline="true" ref="forms2" label-position="right" :rules="rules">
             <el-form-item label="开始时间" prop="startTime">
-              <el-date-picker v-model="item.startTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
+              <el-date-picker v-model="item.startTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1(item.endTime)" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
               </el-date-picker>
               </el-date-picker>
             </el-form-item>
             <el-form-item label="结束时间" prop="endTime">
-              <el-date-picker size="small" v-model="item.endTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4" value-format="yyyy-MM-dd" style="width:199px">
+              <el-date-picker size="small" v-model="item.endTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4(item.startTime)" value-format="yyyy-MM-dd" style="width:199px">
               </el-date-picker>
             </el-form-item>
             <br>
             <el-form-item label="公司名称" prop="companyName">
               <el-input size="small" v-model="item.companyName" suffix-icon="xxx"></el-input>
             </el-form-item>
-            <el-form-item label="职位名称" prop="jobTitle">
-              <el-input size="small" v-model="item.jobTitle" suffix-icon="xxx"></el-input>
-            </el-form-item>
           </el-form>
+          <el-button style="height: 20px;"  type="text" @click="delete2(PerEnclosureWork,item)"><i class="el-icon-delete"></i>删除</el-button>
+          </div>
         </div>
         <p></p>
         <br>
         <span id="xiang"><svg-icon icon-class="xiangmu" class-name="card-panel-icon" /></span><span class="tit">项目经厉</span><span style="color: red;font-size: 14px;">项目经历不能少于2条</span>
         <i class="el-icon-circle-plus-outline i"  @click="adds(2)"></i>
         <div class="magen">
-          <el-form v-for="item,i in projectexper" :key="i" :model="item"  label-width="80px" :inline="true" ref="forms3" label-position="left" :rules="rules">
-            <el-form-item label="开始时间" prop="startTime">
-              <el-date-picker v-model="item.startTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
-              </el-date-picker>
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="结束时间" prop="endTime">
-              <el-date-picker size="small" v-model="item.endTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4" value-format="yyyy-MM-dd" style="width:199px">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="项目名称" prop="projectName" >
-              <el-input size="small" v-model="item.projectName" suffix-icon="xxx" ></el-input>
-            </el-form-item>
-            <br>
-            <el-form-item class="qqq" label="项目描述" prop="duty">
-               <el-input size="small" type="textarea" v-model="item.duty" ></el-input>
-            </el-form-item>
-            <br>
-            <el-form-item class="qqq" label="职责描述" prop="zhize">
-               <el-input size="small" type="textarea" v-model="item.zhize" ></el-input>
-            </el-form-item>
-          </el-form>
+          <div v-for="item,i in projectexper" :key="i" style="display: flex;justify-content: space-between;">
+            <el-form  :model="item"  label-width="80px" :inline="true" ref="forms3" label-position="left" :rules="rules">
+              <el-form-item label="开始时间" prop="joinprojectTime">
+                <el-date-picker v-model="item.joinprojectTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1(item.quitprojectTime)" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
+                </el-date-picker>
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="结束时间" prop="quitprojectTime">
+                <el-date-picker size="small" v-model="item.quitprojectTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4(item.joinprojectTime)" value-format="yyyy-MM-dd" style="width:199px">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item label="项目名称" prop="projectName" >
+                <el-input size="small" v-model="item.projectName" suffix-icon="xxx" ></el-input>
+              </el-form-item>
+              <br>
+              <el-form-item class="qqq" label="技术要点" prop="technologyType">
+                 <el-input size="small" type="textarea" autosize v-model="item.technologyType" ></el-input>
+              </el-form-item>
+              <br>
+              <el-form-item class="qqq" label="项目描述" prop="projectIntroduction">
+                 <el-input size="small" type="textarea" autosize v-model="item.projectIntroduction" ></el-input>
+              </el-form-item>
+              <br>
+              <el-form-item class="qqq" label="职责描述" prop="duty">
+                 <el-input size="small" type="textarea" autosize v-model="item.duty" ></el-input>
+              </el-form-item>
+            </el-form>
+            <el-button style="height: 20px;"  type="text" @click="delete2(projectexper,item)"><i class="el-icon-delete"></i>删除</el-button>
+          </div>
         </div>
         <p></p>
         <br>
         <span><svg-icon icon-class="jiaoyu" class-name="card-panel-icon" /></span><span class="tit">教育经历</span><span style="color: red;font-size: 14px;">教育经历不能少于1条</span><i class="el-icon-circle-plus-outline i"  @click="adds(3)"></i>
-        <div class="magen">
-            <el-form v-for="item,i in perEduc" :key="i" :model="item"  label-width="80px" :inline="true" ref="forms4" label-position="left" :rules="rules">
-              <el-form-item label="开始时间" prop="startTime">
-                <el-date-picker v-model="item.startTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
-                </el-date-picker>
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item label="结束时间" prop="endTime">
-                <el-date-picker size="small" v-model="item.endTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4" value-format="yyyy-MM-dd" style="width:199px">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item label="所在学校" prop="schoolName" >
-                <el-input size="small" v-model="item.schoolName" suffix-icon="xxx" ></el-input>
-              </el-form-item>
-              <el-form-item label="学历" prop="degree" >
-                <el-select v-model='item.degree' filterable placeholder="" size="small">
-                  <el-option v-for="dict in professionIdoptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="专业" prop="major" >
-                <el-input size="small" v-model="item.major" suffix-icon="xxx"></el-input>
-              </el-form-item>
-            </el-form>
+        <div class="magen" >
+            <div v-for="item,i in perEduc" :key="i" style="display: flex;justify-content: space-between;">
+              <el-form  :model="item"  label-width="80px" :inline="true" ref="forms4" label-position="left" :rules="rules" >
+                <el-form-item label="开始时间" prop="startTime">
+                  <el-date-picker v-model="item.startTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1(item.endTime)" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
+                  </el-date-picker>
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="结束时间" prop="endTime">
+                  <el-date-picker size="small" v-model="item.endTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4(item.startTime)" value-format="yyyy-MM-dd" style="width:199px">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="所在学校" prop="schoolName" >
+                  <el-input size="small" v-model="item.schoolName" suffix-icon="xxx" ></el-input>
+                </el-form-item>
+                <el-form-item label="学历" prop="degree" >
+                  <el-input size="small" v-model="item.degree" suffix-icon="xxx"></el-input>
+                </el-form-item>
+                <el-form-item label="专业" prop="major" >
+                  <el-input size="small" v-model="item.major" suffix-icon="xxx"></el-input>
+                </el-form-item>
+              </el-form>
+              <el-button style="height: 20px;"  type="text" @click="delete2(perEduc,item)"><i class="el-icon-delete"></i>删除</el-button>
+            </div>
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="submitForm2">确定</el-button>
@@ -178,8 +193,6 @@
     },
     data(){
       return {
-        pickerOptions1:{},
-        pickerOptions4:{},
         corpnamelist:null,
         opens:false,
         titles:"",
@@ -194,6 +207,31 @@
         formdata:null,
         perCustomerinfo:{},
         rules: {
+          technologyType:[{
+            required: true,
+            message: "技术要求不能为空",
+            trigger: ["blur", "change"]
+          }, ],
+          projectIntroduction:[{
+            required: true,
+            message: "项目描述不能为空",
+            trigger: ["blur", "change"]
+          }, ],
+          selfEvaluation:[{
+            required: true,
+            message: "自我描述不能为空",
+            trigger: ["blur", "change"]
+          }, ],
+          joinprojectTime:[{
+            required: true,
+            message: "开始时间不能为空",
+            trigger: ["blur", "change"]
+          }, ],
+          quitprojectTime:[{
+            required: true,
+            message: "结束时间不能为空",
+            trigger: ["blur", "change"]
+          }, ],
           customerSex:[{
             required: true,
             message: "性别不能为空",
@@ -203,7 +241,8 @@
             required: true,
             message: "年龄不能为空",
             trigger: ["blur", "change"]
-          }, ],
+          },{ type: 'number',
+              message: '必须为数字值'} ],
           skillsDescribe:[{
             required: true,
             message: "技能描述不能为空",
@@ -247,11 +286,6 @@
           companyName:[{
             required: true,
             message: "公司名称不能为空",
-            trigger: ["blur", "change"]
-          }],
-          jobTitle:[{
-            required: true,
-            message: "职位名称不能为空",
             trigger: ["blur", "change"]
           }],
           projectName:[{
@@ -325,7 +359,34 @@
       });
     },
     methods:{
+      delete2(list,item){
+        let i = list.indexOf(item)
+        list.splice(i,1)
+      },
       // 搜索简历
+      pickerOptions1(item){
+        var data = {
+          disabledDate:(time) => {
+            if (item) {
+                return time.getTime() > new Date(item).getTime();
+            }else{
+                return time.getTime() >  Date.now()
+            }
+          }
+        }
+        return data
+      },
+      pickerOptions4(item){
+        var data = {
+          disabledDate:(time) => {
+            if (item){
+                return time.getTime() < new Date(item).getTime() || time.getTime() >  Date.now()
+            }
+            return time.getTime() >  Date.now()
+          }
+        }
+        return data
+      },
       search(){
         this.corpnamelist=null
         let that = this
@@ -373,6 +434,10 @@
                   this.format = res.data.format
                   getid(form).then(res=>{
                     this.perCustomerinfo = res.data.perCustomerinfo
+                    this.perEduc = res.data.educationList
+                    this.PerEnclosureSkills = res.data.skillsList
+                    this.projectexper = res.data.projectList
+                    this.PerEnclosureWork = res.data.eWorkList
                   })
                   if(this.ganglist.length==0){
                     this.open1 = true
@@ -465,26 +530,37 @@
           }
         },
         submitForm2(){
-          if(!this.bitian()){
-            let zm={
-              customerCode:this.corpnamelist,
-              demandId:this.bangding.id,
-              marDemandresumeRequirement:this.idlist,
-              perEnclosureCustomerinfo:this.perCustomerinfo,
-              perEnclosureEducation:this.perEduc,
-              perEnclosureSkills:this.PerEnclosureSkills,
-              perEnclosureProject:this.projectexper,
-              perEnclosureWorkList:this.PerEnclosureWork
+          if(this.PerEnclosureSkills.length<2){
+            this.msgError("技能描述不能少于2条")
+          }else if(this.PerEnclosureWork.length<1){
+            this.msgError("工作经历不能少于1条")
+          }else if(this.projectexper.length<2){
+            this.msgError("项目经验不能少于2条")
+          }else if(this.perEduc.length<1){
+            this.msgError("教育经历不能少于1条")
+          }else{
+            if(!this.bitian()){
+              let zm={
+                customerCode:this.corpnamelist,
+                demandId:this.bangding.id,
+                marDemandresumeRequirement:this.idlist,
+                perEnclosureCustomerinfo:this.perCustomerinfo,
+                perEnclosureEducation:this.perEduc,
+                perEnclosureSkills:this.PerEnclosureSkills,
+                perEnclosureProject:this.projectexper,
+                perEnclosureWorkList:this.PerEnclosureWork
+              }
+              let formdata = new FormData()
+              formdata.append("zm",JSON.stringify(zm))
+              delFollow(formdata).then(res=>{
+                this.msgSuccess("绑定成功")
+                this.opens=false
+                this.open1 = false
+                this.bangding.open2=false
+                this.$emit("gettelist")
+                this.$emit("getList")
+              })
             }
-            let formdata = new FormData()
-            formdata.append("zm",JSON.stringify(zm))
-            delFollow(formdata).then(res=>{
-              this.msgSuccess("绑定成功")
-              this.opens=false
-              this.bangding.open2=false
-              this.$emit("gettelist")
-              this.$emit("getList")
-            })
           }
         },
         oplodad(){

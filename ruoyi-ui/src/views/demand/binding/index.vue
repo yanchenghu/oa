@@ -119,8 +119,6 @@
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
     <index :bangding="bangding"></index>
-
-
     <el-dialog title="上传面试题" :visible.sync="open"  width="500px" append-to-body>
       <el-form :model="form" label-width="80px"   ref="form" style="width: 400px;">
         <el-form-item label="需求名称">

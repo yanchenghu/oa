@@ -24,6 +24,7 @@ export function deletes(id) {
     method: 'get',
   })
 }
+
 export function addgang(data) {
   return request({
     url: '/demand/follow/addemandAnalysi',
@@ -102,6 +103,13 @@ export function changeopenStatus(query) {
 }
 
 // 查询需求详细
+export function getFollows(id) {
+  return request({
+    url: '/demand/follow/copydemand/' + id,
+    method: 'get'
+  })
+}
+
 export function getFollow(id) {
   return request({
     url: '/demand/follow/' + id,

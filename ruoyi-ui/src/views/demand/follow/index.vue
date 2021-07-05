@@ -379,7 +379,8 @@
     changeopenStatus,
     deletes,
     addgang,
-    editMarDemandRequi
+    editMarDemandRequi,
+    getFollows
   } from "@/api/demand/follow";
   import { getAuditeditor,addaudbindingdemand  } from "@/api/demand/auditeditor";
 import { treeselect } from "@/api/system/dept";
@@ -846,12 +847,8 @@ import {getCompany} from "@/api/customer/company";
           })
         }
       },
-      /** 修改按钮操作 */
-      handleUpdate(row,ind) {
-        this.reset();
-        this.getcorpName()
-        this.gettemplate()
-        getFollow(row.demandId).then(response => {
+      get(fun,ind,row){
+        fun(row.demandId).then(response => {
 
           this.form = response.data.marDeman;
           this.gangwei = response.data.marDemandRequirements
@@ -871,6 +868,18 @@ import {getCompany} from "@/api/customer/company";
             this.title = "复制需求";
           }
         });
+      },
+      /** 修改按钮操作 */
+      handleUpdate(row,ind) {
+        this.reset();
+        this.getcorpName()
+        this.gettemplate()
+        if(ind==1){
+          this.get(getFollow,ind,row)
+        }else{
+          this.get(getFollows,ind,row)
+        }
+
       },
 
       // 用户状态修改
