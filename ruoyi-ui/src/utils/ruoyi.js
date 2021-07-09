@@ -93,7 +93,7 @@ export function permission(file){
         if(permission == permissionFlag){
           hasPermissions = 1
         }else if(permission==permissionFlag1){
-          hasPermissions = 2
+          hasPermissions = 5
         }else if(permission==permissionFlag2){
           hasPermissions = 3
         }else if(permission==permissionFlag3){

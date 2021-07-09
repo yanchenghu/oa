@@ -329,7 +329,7 @@
      // 预览
      handleUpdate(adinw){
        let srcs = process.env.VUE_APP_BASE_API+adinw.resumePath
-       this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
+       this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs}`
        this.open=true
      },
      // 抢占

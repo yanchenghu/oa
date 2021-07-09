@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="70px" class="form">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="85px" class="form">
         <el-form-item label="需求名称" prop="projectName">
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
         </el-form-item>
@@ -41,7 +41,7 @@
               />
           </el-select>
         </el-form-item>
-        <el-form-item label="客户级别" prop="importantLevel">
+        <el-form-item label="是否为重点" prop="importantLevel">
           <el-select  v-model="queryParams.importantLevel"  size="small" @change="handleQuery">
             <el-option
                 v-for="dict,index in customerleve"
@@ -95,7 +95,7 @@
           <div>已提交简历数:{{scope.row.ifLook}}</div>
         </template>
       </el-table-column>
-      <el-table-column label="客户级别" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
+      <el-table-column label="是否为重点" align="left" prop="importantLevel" :formatter="customerleveFormat" width="90"/>
       <el-table-column label="学历/年限" align="left" width="70">
         <template slot-scope="scope">
           <span>{{customerFormat(scope.row)}}/{{scope.row.directWorklife}}</span>
@@ -149,7 +149,7 @@
               />
             </el-select>
         </el-form-item>
-        <el-form-item label="客户级别" prop="importantLevel">
+        <el-form-item label="是否为重点" prop="importantLevel">
         <el-select  v-model="form.importantLevel"  size="small">
           <el-option
               v-for="dict,index in customerleve"
@@ -568,7 +568,7 @@ import {getCompany} from "@/api/customer/company";
           }, ],
           importantLevel:[{
             required: true,
-            message: "客户级别不能为空",
+            message: "是否为重点不能为空",
             trigger: ["blur", "change"]
           }, ],
         }
@@ -919,33 +919,39 @@ import {getCompany} from "@/api/customer/company";
         let formData = new FormData()
         formData.append("zm",zm)
         formData.append("demandPic",this.single)
-        this.$refs["forms"].validate(valid => {
-          if (valid) {
-            if (this.form.demandId != null) {
-              if(this.title == "复制需求"){
-                addFollow(formData).then(response => {
-                  this.msgSuccess("复制成功");
+        if(this.form.maxSalary>50){
+          this.msgError("最大薪资不能大于50k")
+        }else if(this.gangwei.length<2){
+          this.msgError("岗位要求不能小于两条")
+        }else{
+          this.$refs["forms"].validate(valid => {
+            if (valid) {
+              if (this.form.demandId != null) {
+                if(this.title == "复制需求"){
+                  addFollow(formData).then(response => {
+                    this.msgSuccess("复制成功");
+                    this.open = false;
+                    this.getList();
+                  });
+                }else{
+                updateFollow(formData).then(response => {
+                  this.msgSuccess("修改成功");
                   this.open = false;
                   this.getList();
-                });
+                });}
               }else{
-              updateFollow(formData).then(response => {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              });}
+                  addFollow(formData).then(response => {
+                    this.msgSuccess("新增成功");
+                    this.open = false;
+                    this.getList();
+                  });
+              }
             }else{
-                addFollow(formData).then(response => {
-                  this.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                });
+              this.msg=null
+              this.msgError("请确认信息是否正确完整")
             }
-          }else{
-            this.msg=null
-            this.msgError("请确认信息是否正确完整")
-          }
-        });
+          });
+        }
       },
       /** 删除按钮操作 */
       handleDelete(row) {

@@ -2,6 +2,26 @@
     <div class="app-container">
       <span style="font-weight: 400; font-size: 25px;">待面试列表</span>
       <p></p>
+      <el-form :model="queryParams" ref="queryForm" :inline="true"  label-width="70px" class="form">
+          <el-form-item label="姓名" prop="customerName">
+            <el-input v-model="queryParams.customerName" placeholder="请输入姓名" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
+          </el-form-item>
+          <el-form-item label="面试时间" prop="interviewTime">
+            <el-date-picker
+              type="date"
+              style="width:180px"
+              format="yyyy 年 MM 月 dd日"
+              value-format="yyyy-MM-dd"
+              size="small"
+              v-model="queryParams.interviewTime"
+              placeholder="选择面试日期"
+              @change="handleQuery"
+              >
+            </el-date-picker>
+          </el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="small" @click="handleQuery" style="margin:3px 10px 0 10px">查询</el-button>
+
+      </el-form>
       <p style="float: right;font-size: 14px;"><span class="biaozhu h"><span class="dian a" ></span>未通过</span> <span class="biaozhu"><span class="dian b" ></span>待面试</span> <span class="biaozhu l"><span class="dian c" ></span>已通过</span></p>
       <el-table v-loading="loading" :data="dataList" :row-class-name="tableRowClassName">
         <el-table-column label="序号" type="index" width="50"/>
@@ -10,13 +30,16 @@
             <el-button type="text" size="medium" @click="tiaozhuan(scope.row)">{{scope.row.customer_name}}</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="公司名称"  prop="corp_name"/>
         <el-table-column label="项目名称"  prop="project_name"/>
-        <el-table-column label="面试开始时间"  prop="begin_time"/>
-        <el-table-column label="面试结束时间"  prop="end_time"/>
+       <!-- <el-table-column label="面试开始时间"  prop="begin_time"/>
+        <el-table-column label="面试结束时间"  prop="end_time"/> -->
         <el-table-column label="确认面试时间"  prop="interview_time"/>
+        <el-table-column label="确认面试时间"  prop="interview_mode"/>
+        <el-table-column label="面试地点"  prop="interview_location"/>
+        <el-table-column label="联系人"  prop="interview_contact"/>
+        <el-table-column label="注意事项"  prop="be_careful"/>
         <el-table-column label="人事"  prop="nick_name"/>
-        <el-table-column label="未通过原因"  prop="follow_detail"/>
+        <el-table-column label="面试结果"  prop="follow_detail"/>
       </el-table>
       <pagination
         v-show="total>0"
@@ -56,6 +79,10 @@
           this.total = res.total
           this.loading = false
         })
+      },
+      handleQuery(){
+        this.queryParams.pageNum = 1
+        this.getList()
       },
       tableRowClassName({row, rowIndex}) {
             if (row.follow_status === 6) {

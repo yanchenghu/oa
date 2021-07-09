@@ -100,8 +100,8 @@ export default {
             this.datalist = res.data
             this.datalist.numb = hasPermissions
         })
-      }else if(hasPermissions == 2){
-        this.datalist.numb = 2
+      }else if(hasPermissions == 5){
+        this.datalist.numb = 5
         getlist().then(res=>{
             this.datalist = res.data
             this.datalist.numb = hasPermissions

@@ -1,5 +1,10 @@
 <template>
   <div class="app-container">
+    <el-radio-group v-model="queryParams.importantLevel" @change="handleQuery">
+        <el-radio-button :label="0">今日重点</el-radio-button>
+        <el-radio-button :label="1">常规需求</el-radio-button>
+    </el-radio-group>
+    <p></p>
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="70px" class="form">
         <el-form-item label="需求名称" prop="projectName">
           <el-input v-model="queryParams.projectName" placeholder="请输入需求名称" clearable size="small" @keyup.enter.native="handleQuery" style="width: 150px;"/>
@@ -27,6 +32,7 @@
         </el-form-item>
         <el-form-item label="技术级别" prop="demandYears">
           <el-select v-model="queryParams.demandYears" clearable placeholder="请选择" size="small" @change="handleQuery">
+            <el-option label="初级" value="0"/>
             <el-option label="中级" value="1"/>
             <el-option label="高级" value="2"/>
           </el-select>
@@ -58,22 +64,25 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="resetQuery"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" border :data="followList" :row-class-name="tableRowClassName">
-      <el-table-column label="需求名称" align="left" prop="projectName" >
+    <el-table v-loading="loading" border :data="followList" >
+      <el-table-column label="需求名称" align="center" prop="projectName" >
         <template slot-scope="scope">
-          <span >{{scope.row.projectName}}</span>
-           <div>
-              <el-button :disabled="!scope.row.bz" type="text" v-hasPermi="['demand:follow:postInterview']" @click="handsee(scope.row.bz)">面试题</el-button>
-           </div>
+          <div>
+             <el-button v-if="scope.row.bz" type="text"  @click="handsee(scope.row.bz)">{{scope.row.projectName}}</el-button>
+             <span style="font-weight: 700;font-size:14px ;" v-else>{{scope.row.projectName}}</span>
+          </div>
+          <div>{{professionIdopFormat(scope.row)}} | {{scope.row.demandYears==1?"中级":scope.row.demandYears==0?"初级":"高级"}} | {{scope.row.directWorklife}}年 | {{customerFormat(scope.row)}} | {{scope.row.minSalary}}k-{{scope.row.maxSalary}}k | {{scope.row.interviewer}}</div>
+          <br>
+          <div>{{scope.row.address}}</div>
          </template>
       </el-table-column>
 
-      <el-table-column label="技术要求/技术方向" align="left">
+      <!-- <el-table-column label="技术要求/技术方向" align="left">
         <template slot-scope="scope">
           <span>{{scope.row.demandYears==1?"中级":scope.row.demandYears==0?"初级":"高级"}} / {{professionIdopFormat(scope.row)}}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="进度" align="left"  width="130">
+      </el-table-column> -->
+      <!-- <el-table-column label="进度" align="left"  width="130">
         <template slot-scope="scope">
           <div>需求人数:{{scope.row.demandNumber}}</div>
           <div>目标人数:{{scope.row.targetNumber}}</div>
@@ -81,30 +90,23 @@
           <div>面试通过人数:{{scope.row.chsiFlag}}</div>
           <div>已提交简历数:{{scope.row.ifLook}}</div>
         </template>
-      </el-table-column>
-      <el-table-column label="学历/年限" align="left" width="70">
-        <template slot-scope="scope">
-          <span>{{customerFormat(scope.row)}}/{{scope.row.directWorklife}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="岗位要求" width="250">
+      </el-table-column> -->
+      <el-table-column label="岗位要求">
         <template slot-scope="scope">
             <div style="padding-left: 20px;" v-for="item,i in scope.row.marDemandRequirementList" :key="i">
               <span class="bitian" v-if="item.isNecessary==1">★</span><span>{{item.sort}}、{{item.jobRequirements}}</span>
             </div>
         </template>
       </el-table-column>
-      <el-table-column label="面试方式" align="left" prop="interviewer"/>
-      <el-table-column label="发布时间" align="left" prop="addTime"/>
-      <el-table-column label="地址" align="left" prop="demandYears">
+      <el-table-column label="录入人" width="90" prop="operUsername"/>
+      <el-table-column label="备注" width="200" align="left" prop="attention"/>
+      <el-table-column label="操作" width="150" align="center" class-name="small-padding fixed-width" fixed="right">
         <template slot-scope="scope">
-          <span>{{intentionareaFormat(scope.row)}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="详细地址"  width="60" align="left" prop="address" />
-      <el-table-column label="录入人姓名" align="left" prop="operUsername" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
-        <template slot-scope="scope">
+          <div>
+            <el-button type="primary">
+              目标{{scope.row.targetNumber}} / 绑定{{scope.row.ifLook}}
+            </el-button>
+          </div>
           <div>
             <el-button  type="text" @click="handleUpdate(scope.row)"><svg-icon icon-class="bangding" class="icons"/>绑定</el-button>
           </div>
@@ -201,6 +203,7 @@ import index from "../../components/particulars/index"
     data() {
       return {
         // 搜索信息
+        radio1:"jinri",
         searchmsg:"",
         corpnamelists:[],
         // 客户级别
@@ -240,6 +243,7 @@ import index from "../../components/particulars/index"
           demandLevel: null,
           education: null,
           demandNumber: null,
+          importantLevel:0,
         },
         // 表单参数
         form: {},
@@ -253,6 +257,9 @@ import index from "../../components/particulars/index"
       };
     },
     created() {
+      if(this.$route.params.row){
+        this.queryParams.importantLevel = this.$route.params.row
+      }
       this.getList();
       // this.getCorpName()
       // 获取学历字典
@@ -422,7 +429,7 @@ import index from "../../components/particulars/index"
         if(ind==1){
           this.open3 = true
           this.title = '面试题'
-          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+file}`
+          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs+file}`
         }else if(ind==2){
           this.dialogVisible=true
           this.title = "面试题图片"

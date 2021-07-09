@@ -258,7 +258,7 @@
         <el-table-column property="beginTime" label="面试开始时间"></el-table-column>
         <el-table-column property="endTime" label="面试结束时间"></el-table-column>
         <el-table-column property="interviewTime" label="具体面试时间"></el-table-column>
-        <el-table-column label="操作" v-if="dataList.numb==2||dataList.numb==3">
+        <el-table-column label="操作" v-if="dataList.numb==2||dataList.numb==3||dataList.numb==5">
           <template slot-scope="scope">
             <el-button type="text" size="medium" :disabled="scope.row.interviewTime!==null || scope.row.followStatus!==3" @click="addmianshi(scope.row)">
               <span v-if="scope.row.followStatus==3">添加面试状态</span>
@@ -272,13 +272,14 @@
       </el-table>
     </el-dialog>
     <el-dialog  :title="title" :visible.sync="dialogTableVisible"  width="500px">
-      <el-table :data="gridData" v-if="dataList.numb==2||dataList.numb==3" v-loading="loading">
+      <el-table :data="gridData" v-if="dataList.numb==2||dataList.numb==3||dataList.numb==5" v-loading="loading">
         <el-table-column property="customerName" label="姓名" ></el-table-column>
         <el-table-column property="customerTel" label="电话"  ></el-table-column>
-        <el-table-column v-if="title=='录入'||title=='抢占'" property="addTime" label="录入时间"></el-table-column>
-        <el-table-column v-else-if="title=='面试通过'"  property="projectName" label="项目名称"></el-table-column>
-        <el-table-column v-else  property="trackingtime" label="操作时间"></el-table-column>
-        <el-table-column label="操作" v-if="title=='面试通过'">
+        <el-table-column v-if="title=='录入'||title=='抢占'" property="addTime" :label="title=='录入'?'录入时间':'抢占时间'"></el-table-column>
+        <el-table-column v-else-if="title=='面试通过'||title=='绑定'"  property="projectName" label="项目名称"></el-table-column>
+        <el-table-column v-else-if="title=='绑定'"  property="syqstartTime" label="绑定时间"></el-table-column>
+        <el-table-column v-else  property="syqstartTime" label="入项时间"></el-table-column>
+        <el-table-column label="操作状态" v-if="title=='面试通过'">
           <template slot-scope="scope">
             <el-button type="text" size="medium" :disabled="scope.row.followStatus!==5" @click="addmianshi(scope.row)">
               <span v-if="scope.row.followStatus==5&&title=='面试通过'">修改面试状态</span>

@@ -369,7 +369,7 @@ import index from "../../components/particulars/index"
         if(ind==1){
           this.open3 = true
           this.title = '面试题'
-          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+file}`
+          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs+file}`
         }else if(ind==2){
           this.dialogVisible=true
           this.title = "面试题图片"

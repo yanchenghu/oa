@@ -410,7 +410,7 @@
             this.msgError("该简历暂无原版")
           }else{
             let srcs = process.env.VUE_APP_BASE_API+this.perCustomerinfo.resumePath
-            this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
+            this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs}`
             this.open2=true
           }
         }else if(val==3){

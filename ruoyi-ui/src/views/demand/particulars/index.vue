@@ -13,7 +13,7 @@
               <td><span class="name">目标人数</span>{{form.targetNumber}}</td>
             </tr>
             <tr>
-              <td><span class="name">薪资范围</span>{{form.minSalary}}-{{form.maxSalary}}</td>
+              <td><span class="name">薪资范围</span>{{form.minSalary}}k-{{form.maxSalary}}k</td>
               <td><span class="name">经验要求</span>{{form.directWorklife}}年</td>
               <td><span class="name">学历要求</span>{{customerFormat(form)}}</td>
               <td><span class="name">语言要求</span>{{form.langue == 0?"无":form.langue==2?"日语":"英语"}}</td>
@@ -301,6 +301,12 @@
                          />
                     </el-select>
                   </el-form-item>
+                  <el-form-item label="入项联系人" v-if="qqq.remark1=='现场面试'&&followstart==3" prop="interviewContact" :rules="[{ required: true, message: '入项联系人不能为空', trigger: 'change' },]">
+                      <el-input v-model="qqq.interviewContact" placeholder="请输入入项联系人"  size="small" />
+                  </el-form-item>
+                  <el-form-item label="入项地点" v-if="qqq.remark1=='现场面试'&&followstart==3"  prop="interviewLocation" :rules="[{ required: true, message: '入项地点人不能为空', trigger: 'change' },]">
+                      <el-input v-model="qqq.interviewLocation" placeholder="请输入入项地点"  size="small" />
+                  </el-form-item>
                   <el-form-item label="注意事项" v-if="followstart==3">
                       <el-input v-model="qqq.beCareful" placeholder="请输入注意事项"  size="small" />
                   </el-form-item>
@@ -466,6 +472,8 @@
         comform:{},
         // 未通过原因
         qqq:{
+          interviewContact:null,
+          interviewLocation:null,
           textarea1:"",
           stayTime:"",
           qqq:[],
@@ -723,6 +731,8 @@
           this.tempID=array
           this.open=true
           this.qqq={
+            interviewContact:null,
+            interviewLocation:null,
             textarea1 :"",
             stayTime:"",
             qqq:[],
@@ -744,6 +754,8 @@
       },
       resume(row,ind){
         this.qqq={
+          interviewContact:null,
+          interviewLocation:null,
           textarea1 :"",
           stayTime:"",
           qqq:[],
@@ -790,7 +802,9 @@
           beginTime:beginTime,
           endTime:endTime,
           remark1:this.qqq.remark1,
-          beCareful:this.qqq.beCareful
+          beCareful:this.qqq.beCareful,
+          interviewLocation:this.qqq.interviewLocation,
+          interviewContact:this.qqq.interviewContact
         }
         form.append("followStatus",this.followstart)
         form.append("demandresumeId",this.tempID)
@@ -823,6 +837,12 @@
             form.append("trackingtime",this.qqq.stayTime)
             form.append("beginTime ",beginTime)
             form.append("endTime",endTime)
+            if(this.qqq.interviewLocation){
+              form.append("interviewLocation",this.qqq.interviewLocation)
+            }
+            if(this.qqq.interviewContact){
+              form.append("interviewContact",this.qqq.interviewContact)
+            }
             this.$refs["ruxing"].validate((valid) => {
                 if(valid){
                   this.$confirm('确认"'+that.title+'"结果为"'+ that.list[that.followstart] + '"吗?', "警告", {
@@ -932,7 +952,7 @@
           this.msgError(adinw.customerName+"暂无简历附件请上传")
          }
        }
-       this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
+       this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs}`
       },
       // 下载
       download(adinw,ind){
@@ -992,7 +1012,7 @@
         if(ind==1){
           this.open3 = true
           this.title = '预览简历模板'
-          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+file}`
+          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs+file}`
         }else if(ind==2){
           this.dialogVisible=true
           this.title2 = "面试题图片"

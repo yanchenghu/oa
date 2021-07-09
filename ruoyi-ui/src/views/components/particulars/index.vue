@@ -90,12 +90,11 @@
           <div v-for="item,i in PerEnclosureWork" :key="i" style="display: flex;justify-content: space-between;">
           <el-form  :model="item"  label-width="80px" :inline="true" ref="forms2" label-position="right" :rules="rules">
             <el-form-item label="开始时间" prop="startTime">
-              <el-date-picker v-model="item.startTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1(item.endTime)" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
-              </el-date-picker>
+              <el-date-picker v-model="item.startTime" type="month" placeholder="开始日期" :picker-options="pickerOptions1(item.endTime)" size="small" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width:199px" ref="work">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="结束时间" prop="endTime">
-              <el-date-picker size="small" v-model="item.endTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4(item.startTime)" value-format="yyyy-MM-dd" style="width:199px">
+              <el-date-picker size="small" v-model="item.endTime" type="month" placeholder="结束日期"  :picker-options="pickerOptions4(item.startTime)" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width:199px">
               </el-date-picker>
             </el-form-item>
             <br>
@@ -114,12 +113,11 @@
           <div v-for="item,i in projectexper" :key="i" style="display: flex;justify-content: space-between;">
             <el-form  :model="item"  label-width="80px" :inline="true" ref="forms3" label-position="left" :rules="rules">
               <el-form-item label="开始时间" prop="joinprojectTime">
-                <el-date-picker v-model="item.joinprojectTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1(item.quitprojectTime)" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
-                </el-date-picker>
+                <el-date-picker v-model="item.joinprojectTime" type="month" placeholder="开始日期" :picker-options="pickerOptions1(item.quitprojectTime)" size="small" value-format="yyyy-MM-dd" format="yyyy-MM-dd"  style="width:199px" ref="work">
                 </el-date-picker>
               </el-form-item>
               <el-form-item label="结束时间" prop="quitprojectTime">
-                <el-date-picker size="small" v-model="item.quitprojectTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4(item.joinprojectTime)" value-format="yyyy-MM-dd" style="width:199px">
+                <el-date-picker size="small" v-model="item.quitprojectTime" type="month" placeholder="结束日期"  :picker-options="pickerOptions4(item.joinprojectTime)" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width:199px">
                 </el-date-picker>
               </el-form-item>
               <el-form-item label="项目名称" prop="projectName" >
@@ -148,12 +146,11 @@
             <div v-for="item,i in perEduc" :key="i" style="display: flex;justify-content: space-between;">
               <el-form  :model="item"  label-width="80px" :inline="true" ref="forms4" label-position="left" :rules="rules" >
                 <el-form-item label="开始时间" prop="startTime">
-                  <el-date-picker v-model="item.startTime" type="date" placeholder="开始日期" :picker-options="pickerOptions1(item.endTime)" size="small" value-format="yyyy-MM-dd" style="width:199px" ref="work">
-                  </el-date-picker>
+                  <el-date-picker v-model="item.startTime" type="month" placeholder="开始日期" :picker-options="pickerOptions1(item.endTime)" size="small" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width:199px" ref="work">
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间" prop="endTime">
-                  <el-date-picker size="small" v-model="item.endTime" type="date" placeholder="结束日期"  :picker-options="pickerOptions4(item.startTime)" value-format="yyyy-MM-dd" style="width:199px">
+                  <el-date-picker size="small" v-model="item.endTime" type="month" placeholder="结束日期"  :picker-options="pickerOptions4(item.startTime)" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width:199px">
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="所在学校" prop="schoolName" >
@@ -370,13 +367,13 @@
             if (item) {
                 return time.getTime() > new Date(item).getTime();
             }else{
-                return time.getTime() >  Date.now()
+                 return time.getTime() >  Date.now()
             }
           }
         }
         return data
       },
-      pickerOptions4(item){
+      pickerOptions4(item,i){
         var data = {
           disabledDate:(time) => {
             if (item){
@@ -478,6 +475,7 @@
         },
         submitForms:debounce(function(){this.submitFor()}),
         submitFor(){
+          this.idlist = []
           if(this.bixuan()==1){
             this.msgError("必须满足项没有选择")
           }else{
@@ -486,6 +484,7 @@
                   this.idlist.push({requirementsId:item.id,sort:item.sort})
                 }
               })
+              console.log(this.idlist)
               this.titles = "补充简历模板信息"
               this.open1 = true
           }

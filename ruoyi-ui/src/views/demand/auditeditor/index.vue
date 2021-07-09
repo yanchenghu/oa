@@ -424,7 +424,7 @@ export default {
         }
         if(ind==1){
           this.open4 = true
-          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs+row.topicPath}`
+          this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs+row.topicPath}`
         }else if(ind==2){
           this.dialogVisible=true
           this.dialogImageUrl = srcs+row.topicPath

@@ -187,14 +187,14 @@ export default {
     seemuban(){
       this.wenjian = true
       this.title = "文件模板预览"
-      this.src = "https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=http://115.159.35.233:8090/profile/avatar/system/%E5%86%85%E9%83%A8%E5%91%98%E5%B7%A5%E5%BD%95%E5%85%A5%E7%B3%BB%E7%BB%9F%E6%A8%A1%E6%9D%BF.xlxs"
+      this.src = "https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=http://115.159.35.233:8090/profile/avatar/system/%E5%86%85%E9%83%A8%E5%91%98%E5%B7%A5%E5%BD%95%E5%85%A5%E7%B3%BB%E7%BB%9F%E6%A8%A1%E6%9D%BF.xlxs"
     },
     handlesele(row){
       if(row.excelPath==null){
         this.msgError("历史数据暂无原文件")
       }else{
         let srcs = process.env.VUE_APP_BASE_API+row.excelPath
-        this.src=`https://www.xdocin.com/xdoc?_func=form&_key=2iue7a6unfco3kaba2nayfib6i&_xdoc=${srcs}`
+        this.src=`https://www.xdocin.com/xdoc?_func=form&_key=vdm5j3eitvebvmh2qgcuv4idry&_xdoc=${srcs}`
         this.wenjian = true
         this.title = "预览人员信息"
       }

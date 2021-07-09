@@ -10,7 +10,14 @@ export function getlist() {
 
 export function getdata(data) {
   return request({
-    url: 'work/statistic/workresultlist',
+    url: '/work/statistic/workresultlist',
+    method: 'post',
+    data:data
+  })
+}
+export function getMybindingResume(data) {
+  return request({
+    url: '/demand/binding/getMybindingResume',
     method: 'post',
     data:data
   })

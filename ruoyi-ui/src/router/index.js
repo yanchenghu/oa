@@ -62,9 +62,25 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/index'], resolve),
         name: '首页',
         meta: { title: '首页', icon: 'home', noCache: true, affix: true }
+      },
+      {
+        path: 'binbing',
+        component: (resolve) => require(['@/views/binbing'], resolve),
+        hidden:true,
+        name: '我的绑定',
+        meta: { title: '我的绑定', icon: 'binbing',}
       }
     ]
   },
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: 'binbing',
+  //   hidden: true,
+  //   children: [
+
+  //   ]
+  // },
   {
     path: '/user',
     component: Layout,
