@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.demand.mapper.MarWaitinginterviewMapper">
-    
+
     <resultMap type="MarWaitinginterview" id="MarWaitinginterviewResult">
         <result property="id"    column="id"    />
         <result property="nickName"    column="nick_name"    />
@@ -12,35 +12,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="customerCode"    column="customer_code"    />
         <result property="beginTime"    column="begin_time"    />
         <result property="endTime"    column="end_time"    />
+        <result property="interviewMode"    column="interview_mode"    />
         <result property="interviewTime"    column="interview_time"    />
+        <result property="interviewLocation"    column="interview_location"    />
         <result property="insertTime"    column="insert_time"    />
+        <result property="interviewContact"    column="interview_contact"    />
         <result property="bz"    column="bz"    />
+        <result property="beCareful"    column="be_careful"    />
     </resultMap>
 
     <sql id="selectMarWaitinginterviewVo">
-        select id, nick_name, user_name, demand_id, customer_code, begin_time, end_time, interview_time, insert_time, bz from mar_waitinginterview
+        select id, nick_name, user_name, demand_id, customer_code, begin_time, end_time, interview_mode, interview_time, interview_location, insert_time, interview_contact, bz, be_careful from mar_waitinginterview
     </sql>
 
     <select id="selectMarWaitinginterviewList" parameterType="MarWaitinginterview" resultMap="MarWaitinginterviewResult">
         <include refid="selectMarWaitinginterviewVo"/>
-        <where>  
+        <where>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
             <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
             <if test="beginTime != null "> and begin_time = #{beginTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="interviewMode != null  and interviewMode != ''"> and interview_mode = #{interviewMode}</if>
             <if test="interviewTime != null "> and interview_time = #{interviewTime}</if>
+            <if test="interviewLocation != null  and interviewLocation != ''"> and interview_location = #{interviewLocation}</if>
             <if test="insertTime != null "> and insert_time = #{insertTime}</if>
+            <if test="interviewContact != null  and interviewContact != ''"> and interview_contact = #{interviewContact}</if>
             <if test="bz != null  and bz != ''"> and bz = #{bz}</if>
+            <if test="beCareful != null  and beCareful != ''"> and be_careful = #{beCareful}</if>
         </where>
     </select>
-    
+
     <select id="selectMarWaitinginterviewById" parameterType="Integer" resultMap="MarWaitinginterviewResult">
         <include refid="selectMarWaitinginterviewVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertMarWaitinginterview" parameterType="MarWaitinginterview" useGeneratedKeys="true" keyProperty="id">
         insert into mar_waitinginterview
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -50,10 +58,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerCode != null">customer_code,</if>
             <if test="beginTime != null">begin_time,</if>
             <if test="endTime != null">end_time,</if>
+            <if test="interviewMode != null">interview_mode,</if>
             <if test="interviewTime != null">interview_time,</if>
+            <if test="interviewLocation != null">interview_location,</if>
             <if test="insertTime != null">insert_time,</if>
+            <if test="interviewContact != null">interview_contact,</if>
             <if test="bz != null">bz,</if>
-         </trim>
+            <if test="beCareful != null">be_careful,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null">#{nickName},</if>
             <if test="userName != null">#{userName},</if>
@@ -61,10 +73,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerCode != null">#{customerCode},</if>
             <if test="beginTime != null">#{beginTime},</if>
             <if test="endTime != null">#{endTime},</if>
+            <if test="interviewMode != null">#{interviewMode},</if>
             <if test="interviewTime != null">#{interviewTime},</if>
+            <if test="interviewLocation != null">#{interviewLocation},</if>
             <if test="insertTime != null">#{insertTime},</if>
+            <if test="interviewContact != null">#{interviewContact},</if>
             <if test="bz != null">#{bz},</if>
-         </trim>
+            <if test="beCareful != null">#{beCareful},</if>
+        </trim>
     </insert>
 
     <update id="updateMarWaitinginterview" parameterType="MarWaitinginterview">
@@ -76,9 +92,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="customerCode != null">customer_code = #{customerCode},</if>
             <if test="beginTime != null">begin_time = #{beginTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="interviewMode != null">interview_mode = #{interviewMode},</if>
             <if test="interviewTime != null">interview_time = #{interviewTime},</if>
+            <if test="interviewLocation != null">interview_location = #{interviewLocation},</if>
             <if test="insertTime != null">insert_time = #{insertTime},</if>
+            <if test="interviewContact != null">interview_contact = #{interviewContact},</if>
             <if test="bz != null">bz = #{bz},</if>
+            <if test="beCareful != null">be_careful = #{beCareful},</if>
         </trim>
         where id = #{id}
     </update>
@@ -88,30 +108,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteMarWaitinginterviewByIds" parameterType="String">
-        delete from mar_waitinginterview where id in 
+        delete from mar_waitinginterview where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-
     <delete id="deleteMarWaitingeinterviewByDemandandCode" parameterType="MarDemandresume">
         delete from mar_waitinginterview where customer_code = #{customerCode} and demand_id=#{demandId}
     </delete>
 
 
-
-    <select id="selectMarWaitinginterviewMap"  parameterType="String" resultType="map">
-    SELECT a.nick_name,f.corp_name,d.project_name,a.demand_id,
+    <select id="selectMarWaitinginterviewMap"  parameterType="map" resultType="map">
+    SELECT a.nick_name,d.project_name,a.demand_id,
     DATE_FORMAT(a.interview_time,'%Y-%m-%d %H:%i:%s') as interview_time,
      u.customer_name, DATE_FORMAT(a.begin_time,'%Y-%m-%d %H:%i:%s') as begin_time,
      DATE_FORMAT(a.end_time,'%Y-%m-%d %H:%i:%s') as end_time,
+     a.interview_mode,a.interview_location,a.interview_contact,a.be_careful,
 	 c.follow_status,follow_detail from mar_waitinginterview a
     LEFT JOIN mar_demandresume b  on a.demand_id=b.demand_id and a.customer_code=b.customer_code
     LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id and b.newfollowtime=c.trackingtime
     LEFT JOIN per_customerinfo u on a.customer_code=u.customer_code
     LEFT JOIN mar_demand d on a.demand_id=d.demand_id
-    LEFT JOIN mar_company f on d.corp_code=f.corp_code
-    where d.operationuser=#{username}
+
+    where d.operationuser=#{userName}
+        <if test="customerName != null  and customerName != ''">
+            and u.customer_name = #{customerName}
+        </if>
+        <if test="interviewTime != null  and followStatus != ''">
+            and DATE_FORMAT(a.interview_time,'%Y-%m-%d ') = DATE_FORMAT(#{interviewTime},'%Y-%m-%d')
+        </if>
     ORDER BY a.insert_time desc
     </select>
 
@@ -130,5 +155,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where demand_id = #{demandId} and customer_code =#{customerCode}
     </update>
-    
+    <!-- 人事的带面试-->
+    <select id="selectMarWaitinginterviewpersonnelMatters"  parameterType="map" resultType="map">
+      SELECT a.nick_name,d.project_name,a.demand_id,
+        DATE_FORMAT(a.interview_time,'%Y-%m-%d %H:%i:%s') as interview_time,
+        u.customer_name, DATE_FORMAT(a.begin_time,'%Y-%m-%d %H:%i:%s') as begin_time,
+        DATE_FORMAT(a.end_time,'%Y-%m-%d %H:%i:%s') as end_time,
+        a.interview_mode,a.interview_location,a.interview_contact,a.be_careful,
+        c.follow_status,follow_detail from mar_waitinginterview a
+        LEFT JOIN mar_demandresume b  on a.demand_id=b.demand_id and a.customer_code=b.customer_code
+        LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id and b.newfollowtime=c.trackingtime
+        LEFT JOIN per_customerinfo u on a.customer_code=u.customer_code
+        LEFT JOIN mar_demand d on a.demand_id=d.demand_id
+        where
+        a.user_name=#{userName}
+        <if test="followStatus != null  and followStatus != ''">
+         and  c.follow_status=#{followStatus}
+        </if>
+        <if test="customerName != null  and customerName != ''">
+            and u.customer_name = #{customerName}
+        </if>
+        <if test="interviewTime != null  and interviewTime != ''">
+            and DATE_FORMAT(a.interview_time,'%Y-%m-%d ') = DATE_FORMAT(#{interviewTime},'%Y-%m-%d')
+        </if>
+
+        ORDER BY a.insert_time desc
+        </select>
+
+
+
 </mapper>

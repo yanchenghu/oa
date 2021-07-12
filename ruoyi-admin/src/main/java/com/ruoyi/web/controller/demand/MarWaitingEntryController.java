@@ -49,8 +49,10 @@ public class MarWaitingEntryController extends BaseController {
     {
         startPage();
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        String username = loginUser.getUsername();
-        List<Map> list = marWaitingentryService.getMarWaitingentr(username);
+
+
+
+        List<Map> list = marWaitingentryService.getMarWaitingentr(loginUser);
         return getDataTable(list);
     }
 

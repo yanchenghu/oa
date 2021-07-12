@@ -48,9 +48,7 @@ public class MarWaitinginterviewController extends BaseController
     public TableDataInfo list(MarWaitinginterview marWaitinginterview)
     {
         startPage();
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        String username = loginUser.getUsername();
-        List<Map> list = marWaitinginterviewService.selectMarWaitinginterviewMap(username);
+        List<Map> list = marWaitinginterviewService.selectMarWaitinginterviewMap(marWaitinginterview,tokenService.getLoginUser(ServletUtils.getRequest()));
         return getDataTable(list);
     }
 

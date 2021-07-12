@@ -258,13 +258,12 @@
         DATE_FORMAT(a.customer_birth,'%Y-%m-%d') as customerBirth  ,a.profession_id as professionId,
         a.work_year as workYear,a.education,a.customer_university as customerUniversity,
         a.expectation_salary as expectationSalary,a.intention_area as intentionArea,
-        DATE_FORMAT(a.add_time,'%Y-%m-%d') as addTime,a.resume_path as resumePath,b.add_name as addName,
+        DATE_FORMAT(a.add_time,'%Y-%m-%d') as addTime,a.resume_path as resumePath,
         a.opert_name as opertName
         FROM
-        per_customerinfo a LEFT JOIN
-        per_robcustomer b on a.customer_tel=b.customer_tel and b.Status=0
-       where
-         b.add_name is null
+        per_customerinfo a
+        WHERE
+        1=1
         <if test="professionId != null  and professionId != ''"> and a.profession_id = #{professionId}</if>
         <if test="workYear != null  and workYear != ''"> and a.work_year &gt;= #{workYear}</if>
         <if test="education != null "> and a.education = #{education}</if>
@@ -280,6 +279,7 @@
         <where>
             DATE_FORMAT(add_time, '%Y%m') = DATE_FORMAT( CURDATE( ) , '%Y%m' )
             <if test="opertCode != null "> and opert_code = #{opertCode}</if>
+            order by add_time desc
         </where>
     </select>
 

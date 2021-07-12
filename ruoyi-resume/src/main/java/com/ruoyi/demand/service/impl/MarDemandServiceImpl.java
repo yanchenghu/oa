@@ -1,13 +1,16 @@
 package com.ruoyi.demand.service.impl;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.*;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.resume.DateUtils;
@@ -26,10 +29,12 @@ import com.ruoyi.demand.mapper.*;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.tool.WordUtils;
 import com.ruoyi.tool.WorkDay;
 import com.taobao.api.ApiException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.service.IMarDemandService;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +49,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class MarDemandServiceImpl implements IMarDemandService
 {
+    @Value("${ruoyi.template}")
+    private String template;// 模板(路径)
+
     @Autowired
     private MarDemandMapper marDemandMapper;
 
@@ -76,6 +84,22 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Autowired
     private  MarWaitinginterviewMapper marWaitinginterviewMapper;
 
+    @Autowired
+    private MarDemandRequirementMapper marDemandRequirementMapper;
+    @Autowired
+    private MarDemandresumeRequirementMapper marDemandresumeRequirementMapper;
+    @Autowired
+    private PerEnclosureCustomerinfoMapper perEnclosureCustomerinfoMapper;
+    @Autowired
+    private  PerEnclosureEducationMapper perEnclosureEducationMapper;
+    @Autowired
+    private PerEnclosureProjectMapper perEnclosureProjectMapper;
+    @Autowired
+    private   PerEnclosureSkillsMapper perEnclosureSkillsMapper;
+    @Autowired
+    private PerEnclosureWorkMapper perEnclosureWorkMapper;
+
+
     /**
      * 查询需求
      * @param
@@ -89,8 +113,32 @@ public class MarDemandServiceImpl implements IMarDemandService
         marSign.setDemandId(demandId);
         List<MarSign> Signlis=marSignMapper.selectMarSignList(marSign);
         MarDemand marDeman=marDemandMapper.selectMarDemandById(demandId);
+        MarDemandRequirement marDemandRequirement=new MarDemandRequirement();
+        marDemandRequirement.setDemandId(demandId);
+        List<MarDemandRequirement> marDemandRequirements = marDemandRequirementMapper.selectMarDemandRequirementList(marDemandRequirement);
         map.put("Signlis",Signlis);
         map.put("marDeman",marDeman);
+        map.put("marDemandRequirements",marDemandRequirements);
+        return map;
+    }
+
+    @Override
+    public Map copydemand(String demandId) {
+        Map map=new HashMap();
+        MarSign marSign=new MarSign();
+        marSign.setDemandId(demandId);
+        List<MarSign> Signlis=marSignMapper.selectMarSignList(marSign);
+        MarDemand marDeman=marDemandMapper.selectMarDemandById(demandId);
+        MarDemandRequirement marDemandRequirement=new MarDemandRequirement();
+        marDemandRequirement.setDemandId(demandId);
+        List<MarDemandRequirement> marDemandRequirements = marDemandRequirementMapper.selectMarDemandRequirementList(marDemandRequirement);
+        for (MarDemandRequirement marDemandR:marDemandRequirements){
+            marDemandR.setId(null);
+            marDemandR.setDemandId("");
+        }
+        map.put("Signlis",Signlis);
+        map.put("marDeman",marDeman);
+        map.put("marDemandRequirements",marDemandRequirements);
         return map;
     }
 
@@ -121,6 +169,12 @@ public class MarDemandServiceImpl implements IMarDemandService
         marDema.setDownloadStatus(7);
         List<MarDemandresume>  lif=marDemandresumefollowMapper.selectMarDemandList(marDema);
         marDe.setCoopnature(lif.size());
+        //岗位要求
+        MarDemandRequirement marDemandRequirement=new MarDemandRequirement();
+        marDemandRequirement.setDemandId(marDe.getDemandId());
+        List<MarDemandRequirement> marDemandRequirements = marDemandRequirementMapper.selectMarDemandRequirementList(marDemandRequirement);
+        marDe.setMarDemandRequirementList(marDemandRequirements);
+
         }
         return list;
     }
@@ -148,6 +202,8 @@ public class MarDemandServiceImpl implements IMarDemandService
 
         List<Integer> liStr = JSON.parseArray(JSON.parseObject(zm).getString("list"), Integer.class);
         MarDemand marDemand = JSON.parseObject(JSON.parseObject(zm).getString("marDemand"), MarDemand.class);
+        //岗位要求
+        List<MarDemandRequirement> ListmarDema = JSON.parseArray(JSON.parseObject(zm).getString("marDemandRequirement"), MarDemandRequirement.class);
 
         MarDemand sd=marDemandMapper.selectMarDemandByName(marDemand.getProjectName());
         if(sd!=null){
@@ -167,6 +223,20 @@ public class MarDemandServiceImpl implements IMarDemandService
         }else {
             return AjaxResult.error("没有选择下包商");
         }
+        for (MarDemandRequirement marDemandRequirement:ListmarDema ){
+            marDemandRequirement.setDemandId(demandId);
+            marDemandRequirement.setAddTime(new Date());
+
+        }
+        if(ListmarDema.size()>0){
+            marDemandRequirementMapper.insertMListmarDema(ListmarDema);
+        }else {
+         return AjaxResult.error("岗位要求为空");
+        }
+
+
+
+
         marDemand.setDemandPic(fsafsa);
         marDemand.setDemandId(demandId);
         marDemand.setOperationuser(loginUser.getUsername());
@@ -189,6 +259,8 @@ public class MarDemandServiceImpl implements IMarDemandService
     {
         List<Integer> liStr = JSON.parseArray(JSON.parseObject(zm).getString("list"), Integer.class);
         MarDemand marDemand = JSON.parseObject(JSON.parseObject(zm).getString("marDemand"), MarDemand.class);
+        //岗位要求
+        List<MarDemandRequirement> ListmarDema = JSON.parseArray(JSON.parseObject(zm).getString("marDemandRequirement"), MarDemandRequirement.class);
         String demandId=marDemand.getDemandId();
 
         if(liStr.size()<=0){
@@ -375,6 +447,12 @@ public class MarDemandServiceImpl implements IMarDemandService
             marDema.setDownloadStatus(7);
             List<MarDemandresume>  lif=marDemandresumefollowMapper.selectMarDemandList(marDema);
             marDe.setCoopnature(lif.size());
+            //岗位要求
+            MarDemandRequirement marDemandRequirement=new MarDemandRequirement();
+            marDemandRequirement.setDemandId(marDe.getDemandId());
+            List<MarDemandRequirement> marDemandRequirements = marDemandRequirementMapper.selectMarDemandRequirementList(marDemandRequirement);
+            marDe.setMarDemandRequirementList(marDemandRequirements);
+
         }
         return list;
     }
@@ -383,62 +461,116 @@ public class MarDemandServiceImpl implements IMarDemandService
      */
     @Override
     @Transactional
-    public AjaxResult resumeBingDemand(LoginUser loginUser,String zm,MultipartFile file) {
+    public AjaxResult resumeBingDemand(LoginUser loginUser,String zm) {
         String customerCode = JSON.parseObject(zm).getString("customerCode");
         String demandId = JSON.parseObject(zm).getString("demandId");
+        if(StringUtils.isEmpty(customerCode)||StringUtils.isEmpty(demandId)){
+            return AjaxResult.error("绑定简历ID为空，或者需求ID为空，请联系管理员");
+        }
+        //岗位要求
+        List<MarDemandresumeRequirement> listresumeRequirement = JSON.parseArray(JSON.parseObject(zm).getString("marDemandresumeRequirement"), MarDemandresumeRequirement.class);
+        //基本信息
+        PerEnclosureCustomerinfo perEnclosureCustomerinfo = JSON.parseObject(JSON.parseObject(zm).getString("perEnclosureCustomerinfo"), PerEnclosureCustomerinfo.class);
+        if(perEnclosureCustomerinfo==null){
+            return AjaxResult.error("基本信息为空,请联系管理员");
+
+        }
+        perEnclosureCustomerinfo.setCustomerCode(customerCode);
+        //工作经验
+        List<PerEnclosureWork> perEnclosureWorkList = JSON.parseArray(JSON.parseObject(zm).getString("perEnclosureWorkList"), PerEnclosureWork.class);
+        if(perEnclosureWorkList.size()<1){
+            return AjaxResult.error("工作经验最少一个");
+        }
+        //项目经验
+        List<PerEnclosureProject> perEnclosureProjectList = JSON.parseArray(JSON.parseObject(zm).getString("perEnclosureProject"), PerEnclosureProject.class);
+        if(perEnclosureProjectList.size()<2){
+            return AjaxResult.error("项目经验最少两个");
+        }
+        //教育背景
+        List<PerEnclosureEducation> perEnclosureEducationList = JSON.parseArray(JSON.parseObject(zm).getString("perEnclosureEducation"), PerEnclosureEducation.class);
+        if(perEnclosureEducationList.size()<1){
+            return AjaxResult.error("专业技能最少一个");
+        }
+        //专业技能
+        List<PerEnclosureSkills> perEnclosureSkillsList = JSON.parseArray(JSON.parseObject(zm).getString("perEnclosureSkills"), PerEnclosureSkills.class);
+       if(perEnclosureSkillsList.size()<2){
+             return AjaxResult.error("专业技能最少两个");
+       }
+
+        MarDemand marDemand = marDemandMapper.selectMarDemandById(demandId);
+        PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
+        // 保存简历模板
+        Map ma =new HashMap();
+        ma.put("customerName",perCustomerinfo.getCustomerName());
+        ma.put("workYear",perEnclosureCustomerinfo.getWorkYear());
+        ma.put("professionId",perEnclosureCustomerinfo.getProfessionId());
+        ma.put("customerAge",perEnclosureCustomerinfo.getCustomerAge());
+        ma.put("selfEvaluation",perEnclosureCustomerinfo.getSelfEvaluation());
+        ma.put("customerSex",perEnclosureCustomerinfo.getCustomerSex()>0?"女":"男");
+        ma.put("education", DictUtils.getDictLabel("per_customerinfo_education",perEnclosureCustomerinfo.getEducation().toString()));
+
+        ma.put("workList",perEnclosureWorkList);
+        ma.put("projectList",perEnclosureProjectList);
+        ma.put("educationList",perEnclosureEducationList);
+        ma.put("skillsList",perEnclosureSkillsList);
+        String downLoadName = perCustomerinfo.getCustomerName() +"_"+ marDemand.getProjectName() + ".doc";  /*默认为word格式*/
+        String templateName = "个人基本.xml";
+        String downloadWordByTemplate="";
+        try {
+            downloadWordByTemplate = WordUtils.downloadWordByTemplate(ma, template, templateName, downLoadName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(StringUtils.isEmpty(downloadWordByTemplate)){
+            return AjaxResult.error("附件简历保存异常，请联系管理员");
+        }
+        //查询是否有简历附件,如果没有附件覆盖简历原件
+        if(StringUtils.isEmpty(perCustomerinfo.getResumePath())){
+            perCustomerinfo.setResumePath(downloadWordByTemplate);
+            perCustomerinfoMapper.updatePerCustomerinfo(perCustomerinfo);
+        }
+        PerEnclosureCustomerinfo perEnclo = perEnclosureCustomerinfoMapper.selectPerEnclosureCustomerinfoById(customerCode);
+        if (perEnclo!= null) {
+            perEnclo.setCustomerCode(customerCode);
+            perEnclosureCustomerinfoMapper.updatePerEnclosureCustomerinfo(perEnclo);
+        }else{
+            perEnclosureCustomerinfoMapper.insertPerEnclosureCustomerinfo(perEnclosureCustomerinfo);
+            for(PerEnclosureWork perEnclosureWork:perEnclosureWorkList){
+                perEnclosureWork.setCustomerCode(customerCode);
+                perEnclosureWorkMapper.insertPerEnclosureWork(perEnclosureWork);
+            }
+            for(PerEnclosureProject perEnclosureProject:perEnclosureProjectList){
+                perEnclosureProject.setCustomerCode(customerCode);
+                perEnclosureProjectMapper.insertPerEnclosureProject(perEnclosureProject);
+            }
+            for(PerEnclosureEducation perEnclosureEducation:perEnclosureEducationList){
+                perEnclosureEducation.setCustomerCode(customerCode);
+                perEnclosureEducationMapper.insertPerEnclosureEducation(perEnclosureEducation);
+            }
+
+            for(PerEnclosureSkills perEnclosureSkills:perEnclosureSkillsList){
+                perEnclosureSkills.setCustomerCode(customerCode);
+                perEnclosureSkillsMapper.insertPerEnclosureSkills(perEnclosureSkills);
+            }
+
+        }
 
 
         Map map=new HashMap();
         map.put("demandId",demandId);
 
-        if(StringUtils.isEmpty(customerCode)||StringUtils.isEmpty(demandId)){
-            return AjaxResult.error("绑定简历ID为空，或者需求ID为空，请联系管理员");
-        }
-        //查询是否有简历附件
-        PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
-        Date customerUniversityTime = perCustomerinfo.getCustomerUniversityTime();
-        if(customerUniversityTime==null){
-            return  AjaxResult.error(perCustomerinfo.getCustomerName()+"的毕业时间为空，绑定失败");
-        }
-        String expectationSalary = perCustomerinfo.getExpectationSalary();
-        if(StringUtils.isEmpty(expectationSalary)){
-           return  AjaxResult.error(perCustomerinfo.getCustomerName()+"的期望薪资为空，绑定失败");
-        }
 
-        //查重
-        map.put("customerCode",customerCode);
-        Map me=marDemandresumeMapper.selectMarDemandresumeByCodeID(map);
-        if(me!=null && me.get("customer_name")!=null){
-            return AjaxResult.error( me.get("customer_name").toString()+"已经被绑定，绑定失败");
-        }
-            String fsafsa="";
-            if(file != null){
-                try {
-                    fsafsa = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return AjaxResult.error( "简历附件上传失败，请联系管理员");
-                }
-            }else {
-                return AjaxResult.error( perCustomerinfo.getCustomerName()+"没有简历附件，绑定失败，请上传后在绑定");
-
-            }
-        //查询是否有简历附件,如果没有附件覆盖简历原件
-            if(StringUtils.isEmpty(perCustomerinfo.getResumePath())){
-                perCustomerinfo.setResumePath(fsafsa);
-                perCustomerinfoMapper.updatePerCustomerinfo(perCustomerinfo);
-            }
-            Date date=new Date();
-            String demandresumeId=UUID.randomUUID().toString();
-            MarDemandresume marde=new MarDemandresume();
-            marde.setId(demandresumeId);
-            marde.setDemandId(demandId);
-            marde.setCustomerCode(customerCode);
-            marde.setBindTime(date);
-            marde.setBindPeople(loginUser.getUsername());
-            marde.setNewfollowtime(date);
-            marde.setTrackzPeoname(loginUser.getUser().getNickName());
-        marde.setResumeEnclosurepath(fsafsa);
+        Date date=new Date();
+        String demandresumeId=UUID.randomUUID().toString();
+        MarDemandresume marde=new MarDemandresume();
+        marde.setId(demandresumeId);
+        marde.setDemandId(demandId);
+        marde.setCustomerCode(customerCode);
+        marde.setBindTime(date);
+        marde.setBindPeople(loginUser.getUsername());
+        marde.setNewfollowtime(date);
+        marde.setTrackzPeoname(loginUser.getUser().getNickName());
+        marde.setResumeEnclosurepath(downloadWordByTemplate);
         marDemandresumeMapper.insertMarDemandresume(marde);
         //添加简历跟进记录
             MarDemandresumefollow marDemFoll=new MarDemandresumefollow();
@@ -448,6 +580,11 @@ public class MarDemandServiceImpl implements IMarDemandService
             marDemFoll.setFollowStatus(1);
             marDemFoll.setFollowDetail("简历绑定");
          marDemandresumefollowMapper.insertMarDemandresumefollow(marDemFoll);
+        //添加岗位需求
+        for(MarDemandresumeRequirement marDemandresumeRequirement:listresumeRequirement){
+            marDemandresumeRequirement.setDemandresumeId(demandresumeId);
+            marDemandresumeRequirementMapper.insertMarDemandresumeRequirement(marDemandresumeRequirement);
+        }
              //添加操作记录
             ConOperationrecords conOperationrec=new ConOperationrecords();
             conOperationrec.setType(4);
@@ -456,6 +593,25 @@ public class MarDemandServiceImpl implements IMarDemandService
             conOperationrec.setRemark("简历绑定");
         conOperationrecordsMapper.insertConOperationrecords(conOperationrec);
 
+        ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
+        if(cotoken==null){
+            cotoken=new ConDingtoken();
+            try {
+                JSONObject jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                cotoken.setToken( jsonToken.getString("access_token"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        SysUser sysUser = sysUserMapper.selectUserByUserName(marDemand.getOperationuser());
+        String dinguserid = sysUser.getDinguserid();//用户钉钉
+        try {
+            DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
+                    loginUser.getUser().getNickName()+"将 "+perCustomerinfo.getCustomerName()+" 绑定到你的需求"+marDemand.getProjectName()+" 请及时跟进");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return AjaxResult.success("绑定成功");
 
     }
@@ -468,6 +624,13 @@ public class MarDemandServiceImpl implements IMarDemandService
         map.put("demandId",demandId);
         map.put("customerName",customerName);
         List<Map>  list=marDemandresumefollowMapper.selectDemandDetailsList(map);
+        MarDemandresumeRequirement marDemandresumeRequirement=new MarDemandresumeRequirement();
+        for(Map ma:list){
+           String id= (String) ma.get("id");
+            marDemandresumeRequirement.setDemandresumeId(id);
+            List<MarDemandresumeRequirement> t1 = marDemandresumeRequirementMapper.selectMarDemandresumeRequirementList(marDemandresumeRequirement);
+            ma.put("postlist",t1);
+        }
         return list;
     }
     /**
@@ -484,8 +647,8 @@ public class MarDemandServiceImpl implements IMarDemandService
           MarDemandresume marDemandres=new MarDemandresume();
           marDemandres.setId(marDemandresumefollow.getDemandresumeId());
           marDemandres.setNewfollowtime(date);
-          int a=marDemandresumeMapper.updateMarDemandresume(marDemandres);
-        if(marDemandresumefollow.getFollowStatus()==3) {
+            int a=marDemandresumeMapper.updateMarDemandresume(marDemandres);
+            if(marDemandresumefollow.getFollowStatus()==3) {
 
          //添加待面试信息并且钉钉提醒
          MarDemandresume marDemandresume = marDemandresumeMapper.selectMarDemandresumeById(marDemandresumefollow.getDemandresumeId());
@@ -496,13 +659,18 @@ public class MarDemandServiceImpl implements IMarDemandService
          marWaitingi.setDemandId(marDemandresume.getDemandId());
          marWaitingi.setBeginTime(DateUtils.strToTime(marDemandresumefollow.getBeginTime(),DateUtils.FORMAT_Y_M_D_H_M_S)        );
          marWaitingi.setEndTime(DateUtils.strToTime(marDemandresumefollow.getEndTime(),DateUtils.FORMAT_Y_M_D_H_M_S));
+         marWaitingi.setInterviewMode(marDemandresumefollow.getRemark1());
+         marWaitingi.setInterviewLocation(marDemandresumefollow.getInterviewLocation());
+         marWaitingi.setInterviewContact(marDemandresumefollow.getInterviewContact());
+         marWaitingi.setBeCareful(marDemandresumefollow.getBeCareful());
          marWaitingi.setInsertTime(new Date());
          marWaitinginterviewMapper.insertMarWaitinginterview(marWaitingi);
         ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
         if(cotoken==null){
-            JSONObject jsonToken = null;
+            cotoken=new ConDingtoken();
+
             try {
-                jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                JSONObject jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
                 cotoken.setToken(jsonToken.getString("access_token"));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -522,8 +690,8 @@ public class MarDemandServiceImpl implements IMarDemandService
                     "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+marDemandresumefollow.getRemark1()+"，请及时沟通选定具体面试时间，面试时间范围为："+marDemandresumefollow.getBeginTime()+"至"+
                             marDemandresumefollow.getEndTime()+"并填入OA平台，注意事项："+beCareful);
 
-       System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+marDemandresumefollow.getRemark1()+"，请及时沟通选定具体面试时间，面试时间范围为："+marDemandresumefollow.getBeginTime()+"至"+
-              marDemandresumefollow.getEndTime()+"并填入OA平台，注意事项："+beCareful);
+//       System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+marDemandresumefollow.getRemark1()+"，请及时沟通选定具体面试时间，面试时间范围为："+marDemandresumefollow.getBeginTime()+"至"+
+//              marDemandresumefollow.getEndTime()+"并填入OA平台，注意事项："+beCareful);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -636,6 +804,9 @@ public class MarDemandServiceImpl implements IMarDemandService
         String followDetail=JSON.parseObject(zm).getString("followDetail");
         String Remark1=JSON.parseObject(zm).getString("remark1");
         String beCareful=JSON.parseObject(zm).getString("beCareful");
+
+        String interviewLocation=JSON.parseObject(zm).getString("interviewLocation");
+        String interviewContact=JSON.parseObject(zm).getString("interviewContact");
         Date stayTime= JSON.parseObject(zm).getDate("trackingtime");
 
 
@@ -665,13 +836,18 @@ public class MarDemandServiceImpl implements IMarDemandService
                 marWaitingi.setDemandId(marDemandresume.getDemandId());
                 marWaitingi.setBeginTime(beginTime);
                 marWaitingi.setEndTime(endTime);
+                marWaitingi.setInterviewMode(Remark1);
+                marWaitingi.setInterviewLocation(interviewLocation);
+                marWaitingi.setInterviewContact(interviewContact);
+                marWaitingi.setBeCareful(beCareful);
                 marWaitingi.setInsertTime(new Date());
                 marWaitinginterviewMapper.insertMarWaitinginterview(marWaitingi);
                 ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
                 if(cotoken==null){
-                    JSONObject jsonToken = null;
+                    cotoken=new ConDingtoken();
+
                     try {
-                        jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                        JSONObject jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
                         cotoken.setToken(jsonToken.getString("access_token"));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -689,8 +865,8 @@ public class MarDemandServiceImpl implements IMarDemandService
                     DingUtil.sendMessage(DingUtil.sendMessage_URL+"?access_token="+cotoken.getToken()+"&agent_id="+DingUtil.agent_id+"&userid_list="+dinguserid,
                             "你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+Remark1+"，请及时沟通选定具体面试时间，面试时间范围为："+DateUtils.formatY_M_D2String(beginTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"至"+
                                     DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台,注意事项："+beCareful);
-                    System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+Remark1+"，请及时沟通选定具体面试时间，面试时间范围为："+DateUtils.formatY_M_D2String(beginTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"至"+
-                            DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台,注意事项："+beCareful);
+//                    System.out.println("你绑定"+marDemand.getProjectName()+"项目下的："+perCustomerinfo.getCustomerName()+"简历通过，确定为："+Remark1+"，请及时沟通选定具体面试时间，面试时间范围为："+DateUtils.formatY_M_D2String(beginTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"至"+
+//                            DateUtils.formatY_M_D2String(endTime,DateUtils.FORMAT_Y_M_D_H_M_S)+"并填入OA平台,注意事项："+beCareful);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -855,6 +1031,7 @@ public class MarDemandServiceImpl implements IMarDemandService
             ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
             if(StringUtils.isNotEmpty(dsadas)){
                 if(cotoken==null){
+                    cotoken=new ConDingtoken();
                     JSONObject jsonToken =  DingUtil.getAccessToken(DingUtil.TOKEN_URL);
                     cotoken.setToken(jsonToken.getString("access_token"));
                 }
@@ -896,6 +1073,10 @@ public class MarDemandServiceImpl implements IMarDemandService
             marDema.setDownloadStatus(7);
             List<MarDemandresume>  lif=marDemandresumefollowMapper.selectMarDemandList(marDema);
             marDe.setCoopnature(lif.size());
+            MarDemandRequirement marDemandRequirement=new MarDemandRequirement();
+            marDemandRequirement.setDemandId(marDe.getDemandId());
+            List<MarDemandRequirement> marDemandRequirements = marDemandRequirementMapper.selectMarDemandRequirementList(marDemandRequirement);
+            marDe.setMarDemandRequirementList(marDemandRequirements);
         }
         return list;
     }
@@ -1001,6 +1182,88 @@ public class MarDemandServiceImpl implements IMarDemandService
     @Override
     public List<MarDemand> selectaccordingDemand(MarDemand marDemand) {
         return marDemandMapper.selectMarDemandList(marDemand);
+    }
+
+    @Override
+    public int insertdemandAnalysis(MarDemandRequirement marDemandRequirement) {
+        marDemandRequirement.setAddTime(new Date());
+        return  marDemandRequirementMapper.insertMarDemandRequirement(marDemandRequirement);
+    }
+
+    @Override
+    public int deleteMarDemandRequirementById(Long id) {
+        marDemandresumeRequirementMapper.delbyRequirements_id(id);
+
+        return marDemandRequirementMapper.deleteMarDemandRequirementById(id);
+    }
+
+    @Override
+    public AjaxResult demandIDAcquisition(String demandId, LoginUser loginUser) {
+
+        Map ma=new HashMap();
+        ma.put("bindStarTime",DateUtils.getDayBefore(new Date(),10));
+        ma.put("bindEndTime",new Date());
+        ma.put("bindPeople",loginUser.getUsername());
+        //查询近十天的简历绑定数量
+        String format="0";
+        int marDeman = marDemandresumeMapper.selectBindingMarDemandresumeCont(ma);
+        int maran = marDemandresumeMapper.selectpassMarDemandresumeCont(ma);
+        if(marDeman!=0){
+        //查询近十天的简历绑定数量的通过率
+         DecimalFormat df=new DecimalFormat(".00");
+         format=df.format((float)maran / marDeman*100);
+        }
+        MarDemandRequirement marDemandRequirement=new MarDemandRequirement();
+        marDemandRequirement.setDemandId(demandId);
+        List<MarDemandRequirement> marDemandRequirements = marDemandRequirementMapper.selectMarDemandRequirementList(marDemandRequirement);
+        Map map=new HashMap();
+        map.put("marDemandRequirements",marDemandRequirements);
+        map.put("format",format);
+        return AjaxResult.success(map);
+    }
+
+    @Override
+    public int updateMarDemandRequirement(MarDemandRequirement marDemandRequirement) {
+        return marDemandRequirementMapper.updateMarDemandRequirement(marDemandRequirement);
+    }
+
+    @Override
+    public AjaxResult isResumeTemplate(String customerCode) {
+    if(StringUtils.isEmpty(customerCode)){
+        return AjaxResult.error( "简历ID为空，请联系管理员");
+    }
+    Map map=new HashMap();
+        List<PerEnclosureEducation> perEnclosureEducationList=new ArrayList<>();
+        List<PerEnclosureProject> perEnclosureProjectList=new ArrayList<>();
+        List<PerEnclosureSkills> perEnclosureSkillsList=new ArrayList<>();
+        List<PerEnclosureWork> perEnclosureWorkList=new ArrayList<>();
+        PerEnclosureCustomerinfo perEnclosureCustomerinfo = perEnclosureCustomerinfoMapper.selectPerEnclosureCustomerinfoById(customerCode);
+    if(perEnclosureCustomerinfo==null){
+        PerCustomerinfo perCustomerinfo = perCustomerinfoMapper.selectPerCustomerinfoById(customerCode);
+        perCustomerinfo.setProfessionId("");
+        map.put("perCustomerinfo",perCustomerinfo);
+        map.put("educationList",perEnclosureEducationList);
+        map.put("projectList",perEnclosureProjectList);
+        map.put("skillsList",perEnclosureSkillsList);
+        map.put("eWorkList",perEnclosureWorkList);
+        return AjaxResult.success(map);
+    }
+        //查重(查询当前简历是否在该需求上绑定过)
+        map.put("customerCode",customerCode);
+        Map me=marDemandresumeMapper.selectMarDemandresumeByCodeID(map);
+        if(me!=null && me.get("customer_name")!=null){
+            return AjaxResult.error( me.get("customer_name").toString()+"已经被绑定，绑定失败");
+        }
+         perEnclosureEducationList = perEnclosureEducationMapper.selectPerEnclosureEducationList(new PerEnclosureEducation(customerCode));
+         perEnclosureProjectList = perEnclosureProjectMapper.selectPerEnclosureProjectList(new PerEnclosureProject(customerCode));
+        perEnclosureSkillsList = perEnclosureSkillsMapper.selectPerEnclosureSkillsList(new PerEnclosureSkills(customerCode));
+         perEnclosureWorkList = perEnclosureWorkMapper.selectPerEnclosureWorkList(new PerEnclosureWork(customerCode));
+        map.put("perCustomerinfo",perEnclosureCustomerinfo);
+        map.put("educationList",perEnclosureEducationList);
+        map.put("projectList",perEnclosureProjectList);
+        map.put("skillsList",perEnclosureSkillsList);
+        map.put("eWorkList",perEnclosureWorkList);
+     return AjaxResult.success(map);
     }
 
 

@@ -48,6 +48,15 @@ public class MarDemandresumefollow extends BaseEntity
 
     /** 注意事项 */
     private String beCareful;
+    /*面试地点*/
+    private String interviewLocation;
+    /*面试联系人*/
+    private String interviewContact;
+
+
+
+
+
 
 
 
@@ -65,52 +74,52 @@ public class MarDemandresumefollow extends BaseEntity
         this.demandresumeId = demandresumeId;
     }
 
-    public String getDemandresumeId() 
+    public String getDemandresumeId()
     {
         return demandresumeId;
     }
-    public void setTrackingPeople(String trackingPeople) 
+    public void setTrackingPeople(String trackingPeople)
     {
         this.trackingPeople = trackingPeople;
     }
 
-    public String getTrackingPeople() 
+    public String getTrackingPeople()
     {
         return trackingPeople;
     }
-    public void setTrackingtime(Date trackingtime) 
+    public void setTrackingtime(Date trackingtime)
     {
         this.trackingtime = trackingtime;
     }
 
-    public Date getTrackingtime() 
+    public Date getTrackingtime()
     {
         return trackingtime;
     }
-    public void setFollowStatus(Integer followStatus) 
+    public void setFollowStatus(Integer followStatus)
     {
         this.followStatus = followStatus;
     }
 
-    public Integer getFollowStatus() 
+    public Integer getFollowStatus()
     {
         return followStatus;
     }
-    public void setFollowDetail(String followDetail) 
+    public void setFollowDetail(String followDetail)
     {
         this.followDetail = followDetail;
     }
 
-    public String getFollowDetail() 
+    public String getFollowDetail()
     {
         return followDetail;
     }
-    public void setRemark1(String remark1) 
+    public void setRemark1(String remark1)
     {
         this.remark1 = remark1;
     }
 
-    public String getRemark1() 
+    public String getRemark1()
     {
         return remark1;
     }
@@ -121,6 +130,8 @@ public class MarDemandresumefollow extends BaseEntity
     public void setBeCareful(String beCareful) {
         this.beCareful = beCareful;
     }
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -135,4 +146,19 @@ public class MarDemandresumefollow extends BaseEntity
     }
 
 
+    public String getInterviewLocation() {
+        return interviewLocation;
+    }
+
+    public void setInterviewLocation(String interviewLocation) {
+        this.interviewLocation = interviewLocation;
+    }
+
+    public String getInterviewContact() {
+        return interviewContact;
+    }
+
+    public void setInterviewContact(String interviewContact) {
+        this.interviewContact = interviewContact;
+    }
 }

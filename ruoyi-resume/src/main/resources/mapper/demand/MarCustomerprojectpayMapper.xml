@@ -326,13 +326,16 @@
         <if test="operationuser != null">and c.operationuser=#{operationuser}</if>
         ORDER BY g.dept_name,f.nick_name
     </select>
-    <select id="inItemNowCount"    resultType="map">
-       SELECT b.sumSalary,a.sumServicePay,c.nowNum from
+    <select id="inItemNowCount"     parameterType="String" resultType="map">
+        SELECT b.sumSalary,a.sumServicePay,c.nowNum from
         ( SELECT IFNULL(SUM(service_pay),0) AS sumServicePay ,IFNULL(SUM( salary ),0) AS sumSalary FROM mar_customerprojectpay  WHERE DATE_FORMAT( syqstart_time, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m')
         ) as a,
         (SELECT IFNULL(SUM( salary ),0) AS sumSalary FROM mar_customerprojectpay WHERE DATE_FORMAT( outof_projecttime, '%Y-%m' ) = DATE_FORMAT( now( ), '%Y-%m' )
         ) as b,
-        ( SELECT IFNULL( COUNT( id ), 0 ) AS nowNum FROM mar_customerprojectpay WHERE outof_projecttime IS NULL
+        ( SELECT IFNULL( COUNT(f.id ), 0 ) AS nowNum FROM mar_customerprojectpay  f LEFT JOIN
+        mar_demand g on f.demand_id=g.demand_id
+        WHERE f.outof_projecttime IS NULL
+        <if test="userName != null  and userName != ''"> and g.operationuser=#{userName}</if>
         )as c
     </select>
     <select id="entryPeopleCount"    parameterType="map"  resultType="map">

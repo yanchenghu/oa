@@ -1,9 +1,12 @@
 package com.ruoyi.demand.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.resume.DateUtils;
 import com.ruoyi.common.utils.resume.DingUtil;
 import com.ruoyi.conn.domain.ConDingtoken;
@@ -59,10 +62,18 @@ public class MarWaitinginterviewServiceImpl implements IMarWaitinginterviewServi
     {
         return marWaitinginterviewMapper.selectMarWaitinginterviewList(marWaitinginterview);
     }
-
     @Override
-    public List<Map> selectMarWaitinginterviewMap(String username) {
-        return marWaitinginterviewMapper.selectMarWaitinginterviewMap(username);
+    public List<Map> selectMarWaitinginterviewMap(MarWaitinginterview marWaitinginterview,LoginUser loginUser) {
+        Map map =new HashMap();
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        boolean personnelteamleader = roles.stream().anyMatch(e -> e.getRoleKey().equals("business"));
+        map.put("userName",loginUser.getUsername());
+        map.put("followStatus",marWaitinginterview.getFollowStatus());
+        map.put("interviewTime",marWaitinginterview.getInterviewTime());
+        if(personnelteamleader){
+            return marWaitinginterviewMapper.selectMarWaitinginterviewMap(map);
+        }
+        return marWaitinginterviewMapper.selectMarWaitinginterviewpersonnelMatters(map);
     }
 
     @Override
@@ -71,9 +82,10 @@ public class MarWaitinginterviewServiceImpl implements IMarWaitinginterviewServi
         MarDemand marDemand = marDemandMapper.selectMarDemandById(demandId);
         ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
         if(cotoken==null){
-            JSONObject jsonToken = null;
+            cotoken=new ConDingtoken();
+
             try {
-                jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+                JSONObject jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
                 cotoken.setToken(jsonToken.getString("access_token"));
             } catch (Exception e) {
                 e.printStackTrace();

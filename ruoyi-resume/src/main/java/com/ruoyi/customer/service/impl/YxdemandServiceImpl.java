@@ -491,9 +491,10 @@ public class YxdemandServiceImpl implements IYxdemandService
         }
         ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
         if(cotoken==null){
-            JSONObject jsonToken = null;
+            cotoken=new ConDingtoken();
             try {
-                jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
+
+                JSONObject jsonToken = DingUtil.getAccessToken(DingUtil.TOKEN_URL);
                 cotoken.setToken(jsonToken.getString("access_token"));
             } catch (Exception e) {
                 e.printStackTrace();

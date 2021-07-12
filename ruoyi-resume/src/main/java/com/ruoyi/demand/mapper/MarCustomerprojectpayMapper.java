@@ -83,7 +83,7 @@ public interface MarCustomerprojectpayMapper
 
     List<PersonnelEssentialinfor> selectpersonnelTurnoverList(Map map);
 
-    Map inItemNowCount();
+    Map inItemNowCount(String userName);
 
     Map entryPeopleCount(Map map);
 

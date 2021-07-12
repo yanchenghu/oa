@@ -13,6 +13,9 @@ import com.ruoyi.common.utils.ServletUtils;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.resume.downloadFile;
+import com.ruoyi.customer.domain.MarCompanyContacts;
+import com.ruoyi.demand.domain.MarDemandRequirement;
+import com.ruoyi.demand.domain.MarDemandresume;
 import com.ruoyi.demand.domain.MarTopic;
 import com.ruoyi.demand.service.IMarTopicService;
 import com.ruoyi.framework.web.service.TokenService;
@@ -84,6 +87,14 @@ public class MarDemandFollowController extends BaseController
     public AjaxResult getInfo(@PathVariable("demandId") String demandId)
     {
         return AjaxResult.success(marDemandService.selectMarDemandById(demandId));
+    }
+    /**
+     * 复制需求
+     */
+    @GetMapping(value = "copydemand/{demandId}")
+    public AjaxResult copydemand(@PathVariable("demandId") String demandId)
+    {
+        return AjaxResult.success(marDemandService.copydemand(demandId));
     }
 
     /**
@@ -175,7 +186,7 @@ public class MarDemandFollowController extends BaseController
 
 
     /**
-     * 获取需求详细信息
+     * 获取绑定需求上限制
      */
     @PostMapping(value = "/bindingUpper")
     public AjaxResult bindingUpper( String demandId)
@@ -209,6 +220,46 @@ public class MarDemandFollowController extends BaseController
 
 
 
+
+
+    /**
+     * 新增岗位的需求
+     */
+
+    @PostMapping("/addemandAnalysi")
+    public AjaxResult addemandAnalysi(@RequestBody MarDemandRequirement marDemandRequirement)
+  {
+        return toAjax(marDemandService.insertdemandAnalysis(marDemandRequirement)) ;
+    }
+
+    /**
+     * 删除岗位的需求
+     */
+    @GetMapping(value = "/deldemandAnalysis/{id}")
+    public AjaxResult deldemandAnalysis(@PathVariable("id") Long id)
+    {
+        return toAjax(marDemandService.deleteMarDemandRequirementById(id)) ;
+    }
+
+    /**
+     * 根据需求id获取岗位要求(和当前人近10天的简历通过率)
+     */
+    @GetMapping(value = "/acquisitionList/{demandId}")
+    public AjaxResult demandIDAcquisition(@PathVariable("demandId") String demandId)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        return marDemandService.demandIDAcquisition(demandId,loginUser);
+    }
+
+    /**
+     * 修改需求岗位要求
+     */
+
+    @PostMapping(value = "/editMarDemandRequi")
+    public AjaxResult edit(@RequestBody MarDemandRequirement marDemandRequirement)
+    {
+        return toAjax(marDemandService.updateMarDemandRequirement(marDemandRequirement));
+    }
 
 
 

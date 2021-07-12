@@ -3,6 +3,7 @@ package com.ruoyi.demand.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.demand.domain.MarWaitingentry;
 
 /**
@@ -21,7 +22,7 @@ public interface IMarWaitingentryService
      * @param marWaitingentry 待入项
      * @return 待入项集合
      */
-    public List<Map> getMarWaitingentr(String username);
+    public List<Map> getMarWaitingentr( LoginUser loginUser);
 
 
 }

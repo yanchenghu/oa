@@ -801,9 +801,15 @@ public class PerCustomerinfoServiceImpl implements IPerCustomerinfoService
      */
     @Override
     public List<Map> selectPeopostlist(PerCustomerinfo perCustomerinfo) {
-//   返回未抢占?
 
         List<Map>   infoList =perCustomerinfoMapper.selectPeopostlist(perCustomerinfo);
+        for(Map map:infoList){
+            String customerCode = (String) map.get("customerCode");
+            PerRobcustomer perrob = perRobcustomerMapper.selectByCustomerCode(customerCode);
+            if (perrob!=null){
+                map.put("addName",perrob.getAddName());
+            }
+        }
         return infoList;
     }
 

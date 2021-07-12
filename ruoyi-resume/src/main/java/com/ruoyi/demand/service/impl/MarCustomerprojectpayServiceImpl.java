@@ -236,7 +236,7 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
             rol.add(sysRo.getRoleKey());
         }
         // 目前在项 查询当前在项人数 、当月净成本、 当月净服务费 、 、当月净利润     净利润率
-        Map nowItem=marCustomerprojectpayMapper.inItemNowCount();
+        Map nowItem=new Hashtable();
         Integer settledCycle = marCustomerprojectpay.getSettledCycle();
 
         Map map=new HashMap();
@@ -249,9 +249,12 @@ public class MarCustomerprojectpayServiceImpl implements IMarCustomerprojectpayS
         List<Map>  digressilist =new ArrayList<>();
         //老板 boss，总商务权限 businessextra ，财务finance ,行政 administration
         if(rol.contains("Boss") || rol.contains("businessextra")|| rol.contains("finance")  || rol.contains("administration")|| rol.contains("admin")){
+             nowItem=marCustomerprojectpayMapper.inItemNowCount("");
              totalItem=marCustomerprojectpayMapper.entryPeopleCount(map);
              digressilist =marCustomerprojectpayMapper.outItemlist(map);
         }else{
+            nowItem=marCustomerprojectpayMapper.inItemNowCount(loginUser.getUsername());
+
             map.put("operationuser",loginUser.getUsername());
             totalItem=marCustomerprojectpayMapper.entryPeopleCount(map);
             digressilist =marCustomerprojectpayMapper.outItemlist(map);

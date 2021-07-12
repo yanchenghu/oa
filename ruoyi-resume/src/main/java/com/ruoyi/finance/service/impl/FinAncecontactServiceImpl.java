@@ -72,6 +72,7 @@ public class FinAncecontactServiceImpl implements IFinAncecontactService
 
         ConDingtoken cotoken =conDingtokenMapper.selectConDingtokenByType(1);
         if(cotoken==null){
+            cotoken=new ConDingtoken();
             JSONObject jsonToken =  DingUtil.getAccessToken(DingUtil.TOKEN_URL);
             cotoken.setToken(jsonToken.getString("access_token"));
         }

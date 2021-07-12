@@ -101,11 +101,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
     <select id="getMarWaitingentr"  parameterType="String" resultType="map">
      SELECT a.nick_name,f.corp_name,d.project_name,DATE_FORMAT(a.interview_time,'%Y-%m-%d') as interview_time,a.demand_id,
-     u.customer_name, DATE_FORMAT(a.stay_time,'%Y-%m-%d') as stay_time,c.follow_status,follow_detail from mar_waitingentry a
+     u.customer_name, DATE_FORMAT(a.stay_time,'%Y-%m-%d') as stay_time,c.follow_status,follow_detail,g.nick_name as bus_name,
+     DATE_FORMAT(h.syqstart_time,'%Y-%m-%d') as syqstart_time
+     from mar_waitingentry a
     LEFT JOIN mar_demandresume b  on a.demand_id=b.demand_id and a.customer_code=b.customer_code
     LEFT JOIN mar_demandresumefollow c on b.id=c.demandresume_id and b.newfollowtime=c.trackingtime
+    LEFT JOIN mar_customerprojectpay h  on a.demand_id=h.demand_id and a.customer_code=h.customer_code
     LEFT JOIN per_customerinfo u on a.customer_code=u.customer_code
     LEFT JOIN mar_demand d on a.demand_id=d.demand_id
+    LEFT JOIN sys_user g on d.operationuser=g.user_name
     LEFT JOIN mar_company f on d.corp_code=f.corp_code
     where  1=1
     <if test="username != null and username != ''"> and d.operationuser = #{username}</if>

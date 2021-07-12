@@ -1,6 +1,13 @@
 package com.ruoyi.demand.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.demand.domain.MybindingResume;
+import com.ruoyi.resume.domain.PerCustomerinfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.demand.mapper.MarDemandresumeMapper;
@@ -89,5 +96,18 @@ public class MarDemandresumeServiceImpl implements IMarDemandresumeService
     public int deleteMarDemandresumeById(String id)
     {
         return marDemandresumeMapper.deleteMarDemandresumeById(id);
+    }
+    /**
+     * 获取我绑定的简历
+     */
+    @Override
+    public  List<MybindingResume>  getMybindingResume(PerCustomerinfo perCustomerinfo, LoginUser loginUser) {
+        Map map=new HashMap<>();
+        map.put("customerName",perCustomerinfo.getCustomerName());
+        map.put("customerTel",perCustomerinfo.getCustomerTel());
+        map.put("followStatus",perCustomerinfo.getRelationshipZq());
+        map.put("userName",loginUser.getUsername());
+        List<MybindingResume> list=marDemandresumeMapper.getMybindingResume(map);
+        return list;
     }
 }

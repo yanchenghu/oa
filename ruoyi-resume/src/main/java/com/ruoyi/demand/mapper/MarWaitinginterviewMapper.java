@@ -64,7 +64,9 @@ public interface MarWaitinginterviewMapper
 
     int deleteMarWaitingeinterviewByDemandandCode(MarDemandresume marDemandresume);
 
-    List<Map> selectMarWaitinginterviewMap(String username);
+    List<Map> selectMarWaitinginterviewMap( Map map);
 
     int updateMarWaitinginByDemandCode(MarWaitinginterview marWaitinginterview);
+
+    List<Map> selectMarWaitinginterviewpersonnelMatters(Map mapss);
 }

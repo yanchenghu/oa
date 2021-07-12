@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.demand.domain.MarCustomerprojectpay;
 import com.ruoyi.demand.domain.MarDemand;
+import com.ruoyi.demand.domain.MarDemandRequirement;
 import com.ruoyi.demand.domain.MarDemandresumefollow;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,13 @@ public interface IMarDemandService
      */
     public Map selectMarDemandById(String demandId);
 
+    /**
+     * 复制需求
+     *
+     * @param
+     * @return 需求
+     */
+    public Map copydemand(String demandId);
     /**
      * 查询需求列表
      * 
@@ -89,7 +97,7 @@ public interface IMarDemandService
     /**
      * 简历绑定需求
      */
-    AjaxResult resumeBingDemand(LoginUser loginUser,String zm,MultipartFile file);
+    AjaxResult resumeBingDemand(LoginUser loginUser,String zm);
 
     /**
      * 需求已绑定简历列表
@@ -142,4 +150,24 @@ public interface IMarDemandService
     String queryresumesalary(String customerCode);
 
     List<MarDemand> selectaccordingDemand(MarDemand marDemand);
+
+
+
+    /**
+     * 新增岗位的需求
+     */
+    int insertdemandAnalysis(MarDemandRequirement marDemandRequirement);
+
+    int deleteMarDemandRequirementById(Long id);
+    /**
+     * 根据需求id获取岗位要求(和当前人近10天的简历通过率)
+     */
+
+    AjaxResult demandIDAcquisition(String demandId, LoginUser loginUser);
+
+    int updateMarDemandRequirement(MarDemandRequirement marDemandRequirement);
+
+    AjaxResult isResumeTemplate(String customerCode);
+
+
 }

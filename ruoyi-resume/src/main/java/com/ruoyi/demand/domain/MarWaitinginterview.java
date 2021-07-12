@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 待面试对象 mar_waitinginterview
  * 
  * @author ych
- * @date 2021-04-29
+ * @date 2021-07-07
  */
 public class MarWaitinginterview
 {
@@ -46,35 +46,42 @@ public class MarWaitinginterview
     @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date endTime;
 
+    /** 面试方式 */
+    @Excel(name = "面试方式")
+    private String interviewMode;
+
     /** 确定面试时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "确定面试时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date interviewTime;
+
+    /** 面试地点 */
+    @Excel(name = "面试地点")
+    private String interviewLocation;
 
     /** 添加时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "添加时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date insertTime;
 
+    /** 面试联系人 */
+    @Excel(name = "面试联系人")
+    private String interviewContact;
+
     /** $column.columnComment */
-    @Excel(name = "添加时间")
+    @Excel(name = "面试联系人")
     private String bz;
 
+    /** 注意事项 */
+    @Excel(name = "注意事项")
+    private String beCareful;
+
+
     private String customerName;
+    private String followStatus;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public void setId(Integer id)
+    public void setId(Integer id) 
     {
         this.id = id;
     }
@@ -137,6 +144,15 @@ public class MarWaitinginterview
     {
         return endTime;
     }
+    public void setInterviewMode(String interviewMode) 
+    {
+        this.interviewMode = interviewMode;
+    }
+
+    public String getInterviewMode() 
+    {
+        return interviewMode;
+    }
     public void setInterviewTime(Date interviewTime) 
     {
         this.interviewTime = interviewTime;
@@ -145,6 +161,15 @@ public class MarWaitinginterview
     public Date getInterviewTime() 
     {
         return interviewTime;
+    }
+    public void setInterviewLocation(String interviewLocation) 
+    {
+        this.interviewLocation = interviewLocation;
+    }
+
+    public String getInterviewLocation() 
+    {
+        return interviewLocation;
     }
     public void setInsertTime(Date insertTime) 
     {
@@ -155,6 +180,15 @@ public class MarWaitinginterview
     {
         return insertTime;
     }
+    public void setInterviewContact(String interviewContact) 
+    {
+        this.interviewContact = interviewContact;
+    }
+
+    public String getInterviewContact() 
+    {
+        return interviewContact;
+    }
     public void setBz(String bz) 
     {
         this.bz = bz;
@@ -163,6 +197,15 @@ public class MarWaitinginterview
     public String getBz() 
     {
         return bz;
+    }
+    public void setBeCareful(String beCareful) 
+    {
+        this.beCareful = beCareful;
+    }
+
+    public String getBeCareful() 
+    {
+        return beCareful;
     }
 
     @Override
@@ -175,9 +218,29 @@ public class MarWaitinginterview
             .append("customerCode", getCustomerCode())
             .append("beginTime", getBeginTime())
             .append("endTime", getEndTime())
+            .append("interviewMode", getInterviewMode())
             .append("interviewTime", getInterviewTime())
+            .append("interviewLocation", getInterviewLocation())
             .append("insertTime", getInsertTime())
+            .append("interviewContact", getInterviewContact())
             .append("bz", getBz())
+            .append("beCareful", getBeCareful())
             .toString();
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getFollowStatus() {
+        return followStatus;
+    }
+
+    public void setFollowStatus(String followStatus) {
+        this.followStatus = followStatus;
     }
 }

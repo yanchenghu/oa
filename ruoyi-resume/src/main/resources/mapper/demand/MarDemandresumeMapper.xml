@@ -38,6 +38,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="followStatus"    column="follow_status"    />
     </resultMap>
 
+    <resultMap type="MybindingResume" id="MybindingResumeResult">
+        <result property="customerCode"    column="customer_code"    />
+        <result property="bindTime"    column="bind_time"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerTel"    column="customer_tel"    />
+        <result property="expectationSalary"    column="expectation_salary"    />
+        <result property="customerUniversityTime"    column="customer_university_time"    />
+        <result property="education"    column="education"    />
+        <result property="workYear"    column="work_year"    />
+        <result property="professionId"    column="profession_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="followStatus"    column="follow_status"    />
+        <result property="resumePath"    column="resume_path"    />
+        <result property="resumeEnclosurepath"    column="resume_enclosurepath"    />
+    </resultMap>
+
+
     <sql id="selectMarDemandresumeVo">
         select id, demand_id, customer_code, bind_time, bind_people, download_status,is_recommend, newfollowtime, trackz_peoname, resume_enclosurepath from mar_demandresume
     </sql>
@@ -152,10 +170,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMarDemandresumedataDisplay"  parameterType="map"  resultType="map">
 
         SELECT c.customer_name as customerName ,c.customer_tel as customerTel, a.customer_code as customerCode,
-        a.demand_id as demandId,b.follow_status as followStatus,
-        DATE_FORMAT(b.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime from  mar_demandresume a LEFT JOIN
+        a.demand_id as demandId,b.follow_status as followStatus,f.project_name as projectName,
+        DATE_FORMAT(b.trackingtime, '%Y-%m-%d %H:%i:%s')as trackingtime,
+          DATE_FORMAT(d.syqstart_time, '%Y-%m-%d ')as syqstart_time from  mar_demandresume a LEFT JOIN
         mar_demandresumefollow b on a.id=b.demandresume_id
         LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        LEFT JOIN mar_demand f on a.demand_id=f.demand_id
+       LEFT JOIN mar_customerprojectpay d on a.customer_code=d.customer_code and a.demand_id=d.demand_id
+
         where 1=1
          and  a.bind_people =#{AddPeople}
          and  DATE_FORMAT( b.trackingtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
@@ -331,6 +353,45 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         mar_demandresume a
     LEFT JOIN mar_demandresumefollow b ON a.id = b.demandresume_id and a.newfollowtime=b.trackingtime
     where a.demand_id=#{demandId} and a.customer_code =#{customerCode}
+    </select>
+
+    <select id="selectBindingMarDemandresumeCont" parameterType="Map" resultType="Integer">
+        select  count(id) from mar_demandresume
+       where 1=1
+            <if test="bindPeople != null  and bindPeople != ''"> and bind_people = #{bindPeople}</if>
+            <if test="bindStarTime != null "> and (bind_time BETWEEN #{bindStarTime} and #{bindEndTime}) </if>
+
+    </select>
+    <select id="selectpassMarDemandresumeCont" parameterType="Map" resultType="Integer">
+        SELECT
+        count(a.id)
+        FROM
+        mar_demandresume a
+        LEFT JOIN mar_demandresumefollow b ON a.id = b.demandresume_id
+        where b.follow_status=3
+        <if test="bindPeople != null  and bindPeople != ''"> and a.bind_people = #{bindPeople}</if>
+        <if test="bindStarTime != null "> and (a.bind_time BETWEEN #{bindStarTime} and #{bindEndTime}) </if>
+    </select>
+
+    <select id="getMybindingResume" parameterType="Map" resultMap="MybindingResumeResult">
+    SELECT
+        a.customer_code,a.bind_time,a.demand_id,c.customer_name,c.customer_tel,c.expectation_salary,c.customer_university_time,
+        c.education,c.work_year,c.profession_id,d.project_name, b.follow_status,c.resume_path,a.resume_enclosurepath
+        FROM
+        mar_demandresume a
+        LEFT JOIN mar_demandresumefollow b ON a.id=b.demandresume_id and a.newfollowtime=b.trackingtime
+        LEFT JOIN per_customerinfo c on a.customer_code=c.customer_code
+        LEFT JOIN mar_demand d on a.demand_id=d.demand_id
+        where 1=1
+        <if test="customerName != null  and customerName != ''"> and a.customer_name = #{customerName}</if>
+        <if test="customerTel != null  and customerTel != ''"> and a.customer_tel = #{customerTel}</if>
+        <if test="followStatus != null  and followStatus != ''"> and b.follow_status = #{followStatus}</if>
+        <if test="userName != null  and userName != ''"> and a.bind_people = #{userName}</if>
+         order by a.bind_time desc
+
+
+
+
     </select>
 
 </mapper>

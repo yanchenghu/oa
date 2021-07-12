@@ -3,6 +3,7 @@ package com.ruoyi.common.utils.resume;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -400,8 +401,15 @@ public class DateUtils {
 ////		System.out.println(formatY_M_D2String(nMonthlastDate,FORMAT_Y_M));
 //		System.out.println(formatY_M_D2String(nMonthlasde,FORMAT_Y_M));
 //		System.out.println(formatY_M_D2String(getyearFirstDate(new Date()),FORMAT_Y_M));
-		System.out.println(formatY_M_D2String(nMonthlasde,FORMAT_Y_M_D));
-//	System.out.println(getyearFirstDate(new Date()));
+//		System.out.println(formatY_M_D2String(nMonthlasde,FORMAT_Y_M_D));
+//		System.out.println(formatY_M_D2String(getDayBefore(new Date(),10),FORMAT_Y_M_D_H_M_S));
+		DecimalFormat df=new DecimalFormat(".00");
+        int maran=1;
+        int marDeman=2;
+
+		String price1=df.format((float)maran / marDeman*100);//format 返回的是字符串
+
+		System.out.println(price1);
 
 
 	}

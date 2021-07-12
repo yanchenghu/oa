@@ -39,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="operationuser"    column="operationuser"    />
         <result property="operUsername"    column="oper_username"    />
         <result property="bz"    column="bz"    />
+
     </resultMap>
 
     <resultMap  type="MarEntryInfo" id="MarrInfo">

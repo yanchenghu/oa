@@ -1,7 +1,12 @@
 package com.ruoyi.demand.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.demand.domain.MarDemandresume;
+import com.ruoyi.demand.domain.MybindingResume;
+import com.ruoyi.resume.domain.PerCustomerinfo;
 
 /**
  * 需求绑定简历Service接口
@@ -58,4 +63,8 @@ public interface IMarDemandresumeService
      * @return 结果
      */
     public int deleteMarDemandresumeById(String id);
+    /**
+     * 获取我绑定的简历
+     */
+    List<MybindingResume>  getMybindingResume(PerCustomerinfo perCustomerinfo, LoginUser loginUser);
 }

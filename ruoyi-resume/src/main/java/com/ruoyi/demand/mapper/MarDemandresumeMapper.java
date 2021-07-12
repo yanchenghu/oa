@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.demand.domain.MarDemandresume;
+import com.ruoyi.demand.domain.MybindingResume;
 import com.ruoyi.statistic.domain.BeInterviewed;
 import com.ruoyi.statistic.domain.ItemsIncluded;
 
@@ -106,4 +107,10 @@ public interface MarDemandresumeMapper
     List<ItemsIncluded> selectMarDemandresumeItemsIncluded(Map map);
 
     List<MarDemandresume> selectMarDemandresumeUpperBydemandId(String demandId);
+
+    int selectBindingMarDemandresumeCont( Map ma);
+
+    int selectpassMarDemandresumeCont(Map ma);
+
+    List<MybindingResume> getMybindingResume(Map map);
 }

@@ -10,6 +10,7 @@ import com.ruoyi.demand.domain.MarEntryInfo;
 import com.ruoyi.demand.mapper.MarCustomerprojectpayMapper;
 import com.ruoyi.demand.mapper.MarDemandMapper;
 import com.ruoyi.demand.mapper.MarDemandresumeMapper;
+import com.ruoyi.demand.mapper.MarWaitinginterviewMapper;
 import com.ruoyi.resume.domain.PerCustomerinfo;
 import com.ruoyi.resume.domain.PerRobcustomer;
 import com.ruoyi.resume.mapper.PerCustomerinfoMapper;
@@ -40,6 +41,8 @@ public class IHomePageServiceImpl implements IHomePageService {
     private MarDemandMapper marDemandMapper;
     @Autowired
     private PerCustomerinfoMapper perCustomerinfoMapper;
+    @Autowired
+    private MarWaitinginterviewMapper marWaitinginterviewMapper;
 
     /**
      * 首页人事数据展示
@@ -54,59 +57,66 @@ public class IHomePageServiceImpl implements IHomePageService {
         int x=0;
         //获取本月录入
         List<PerCustomerinfo> EnterInfo = perCustomerinfoMapper.selectPerCustomerinfoByMonth(perCustomerinfo);
-
-
         //获取抢占跟踪
         List<PerRobcustomer> ListperRob = perRobcustomerMapper.selectPerRobdatadisplayList(map);
-
         //获取简历绑定人数
         map.put("followStatus",1);
         List<Map> ListMarbing=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-
         //获取简历通过
         map.put("followStatus",3);
         List<Map> resumeadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-
-
         //获取简历面试通过
         map.put("followStatus",5);
         List<Map> interviewadopt=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-
-
         //获取简历入项
         map.put("followStatus",7);
         List<Map> entryPeople=marDemandresumeMapper.selectMarDemandresumedataDisplay(map);
-
-
         //本月入项排行榜
         List<Map> RankingEntry=marCustomerprojectpayMapper.getRankingEntry();
         //本月面试排行榜
         List<Map> InterviewEntry=marCustomerprojectpayMapper.getInterviewEntry();
-
         //获取分配给我的项目
         Map mapss=new HashMap();
         mapss.put("deptId",loginUser.getUser().getDeptId());
-        //获取分配给我的项目的目标数绑定数
-        List<MarDemand> list= marDemandMapper.selectMarDemandbindingList(mapss);
-        for (MarDemand marDe:list){
-            //查询当前需求绑定了多少简历
-            String  DemandId= marDe.getDemandId();
-            List<MarDemandresume>  li=marDemandresumeMapper.selectMarDemandresumeUpperBydemandId(DemandId);
-            marDe.setIfLook(li.size());
-        }
-        List<MarEntryInfo> listMarEntry= marDemandMapper.selectMarDemanddsaList(mapss);
         mapss.put("bindPeople",loginUser.getUsername());
-        for(int i=listMarEntry.size()-1;i>=0;i--) {
-            MarEntryInfo marDe= listMarEntry.get(i);
-            mapss.put("demandId",marDe.getDemandId());
-            List<BasicInfo>  li= marDemandMapper.selectMarDem(mapss);
-            marDe.setBasicInfo(li);
-            if(li.size()==0){
-                listMarEntry.remove(i);
+        //重点需求
+        int keyNeeds=0;
+        int nonKeyNeeds =0;
+        //获取分配给我的项目
+        List<MarDemand> list= marDemandMapper.selectMarDemandbindingList(mapss);
+        for(MarDemand marDemand:list){
+            Integer importantLevel = marDemand.getImportantLevel();
+            if(importantLevel==0){
+                keyNeeds+=1;
+            }else{
+                nonKeyNeeds+=1;
             }
         }
+        //获取我绑定的页面
+        int bindnum = marDemandresumeMapper.selectBindingMarDemandresumeCont(mapss);
+        mapss.put("followStatus",3);
+        List<Map> personnellist = marWaitinginterviewMapper.selectMarWaitinginterviewpersonnelMatters(mapss);
+
+
+
+//        for (MarDemand marDe:list){
+//            //查询当前需求绑定了多少简历
+//            String  DemandId= marDe.getDemandId();
+//            List<MarDemandresume>  li=marDemandresumeMapper.selectMarDemandresumeUpperBydemandId(DemandId);
+//            marDe.setIfLook(li.size());
+//        }
+//        List<MarEntryInfo> listMarEntry= marDemandMapper.selectMarDemanddsaList(mapss);
+//        mapss.put("bindPeople",loginUser.getUsername());
+//        for(int i=listMarEntry.size()-1;i>=0;i--) {
+//            MarEntryInfo marDe= listMarEntry.get(i);
+//            mapss.put("demandId",marDe.getDemandId());
+//            List<BasicInfo>  li= marDemandMapper.selectMarDem(mapss);
+//            marDe.setBasicInfo(li);
+//            if(li.size()==0){
+//                listMarEntry.remove(i);
+//            }
+//        }
         Map maps=new HashMap();
-        maps.put("list",list);
         maps.put("entryrobnnum",ListperRob.size());
         maps.put("bingdinnum",ListMarbing.size());
         maps.put("resumeadopt",resumeadopt.size());
@@ -114,8 +124,11 @@ public class IHomePageServiceImpl implements IHomePageService {
         maps.put("entryPeople",entryPeople.size());
         maps.put("RankingEntry",RankingEntry);
         maps.put("InterviewEntry",InterviewEntry);
-        maps.put("listMarEntry",listMarEntry);
         maps.put("EnterInfosize",EnterInfo.size());
+        maps.put("keyNeeds",keyNeeds);
+        maps.put("nonKeyNeeds",nonKeyNeeds);
+        maps.put("bindpassnum",personnellist.size());
+        maps.put("bindnum",bindnum);
         return AjaxResult.success(maps);
     }
 

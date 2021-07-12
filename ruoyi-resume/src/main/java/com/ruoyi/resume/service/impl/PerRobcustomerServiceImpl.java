@@ -130,6 +130,7 @@ public class PerRobcustomerServiceImpl implements IPerRobcustomerService
         Integer ding_type=1;
         ConDingtoken  cotoken =conDingtokenMapper.selectConDingtokenByType(ding_type);
         if(cotoken==null){
+            cotoken=new ConDingtoken();
             JSONObject jsonToken =  DingUtil.getAccessToken(DingUtil.TOKEN_URL);
             cotoken.setToken(jsonToken.getString("access_token"));
         }

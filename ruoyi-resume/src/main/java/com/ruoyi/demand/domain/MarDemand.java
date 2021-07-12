@@ -2,6 +2,8 @@ package com.ruoyi.demand.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -149,6 +151,11 @@ public class MarDemand extends BaseEntity
     /** 录入人姓名 */
     @Excel(name = "备注")
     private String bz;
+    /** 岗位需求id */
+    private List<MarDemandRequirement> marDemandRequirementList;
+
+
+
 
     public void setDemandId(String demandId) 
     {
@@ -447,6 +454,14 @@ public class MarDemand extends BaseEntity
         this.bz = bz;
     }
 
+    public List<MarDemandRequirement> getMarDemandRequirementList() {
+        return marDemandRequirementList;
+    }
+
+    public void setMarDemandRequirementList(List<MarDemandRequirement> marDemandRequirementList) {
+        this.marDemandRequirementList = marDemandRequirementList;
+    }
+
     @Override
     public String toString() {
         return "MarDemand{" +
@@ -485,4 +500,6 @@ public class MarDemand extends BaseEntity
                 ", bz='" + bz + '\'' +
                 '}';
     }
+
+
 }

@@ -27,8 +27,13 @@ public class RuoYiConfig
     /** 上传路径 */
     private static String profile;
 
+
+
+
     /** 获取地址开关 */
     private static boolean addressEnabled;
+
+
 
     public String getName()
     {
@@ -90,6 +95,7 @@ public class RuoYiConfig
         RuoYiConfig.addressEnabled = addressEnabled;
     }
 
+
     /**
      * 获取头像上传路径
      */
@@ -98,6 +104,13 @@ public class RuoYiConfig
         return getProfile() + "/avatar";
     }
 
+    /**
+     * 获取附件简历上传路径
+     */
+    public static String getEnclosurepath()
+    {
+        return getProfile()+"/enclosure" ;
+    }
     /**
      * 获取下载路径
      */

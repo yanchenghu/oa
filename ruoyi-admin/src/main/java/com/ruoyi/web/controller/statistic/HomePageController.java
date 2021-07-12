@@ -60,9 +60,6 @@ public class HomePageController extends BaseController {
         return homePageService.viewdetailsplay(loginUser,followStatus);
     }
 
-
-
-
     /**
      * 首页商务数据展示
      */

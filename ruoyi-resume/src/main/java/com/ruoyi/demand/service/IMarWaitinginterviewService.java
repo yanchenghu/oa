@@ -3,6 +3,7 @@ package com.ruoyi.demand.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.demand.domain.MarWaitinginterview;
 
 /**
@@ -30,7 +31,7 @@ public interface IMarWaitinginterviewService
     public List<MarWaitinginterview> selectMarWaitinginterviewList(MarWaitinginterview marWaitinginterview);
 
 
-    List<Map> selectMarWaitinginterviewMap(String username);
+    List<Map> selectMarWaitinginterviewMap(MarWaitinginterview marWaitinginterview,LoginUser loginUser);
 
     int updateMarWaitinginterview(MarWaitinginterview marWaitinginterview);
 }
