@@ -20,6 +20,10 @@ ruoyi:
   # 验证码类型 math 数组计算 char 字符验证
   captchaType: math
 
+
+
+
+
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为8080
@@ -38,7 +42,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: error
+    com.ruoyi: debug
     org.springframework: warn
 
 # Spring配置
