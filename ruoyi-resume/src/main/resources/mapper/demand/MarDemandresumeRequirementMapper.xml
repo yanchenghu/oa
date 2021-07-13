@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarDemandresumeRequirementMapper">
+    
+    <resultMap type="MarDemandresumeRequirement" id="MarDemandresumeRequirementResult">
+        <result property="id"    column="id"    />
+        <result property="demandresumeId"    column="demandresume_id"    />
+        <result property="requirementsId"    column="requirements_id"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <sql id="selectMarDemandresumeRequirementVo">
+        select id, demandresume_id, requirements_id, sort from mar_demandresume_requirement
+    </sql>
+
+    <select id="selectMarDemandresumeRequirementList" parameterType="MarDemandresumeRequirement" resultMap="MarDemandresumeRequirementResult">
+        <include refid="selectMarDemandresumeRequirementVo"/>
+        <where>  
+            <if test="demandresumeId != null "> and demandresume_id = #{demandresumeId}</if>
+            <if test="requirementsId != null "> and requirements_id = #{requirementsId}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+        </where>
+    </select>
+    
+    <select id="selectMarDemandresumeRequirementById" parameterType="Long" resultMap="MarDemandresumeRequirementResult">
+        <include refid="selectMarDemandresumeRequirementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarDemandresumeRequirement" parameterType="MarDemandresumeRequirement">
+        insert into mar_demandresume_requirement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="demandresumeId != null">demandresume_id,</if>
+            <if test="requirementsId != null">requirements_id,</if>
+            <if test="sort != null">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="demandresumeId != null">#{demandresumeId},</if>
+            <if test="requirementsId != null">#{requirementsId},</if>
+            <if test="sort != null">#{sort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarDemandresumeRequirement" parameterType="MarDemandresumeRequirement">
+        update mar_demandresume_requirement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="demandresumeId != null">demandresume_id = #{demandresumeId},</if>
+            <if test="requirementsId != null">requirements_id = #{requirementsId},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarDemandresumeRequirementById" parameterType="Long">
+        delete from mar_demandresume_requirement where id = #{id}
+    </delete>
+
+    <delete id="deleteMarDemandresumeRequirementByIds" parameterType="String">
+        delete from mar_demandresume_requirement where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="delbyRequirements_id" parameterType="Long">
+        delete from mar_demandresume_requirement where requirements_id = #{id}
+    </delete>
+    
+</mapper>

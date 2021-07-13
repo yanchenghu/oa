@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.PerEnclosureProjectMapper">
+    
+    <resultMap type="PerEnclosureProject" id="PerEnclosureProjectResult">
+        <result property="custproId"    column="custpro_id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="joinprojectTime"    column="joinproject_time"    />
+        <result property="quitprojectTime"    column="quitproject_time"    />
+        <result property="projectIntroduction"    column="project_introduction"    />
+        <result property="technologyType"    column="technology_type"    />
+        <result property="duty"    column="duty"    />
+        <result property="remark"    column="remark"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectPerEnclosureProjectVo">
+        select custpro_id, customer_code, project_name, DATE_FORMAT(joinproject_time,'%Y-%m-%d') as joinproject_time,  DATE_FORMAT(quitproject_time,'%Y-%m-%d') as quitproject_time, project_introduction, technology_type, duty, remark, add_time from per_enclosure_project
+    </sql>
+
+    <select id="selectPerEnclosureProjectList" parameterType="PerEnclosureProject" resultMap="PerEnclosureProjectResult">
+        <include refid="selectPerEnclosureProjectVo"/>
+        <where>  
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="joinprojectTime != null "> and joinproject_time = #{joinprojectTime}</if>
+            <if test="quitprojectTime != null "> and quitproject_time = #{quitprojectTime}</if>
+            <if test="projectIntroduction != null  and projectIntroduction != ''"> and project_introduction = #{projectIntroduction}</if>
+            <if test="technologyType != null  and technologyType != ''"> and technology_type = #{technologyType}</if>
+            <if test="duty != null  and duty != ''"> and duty = #{duty}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerEnclosureProjectById" parameterType="Integer" resultMap="PerEnclosureProjectResult">
+        <include refid="selectPerEnclosureProjectVo"/>
+        where custpro_id = #{custproId}
+    </select>
+        
+    <insert id="insertPerEnclosureProject" parameterType="PerEnclosureProject" useGeneratedKeys="true" keyProperty="custproId">
+        insert into per_enclosure_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">customer_code,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="joinprojectTime != null">joinproject_time,</if>
+            <if test="quitprojectTime != null">quitproject_time,</if>
+            <if test="projectIntroduction != null">project_introduction,</if>
+            <if test="technologyType != null">technology_type,</if>
+            <if test="duty != null">duty,</if>
+            <if test="remark != null">remark,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="joinprojectTime != null">#{joinprojectTime},</if>
+            <if test="quitprojectTime != null">#{quitprojectTime},</if>
+            <if test="projectIntroduction != null">#{projectIntroduction},</if>
+            <if test="technologyType != null">#{technologyType},</if>
+            <if test="duty != null">#{duty},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerEnclosureProject" parameterType="PerEnclosureProject">
+        update per_enclosure_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="joinprojectTime != null">joinproject_time = #{joinprojectTime},</if>
+            <if test="quitprojectTime != null">quitproject_time = #{quitprojectTime},</if>
+            <if test="projectIntroduction != null">project_introduction = #{projectIntroduction},</if>
+            <if test="technologyType != null">technology_type = #{technologyType},</if>
+            <if test="duty != null">duty = #{duty},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where custpro_id = #{custproId}
+    </update>
+
+    <delete id="deletePerEnclosureProjectById" parameterType="Integer">
+        delete from per_enclosure_project where custpro_id = #{custproId}
+    </delete>
+
+    <delete id="deletePerEnclosureProjectByIds" parameterType="String">
+        delete from per_enclosure_project where custpro_id in 
+        <foreach item="custproId" collection="array" open="(" separator="," close=")">
+            #{custproId}
+        </foreach>
+    </delete>
+    
+</mapper>

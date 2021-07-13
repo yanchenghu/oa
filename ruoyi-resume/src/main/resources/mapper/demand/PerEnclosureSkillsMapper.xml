@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.PerEnclosureSkillsMapper">
+    
+    <resultMap type="PerEnclosureSkills" id="PerEnclosureSkillsResult">
+        <result property="id"    column="id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="skillsDescribe"    column="skills_describe"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectPerEnclosureSkillsVo">
+        select id, customer_code, skills_describe, add_time from per_enclosure_skills
+    </sql>
+
+    <select id="selectPerEnclosureSkillsList" parameterType="PerEnclosureSkills" resultMap="PerEnclosureSkillsResult">
+        <include refid="selectPerEnclosureSkillsVo"/>
+        <where>  
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="skillsDescribe != null  and skillsDescribe != ''"> and skills_describe = #{skillsDescribe}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerEnclosureSkillsById" parameterType="Integer" resultMap="PerEnclosureSkillsResult">
+        <include refid="selectPerEnclosureSkillsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPerEnclosureSkills" parameterType="PerEnclosureSkills" useGeneratedKeys="true" keyProperty="id">
+        insert into per_enclosure_skills
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">customer_code,</if>
+            <if test="skillsDescribe != null">skills_describe,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="skillsDescribe != null">#{skillsDescribe},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerEnclosureSkills" parameterType="PerEnclosureSkills">
+        update per_enclosure_skills
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="skillsDescribe != null">skills_describe = #{skillsDescribe},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePerEnclosureSkillsById" parameterType="Integer">
+        delete from per_enclosure_skills where id = #{id}
+    </delete>
+
+    <delete id="deletePerEnclosureSkillsByIds" parameterType="String">
+        delete from per_enclosure_skills where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

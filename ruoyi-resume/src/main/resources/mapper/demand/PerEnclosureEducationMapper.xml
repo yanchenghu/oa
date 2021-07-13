@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.PerEnclosureEducationMapper">
+    
+    <resultMap type="PerEnclosureEducation" id="PerEnclosureEducationResult">
+        <result property="id"    column="id"    />
+        <result property="customerCode"    column="customer_code"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="schoolName"    column="school_name"    />
+        <result property="degree"    column="degree"    />
+        <result property="major"    column="major"    />
+        <result property="addtime"    column="addtime"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectPerEnclosureEducationVo">
+        select id, customer_code, start_time, end_time, school_name, degree, major, addtime, remark from per_enclosure_education
+    </sql>
+
+    <select id="selectPerEnclosureEducationList" parameterType="PerEnclosureEducation" resultMap="PerEnclosureEducationResult">
+        <include refid="selectPerEnclosureEducationVo"/>
+        <where>  
+            <if test="customerCode != null  and customerCode != ''"> and customer_code = #{customerCode}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="schoolName != null  and schoolName != ''"> and school_name like concat('%', #{schoolName}, '%')</if>
+            <if test="degree != null  and degree != ''"> and degree = #{degree}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="addtime != null "> and addtime = #{addtime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerEnclosureEducationById" parameterType="Integer" resultMap="PerEnclosureEducationResult">
+        <include refid="selectPerEnclosureEducationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPerEnclosureEducation" parameterType="PerEnclosureEducation" useGeneratedKeys="true" keyProperty="id">
+        insert into per_enclosure_education
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">customer_code,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="schoolName != null">school_name,</if>
+            <if test="degree != null">degree,</if>
+            <if test="major != null">major,</if>
+            <if test="addtime != null">addtime,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="schoolName != null">#{schoolName},</if>
+            <if test="degree != null">#{degree},</if>
+            <if test="major != null">#{major},</if>
+            <if test="addtime != null">#{addtime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerEnclosureEducation" parameterType="PerEnclosureEducation">
+        update per_enclosure_education
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerCode != null">customer_code = #{customerCode},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="schoolName != null">school_name = #{schoolName},</if>
+            <if test="degree != null">degree = #{degree},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="addtime != null">addtime = #{addtime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePerEnclosureEducationById" parameterType="Integer">
+        delete from per_enclosure_education where id = #{id}
+    </delete>
+
+    <delete id="deletePerEnclosureEducationByIds" parameterType="String">
+        delete from per_enclosure_education where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

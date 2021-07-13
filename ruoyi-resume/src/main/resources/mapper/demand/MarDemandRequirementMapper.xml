@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.MarDemandRequirementMapper">
+    
+    <resultMap type="MarDemandRequirement" id="MarDemandRequirementResult">
+        <result property="id"    column="id"    />
+        <result property="demandId"    column="demand_id"    />
+        <result property="sort"    column="sort"    />
+        <result property="jobRequirements"    column="job_requirements"    />
+        <result property="isNecessary"    column="is_necessary"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectMarDemandRequirementVo">
+        select id, demand_id, sort, job_requirements, is_necessary, add_time from mar_demand_requirement
+    </sql>
+
+    <select id="selectMarDemandRequirementList" parameterType="MarDemandRequirement" resultMap="MarDemandRequirementResult">
+        <include refid="selectMarDemandRequirementVo"/>
+        <where>  
+            <if test="demandId != null  and demandId != ''"> and demand_id = #{demandId}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="jobRequirements != null  and jobRequirements != ''"> and job_requirements = #{jobRequirements}</if>
+            <if test="isNecessary != null "> and is_necessary = #{isNecessary}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+        order by sort asc
+    </select>
+    
+    <select id="selectMarDemandRequirementById" parameterType="Long" resultMap="MarDemandRequirementResult">
+        <include refid="selectMarDemandRequirementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertMarDemandRequirement" parameterType="MarDemandRequirement" useGeneratedKeys="true" keyProperty="id">
+        insert into mar_demand_requirement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="demandId != null">demand_id,</if>
+            <if test="sort != null">sort,</if>
+            <if test="jobRequirements != null">job_requirements,</if>
+            <if test="isNecessary != null">is_necessary,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="demandId != null">#{demandId},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="jobRequirements != null">#{jobRequirements},</if>
+            <if test="isNecessary != null">#{isNecessary},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMarDemandRequirement" parameterType="MarDemandRequirement">
+        update mar_demand_requirement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="demandId != null">demand_id = #{demandId},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="jobRequirements != null">job_requirements = #{jobRequirements},</if>
+            <if test="isNecessary != null">is_necessary = #{isNecessary},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMarDemandRequirementById" parameterType="Long">
+        delete from mar_demand_requirement where id = #{id}
+    </delete>
+
+    <delete id="deleteMarDemandRequirementByIds" parameterType="String">
+        delete from mar_demand_requirement where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <insert id="insertMListmarDema" parameterType="java.util.List">
+
+        insert into mar_demand_requirement
+           (demand_id,
+            sort,
+            job_requirements,
+            is_necessary,
+            add_time
+            )
+            values
+        <foreach collection="list" item="proinfo" separator=",">
+            ( #{proinfo.demandId},
+            #{proinfo.sort},
+            #{proinfo.jobRequirements},
+            #{proinfo.isNecessary},
+            now()
+            )
+        </foreach>
+
+
+    </insert>
+    
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.demand.mapper.PerEnclosureCustomerinfoMapper">
+    
+    <resultMap type="PerEnclosureCustomerinfo" id="PerEnclosureCustomerinfoResult">
+        <result property="customerCode"    column="customer_code"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerSex"    column="customer_sex"    />
+        <result property="customerAge"    column="customer_age"    />
+        <result property="workYear"    column="work_year"    />
+        <result property="professionId"    column="profession_id"    />
+        <result property="education"    column="education"    />
+        <result property="selfEvaluation"    column="self_evaluation"    />
+        <result property="addTime"    column="add_time"    />
+    </resultMap>
+
+    <sql id="selectPerEnclosureCustomerinfoVo">
+        select customer_code, customer_name, customer_sex, customer_age, work_year, profession_id, education, self_evaluation, add_time from per_enclosure_customerinfo
+    </sql>
+
+    <select id="selectPerEnclosureCustomerinfoList" parameterType="PerEnclosureCustomerinfo" resultMap="PerEnclosureCustomerinfoResult">
+        <include refid="selectPerEnclosureCustomerinfoVo"/>
+        <where>  
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="customerSex != null "> and customer_sex = #{customerSex}</if>
+            <if test="customerAge != null "> and customer_age = #{customerAge}</if>
+            <if test="workYear != null "> and work_year = #{workYear}</if>
+            <if test="professionId != null  and professionId != ''"> and profession_id = #{professionId}</if>
+            <if test="education != null "> and education = #{education}</if>
+            <if test="selfEvaluation != null  and selfEvaluation != ''"> and self_evaluation = #{selfEvaluation}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPerEnclosureCustomerinfoById" parameterType="String" resultMap="PerEnclosureCustomerinfoResult">
+        <include refid="selectPerEnclosureCustomerinfoVo"/>
+        where customer_code = #{customerCode}
+    </select>
+        
+    <insert id="insertPerEnclosureCustomerinfo" parameterType="PerEnclosureCustomerinfo">
+        insert into per_enclosure_customerinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">customer_code,</if>
+            <if test="customerName != null and customerName != ''">customer_name,</if>
+            <if test="customerSex != null">customer_sex,</if>
+            <if test="customerAge != null">customer_age,</if>
+            <if test="workYear != null">work_year,</if>
+            <if test="professionId != null">profession_id,</if>
+            <if test="education != null">education,</if>
+            <if test="selfEvaluation != null">self_evaluation,</if>
+            <if test="addTime != null">add_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerCode != null">#{customerCode},</if>
+            <if test="customerName != null and customerName != ''">#{customerName},</if>
+            <if test="customerSex != null">#{customerSex},</if>
+            <if test="customerAge != null">#{customerAge},</if>
+            <if test="workYear != null">#{workYear},</if>
+            <if test="professionId != null">#{professionId},</if>
+            <if test="education != null">#{education},</if>
+            <if test="selfEvaluation != null">#{selfEvaluation},</if>
+            <if test="addTime != null">#{addTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePerEnclosureCustomerinfo" parameterType="PerEnclosureCustomerinfo">
+        update per_enclosure_customerinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
+            <if test="customerSex != null">customer_sex = #{customerSex},</if>
+            <if test="customerAge != null">customer_age = #{customerAge},</if>
+            <if test="workYear != null">work_year = #{workYear},</if>
+            <if test="professionId != null">profession_id = #{professionId},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="selfEvaluation != null">self_evaluation = #{selfEvaluation},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+        </trim>
+        where customer_code = #{customerCode}
+    </update>
+
+    <delete id="deletePerEnclosureCustomerinfoById" parameterType="String">
+        delete from per_enclosure_customerinfo where customer_code = #{customerCode}
+    </delete>
+
+    <delete id="deletePerEnclosureCustomerinfoByIds" parameterType="String">
+        delete from per_enclosure_customerinfo where customer_code in 
+        <foreach item="customerCode" collection="array" open="(" separator="," close=")">
+            #{customerCode}
+        </foreach>
+    </delete>
+    
+</mapper>

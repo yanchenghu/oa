@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resume.mapper.FinDocumentMapper">
+    
+    <resultMap type="FinDocument" id="FinDocumentResult">
+        <result property="id"    column="id"    />
+        <result property="documentType"    column="document_type"    />
+        <result property="documentName"    column="document_name"    />
+        <result property="documentIntroduce"    column="document_introduce"    />
+        <result property="documentPath"    column="document_path"    />
+        <result property="documentReadnum"    column="document_readnum"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="documentSort"    column="document_sort"    />
+    </resultMap>
+
+    <sql id="selectFinDocumentVo">
+        select id, document_type, document_name, document_introduce, document_path, document_readnum, add_time, document_sort from fin_document
+    </sql>
+
+    <select id="selectFinDocumentList" parameterType="FinDocument" resultMap="FinDocumentResult">
+        <include refid="selectFinDocumentVo"/>
+        <where>  
+            <if test="documentType != null "> and document_type = #{documentType}</if>
+            <if test="documentName != null  and documentName != ''"> and document_name like concat('%', #{documentName}, '%')</if>
+            <if test="documentIntroduce != null  and documentIntroduce != ''"> and document_introduce = #{documentIntroduce}</if>
+            <if test="documentPath != null  and documentPath != ''"> and document_path = #{documentPath}</if>
+            <if test="documentReadnum != null "> and document_readnum = #{documentReadnum}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="documentSort != null "> and document_sort = #{documentSort}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinDocumentById" parameterType="Integer" resultMap="FinDocumentResult">
+        <include refid="selectFinDocumentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinDocument" parameterType="FinDocument" useGeneratedKeys="true" keyProperty="id">
+        insert into fin_document
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="documentType != null">document_type,</if>
+            <if test="documentName != null">document_name,</if>
+            <if test="documentIntroduce != null">document_introduce,</if>
+            <if test="documentPath != null">document_path,</if>
+            <if test="documentReadnum != null">document_readnum,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="documentSort != null">document_sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="documentType != null">#{documentType},</if>
+            <if test="documentName != null">#{documentName},</if>
+            <if test="documentIntroduce != null">#{documentIntroduce},</if>
+            <if test="documentPath != null">#{documentPath},</if>
+            <if test="documentReadnum != null">#{documentReadnum},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="documentSort != null">#{documentSort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinDocument" parameterType="FinDocument">
+        update fin_document
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="documentType != null">document_type = #{documentType},</if>
+            <if test="documentName != null">document_name = #{documentName},</if>
+            <if test="documentIntroduce != null">document_introduce = #{documentIntroduce},</if>
+            <if test="documentPath != null">document_path = #{documentPath},</if>
+            <if test="documentReadnum != null">document_readnum = #{documentReadnum},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="documentSort != null">document_sort = #{documentSort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinDocumentById" parameterType="Integer">
+        delete from fin_document where id = #{id}
+    </delete>
+
+    <delete id="deleteFinDocumentByIds" parameterType="String">
+        delete from fin_document where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
