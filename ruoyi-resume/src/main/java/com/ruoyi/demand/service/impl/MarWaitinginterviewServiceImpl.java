@@ -68,6 +68,7 @@ public class MarWaitinginterviewServiceImpl implements IMarWaitinginterviewServi
         List<SysRole> roles = loginUser.getUser().getRoles();
         boolean personnelteamleader = roles.stream().anyMatch(e -> e.getRoleKey().equals("business"));
         map.put("userName",loginUser.getUsername());
+        map.put("customerName",marWaitinginterview.getCustomerName());
         map.put("followStatus",marWaitinginterview.getFollowStatus());
         map.put("interviewTime",marWaitinginterview.getInterviewTime());
         if(personnelteamleader){
